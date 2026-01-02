@@ -11,9 +11,9 @@ Rails.application.routes.draw do
 
   # Publications management
   resources :publications do
-    resources :posts, except: [:index]
+    resources :posts, except: [ :index ]
   end
-  
+
   # Defines the root path route ("/")
   root "publications#index"
 end
