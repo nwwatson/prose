@@ -50,7 +50,7 @@ class PublishableTest < ActiveSupport::TestCase
       publication_id: @publication.id
     )
     record.publish!
-    
+
     record.unpublish!
 
     assert record.draft?
@@ -103,7 +103,7 @@ class PublishableTest < ActiveSupport::TestCase
       publication_id: @publication.id,
       status: :draft
     )
-    
+
     published_record = @test_class.create!(
       title: "Published",
       publication_id: @publication.id,
@@ -125,7 +125,7 @@ class PublishableTest < ActiveSupport::TestCase
     )
 
     future_scheduled = @test_class.create!(
-      title: "Future Scheduled", 
+      title: "Future Scheduled",
       publication_id: @publication.id,
       status: :scheduled,
       scheduled_at: 1.hour.from_now
@@ -144,13 +144,13 @@ class PublishableTest < ActiveSupport::TestCase
     )
 
     assert record.draft?
-    
+
     record.status = "published"
     assert record.published?
-    
-    record.status = "scheduled" 
+
+    record.status = "scheduled"
     assert record.scheduled?
-    
+
     record.status = "archived"
     assert record.archived?
   end

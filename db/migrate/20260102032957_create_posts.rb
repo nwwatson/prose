@@ -21,8 +21,8 @@ class CreatePosts < ActiveRecord::Migration[8.1]
     add_index :posts, :slug
     add_index :posts, :status
     add_index :posts, :published_at
-    add_index :posts, [:publication_id, :status]
-    add_index :posts, [:publication_id, :published_at]
-    add_index :posts, [:publication_id, :slug], unique: true
+    add_index :posts, [ :publication_id, :status ]
+    add_index :posts, [ :publication_id, :published_at ]
+    add_index :posts, [ :publication_id, :slug ], unique: true
   end
 end

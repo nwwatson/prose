@@ -49,7 +49,7 @@ class PostTest < ActiveSupport::TestCase
 
   test "should allow same slug in different publications" do
     another_publication = Publication.create!(
-      name: "Another Publication", 
+      name: "Another Publication",
       account: @account
     )
     @post.save!
