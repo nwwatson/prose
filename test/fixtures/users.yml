@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  email: john@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  name: John Doe
+  confirmed_at: <%= Time.current %>
+  confirmation_token: 
+  reset_password_token: 
+  reset_password_sent_at: 
+  remember_token: 
+  current_sign_in_at: <%= Time.current %>
+  last_sign_in_at: <%= 1.day.ago %>
+  sign_in_count: 5
+  failed_attempts: 0
+  locked_at: 
+
+two:
+  email: jane@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  name: Jane Smith
+  confirmed_at: 
+  confirmation_token: abc123token
+  reset_password_token: 
+  reset_password_sent_at: 
+  remember_token: 
+  current_sign_in_at: 
+  last_sign_in_at: 
+  sign_in_count: 0
+  failed_attempts: 0
+  locked_at:

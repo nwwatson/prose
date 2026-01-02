@@ -2,6 +2,8 @@
 
 one:
   name: "Test Account One"
+  user: one
 
 two:
   name: "Test Account Two"
+  user: two

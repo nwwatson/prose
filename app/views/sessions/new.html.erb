@@ -1,0 +1,56 @@
+<div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+      Sign in to Prose
+    </h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Don't have an account?
+      <%= link_to "Sign up here", new_registration_path, class: "font-medium text-blue-600 hover:text-blue-500" %>
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
+      <%= form_with url: sessions_path, local: true, class: "space-y-6" do |form| %>
+        
+        <div>
+          <%= form.label :email, class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= form.email_field :email, required: true, autofocus: true, autocomplete: "email",
+                class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+          </div>
+        </div>
+
+        <div>
+          <%= form.label :password, class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= form.password_field :password, required: true, autocomplete: "current-password",
+                class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <%= form.check_box :remember_me, class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+            <%= form.label :remember_me, "Remember me", class: "ml-2 block text-sm text-gray-900" %>
+          </div>
+
+          <div class="text-sm">
+            <%= link_to "Forgot password?", "#", class: "font-medium text-blue-600 hover:text-blue-500" %>
+          </div>
+        </div>
+
+        <div>
+          <%= form.submit "Sign in", 
+              class: "flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+        </div>
+
+        <div class="mt-6">
+          <div class="text-center">
+            <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path, class: "text-sm text-blue-600 hover:text-blue-500" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

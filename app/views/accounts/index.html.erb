@@ -1,0 +1,75 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl">
+          Your Accounts
+        </h1>
+        <p class="mt-1 text-sm text-gray-500">
+          Welcome back, <%= current_user.name %>!
+        </p>
+      </div>
+      <div class="flex items-center space-x-3">
+        <%= link_to "Create Account", new_account_path, 
+            class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+        <%= link_to "Sign Out", sign_out_path, method: :delete,
+            class: "rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500" %>
+      </div>
+    </div>
+
+    <!-- Accounts Grid -->
+    <div class="mt-8">
+      <% if @accounts.any? %>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <% @accounts.each do |account| %>
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+              <div class="px-4 py-5 sm:p-6">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0">
+                    <div class="h-10 w-10 rounded-lg bg-blue-500 flex items-center justify-center">
+                      <span class="text-white font-medium">
+                        <%= account.name.first.upcase %>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="ml-4 flex-1">
+                    <h3 class="text-lg font-medium text-gray-900">
+                      <%= link_to account.name, account, class: "hover:text-blue-600" %>
+                    </h3>
+                    <p class="text-sm text-gray-500">
+                      <%= pluralize(account.publications.count, 'publication') %>
+                    </p>
+                  </div>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <%= link_to "View", account,
+                      class: "text-sm bg-blue-50 text-blue-700 px-3 py-1 rounded-md hover:bg-blue-100" %>
+                  <%= link_to "Edit", edit_account_path(account),
+                      class: "text-sm bg-gray-50 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-100" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <!-- Empty State -->
+        <div class="text-center py-12">
+          <div class="mx-auto h-12 w-12 text-gray-400">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <h3 class="mt-4 text-lg font-medium text-gray-900">No accounts yet</h3>
+          <p class="mt-2 text-sm text-gray-500">
+            Get started by creating your first account to organize your publications.
+          </p>
+          <div class="mt-6">
+            <%= link_to "Create your first account", new_account_path,
+                class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
