@@ -53,7 +53,13 @@ class PublicationsController < ApplicationController
     params.require(:publication).permit(
       :name, :tagline, :description, :account_id, :custom_domain, :custom_css,
       :language, :timezone, :active, :favicon, :logo, :header_image,
-      settings: {}, social_links: {}
+      settings: [
+        :allow_comments, :require_subscription, :show_author_bio,
+        :email_footer, :analytics_code
+      ],
+      social_links: [
+        :twitter, :facebook, :instagram, :linkedin, :github, :website
+      ]
     )
   end
 end

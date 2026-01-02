@@ -152,7 +152,7 @@ class PublicationsControllerTest < ActionDispatch::IntegrationTest
     assert publication.favicon.attached?
   end
 
-  test "should filter social links and settings" do
+  test "should only allow permitted social links and settings" do
     post publications_url, params: {
       publication: {
         name: "Test Settings",
@@ -164,7 +164,7 @@ class PublicationsControllerTest < ActionDispatch::IntegrationTest
         },
         settings: {
           allow_comments: "1", # String boolean should be converted
-          custom_setting: "ignored" # Should be allowed through
+          show_author_bio: "true" # Additional allowed setting
         }
       }
     }
@@ -174,7 +174,7 @@ class PublicationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "", publication.social_links["facebook"]
     assert_equal "https://linkedin.com/in/test", publication.social_links["linkedin"]
     assert_equal "1", publication.settings["allow_comments"]
-    assert_equal "ignored", publication.settings["custom_setting"]
+    assert_equal "true", publication.settings["show_author_bio"]
   end
 
   test "should handle custom CSS" do
