@@ -5,7 +5,7 @@ module Sluggable
 
   included do
     before_validation :generate_slug, on: :create
-    validates :slug, presence: true, uniqueness: { scope: slug_scope }
+    validates :slug, presence: true
   end
 
   class_methods do
@@ -27,9 +27,19 @@ module Sluggable
     self.slug = base_slug
 
     counter = 1
-    while self.class.exists?(slug: slug)
+    while slug_exists?(slug)
       self.slug = "#{base_slug}-#{counter}"
       counter += 1
+    end
+  end
+
+  def slug_exists?(slug_to_check)
+    scope_column = self.class.slug_scope || (respond_to?(:slug_scope) ? slug_scope : nil)
+    if scope_column
+      scope_value = send(scope_column)
+      self.class.exists?(slug: slug_to_check, scope_column => scope_value)
+    else
+      self.class.exists?(slug: slug_to_check)
     end
   end
 
