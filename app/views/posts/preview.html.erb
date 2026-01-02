@@ -1,0 +1,100 @@
+<article class="bg-white shadow-lg rounded-lg overflow-hidden">
+  <!-- Header -->
+  <header class="px-8 py-6 border-b border-gray-200">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-3">
+        <% if @publication.logo.attached? %>
+          <%= image_tag @publication.logo, class: "w-8 h-8 rounded-full" %>
+        <% end %>
+        <div>
+          <h2 class="text-sm font-medium text-gray-900"><%= @publication.name %></h2>
+          <% if @publication.tagline.present? %>
+            <p class="text-xs text-gray-500"><%= @publication.tagline %></p>
+          <% end %>
+        </div>
+      </div>
+      
+      <div class="text-right">
+        <time class="text-sm text-gray-500">
+          <% if @post.published_at %>
+            <%= @post.published_at.strftime("%B %d, %Y") %>
+          <% elsif @post.scheduled_at %>
+            Scheduled for <%= @post.scheduled_at.strftime("%B %d, %Y") %>
+          <% else %>
+            <%= @post.created_at.strftime("%B %d, %Y") %>
+          <% end %>
+        </time>
+        <div class="text-xs text-gray-400 mt-1">
+          <%= @post.reading_time %> min read
+        </div>
+      </div>
+    </div>
+
+    <h1 class="text-4xl font-bold text-gray-900 leading-tight mb-4">
+      <%= @post.title %>
+    </h1>
+    
+    <% if @post.summary.present? %>
+      <div class="text-xl text-gray-600 leading-relaxed">
+        <%= simple_format(@post.summary) %>
+      </div>
+    <% end %>
+  </header>
+
+  <!-- Featured Image -->
+  <% if @post.featured_image.attached? %>
+    <div class="w-full">
+      <%= image_tag @post.featured_image, 
+          class: "w-full h-96 object-cover",
+          alt: @post.title %>
+    </div>
+  <% end %>
+
+  <!-- Content -->
+  <div class="px-8 py-6">
+    <div class="prose prose-lg prose-gray max-w-none">
+      <%= @post.content %>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="px-8 py-6 bg-gray-50 border-t border-gray-200">
+    <div class="flex items-center justify-between">
+      <div class="text-sm text-gray-500">
+        Published in <strong><%= @publication.name %></strong>
+      </div>
+      
+      <!-- Social sharing buttons would go here -->
+      <div class="flex space-x-3">
+        <% if @publication.social_links&.dig("twitter").present? %>
+          <a href="<%= @publication.social_links['twitter'] %>" 
+             target="_blank" rel="noopener"
+             class="text-gray-400 hover:text-blue-400 transition-colors">
+            <span class="sr-only">Twitter</span>
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
+            </svg>
+          </a>
+        <% end %>
+        
+        <% if @publication.social_links&.dig("facebook").present? %>
+          <a href="<%= @publication.social_links['facebook'] %>" 
+             target="_blank" rel="noopener"
+             class="text-gray-400 hover:text-blue-600 transition-colors">
+            <span class="sr-only">Facebook</span>
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"/>
+            </svg>
+          </a>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Publication email footer -->
+    <% if @publication.settings&.dig("email_footer").present? %>
+      <div class="mt-4 pt-4 border-t border-gray-200 text-sm text-gray-500">
+        <%= simple_format(@publication.settings["email_footer"]) %>
+      </div>
+    <% end %>
+  </footer>
+</article>
