@@ -1,0 +1,67 @@
+<div class="max-w-7xl mx-auto py-6">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Publications</h1>
+      <p class="text-gray-600 mt-2">Manage your newsletter publications</p>
+    </div>
+    <%= link_to "New Publication", new_publication_path, 
+        class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors" %>
+  </div>
+
+  <div class="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
+    <% if @publications.any? %>
+      <div class="divide-y divide-gray-200">
+        <% @publications.each do |publication| %>
+          <div class="p-6 hover:bg-gray-50 transition-colors">
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                  <%= link_to publication.name, publication, class: "hover:text-blue-600 transition-colors" %>
+                </h3>
+                <% if publication.tagline.present? %>
+                  <p class="text-gray-600 mb-2"><%= publication.tagline %></p>
+                <% end %>
+                <div class="flex items-center text-sm text-gray-500 space-x-4">
+                  <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <%= publication.active? ? "Active" : "Inactive" %>
+                  </span>
+                  <span><%= publication.account.name %></span>
+                  <span>Created <%= time_ago_in_words(publication.created_at) %> ago</span>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2 ml-4">
+                <%= link_to "Edit", edit_publication_path(publication), 
+                    class: "text-blue-600 hover:text-blue-800 font-medium" %>
+                <%= link_to "Delete", publication, 
+                    data: { 
+                      "turbo-method": :delete, 
+                      "turbo-confirm": "Are you sure?" 
+                    },
+                    class: "text-red-600 hover:text-red-800 font-medium" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+        <%= paginate @publications if respond_to?(:paginate) %>
+      </div>
+    <% else %>
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No publications</h3>
+        <p class="mt-1 text-sm text-gray-500">Get started by creating a new publication.</p>
+        <div class="mt-6">
+          <%= link_to "New Publication", new_publication_path, 
+              class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

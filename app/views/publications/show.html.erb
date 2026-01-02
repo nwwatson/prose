@@ -1,0 +1,182 @@
+<div class="max-w-6xl mx-auto py-6">
+  <div class="flex justify-between items-start mb-6">
+    <div class="flex-1">
+      <div class="flex items-center space-x-4">
+        <% if @publication.logo.attached? %>
+          <%= image_tag @publication.logo, class: "w-16 h-16 rounded-lg object-cover" %>
+        <% end %>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900"><%= @publication.name %></h1>
+          <% if @publication.tagline.present? %>
+            <p class="text-xl text-gray-600 mt-1"><%= @publication.tagline %></p>
+          <% end %>
+          <div class="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <%= @publication.active? ? "Active" : "Inactive" %>
+            </span>
+            <span><%= @publication.account.name %></span>
+            <span><%= @publication.primary_domain %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="flex space-x-2">
+      <%= link_to "Edit", edit_publication_path(@publication), 
+          class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors" %>
+      <%= link_to "New Post", new_publication_post_path(@publication), 
+          class: "bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Content -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Description -->
+      <% if @publication.description.present? %>
+        <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-3">Description</h2>
+          <div class="prose max-w-none text-gray-700">
+            <%= simple_format(@publication.description) %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Recent Posts -->
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+          <h2 class="text-lg font-semibold text-gray-900">Recent Posts</h2>
+          <%= link_to "View All", publication_posts_path(@publication), 
+              class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+        </div>
+        
+        <% if @publication.posts.exists? %>
+          <div class="divide-y divide-gray-200">
+            <% @publication.posts.recent.limit(5).each do |post| %>
+              <div class="p-6 hover:bg-gray-50 transition-colors">
+                <div class="flex justify-between">
+                  <div class="flex-1">
+                    <h3 class="text-lg font-medium text-gray-900">
+                      <%= link_to post.title, [@publication, post], class: "hover:text-blue-600 transition-colors" %>
+                    </h3>
+                    <% if post.summary.present? %>
+                      <p class="text-gray-600 mt-1"><%= truncate(post.summary, length: 150) %></p>
+                    <% end %>
+                    <div class="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                      <span class="px-2 py-1 rounded-full text-xs font-medium <%= post.published? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                        <%= post.status.humanize %>
+                      </span>
+                      <% if post.published_at %>
+                        <span><%= post.published_at.strftime("%B %d, %Y") %></span>
+                      <% end %>
+                      <span><%= pluralize(post.view_count, 'view') %></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No posts yet</h3>
+            <p class="mt-1 text-sm text-gray-500">Start creating content for your publication.</p>
+            <div class="mt-6">
+              <%= link_to "Create First Post", new_publication_post_path(@publication), 
+                  class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-6">
+      <!-- Quick Stats -->
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Statistics</h3>
+        <div class="space-y-3">
+          <div class="flex justify-between">
+            <span class="text-gray-600">Total Posts</span>
+            <span class="font-semibold"><%= @publication.posts.count %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Published</span>
+            <span class="font-semibold"><%= @publication.posts.published.count %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Drafts</span>
+            <span class="font-semibold"><%= @publication.posts.where(status: 'draft').count %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Total Views</span>
+            <span class="font-semibold"><%= @publication.posts.sum(:view_count) %></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Links -->
+      <% if @publication.social_links.present? && @publication.social_links.any? { |_, v| v.present? } %>
+        <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Social Links</h3>
+          <div class="space-y-2">
+            <% @publication.social_links.each do |platform, url| %>
+              <% if url.present? %>
+                <div class="flex items-center">
+                  <span class="text-gray-600 text-sm capitalize w-16"><%= platform %></span>
+                  <%= link_to url, url, target: "_blank", rel: "noopener", 
+                      class: "text-blue-600 hover:text-blue-800 text-sm truncate flex-1" %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Settings -->
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Settings</h3>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between">
+            <span class="text-gray-600">Language</span>
+            <span class="font-semibold"><%= @publication.language.upcase %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Timezone</span>
+            <span class="font-semibold"><%= @publication.timezone %></span>
+          </div>
+          <% if @publication.custom_domain.present? %>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Custom Domain</span>
+              <span class="font-semibold"><%= @publication.custom_domain %></span>
+            </div>
+          <% end %>
+          <% if @publication.settings %>
+            <div class="pt-2 border-t border-gray-200">
+              <% @publication.settings.each do |key, value| %>
+                <% if key != 'email_footer' && key != 'analytics_code' %>
+                  <div class="flex justify-between py-1">
+                    <span class="text-gray-600 capitalize"><%= key.humanize %></span>
+                    <span class="text-xs font-semibold">
+                      <%= value.is_a?(TrueClass) ? "✓" : value.is_a?(FalseClass) ? "✗" : value %>
+                    </span>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <%= link_to 'Back to Publications', publications_path, 
+        class: "text-gray-600 hover:text-gray-800 font-medium" %>
+  </div>
+</div>
