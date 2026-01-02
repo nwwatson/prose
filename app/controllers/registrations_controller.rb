@@ -10,8 +10,8 @@ class RegistrationsController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      # Send confirmation email (would be implemented later)
-      # UserMailer.confirmation_instructions(@user).deliver_now
+      # Send confirmation email
+      UserMailer.confirmation_instructions(@user).deliver_now
 
       redirect_to new_session_path,
                   notice: "Registration successful! Please check your email to confirm your account."

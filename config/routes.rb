@@ -5,11 +5,8 @@ Rails.application.routes.draw do
 
   resources :registrations, only: [ :new, :create ], path: "register"
 
-  resources :confirmations, only: [ :show, :new, :create ] do
-    collection do
-      get :show, path: ":token"
-    end
-  end
+  resources :confirmations, only: [ :new, :create ]
+  get "confirm/:token", to: "confirmations#show", as: :confirmation
 
   # Account management
   resources :accounts
