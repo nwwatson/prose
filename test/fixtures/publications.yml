@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+one:
+  name: "Test Publication One"
+  tagline: "A test publication"
+  slug: "test-publication-one"
+  description: "This is a test publication for testing purposes"
+  language: "en"
+  timezone: "UTC"
+  active: true
+  account: one
+
+two:
+  name: "Test Publication Two"
+  tagline: "Another test publication"
+  slug: "test-publication-two"
+  custom_domain: "example.com"
+  language: "es"
+  timezone: "America/New_York"
+  active: false
+  account: two

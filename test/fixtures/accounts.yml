@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+one:
+  name: "Test Account One"
+
+two:
+  name: "Test Account Two"
