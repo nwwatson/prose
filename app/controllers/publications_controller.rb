@@ -51,14 +51,32 @@ class PublicationsController < ApplicationController
 
   def publication_params
     params.require(:publication).permit(
-      :name, :tagline, :description, :account_id, :custom_domain, :custom_css,
-      :language, :timezone, :active, :favicon, :logo, :header_image,
+      :name,
+      :tagline,
+      :description,
+      :account_id,
+      :custom_domain,
+      :custom_css,
+      :language,
+      :timezone,
+      :active,
+      :favicon,
+      :logo,
+      :header_image,
       settings: [
-        :allow_comments, :require_subscription, :show_author_bio,
-        :email_footer, :analytics_code
+        :allow_comments,
+        :require_subscription,
+        :show_author_bio,
+        :email_footer,
+        :analytics_code
       ],
       social_links: [
-        :twitter, :facebook, :instagram, :linkedin, :github, :website
+        :twitter,
+        :facebook,
+        :instagram,
+        :linkedin,
+        :github,
+        :website
       ]
     )
   end
