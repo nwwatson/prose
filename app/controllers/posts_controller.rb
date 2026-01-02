@@ -16,7 +16,7 @@ class PostsController < ApplicationController
     @post = @publication.posts.build(post_params)
 
     if @post.save
-      redirect_to [ @publication, @post ], notice: "Post was successfully created."
+      redirect_to [ @account, @publication, @post ], notice: "Post was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class PostsController < ApplicationController
 
   def update
     if @post.update(post_params)
-      redirect_to [ @publication, @post ], notice: "Post was successfully updated."
+      redirect_to [ @account, @publication, @post ], notice: "Post was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class PostsController < ApplicationController
 
   def destroy
     @post.destroy!
-    redirect_to @publication, notice: "Post was successfully deleted."
+    redirect_to [ @account, @publication ], notice: "Post was successfully deleted."
   end
 
   def preview
@@ -44,24 +44,25 @@ class PostsController < ApplicationController
 
   def publish
     if @post.publish!
-      redirect_to [ @publication, @post ], notice: "Post was successfully published."
+      redirect_to [ @account, @publication, @post ], notice: "Post was successfully published."
     else
-      redirect_to [ @publication, @post ], alert: "Could not publish post."
+      redirect_to [ @account, @publication, @post ], alert: "Could not publish post."
     end
   end
 
   def unpublish
     if @post.unpublish!
-      redirect_to [ @publication, @post ], notice: "Post was unpublished."
+      redirect_to [ @account, @publication, @post ], notice: "Post was unpublished."
     else
-      redirect_to [ @publication, @post ], alert: "Could not unpublish post."
+      redirect_to [ @account, @publication, @post ], alert: "Could not unpublish post."
     end
   end
 
   private
 
   def set_publication
-    @publication = Publication.find(params[:publication_id])
+    @account = current_user.accounts.find(params[:account_id])
+    @publication = @account.publications.find(params[:publication_id])
   end
 
   def set_post

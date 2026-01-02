@@ -2,27 +2,32 @@
 
 class PublicationsController < ApplicationController
   before_action :set_publication, only: %i[ show edit update destroy ]
+  before_action :set_account, except: [ :index ]
 
   def index
-    @publications = Publication.includes(:account).page(params[:page])
+    @publications = current_user.publications.includes(:account)
+
+    # Redirect to accounts if no publications exist
+    if @publications.empty? && current_user.accounts.empty?
+      redirect_to new_account_path, notice: "Please create an account first."
+    elsif @publications.empty?
+      redirect_to accounts_path, notice: "Create your first publication."
+    end
   end
 
   def show
   end
 
   def new
-    @publication = Publication.new
-    # For now, create a default account - in a real app this would be current_user.account
-    @accounts = Account.all
+    @publication = @account.publications.build
   end
 
   def create
-    @publication = Publication.new(publication_params)
+    @publication = @account.publications.build(publication_params)
 
     if @publication.save
-      redirect_to @publication, notice: "Publication was successfully created."
+      redirect_to [ @account, @publication ], notice: "Publication was successfully created."
     else
-      @accounts = Account.all
       render :new, status: :unprocessable_entity
     end
   end
@@ -32,7 +37,7 @@ class PublicationsController < ApplicationController
 
   def update
     if @publication.update(publication_params)
-      redirect_to @publication, notice: "Publication was successfully updated."
+      redirect_to [ @account, @publication ], notice: "Publication was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -40,13 +45,21 @@ class PublicationsController < ApplicationController
 
   def destroy
     @publication.destroy!
-    redirect_to publications_url, notice: "Publication was successfully deleted."
+    redirect_to @account, notice: "Publication was successfully deleted."
   end
 
   private
 
+  def set_account
+    @account = current_user.accounts.find(params[:account_id]) if params[:account_id]
+  end
+
   def set_publication
-    @publication = Publication.find(params[:id])
+    if @account
+      @publication = @account.publications.find(params[:id])
+    else
+      @publication = current_user.publications.find(params[:id])
+    end
   end
 
   def publication_params
@@ -54,7 +67,6 @@ class PublicationsController < ApplicationController
       :name,
       :tagline,
       :description,
-      :account_id,
       :custom_domain,
       :custom_css,
       :language,
