@@ -1,0 +1,219 @@
+<%= form_with(model: [@publication, post], local: true, multipart: true, class: "space-y-6") do |form| %>
+  <% if post.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-md p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">
+            <%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700">
+            <ul class="list-disc list-inside space-y-1">
+              <% post.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <!-- Main Content Area -->
+    <div class="lg:col-span-3 space-y-6">
+      <!-- Title -->
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+        <div>
+          <%= form.label :title, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.text_field :title, 
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              placeholder: "Enter your post title..." %>
+        </div>
+      </div>
+
+      <!-- Content Editor -->
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900">Content</h3>
+          <p class="text-sm text-gray-600 mt-1">Write your post content using the rich text editor</p>
+        </div>
+        
+        <div class="p-6">
+          <%= form.label :content, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.rich_text_area :content, 
+              class: "w-full min-h-96 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              placeholder: "Start writing your post content..." %>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+        <div>
+          <%= form.label :summary, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.text_area :summary, rows: 3,
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              placeholder: "Enter a brief summary of your post..." %>
+          <p class="text-xs text-gray-500 mt-1">This will be used for email previews and social media</p>
+        </div>
+      </div>
+
+      <!-- SEO Settings -->
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900">SEO Settings</h3>
+          <p class="text-sm text-gray-600 mt-1">Optimize your post for search engines</p>
+        </div>
+        
+        <div class="p-6 space-y-4">
+          <div>
+            <%= form.label :meta_title, "Meta Title", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= form.text_field :meta_title, 
+                class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                placeholder: "Custom meta title (optional)" %>
+            <p class="text-xs text-gray-500 mt-1">If empty, the post title will be used</p>
+          </div>
+          
+          <div>
+            <%= form.label :meta_description, "Meta Description", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= form.text_area :meta_description, rows: 2,
+                class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                placeholder: "Custom meta description (optional)" %>
+            <p class="text-xs text-gray-500 mt-1">If empty, the summary will be used</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="lg:col-span-1 space-y-6">
+      <!-- Publish Settings -->
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg">
+        <div class="px-4 py-3 border-b border-gray-200">
+          <h3 class="text-sm font-medium text-gray-900">Publish Settings</h3>
+        </div>
+        
+        <div class="p-4 space-y-4">
+          <div>
+            <%= form.label :status, class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= form.select :status, 
+                options_for_select([
+                  ['Draft', 'draft'],
+                  ['Scheduled', 'scheduled'], 
+                  ['Published', 'published'],
+                  ['Archived', 'archived']
+                ], post.status),
+                {},
+                { class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" } %>
+          </div>
+          
+          <div id="scheduled-at-field" style="<%= 'display: none;' unless post.scheduled? %>">
+            <%= form.label :scheduled_at, "Scheduled Date", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= form.datetime_local_field :scheduled_at, 
+                value: (post.scheduled_at&.strftime("%Y-%m-%dT%H:%M") if post.scheduled_at),
+                class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+          </div>
+          
+          <div class="space-y-2">
+            <label class="flex items-center">
+              <%= form.check_box :featured, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+              <span class="ml-2 text-sm text-gray-700">Featured post</span>
+            </label>
+            
+            <label class="flex items-center">
+              <%= form.check_box :pinned, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+              <span class="ml-2 text-sm text-gray-700">Pin to top</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured Image -->
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg">
+        <div class="px-4 py-3 border-b border-gray-200">
+          <h3 class="text-sm font-medium text-gray-900">Featured Image</h3>
+        </div>
+        
+        <div class="p-4">
+          <%= form.label :featured_image, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.file_field :featured_image, accept: "image/*",
+              class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+          <p class="text-xs text-gray-500 mt-1">PNG, JPG, WebP up to 5MB</p>
+          
+          <% if post.featured_image.attached? %>
+            <div class="mt-3">
+              <%= image_tag post.featured_image, class: "w-full h-32 object-cover rounded-md" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-4">
+        <div class="space-y-3">
+          <%= form.submit (post.persisted? ? "Update Post" : "Create Post"),
+              class: "w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors" %>
+          
+          <% if post.persisted? %>
+            <%= link_to "Preview", preview_publication_post_path(@publication, post),
+                target: "_blank", rel: "noopener",
+                class: "block w-full text-center bg-gray-100 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-200 transition-colors" %>
+          <% end %>
+          
+          <%= link_to 'Cancel', post.persisted? ? [@publication, post] : @publication,
+              class: "block w-full text-center border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-colors" %>
+        </div>
+      </div>
+
+      <% if post.persisted? %>
+        <!-- Post Stats -->
+        <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-4">
+          <h3 class="text-sm font-medium text-gray-900 mb-3">Post Statistics</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Status:</span>
+              <span class="font-medium capitalize"><%= post.status %></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Views:</span>
+              <span class="font-medium"><%= post.view_count %></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Reading time:</span>
+              <span class="font-medium"><%= post.reading_time %> min</span>
+            </div>
+            <% if post.published_at %>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Published:</span>
+                <span class="font-medium"><%= post.published_at.strftime("%b %d, %Y") %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  // Show/hide scheduled date field based on status
+  document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.querySelector('[name="post[status]"]');
+    const scheduledField = document.getElementById('scheduled-at-field');
+    
+    function toggleScheduledField() {
+      if (statusSelect.value === 'scheduled') {
+        scheduledField.style.display = 'block';
+      } else {
+        scheduledField.style.display = 'none';
+      }
+    }
+    
+    statusSelect.addEventListener('change', toggleScheduledField);
+    toggleScheduledField();
+  });
+</script>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= @post.seo_title %> - <%= @publication.name %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="<%= @post.seo_description %>">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="<%= @post.seo_title %>">
+    <meta property="og:description" content="<%= @post.seo_description %>">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <% if @post.featured_image.attached? %>
+      <meta property="og:image" content="<%= url_for(@post.featured_image_url(:og)) %>">
+    <% end %>
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="<%= @post.seo_title %>">
+    <meta property="twitter:description" content="<%= @post.seo_description %>">
+    <% if @post.featured_image.attached? %>
+      <meta property="twitter:image" content="<%= url_for(@post.featured_image_url(:og)) %>">
+    <% end %>
+
+    <!-- Favicon -->
+    <% if @publication.favicon.attached? %>
+      <%= favicon_link_tag @publication.favicon %>
+    <% else %>
+      <link rel="icon" href="/icon.png" type="image/png">
+      <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <% end %>
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "lexxy", "data-turbo-track": "reload" %>
+    
+    <!-- Custom Publication CSS -->
+    <% if @publication.custom_css.present? %>
+      <style>
+        <%= raw @publication.custom_css %>
+      </style>
+    <% end %>
+  </head>
+
+  <body class="bg-gray-50">
+    <!-- Preview Banner -->
+    <div class="bg-yellow-100 border-b border-yellow-300 px-4 py-2">
+      <div class="max-w-4xl mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="text-yellow-800 font-medium">Preview Mode</span>
+        </div>
+        <button onclick="window.close()" class="text-yellow-800 hover:text-yellow-900 font-medium">
+          Close Preview
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto py-8 px-4">
+      <%= yield %>
+    </main>
+
+    <!-- Analytics -->
+    <% if @publication.settings&.dig("analytics_code").present? %>
+      <!-- Analytics code would go here -->
+      <!-- <%= raw @publication.settings["analytics_code"] %> -->
+    <% end %>
+  </body>
+</html>

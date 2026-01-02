@@ -1,0 +1,22 @@
+<div class="max-w-6xl mx-auto py-6">
+  <div class="mb-6">
+    <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+      <%= link_to @publication.name, @publication, class: "hover:text-gray-700" %>
+      <span>/</span>
+      <%= link_to @post.title, [@publication, @post], class: "hover:text-gray-700" %>
+      <span>/</span>
+      <span>Edit</span>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900">Edit Post</h1>
+    <p class="text-gray-600 mt-2">Update your content</p>
+  </div>
+
+  <%= render 'form', post: @post %>
+
+  <div class="mt-6 flex space-x-4">
+    <%= link_to 'View Post', [@publication, @post], 
+        class: "text-blue-600 hover:text-blue-800 font-medium" %>
+    <%= link_to 'Back to Publication', @publication, 
+        class: "text-gray-600 hover:text-gray-800 font-medium" %>
+  </div>
+</div>

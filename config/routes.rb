@@ -11,7 +11,13 @@ Rails.application.routes.draw do
 
   # Publications management
   resources :publications do
-    resources :posts, except: [ :index ]
+    resources :posts, except: [ :index ] do
+      member do
+        get :preview
+        patch :publish
+        patch :unpublish
+      end
+    end
   end
 
   # Defines the root path route ("/")
