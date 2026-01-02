@@ -1,0 +1,237 @@
+<%= form_with(model: publication, local: true, multipart: true, class: "space-y-6") do |form| %>
+  <% if publication.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-md p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">
+            <%= pluralize(publication.errors.count, "error") %> prohibited this publication from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700">
+            <ul class="list-disc list-inside space-y-1">
+              <% publication.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="bg-white shadow-sm border border-gray-200 rounded-lg">
+    <!-- Basic Information -->
+    <div class="px-6 py-5 border-b border-gray-200">
+      <h3 class="text-lg font-medium text-gray-900">Basic Information</h3>
+      <p class="text-sm text-gray-600 mt-1">Essential details for your publication</p>
+    </div>
+    
+    <div class="px-6 py-5 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.text_field :name, 
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              placeholder: "My Newsletter" %>
+        </div>
+        
+        <div>
+          <%= form.label :account_id, "Account", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.collection_select :account_id, @accounts || Account.all, :id, :name, 
+              { prompt: "Select an account" },
+              { class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" } %>
+        </div>
+      </div>
+      
+      <div>
+        <%= form.label :tagline, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_field :tagline, 
+            class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+            placeholder: "A brief tagline for your publication" %>
+      </div>
+      
+      <div>
+        <%= form.label :description, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_area :description, rows: 4,
+            class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+            placeholder: "Describe your publication and what readers can expect..." %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visual Assets -->
+  <div class="bg-white shadow-sm border border-gray-200 rounded-lg">
+    <div class="px-6 py-5 border-b border-gray-200">
+      <h3 class="text-lg font-medium text-gray-900">Visual Assets</h3>
+      <p class="text-sm text-gray-600 mt-1">Upload logos, favicons, and header images</p>
+    </div>
+    
+    <div class="px-6 py-5 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <%= form.label :logo, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.file_field :logo, accept: "image/*",
+              class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+          <p class="text-xs text-gray-500 mt-1">PNG, JPG, SVG up to 2MB</p>
+        </div>
+        
+        <div>
+          <%= form.label :favicon, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.file_field :favicon, accept: "image/*",
+              class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+          <p class="text-xs text-gray-500 mt-1">ICO, PNG 32x32px</p>
+        </div>
+        
+        <div>
+          <%= form.label :header_image, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.file_field :header_image, accept: "image/*",
+              class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+          <p class="text-xs text-gray-500 mt-1">Header banner image</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customization -->
+  <div class="bg-white shadow-sm border border-gray-200 rounded-lg">
+    <div class="px-6 py-5 border-b border-gray-200">
+      <h3 class="text-lg font-medium text-gray-900">Customization</h3>
+      <p class="text-sm text-gray-600 mt-1">Domain settings and custom styling</p>
+    </div>
+    
+    <div class="px-6 py-5 space-y-4">
+      <div>
+        <%= form.label :custom_domain, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_field :custom_domain, 
+            class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+            placeholder: "newsletter.example.com" %>
+        <p class="text-xs text-gray-500 mt-1">Optional custom domain for your publication</p>
+      </div>
+      
+      <div>
+        <%= form.label :custom_css, "Custom CSS", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_area :custom_css, rows: 6,
+            class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm",
+            placeholder: "/* Add your custom CSS here */\n.custom-header {\n  background-color: #f3f4f6;\n}" %>
+        <p class="text-xs text-gray-500 mt-1">Custom CSS to style your publication</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Social Links -->
+  <div class="bg-white shadow-sm border border-gray-200 rounded-lg">
+    <div class="px-6 py-5 border-b border-gray-200">
+      <h3 class="text-lg font-medium text-gray-900">Social Links</h3>
+      <p class="text-sm text-gray-600 mt-1">Connect your social media profiles</p>
+    </div>
+    
+    <div class="px-6 py-5 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <% %w[twitter facebook instagram linkedin github website].each do |platform| %>
+          <div>
+            <%= form.label "social_links_#{platform}", platform.humanize, class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= form.text_field "social_links[#{platform}]", 
+                value: (publication.social_links && publication.social_links[platform]) || "",
+                class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                placeholder: platform == 'website' ? 'https://example.com' : "https://#{platform}.com/username" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="bg-white shadow-sm border border-gray-200 rounded-lg">
+    <div class="px-6 py-5 border-b border-gray-200">
+      <h3 class="text-lg font-medium text-gray-900">Publication Settings</h3>
+      <p class="text-sm text-gray-600 mt-1">Configure publication preferences</p>
+    </div>
+    
+    <div class="px-6 py-5 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <%= form.label :language, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.select :language, 
+              options_for_select([
+                ['English', 'en'],
+                ['Spanish', 'es'], 
+                ['French', 'fr'],
+                ['German', 'de'],
+                ['Portuguese', 'pt'],
+                ['Italian', 'it']
+              ], publication.language),
+              {},
+              { class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" } %>
+        </div>
+        
+        <div>
+          <%= form.label :timezone, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.time_zone_select :timezone, nil, 
+              { default: publication.timezone || 'UTC' },
+              { class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" } %>
+        </div>
+      </div>
+      
+      <!-- Additional Settings -->
+      <div class="space-y-3">
+        <h4 class="text-sm font-medium text-gray-700">Additional Settings</h4>
+        
+        <div class="space-y-3">
+          <label class="flex items-center">
+            <%= form.check_box "settings[allow_comments]", 
+                checked: (publication.settings && publication.settings['allow_comments']) || false,
+                class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+            <span class="ml-2 text-sm text-gray-700">Allow comments on posts</span>
+          </label>
+          
+          <label class="flex items-center">
+            <%= form.check_box "settings[require_subscription]", 
+                checked: (publication.settings && publication.settings['require_subscription']) || false,
+                class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+            <span class="ml-2 text-sm text-gray-700">Require subscription to read posts</span>
+          </label>
+          
+          <label class="flex items-center">
+            <%= form.check_box "settings[show_author_bio]", 
+                checked: (publication.settings && publication.settings['show_author_bio']) || true,
+                class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+            <span class="ml-2 text-sm text-gray-700">Show author bio on posts</span>
+          </label>
+          
+          <label class="flex items-center">
+            <%= form.check_box :active,
+                class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+            <span class="ml-2 text-sm text-gray-700">Publication is active</span>
+          </label>
+        </div>
+        
+        <div>
+          <%= form.label "settings[email_footer]", "Email Footer", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.text_area "settings[email_footer]", rows: 3,
+              value: (publication.settings && publication.settings['email_footer']) || "",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              placeholder: "Custom footer text for email newsletters..." %>
+        </div>
+        
+        <div>
+          <%= form.label "settings[analytics_code]", "Analytics Code", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.text_field "settings[analytics_code]", 
+              value: (publication.settings && publication.settings['analytics_code']) || "",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              placeholder: "Google Analytics tracking ID or other analytics code" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-4">
+    <%= link_to 'Cancel', publication.persisted? ? publication : publications_path,
+        class: "px-6 py-2 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors" %>
+    <%= form.submit (publication.persisted? ? "Update Publication" : "Create Publication"),
+        class: "px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors" %>
+  </div>
+<% end %>
