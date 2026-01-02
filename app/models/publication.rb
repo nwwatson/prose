@@ -4,11 +4,13 @@ class Publication < ApplicationRecord
   include Sluggable
 
   belongs_to :account
+  has_many :posts, dependent: :destroy
 
   has_one_attached :favicon
   has_one_attached :logo
   has_one_attached :header_image
 
+  validates :slug, uniqueness: true
   validates :name, presence: true, length: { maximum: 100 }
   validates :tagline, length: { maximum: 200 }
   validates :description, length: { maximum: 2000 }
