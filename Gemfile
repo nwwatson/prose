@@ -43,7 +43,7 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 # Use Lexxy for rich text editing [https://github.com/basecamp/lexxy]
-gem "lexxy", "~> 0.1.23.beta"
+gem "lexxy", "~> 0.1.26.beta"
 
 # Pagination [https://github.com/kaminari/kaminari]
 gem "kaminari"
