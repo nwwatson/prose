@@ -73,6 +73,34 @@ Account-scoped resources using `Current.account` for request-scoped context. Def
 ### Background Jobs
 Solid Queue (database-backed). Jobs organized by domain in `app/jobs/`. Recurring tasks configured in `config/recurring.yml`.
 
+## Git Workflow
+
+This project follows **GitHub Flow** (Feature Branch Workflow). All development happens on feature branches created from `master`. The `master` branch is always deployable.
+
+### Rules
+
+1. **Never commit directly to `master`.** Always create a feature branch.
+2. **Branch from `master`** for every change — features, bug fixes, docs, refactors.
+3. **Name branches descriptively**: `fix-typography-preview`, `add-subscriber-export`, `update-tailwind-config`.
+4. **Before opening a pull request**, ensure:
+   - All unit tests pass: `bin/rails test`
+   - Linting passes with no offenses: `bin/rubocop`
+   - Security scans are clean: `bin/brakeman --quiet --no-pager --exit-on-warn --exit-on-error`
+5. **Submit a pull request** to merge back into `master`. PRs require review before merging.
+6. **Keep PRs focused.** One logical change per PR — don't bundle unrelated work.
+
+### Typical Workflow
+
+```bash
+git checkout master && git pull
+git checkout -b my-feature-branch
+# ... make changes ...
+bin/rails test && bin/rubocop        # Verify before committing
+git add <files> && git commit
+git push -u origin my-feature-branch
+gh pr create                          # Open pull request against master
+```
+
 ## Code Style
 
 - **Linter**: RuboCop with `rubocop-rails-omakase` preset (`.rubocop.yml`)
