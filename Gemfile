@@ -43,7 +43,7 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 # Modern rich text editor built on Lexical [https://github.com/basecamp/lexxy]
-gem 'lexxy', '~> 0.7.4.beta'
+gem "lexxy", "~> 0.7.4.beta"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
