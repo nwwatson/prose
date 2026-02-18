@@ -1,0 +1,5 @@
+one:
+  post_id: <%= ActiveRecord::FixtureSet.identify(:published_post) %>
+  identity_id: <%= ActiveRecord::FixtureSet.identify(:subscriber_identity) %>
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>

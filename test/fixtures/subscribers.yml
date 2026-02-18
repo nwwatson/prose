@@ -1,0 +1,23 @@
+confirmed:
+  email: subscriber@example.com
+  confirmed_at: <%= 1.week.ago %>
+  identity: subscriber_identity
+
+unconfirmed:
+  email: unconfirmed@example.com
+  confirmed_at:
+  identity: unconfirmed_identity
+
+with_token:
+  email: tokenuser@example.com
+  confirmed_at: <%= 1.week.ago %>
+  auth_token: valid_test_token_123
+  auth_token_sent_at: <%= 5.minutes.ago %>
+  identity: with_token_identity
+
+expired_token:
+  email: expired@example.com
+  confirmed_at: <%= 1.week.ago %>
+  auth_token: expired_token_456
+  auth_token_sent_at: <%= 1.hour.ago %>
+  identity: expired_token_identity

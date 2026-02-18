@@ -1,0 +1,10 @@
+<%= turbo_frame_tag "subscription_form" do %>
+  <%= form_with url: subscriptions_path, class: "flex gap-2" do |f| %>
+    <%= f.email_field :email, placeholder: "your@email.com", required: true,
+          class: "flex-1 rounded-md bg-white px-3 py-2 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-ink-blue" %>
+    <%= f.submit "Subscribe", class: "rounded-md bg-charcoal px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
+  <% end %>
+  <% if defined?(error) && error.present? %>
+    <p class="mt-2 text-sm text-red-600"><%= error %></p>
+  <% end %>
+<% end %>

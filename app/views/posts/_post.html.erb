@@ -1,0 +1,21 @@
+<article class="border-b border-gray-200 pb-8">
+  <header>
+    <h3 class="font-display text-2xl font-bold">
+      <%= link_to post.title, post_path(post, slug: post.slug), class: "text-charcoal hover:text-ink-blue transition-colors no-underline" %>
+    </h3>
+    <% if post.subtitle.present? %>
+      <p class="mt-1 text-gray-600 font-subtitle"><%= post.subtitle %></p>
+    <% end %>
+    <div class="mt-2 flex items-center space-x-3 text-sm text-gray-500">
+      <span>By <%= post.user.display_name %></span>
+      <span>&middot;</span>
+      <time datetime="<%= post.published_at.iso8601 %>"><%= post.published_at.strftime("%B %-d, %Y") %></time>
+      <span>&middot;</span>
+      <span><%= post.reading_time_minutes %> min read</span>
+      <% if post.category %>
+        <span>&middot;</span>
+        <%= link_to post.category.name, category_path(post.category, slug: post.category.slug), class: "text-ink-blue hover:underline" %>
+      <% end %>
+    </div>
+  </header>
+</article>

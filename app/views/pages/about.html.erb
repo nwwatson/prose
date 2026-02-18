@@ -1,0 +1,15 @@
+<% content_for(:title, page_title("About")) %>
+
+<% content_for(:head) do %>
+  <%= meta_description_tag("Learn more about #{site_name}") %>
+  <%= open_graph_tags(title: "About — #{site_name}", description: "Learn more about #{site_name}", url: about_url) %>
+  <%= twitter_card_tags(title: "About — #{site_name}", description: "Learn more about #{site_name}") %>
+  <%= canonical_tag(about_url) %>
+<% end %>
+
+<article>
+  <h1 class="font-display text-3xl font-bold">About <%= site_name %></h1>
+  <div class="mt-6 space-y-4 text-lg leading-relaxed text-gray-700">
+    <p><%= site_name %> is a thoughtfully crafted publication focused on delivering quality writing and ideas.</p>
+  </div>
+</article>

@@ -1,0 +1,18 @@
+admin_identity:
+  name: Admin User
+
+writer_identity:
+  name: Writer User
+
+subscriber_identity:
+  name: subscriber1
+  handle: subscriber1
+
+unconfirmed_identity:
+  name: unconfirmed
+
+with_token_identity:
+  name: tokenuser
+
+expired_token_identity:
+  name: expired

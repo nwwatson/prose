@@ -1,0 +1,24 @@
+top_level:
+  post_id: <%= ActiveRecord::FixtureSet.identify(:published_post) %>
+  identity_id: <%= ActiveRecord::FixtureSet.identify(:subscriber_identity) %>
+  body: Great post!
+  approved: true
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+reply:
+  post_id: <%= ActiveRecord::FixtureSet.identify(:published_post) %>
+  identity_id: <%= ActiveRecord::FixtureSet.identify(:subscriber_identity) %>
+  parent_comment_id: <%= ActiveRecord::FixtureSet.identify(:top_level) %>
+  body: Thanks for the feedback!
+  approved: true
+  created_at: <%= 12.hours.ago %>
+  updated_at: <%= 12.hours.ago %>
+
+pending_comment:
+  post_id: <%= ActiveRecord::FixtureSet.identify(:published_post) %>
+  identity_id: <%= ActiveRecord::FixtureSet.identify(:subscriber_identity) %>
+  body: This needs moderation
+  approved: false
+  created_at: <%= 6.hours.ago %>
+  updated_at: <%= 6.hours.ago %>

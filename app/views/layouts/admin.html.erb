@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html class="h-full bg-gray-50">
+  <head>
+    <title><%= content_for(:title) || "Admin — #{site_name}" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "lexxy" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="h-full">
+    <div class="flex h-full">
+      <%# Sidebar %>
+      <aside class="hidden w-64 flex-shrink-0 border-r border-gray-200 bg-white lg:block">
+        <div class="flex h-full flex-col">
+          <%# Logo %>
+          <div class="flex h-16 items-center border-b border-gray-200 px-6">
+            <span class="text-xl font-bold text-gray-900"><%= site_name %></span>
+          </div>
+
+          <%# Navigation %>
+          <nav class="flex-1 space-y-1 px-3 py-4">
+            <div class="space-y-1">
+              <%= admin_nav_link "Home", admin_root_path, icon: "home" %>
+            </div>
+
+            <div class="pt-4">
+              <p class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Content</p>
+              <div class="mt-2 space-y-1">
+                <%= admin_nav_link "All Posts", admin_posts_path, icon: "document" %>
+                <div class="ml-5 space-y-0.5">
+                  <%= admin_nav_link "Published", admin_posts_path(status: "published"), icon: "check-circle", small: true %>
+                  <%= admin_nav_link "Scheduled", admin_posts_path(status: "scheduled"), icon: "clock", small: true %>
+                  <%= admin_nav_link "Drafts", admin_posts_path(status: "draft"), icon: "pencil", small: true %>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4">
+              <p class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Audience</p>
+              <div class="mt-2 space-y-1">
+                <%= admin_nav_link "Subscribers", admin_subscribers_path, icon: "users" %>
+                <%= admin_nav_link "Growth", "#", icon: "trending-up" %>
+              </div>
+            </div>
+
+            <div class="pt-4">
+              <p class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">System</p>
+              <div class="mt-2 space-y-1">
+                <%= admin_nav_link "Settings", edit_admin_settings_path, icon: "cog" %>
+              </div>
+            </div>
+          </nav>
+
+          <%# User menu %>
+          <div class="border-t border-gray-200 p-4">
+            <div class="flex items-center">
+              <div class="flex-1 truncate">
+                <p class="text-sm font-medium text-gray-900"><%= current_user.display_name %></p>
+                <p class="truncate text-xs text-gray-500"><%= current_user.email %></p>
+              </div>
+              <%= button_to "Sign out", admin_session_path, method: :delete,
+                    class: "ml-2 text-xs text-gray-400 hover:text-gray-600" %>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <%# Main content %>
+      <div class="flex flex-1 flex-col overflow-hidden">
+        <%# Mobile header %>
+        <header class="flex h-16 items-center border-b border-gray-200 bg-white px-4 lg:hidden">
+          <span class="text-xl font-bold text-gray-900"><%= site_name %></span>
+        </header>
+
+        <%# Flash messages %>
+        <% if notice %>
+          <div class="bg-green-50 border-b border-green-200 px-4 py-3">
+            <p class="text-sm text-green-800"><%= notice %></p>
+          </div>
+        <% end %>
+        <% if alert %>
+          <div class="bg-red-50 border-b border-red-200 px-4 py-3">
+            <p class="text-sm text-red-800"><%= alert %></p>
+          </div>
+        <% end %>
+
+        <%# Page content %>
+        <main class="flex-1 overflow-y-auto p-6">
+          <%= yield %>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

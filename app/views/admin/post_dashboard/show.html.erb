@@ -1,0 +1,109 @@
+<% content_for(:title, "#{@post.title} Analytics — #{site_name}") %>
+
+<div class="flex items-center justify-between">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900"><%= @post.title %></h1>
+    <p class="mt-1 text-sm text-gray-500">
+      <% if @post.published? %>
+        Published <%= @post.published_at&.strftime("%b %d, %Y") %>
+      <% else %>
+        <%= @post.status.capitalize %>
+      <% end %>
+      · <%= @post.user.display_name %>
+    </p>
+  </div>
+  <div class="flex space-x-3">
+    <%= link_to "Edit Post", edit_admin_post_path(@post), class: "inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+    <%= link_to "View Live", post_path(@post, slug: @post.slug), class: "inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50", target: "_blank" %>
+  </div>
+</div>
+
+<div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="p-5">
+      <div class="text-sm font-medium text-gray-500 truncate">Total Views</div>
+      <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @views_count %></div>
+    </div>
+  </div>
+
+  <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="p-5">
+      <div class="text-sm font-medium text-gray-500 truncate">Unique Viewers</div>
+      <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @unique_viewers %></div>
+    </div>
+  </div>
+
+  <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="p-5">
+      <div class="text-sm font-medium text-gray-500 truncate">Loves</div>
+      <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @post.loves_count %></div>
+    </div>
+  </div>
+
+  <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="p-5">
+      <div class="text-sm font-medium text-gray-500 truncate">Engagement Rate</div>
+      <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @engagement_rate %>%</div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
+  <div class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-lg font-medium text-gray-900">Views (Last 30 Days)</h2>
+    <div class="mt-4" data-controller="chart" data-chart-type-value="line" data-chart-data-value="<%= @views_by_day.to_json %>">
+      <canvas data-chart-target="canvas" class="w-full" height="200"></canvas>
+    </div>
+    <% if @views_by_day.empty? %>
+      <p class="mt-4 text-sm text-gray-500">No view data yet.</p>
+    <% end %>
+  </div>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-lg font-medium text-gray-900">Traffic Sources</h2>
+    <% if @traffic_sources.any? %>
+      <div class="mt-4 space-y-3">
+        <% @traffic_sources.each do |source, count| %>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <span class="text-sm font-medium text-gray-900 capitalize"><%= source %></span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-sm text-gray-500"><%= count %> views</span>
+              <div class="ml-3 w-24 bg-gray-200 rounded-full h-2">
+                <div class="bg-indigo-600 h-2 rounded-full" style="width: <%= @views_count.positive? ? (count.to_f / @views_count * 100).round : 0 %>%"></div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="mt-4 text-sm text-gray-500">No traffic data yet.</p>
+    <% end %>
+  </div>
+</div>
+
+<div class="mt-8 bg-white shadow rounded-lg p-6">
+  <h2 class="text-lg font-medium text-gray-900 mb-4">Comments (<%= @post.comments.approved.count %>)</h2>
+  <% comments = @post.comments.includes(:identity).order(created_at: :desc).limit(10) %>
+  <% if comments.any? %>
+    <div class="space-y-4">
+      <% comments.each do |comment| %>
+        <div class="border-b border-gray-200 pb-4 last:border-0">
+          <div class="flex items-center justify-between">
+            <p class="text-sm font-medium text-gray-900"><%= comment.identity.handle || comment.identity.name %></p>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-gray-500"><%= comment.created_at.strftime("%b %d, %Y") %></span>
+              <% unless comment.approved? %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
+              <% end %>
+            </div>
+          </div>
+          <p class="mt-1 text-sm text-gray-600"><%= comment.body %></p>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-sm text-gray-500">No comments yet.</p>
+  <% end %>
+</div>

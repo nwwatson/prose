@@ -1,0 +1,7 @@
+ruby:
+  name: Ruby
+  slug: ruby
+
+rails:
+  name: Rails
+  slug: rails

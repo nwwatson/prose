@@ -1,0 +1,11 @@
+<div id="handle_form" data-controller="handle-check">
+  <%= form_with url: handle_path, method: :patch, class: "flex items-center gap-2" do |f| %>
+    <div class="flex-1">
+      <%= f.text_field :handle, value: identity.handle, placeholder: "Choose a handle",
+            data: { handle_check_target: "input", action: "input->handle-check#check" },
+            class: "block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-ink-blue" %>
+      <span id="handle_availability" data-handle-check-target="status"></span>
+    </div>
+    <%= f.submit "Save", class: "rounded-md bg-charcoal px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
+  <% end %>
+</div>

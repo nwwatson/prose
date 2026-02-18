@@ -1,0 +1,8 @@
+<div id="comment_<%= comment.id %>" class="py-4 <%= comment.parent_comment_id? ? 'ml-8 border-l-2 border-gray-200 pl-4' : '' %>">
+  <div class="flex items-center space-x-2 text-sm text-gray-500">
+    <span class="font-medium text-charcoal"><%= comment.identity.handle || comment.identity.name %></span>
+    <span>&middot;</span>
+    <time datetime="<%= comment.created_at.iso8601 %>"><%= time_ago_in_words(comment.created_at) %> ago</time>
+  </div>
+  <div class="mt-1 text-sm text-gray-700"><%= simple_format(comment.body) %></div>
+</div>

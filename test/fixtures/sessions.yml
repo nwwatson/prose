@@ -1,0 +1,13 @@
+admin_session:
+  user: admin
+  token: admin_session_token_123
+  ip_address: 127.0.0.1
+  user_agent: TestBrowser/1.0
+  expires_at: <%= 14.days.from_now %>
+
+expired_session:
+  user: admin
+  token: expired_session_token_456
+  ip_address: 127.0.0.1
+  user_agent: TestBrowser/1.0
+  expires_at: <%= 1.day.ago %>

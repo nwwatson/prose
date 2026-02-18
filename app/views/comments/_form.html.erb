@@ -1,0 +1,23 @@
+<div id="comment_form">
+  <% if identity_signed_in? %>
+    <%= form_with model: Comment.new, url: post_comments_path(post, slug: post.slug), class: "space-y-3" do |f| %>
+      <% if defined?(comment) && comment&.errors&.any? %>
+        <div class="text-sm text-red-600"><%= comment.errors.full_messages.to_sentence %></div>
+      <% end %>
+      <div>
+        <%= f.text_area :body, rows: 3, placeholder: "Share your thoughts...",
+              class: "block w-full rounded-md bg-white px-3 py-2 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-ink-blue" %>
+      </div>
+      <div class="flex justify-end">
+        <%= f.submit "Comment", class: "rounded-md bg-charcoal px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="rounded-lg border border-gray-200 p-4 text-center text-sm text-gray-500">
+      <p>Subscribe to join the conversation.</p>
+      <div class="mx-auto mt-3 max-w-sm">
+        <%= render "subscriptions/form" %>
+      </div>
+    </div>
+  <% end %>
+</div>

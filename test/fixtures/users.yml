@@ -1,0 +1,11 @@
+admin:
+  email: admin@example.com
+  password_digest: <%= BCrypt::Password.create("P@ssw0rd!Strong1") %>
+  role: 0
+  identity: admin_identity
+
+writer:
+  email: writer@example.com
+  password_digest: <%= BCrypt::Password.create("P@ssw0rd!Strong1") %>
+  role: 1
+  identity: writer_identity

@@ -1,0 +1,11 @@
+technology:
+  name: Technology
+  slug: technology
+  description: Posts about technology
+  position: 0
+
+design:
+  name: Design
+  slug: design
+  description: Posts about design
+  position: 1

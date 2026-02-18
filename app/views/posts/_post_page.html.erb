@@ -1,0 +1,18 @@
+<%= turbo_frame_tag "posts_page_#{page}", target: "_top" do %>
+  <% posts.each do |post| %>
+    <% cache(post) do %>
+      <%= render "posts/post", post: post %>
+    <% end %>
+  <% end %>
+
+  <% if next_page %>
+    <%= turbo_frame_tag "posts_page_#{next_page}" do %>
+      <div data-infinite-scroll-target="sentinel">
+        <%= link_to "Load more", posts_path(page: next_page, q: query), data: { turbo_frame: "posts_page_#{next_page}" }, class: "hidden" %>
+      </div>
+      <div data-infinite-scroll-target="loading" class="hidden py-8 text-center text-gray-500">
+        Loading more posts…
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

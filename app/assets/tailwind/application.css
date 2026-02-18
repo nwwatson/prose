@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+@theme {
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-subtitle: "Source Serif 4", Georgia, serif;
+  --color-cream: #faf7f2;
+  --color-charcoal: #2c2c2c;
+  --color-ink-blue: #3d5a80;
+}
+
+/* Focused editor: strip rich-text editor chrome */
+.editor-writing-area lexxy-editor {
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}

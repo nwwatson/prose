@@ -1,0 +1,37 @@
+published_post:
+  title: Published Post
+  subtitle: A published article
+  slug: published-post
+  status: 2
+  published_at: <%= 1.day.ago %>
+  featured: false
+  reading_time_minutes: 3
+  user: admin
+  category: technology
+
+draft_post:
+  title: Draft Post
+  slug: draft-post
+  status: 0
+  featured: false
+  reading_time_minutes: 1
+  user: writer
+
+scheduled_post:
+  title: Scheduled Post
+  slug: scheduled-post
+  status: 1
+  scheduled_at: <%= 1.day.from_now %>
+  featured: false
+  reading_time_minutes: 2
+  user: admin
+
+featured_post:
+  title: Featured Post
+  slug: featured-post
+  status: 2
+  published_at: <%= 2.hours.ago %>
+  featured: true
+  reading_time_minutes: 5
+  user: admin
+  category: technology

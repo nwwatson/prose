@@ -1,0 +1,289 @@
+/*
+ * Rich text content styles for Lexxy editor and rendered Action Text content.
+ * Targets both the live editor (.lexxy-editor__content, trix-editor)
+ * and the rendered output (.trix-content).
+ */
+
+.lexxy-editor__content,
+trix-editor,
+.trix-content {
+  line-height: 1.75;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* -- Paragraphs ----------------------------------------------------------- */
+
+.lexxy-editor__content p,
+trix-editor p,
+.trix-content p {
+  margin-bottom: 1em;
+}
+
+/* -- Bold / Italic / Strikethrough ---------------------------------------- */
+
+.lexxy-editor__content strong,
+trix-editor strong,
+.trix-content strong {
+  font-weight: 700;
+}
+
+.lexxy-editor__content em,
+trix-editor em,
+.trix-content em {
+  font-style: italic;
+}
+
+.lexxy-editor__content s,
+trix-editor s,
+.trix-content s,
+.lexxy-editor__content del,
+trix-editor del,
+.trix-content del {
+  text-decoration: line-through;
+}
+
+/* -- Links ---------------------------------------------------------------- */
+
+.lexxy-editor__content a,
+trix-editor a,
+.trix-content a {
+  color: #3d5a80;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.lexxy-editor__content a:hover,
+trix-editor a:hover,
+.trix-content a:hover {
+  color: #2c4a6e;
+}
+
+/* -- Headings ------------------------------------------------------------- */
+
+.lexxy-editor__content h1,
+trix-editor h1,
+.trix-content h1 {
+  font-size: 2em;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 1.5em;
+  margin-bottom: 0.6em;
+}
+
+.lexxy-editor__content h2,
+trix-editor h2,
+.trix-content h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.4em;
+  margin-bottom: 0.5em;
+}
+
+.lexxy-editor__content h3,
+trix-editor h3,
+.trix-content h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.3em;
+  margin-bottom: 0.4em;
+}
+
+.lexxy-editor__content h4,
+trix-editor h4,
+.trix-content h4 {
+  font-size: 1.1em;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.2em;
+  margin-bottom: 0.4em;
+}
+
+.lexxy-editor__content h5,
+trix-editor h5,
+.trix-content h5 {
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-top: 1.1em;
+  margin-bottom: 0.3em;
+}
+
+.lexxy-editor__content h6,
+trix-editor h6,
+.trix-content h6 {
+  font-size: 0.9em;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-top: 1em;
+  margin-bottom: 0.3em;
+  color: #666;
+}
+
+/* -- Blockquote ----------------------------------------------------------- */
+
+.lexxy-editor__content blockquote,
+trix-editor blockquote,
+.trix-content blockquote {
+  border-left: 3px solid #d1d5db;
+  padding-left: 1em;
+  margin-left: 0;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  color: #4b5563;
+  font-style: italic;
+}
+
+/* -- Ordered & Unordered Lists -------------------------------------------- */
+
+.lexxy-editor__content ul,
+trix-editor ul,
+.trix-content ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+.lexxy-editor__content ol,
+trix-editor ol,
+.trix-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+.lexxy-editor__content li,
+trix-editor li,
+.trix-content li {
+  margin-bottom: 0.25em;
+}
+
+.lexxy-editor__content ul ul,
+trix-editor ul ul,
+.trix-content ul ul {
+  list-style-type: circle;
+}
+
+.lexxy-editor__content ul ul ul,
+trix-editor ul ul ul,
+.trix-content ul ul ul {
+  list-style-type: square;
+}
+
+/* -- Tables --------------------------------------------------------------- */
+
+.lexxy-editor__content table,
+trix-editor table,
+.trix-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.lexxy-editor__content th,
+trix-editor th,
+.trix-content th {
+  border: 1px solid #d1d5db;
+  padding: 0.5em 0.75em;
+  background-color: #f9fafb;
+  font-weight: 600;
+  text-align: left;
+}
+
+.lexxy-editor__content td,
+trix-editor td,
+.trix-content td {
+  border: 1px solid #d1d5db;
+  padding: 0.5em 0.75em;
+}
+
+/* -- Horizontal Rule ------------------------------------------------------ */
+
+.lexxy-editor__content hr,
+trix-editor hr,
+.trix-content hr {
+  border: none;
+  border-top: 1px solid #d1d5db;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+/* -- Code ----------------------------------------------------------------- */
+
+.lexxy-editor__content pre,
+trix-editor pre,
+.trix-content pre {
+  display: block;
+  width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875em;
+  padding: 0.75em 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  background-color: #f3f4f6;
+  border-radius: 0.375em;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.lexxy-editor__content code,
+trix-editor code,
+.trix-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875em;
+  background-color: #f3f4f6;
+  padding: 0.125em 0.25em;
+  border-radius: 0.25em;
+}
+
+.lexxy-editor__content pre code,
+trix-editor pre code,
+.trix-content pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* -- Images / Attachments ------------------------------------------------- */
+
+.lexxy-editor__content img,
+trix-editor img,
+.trix-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.lexxy-editor__content .attachment,
+trix-editor .attachment,
+.trix-content .attachment {
+  display: inline-block;
+  position: relative;
+  max-width: 100%;
+}
+
+.lexxy-editor__content .attachment__caption,
+trix-editor .attachment__caption,
+.trix-content .attachment__caption {
+  text-align: center;
+  font-size: 0.875em;
+  color: #6b7280;
+}
+
+/* -- First/Last child margin resets --------------------------------------- */
+
+.lexxy-editor__content > *:first-child,
+trix-editor > *:first-child,
+.trix-content > *:first-child {
+  margin-top: 0;
+}
+
+.lexxy-editor__content > *:last-child,
+trix-editor > *:last-child,
+.trix-content > *:last-child {
+  margin-bottom: 0;
+}

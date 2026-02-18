@@ -1,0 +1,10 @@
+<% content_for(:title, "New Post — #{site_name}") %>
+
+<% content_for(:top_bar_actions) do %>
+  <button type="submit" form="post_form"
+          class="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer">
+    Save Draft
+  </button>
+<% end %>
+
+<%= render "form", post: @post %>

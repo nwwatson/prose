@@ -1,0 +1,7 @@
+<%= @post.title %>
+
+<% if @post.subtitle.present? %><%= @post.subtitle %>
+
+<% end %>By <%= @post.user.display_name %>
+
+Read the full post: <%= post_url(@post, slug: @post.slug) %>
