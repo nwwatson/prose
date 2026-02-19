@@ -96,17 +96,35 @@
         <%= f.label :featured, class: "ml-2 text-sm font-medium text-gray-900" %>
       </div>
 
-      <div>
+      <div <% if SiteSetting.current.image_ai_configured? && post.persisted? %>
+             data-controller="ai-image-modal"
+             data-ai-image-modal-suggest-url-value="<%= suggest_prompt_admin_post_ai_featured_image_path(post) %>"
+             data-ai-image-modal-generate-url-value="<%= admin_post_ai_featured_image_path(post) %>"
+           <% end %>>
         <%= f.label :featured_image, class: "block text-sm font-medium text-gray-900" %>
         <div class="mt-2">
           <% if post.featured_image.attached? %>
-            <div class="mb-3">
+            <div id="featured-image-preview" class="mb-3">
               <%= image_tag post.featured_image, class: "max-h-48 rounded-md" %>
             </div>
           <% end %>
           <%= f.file_field :featured_image, accept: "image/*",
                 class: "block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-gray-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-gray-700 hover:file:bg-gray-200" %>
+          <% if SiteSetting.current.image_ai_configured? && post.persisted? %>
+            <p class="my-2 text-center text-xs text-gray-400">or</p>
+            <button type="button"
+                    data-action="click->ai-image-modal#open"
+                    class="inline-flex items-center gap-1.5 rounded-md bg-purple-100 px-3 py-1.5 text-xs font-medium text-purple-700 hover:bg-purple-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+              Generate with AI
+            </button>
+          <% end %>
         </div>
+        <% if SiteSetting.current.image_ai_configured? && post.persisted? %>
+          <%= render "admin/posts/featured_image_modal", post: post %>
+        <% end %>
       </div>
 
       <div>

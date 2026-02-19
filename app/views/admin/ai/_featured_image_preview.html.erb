@@ -1,0 +1,22 @@
+<div id="ai-image-modal-content" class="space-y-3">
+  <p class="text-xs font-medium text-gray-500">Generated Featured Image</p>
+  <% if post.featured_image.attached? %>
+    <div class="overflow-hidden rounded-lg border border-gray-200">
+      <%= image_tag rails_storage_proxy_path(post.featured_image), class: "w-full" %>
+    </div>
+    <div class="flex gap-2">
+      <button type="button" data-action="click->ai-image-modal#saveAndClose"
+              class="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-500">
+        Save as Featured Image
+      </button>
+      <button type="button" data-action="click->ai-image-modal#regenerate"
+              class="rounded-md bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200">
+        Regenerate
+      </button>
+      <button type="button" data-action="click->ai-image-modal#cancel"
+              class="rounded-md bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200">
+        Cancel
+      </button>
+    </div>
+  <% end %>
+</div>

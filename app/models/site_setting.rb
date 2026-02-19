@@ -1,5 +1,6 @@
 class SiteSetting < ApplicationRecord
   include Typography
+  include AiConfiguration
 
   has_one_attached :default_og_image
 
