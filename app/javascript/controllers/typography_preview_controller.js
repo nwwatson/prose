@@ -4,7 +4,6 @@ export default class extends Controller {
   static targets = [
     "headingFont", "subtitleFont", "bodyFont",
     "headingSize", "subtitleSize", "bodySize",
-    "headingSizeValue", "subtitleSizeValue", "bodySizeValue",
     "previewHeading", "previewSubtitle", "previewBody"
   ]
 
@@ -26,11 +25,6 @@ export default class extends Controller {
     this.#loadFont(headingFont)
     this.#loadFont(subtitleFont)
     this.#loadFont(bodyFont)
-
-    // Update size labels
-    this.headingSizeValueTarget.textContent = `${headingSize}rem`
-    this.subtitleSizeValueTarget.textContent = `${subtitleSize}rem`
-    this.bodySizeValueTarget.textContent = `${bodySize}rem`
 
     // Update preview styles
     this.previewHeadingTarget.style.fontFamily = `"${headingFont}"`
