@@ -10,7 +10,21 @@ module ActiveSupport
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
 
-    # Add more helper methods to be used by all tests here...
+    # Ensure RubyLLM model registry is populated and configured for tests
+    parallelize_setup do
+      if Model.none?
+        RubyLLM.models.load_from_json!
+        Model.save_to_database
+      end
+    end
+
+    setup do
+      RubyLLM.configure do |config|
+        config.anthropic_api_key = "test-key"
+        config.gemini_api_key = "test-key"
+        config.openai_api_key = "test-key"
+      end
+    end
   end
 end
 

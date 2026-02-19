@@ -22,6 +22,13 @@ Rails.application.routes.draw do
     resource :session, only: [ :new, :create, :destroy ]
     resources :posts do
       resource :dashboard, only: [ :show ], controller: "post_dashboard"
+      namespace :ai do
+        resource :conversation, only: [ :show, :create ]
+        resources :messages, only: [ :create ]
+        resource :featured_image, only: [ :create ], controller: "featured_images" do
+          post :suggest_prompt, on: :collection
+        end
+      end
     end
     resources :categories
     resources :comments, only: [ :index, :update, :destroy ]

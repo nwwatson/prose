@@ -1,0 +1,10 @@
+<div id="<%= dom_id(message) %>" class="flex <%= message.role == 'user' ? 'justify-end' : 'justify-start' %>">
+  <div class="max-w-[85%] rounded-lg px-3 py-2 text-sm
+              <%= message.role == 'user' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-900' %>">
+    <div class="prose prose-sm max-w-none <%= message.role == 'user' ? 'prose-invert' : '' %>"
+         data-controller="markdown-render"
+         data-markdown-render-raw-value="<%= message.content %>">
+      <%= simple_format(message.content) %>
+    </div>
+  </div>
+</div>

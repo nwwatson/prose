@@ -1,0 +1,7 @@
+<%# Remove empty state if present %>
+<%= turbo_stream.remove "ai-empty-state" %>
+
+<%# Append user message %>
+<%= turbo_stream.append "ai-messages" do %>
+  <%= render "admin/ai/messages/message", message: @message %>
+<% end %>

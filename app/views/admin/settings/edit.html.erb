@@ -118,6 +118,76 @@
       </div>
     </fieldset>
 
+    <%# AI Configuration %>
+    <fieldset class="border-t border-gray-200 pt-6">
+      <legend class="text-lg font-semibold text-gray-900">AI Configuration</legend>
+      <p class="mt-1 text-sm text-gray-600">Provide your API keys to enable AI writing features. Remove keys to disable all AI features.</p>
+
+      <div class="mt-4 space-y-4">
+        <div>
+          <%= f.label :claude_api_key, "Anthropic API Key", class: "block text-sm font-medium text-gray-900" %>
+          <div class="mt-2">
+            <%= f.password_field :claude_api_key,
+                  value: @site_setting.claude_api_key.present? ? "••••••••" : "",
+                  placeholder: "sk-ant-...",
+                  autocomplete: "off",
+                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Required for AI chat, writing assistance, SEO, and social media features.</p>
+        </div>
+
+        <div>
+          <%= f.label :gemini_api_key, "Google Gemini API Key", class: "block text-sm font-medium text-gray-900" %>
+          <div class="mt-2">
+            <%= f.password_field :gemini_api_key,
+                  value: @site_setting.gemini_api_key.present? ? "••••••••" : "",
+                  placeholder: "AIza...",
+                  autocomplete: "off",
+                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Required for Google Imagen image models. Only needed if you select a Gemini image model below.</p>
+        </div>
+
+        <div>
+          <%= f.label :openai_api_key, "OpenAI API Key", class: "block text-sm font-medium text-gray-900" %>
+          <div class="mt-2">
+            <%= f.password_field :openai_api_key,
+                  value: @site_setting.openai_api_key.present? ? "••••••••" : "",
+                  placeholder: "sk-...",
+                  autocomplete: "off",
+                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Required for OpenAI image models (GPT Image, DALL-E). Only needed if you select an OpenAI image model below.</p>
+        </div>
+
+        <div>
+          <%= f.label :ai_model, "AI Model", class: "block text-sm font-medium text-gray-900" %>
+          <div class="mt-2">
+            <%= f.select :ai_model, SiteSetting::AiConfiguration::AI_MODELS.map { |m| [m, m] }, {},
+                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :image_model, "Image Generation Model", class: "block text-sm font-medium text-gray-900" %>
+          <div class="mt-2">
+            <%= f.select :image_model, SiteSetting::AiConfiguration::IMAGE_MODELS.keys.map { |m| [m, m] }, {},
+                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Select which AI model to use for featured image generation.</p>
+        </div>
+
+        <div>
+          <%= f.label :ai_max_tokens, "Max Response Tokens", class: "block text-sm font-medium text-gray-900" %>
+          <div class="mt-2">
+            <%= f.number_field :ai_max_tokens, min: 256, max: 16384, step: 256,
+                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Maximum number of tokens in AI responses (256-16384).</p>
+        </div>
+      </div>
+    </fieldset>
+
     <div class="flex justify-end border-t border-gray-200 pt-6">
       <%= f.submit "Save settings", class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
     </div>
