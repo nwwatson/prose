@@ -1,0 +1,15 @@
+<%# locals: (form:, field:, label:, min:, max:, step:, suffix: "", data: {}) %>
+<%
+  extra_action = data.delete(:action)
+  own_action = "input->range-slider#updateDisplay"
+  merged_action = extra_action ? "#{own_action} #{extra_action}" : own_action
+%>
+<div data-controller="range-slider" data-range-slider-suffix-value="<%= suffix %>">
+  <div class="flex justify-between mb-2">
+    <%= form.label field, label, class: "block text-sm font-medium text-gray-900" %>
+    <span class="text-sm font-medium text-blue-600" data-range-slider-target="value"><%= form.object.send(field) %><%= suffix %></span>
+  </div>
+  <%= form.range_field field, min: min, max: max, step: step,
+        class: "w-full",
+        data: { range_slider_target: "input", action: merged_action }.merge(data) %>
+</div>

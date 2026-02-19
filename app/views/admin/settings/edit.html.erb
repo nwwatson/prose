@@ -1,6 +1,6 @@
 <% content_for(:title, "Settings — #{site_name}") %>
 
-<div class="max-w-2xl">
+<div class="max-w-4xl">
   <h1 class="text-2xl font-bold text-gray-900">Site Settings</h1>
   <p class="mt-1 text-sm text-gray-600">Configure your site name, description, and default social sharing image.</p>
 
@@ -48,73 +48,77 @@
       <legend class="text-lg font-semibold text-gray-900">Typography</legend>
       <p class="mt-1 text-sm text-gray-600">Choose fonts and sizes for your site. Changes apply to all public pages.</p>
 
-      <div class="mt-4 grid gap-6 sm:grid-cols-3">
-        <div>
-          <%= f.label :heading_font, "Heading font", class: "block text-sm font-medium text-gray-900" %>
-          <div class="mt-2">
-            <%= f.select :heading_font, SiteSetting::Typography::GOOGLE_FONTS, {},
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
-                  data: { typography_preview_target: "headingFont", action: "typography-preview#update" } %>
+      <div class="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <%# Left column — Controls %>
+        <div class="space-y-6">
+          <%# Heading group %>
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Heading</h3>
+            <div class="mt-3 space-y-4">
+              <div>
+                <%= f.label :heading_font, "Font family", class: "block text-sm font-medium text-gray-900" %>
+                <div class="mt-2">
+                  <%= f.select :heading_font, SiteSetting::Typography::GOOGLE_FONTS, {},
+                        class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+                        data: { typography_preview_target: "headingFont", action: "typography-preview#update" } %>
+                </div>
+              </div>
+              <%= render "shared/range_slider", form: f, field: :heading_font_size, label: "Font size",
+                    min: 0.75, max: 6, step: 0.125, suffix: "rem",
+                    data: { typography_preview_target: "headingSize", action: "input->typography-preview#update" } %>
+            </div>
+          </div>
+
+          <hr class="border-gray-200">
+
+          <%# Subtitle group %>
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Subtitle</h3>
+            <div class="mt-3 space-y-4">
+              <div>
+                <%= f.label :subtitle_font, "Font family", class: "block text-sm font-medium text-gray-900" %>
+                <div class="mt-2">
+                  <%= f.select :subtitle_font, SiteSetting::Typography::GOOGLE_FONTS, {},
+                        class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+                        data: { typography_preview_target: "subtitleFont", action: "typography-preview#update" } %>
+                </div>
+              </div>
+              <%= render "shared/range_slider", form: f, field: :subtitle_font_size, label: "Font size",
+                    min: 0.75, max: 6, step: 0.125, suffix: "rem",
+                    data: { typography_preview_target: "subtitleSize", action: "input->typography-preview#update" } %>
+            </div>
+          </div>
+
+          <hr class="border-gray-200">
+
+          <%# Body group %>
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Body</h3>
+            <div class="mt-3 space-y-4">
+              <div>
+                <%= f.label :body_font, "Font family", class: "block text-sm font-medium text-gray-900" %>
+                <div class="mt-2">
+                  <%= f.select :body_font, SiteSetting::Typography::GOOGLE_FONTS, {},
+                        class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+                        data: { typography_preview_target: "bodyFont", action: "typography-preview#update" } %>
+                </div>
+              </div>
+              <%= render "shared/range_slider", form: f, field: :body_font_size, label: "Font size",
+                    min: 0.75, max: 6, step: 0.125, suffix: "rem",
+                    data: { typography_preview_target: "bodySize", action: "input->typography-preview#update" } %>
+            </div>
           </div>
         </div>
 
-        <div>
-          <%= f.label :subtitle_font, "Subtitle font", class: "block text-sm font-medium text-gray-900" %>
-          <div class="mt-2">
-            <%= f.select :subtitle_font, SiteSetting::Typography::GOOGLE_FONTS, {},
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
-                  data: { typography_preview_target: "subtitleFont", action: "typography-preview#update" } %>
+        <%# Right column — Sticky preview %>
+        <div class="lg:sticky lg:top-20 lg:self-start">
+          <div class="rounded-md border border-gray-200 bg-white p-6">
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400">Preview</p>
+            <h2 data-typography-preview-target="previewHeading" class="text-3xl font-bold">The quick brown fox</h2>
+            <p data-typography-preview-target="previewSubtitle" class="mt-1 text-lg text-gray-600">Jumps over the lazy dog</p>
+            <p data-typography-preview-target="previewBody" class="mt-3 text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
           </div>
         </div>
-
-        <div>
-          <%= f.label :body_font, "Body font", class: "block text-sm font-medium text-gray-900" %>
-          <div class="mt-2">
-            <%= f.select :body_font, SiteSetting::Typography::GOOGLE_FONTS, {},
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
-                  data: { typography_preview_target: "bodyFont", action: "typography-preview#update" } %>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-6 grid gap-6 sm:grid-cols-3">
-        <div>
-          <%= f.label :heading_font_size, class: "block text-sm font-medium text-gray-900" %>
-          <div class="mt-2 flex items-center gap-3">
-            <%= f.range_field :heading_font_size, min: 0.75, max: 6, step: 0.125,
-                  class: "flex-1",
-                  data: { typography_preview_target: "headingSize", action: "input->typography-preview#update" } %>
-            <span class="w-16 text-right text-sm text-gray-600" data-typography-preview-target="headingSizeValue"><%= @site_setting.heading_font_size %>rem</span>
-          </div>
-        </div>
-
-        <div>
-          <%= f.label :subtitle_font_size, class: "block text-sm font-medium text-gray-900" %>
-          <div class="mt-2 flex items-center gap-3">
-            <%= f.range_field :subtitle_font_size, min: 0.75, max: 6, step: 0.125,
-                  class: "flex-1",
-                  data: { typography_preview_target: "subtitleSize", action: "input->typography-preview#update" } %>
-            <span class="w-16 text-right text-sm text-gray-600" data-typography-preview-target="subtitleSizeValue"><%= @site_setting.subtitle_font_size %>rem</span>
-          </div>
-        </div>
-
-        <div>
-          <%= f.label :body_font_size, class: "block text-sm font-medium text-gray-900" %>
-          <div class="mt-2 flex items-center gap-3">
-            <%= f.range_field :body_font_size, min: 0.75, max: 6, step: 0.125,
-                  class: "flex-1",
-                  data: { typography_preview_target: "bodySize", action: "input->typography-preview#update" } %>
-            <span class="w-16 text-right text-sm text-gray-600" data-typography-preview-target="bodySizeValue"><%= @site_setting.body_font_size %>rem</span>
-          </div>
-        </div>
-      </div>
-
-      <%# Live preview %>
-      <div class="mt-6 rounded-md border border-gray-200 bg-white p-6">
-        <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400">Preview</p>
-        <h2 data-typography-preview-target="previewHeading" class="text-3xl font-bold">The quick brown fox</h2>
-        <p data-typography-preview-target="previewSubtitle" class="mt-1 text-lg text-gray-600">Jumps over the lazy dog</p>
-        <p data-typography-preview-target="previewBody" class="mt-3 text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
       </div>
     </fieldset>
 

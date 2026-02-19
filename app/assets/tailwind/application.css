@@ -9,6 +9,27 @@
   --color-ink-blue: #3d5a80;
 }
 
+/* Range slider component */
+input[data-range-slider-target="input"] {
+  @apply h-2 rounded-full outline-none cursor-pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[data-range-slider-target="input"]::-webkit-slider-thumb {
+  @apply size-5.5 rounded-full bg-white border-2 border-blue-500 shadow-sm cursor-pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[data-range-slider-target="input"]::-moz-range-thumb {
+  @apply size-5.5 rounded-full bg-white border-2 border-blue-500 shadow-sm cursor-pointer;
+}
+
+input[data-range-slider-target="input"]::-moz-range-track {
+  @apply h-2 rounded-full bg-transparent;
+}
+
 /* Focused editor: strip rich-text editor chrome */
 .editor-writing-area lexxy-editor {
   border: none;
