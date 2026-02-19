@@ -45,10 +45,8 @@
     <div class="space-y-6 p-6">
       <div>
         <%= f.label :status, class: "block text-sm font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.select :status, Post.statuses.keys.map { |s| [s.capitalize, s] }, {},
-                class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
-        </div>
+        <%= render "shared/custom_select", form: f, field: :status,
+              options: Post.statuses.keys.map { |s| [s.capitalize, s] } %>
       </div>
 
       <div>
@@ -72,11 +70,9 @@
 
       <div>
         <%= f.label :category_id, "Category", class: "block text-sm font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.collection_select :category_id, Category.ordered, :id, :name,
-                { include_blank: "No category" },
-                class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
-        </div>
+        <%= render "shared/custom_select", form: f, field: :category_id,
+              collection: Category.ordered, value_method: :id, text_method: :name,
+              include_blank: "No category" %>
       </div>
 
       <div>

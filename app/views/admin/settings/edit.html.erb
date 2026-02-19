@@ -57,11 +57,9 @@
             <div class="mt-3 space-y-4">
               <div>
                 <%= f.label :heading_font, "Font family", class: "block text-sm font-medium text-gray-900" %>
-                <div class="mt-2">
-                  <%= f.select :heading_font, SiteSetting::Typography::GOOGLE_FONTS, {},
-                        class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
-                        data: { typography_preview_target: "headingFont", action: "typography-preview#update" } %>
-                </div>
+                <%= render "shared/custom_select", form: f, field: :heading_font,
+                      options: SiteSetting::Typography::GOOGLE_FONTS,
+                      data: { typography_preview_target: "headingFont", action: "typography-preview#update" } %>
               </div>
               <%= render "shared/range_slider", form: f, field: :heading_font_size, label: "Font size",
                     min: 0.75, max: 6, step: 0.125, suffix: "rem",
@@ -77,11 +75,9 @@
             <div class="mt-3 space-y-4">
               <div>
                 <%= f.label :subtitle_font, "Font family", class: "block text-sm font-medium text-gray-900" %>
-                <div class="mt-2">
-                  <%= f.select :subtitle_font, SiteSetting::Typography::GOOGLE_FONTS, {},
-                        class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
-                        data: { typography_preview_target: "subtitleFont", action: "typography-preview#update" } %>
-                </div>
+                <%= render "shared/custom_select", form: f, field: :subtitle_font,
+                      options: SiteSetting::Typography::GOOGLE_FONTS,
+                      data: { typography_preview_target: "subtitleFont", action: "typography-preview#update" } %>
               </div>
               <%= render "shared/range_slider", form: f, field: :subtitle_font_size, label: "Font size",
                     min: 0.75, max: 6, step: 0.125, suffix: "rem",
@@ -97,11 +93,9 @@
             <div class="mt-3 space-y-4">
               <div>
                 <%= f.label :body_font, "Font family", class: "block text-sm font-medium text-gray-900" %>
-                <div class="mt-2">
-                  <%= f.select :body_font, SiteSetting::Typography::GOOGLE_FONTS, {},
-                        class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
-                        data: { typography_preview_target: "bodyFont", action: "typography-preview#update" } %>
-                </div>
+                <%= render "shared/custom_select", form: f, field: :body_font,
+                      options: SiteSetting::Typography::GOOGLE_FONTS,
+                      data: { typography_preview_target: "bodyFont", action: "typography-preview#update" } %>
               </div>
               <%= render "shared/range_slider", form: f, field: :body_font_size, label: "Font size",
                     min: 0.75, max: 6, step: 0.125, suffix: "rem",
@@ -166,18 +160,14 @@
 
         <div>
           <%= f.label :ai_model, "AI Model", class: "block text-sm font-medium text-gray-900" %>
-          <div class="mt-2">
-            <%= f.select :ai_model, SiteSetting::AiConfiguration::AI_MODELS.map { |m| [m, m] }, {},
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
-          </div>
+          <%= render "shared/custom_select", form: f, field: :ai_model,
+                options: SiteSetting::AiConfiguration::AI_MODELS.map { |m| [m, m] } %>
         </div>
 
         <div>
           <%= f.label :image_model, "Image Generation Model", class: "block text-sm font-medium text-gray-900" %>
-          <div class="mt-2">
-            <%= f.select :image_model, SiteSetting::AiConfiguration::IMAGE_MODELS.keys.map { |m| [m, m] }, {},
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
-          </div>
+          <%= render "shared/custom_select", form: f, field: :image_model,
+                options: SiteSetting::AiConfiguration::IMAGE_MODELS.keys.map { |m| [m, m] } %>
           <p class="mt-1 text-xs text-gray-500">Select which AI model to use for featured image generation.</p>
         </div>
 
