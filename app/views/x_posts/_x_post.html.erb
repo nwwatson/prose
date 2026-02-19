@@ -1,0 +1,9 @@
+<div class="x-post-embed" data-controller="x-post-widget">
+  <% if x_post.embed_html.present? %>
+    <%= sanitize x_post.embed_html, tags: %w[blockquote a p br], attributes: %w[href class cite data-conversation] %>
+  <% else %>
+    <blockquote>
+      <a href="<%= x_post.url %>"><%= x_post.url %></a>
+    </blockquote>
+  <% end %>
+</div>

@@ -24,7 +24,9 @@
 
     <hr class="border-gray-200">
 
-    <div class="editor-writing-area">
+    <div class="editor-writing-area"
+         data-controller="x-post-embed"
+         data-x-post-embed-url-value="<%= admin_x_posts_path %>">
       <%= f.rich_text_area :content, class: "min-h-[60vh] block w-full font-serif text-lg" %>
     </div>
   </div>
