@@ -274,6 +274,29 @@ trix-editor .attachment__caption,
   color: #6b7280;
 }
 
+/* -- X Post Embeds -------------------------------------------------------- */
+
+.lexxy-editor__content action-text-attachment:has(.x-post-embed),
+.trix-content action-text-attachment:has(.x-post-embed) {
+  display: block;
+  margin: 0.5em 0;
+}
+
+.x-post-embed {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.x-post-embed .twitter-tweet,
+.x-post-embed .twitter-tweet-rendered {
+  margin: 0 !important;
+}
+
+.x-post-embed iframe {
+  margin: 0 !important;
+}
+
 /* -- First/Last child margin resets --------------------------------------- */
 
 .lexxy-editor__content > *:first-child,

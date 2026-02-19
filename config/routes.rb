@@ -30,6 +30,7 @@ Rails.application.routes.draw do
         end
       end
     end
+    resources :x_posts, only: [ :create ]
     resources :categories
     resources :comments, only: [ :index, :update, :destroy ]
     resources :subscribers, only: [ :index, :show ]
