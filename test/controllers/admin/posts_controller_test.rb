@@ -58,6 +58,41 @@ class Admin::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to admin_posts_path
   end
 
+  test "POST create as JSON returns created with post data" do
+    assert_difference "Post.count", 1 do
+      post admin_posts_path, params: { post: { title: "Autosaved Post" } }, as: :json
+    end
+    assert_response :created
+    json = JSON.parse(response.body)
+    assert json["slug"].present?
+    assert json["url"].present?
+    assert json["edit_url"].present?
+  end
+
+  test "POST create as JSON with blank title returns errors" do
+    post admin_posts_path, params: { post: { title: "" } }, as: :json
+    assert_response :unprocessable_entity
+    json = JSON.parse(response.body)
+    assert json["errors"].any?
+  end
+
+  test "PATCH update as JSON returns ok with post data" do
+    patch admin_post_path(posts(:draft_post)), params: { post: { title: "Updated via JSON" } }, as: :json
+    assert_response :ok
+    json = JSON.parse(response.body)
+    assert json["slug"].present?
+    assert json["url"].present?
+    assert json["edit_url"].present?
+    assert_equal "Updated via JSON", posts(:draft_post).reload.title
+  end
+
+  test "PATCH update as JSON with blank title returns errors" do
+    patch admin_post_path(posts(:draft_post)), params: { post: { title: "" } }, as: :json
+    assert_response :unprocessable_entity
+    json = JSON.parse(response.body)
+    assert json["errors"].any?
+  end
+
   test "requires authentication" do
     delete admin_session_path
     get admin_posts_path
