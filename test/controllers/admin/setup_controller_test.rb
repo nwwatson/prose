@@ -92,6 +92,7 @@ class Admin::SetupControllerTest < ActionDispatch::IntegrationTest
     PostTag.delete_all
     Post.delete_all
     Session.delete_all
+    ApiToken.delete_all
     User.delete_all
   end
 end

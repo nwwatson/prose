@@ -6,6 +6,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 
 - **Writing & Editing** — Rich text with [Lexxy](https://github.com/basecamp/lexxy), autosave, post scheduling, featured posts
 - **AI Assistant** — Chat (proofread, critique, brainstorm), SEO/social metadata generation, featured image generation (Gemini/OpenAI), streaming responses
+- **MCP Server** — [Model Context Protocol](https://modelcontextprotocol.io) endpoint for managing posts, categories, tags, and assets from Claude Desktop, Claude Code, or any MCP client
 - **Content Organization** — Categories, tags with searchable combo box and inline creation
 - **Reader Engagement** — Comments with threading and moderation, loves, subscriber magic-link auth, email notifications
 - **Social Embeds** — X/Twitter and YouTube via oEmbed
@@ -65,6 +66,37 @@ bin/brakeman --quiet --no-pager --exit-on-warn --exit-on-error  # Security scan
 bin/bundler-audit      # Gem vulnerability audit
 bin/importmap audit    # JS dependency audit
 ```
+
+## MCP Integration
+
+Prose exposes a [Model Context Protocol](https://modelcontextprotocol.io) server at `/mcp`, allowing AI assistants to manage your blog programmatically. See [docs/mcp_setup.md](docs/mcp_setup.md) for the full setup guide.
+
+### Quick Start
+
+1. Generate an API token from **Admin > System > API Tokens**
+2. Connect your client:
+
+   **Claude Code:**
+   ```bash
+   claude mcp add prose --transport streamable-http https://your-domain.com/mcp \
+     --header "Authorization: Bearer prose_YOUR_TOKEN"
+   ```
+
+   **Claude Desktop** — add to `claude_desktop_config.json`:
+   ```json
+   {
+     "mcpServers": {
+       "prose": {
+         "url": "https://your-domain.com/mcp",
+         "headers": { "Authorization": "Bearer prose_YOUR_TOKEN" }
+       }
+     }
+   }
+   ```
+
+### Available Tools
+
+Post management (`list_posts`, `get_post`, `create_post`, `update_post`, `delete_post`, `publish_post`, `schedule_post`, `unpublish_post`), site info (`get_site_info`, `list_categories`, `list_tags`, `create_tag`), and assets (`upload_asset`, `set_featured_image`).
 
 ## Contributing
 

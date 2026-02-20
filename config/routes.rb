@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # MCP endpoint for Claude Desktop integration
+  post "mcp", to: "mcp/sessions#create"
+
   # Public
   root "posts#index"
   resources :posts, only: [ :index, :show ], param: :slug do
@@ -37,6 +40,7 @@ Rails.application.routes.draw do
     resources :comments, only: [ :index, :update, :destroy ]
     resources :subscribers, only: [ :index, :show ]
     resource :settings, only: [ :edit, :update ]
+    resources :api_tokens, only: [ :index, :create, :destroy ]
   end
 
   # Health check

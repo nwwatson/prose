@@ -1,0 +1,24 @@
+admin_token:
+  user: admin
+  name: Admin Claude Desktop
+  token_digest: <%= Digest::SHA256.hexdigest("prose_admin_test_token_1234567890abcdef") %>
+  token_prefix: prose_admin_
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>
+
+writer_token:
+  user: writer
+  name: Writer Claude Desktop
+  token_digest: <%= Digest::SHA256.hexdigest("prose_writer_test_token_1234567890abcdef") %>
+  token_prefix: prose_writer
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 3.days.ago %>
+
+revoked_token:
+  user: admin
+  name: Old Revoked Token
+  token_digest: <%= Digest::SHA256.hexdigest("prose_revoked_test_token_1234567890abcdef") %>
+  token_prefix: prose_revoke
+  revoked_at: <%= 1.day.ago %>
+  created_at: <%= 2.weeks.ago %>
+  updated_at: <%= 1.day.ago %>

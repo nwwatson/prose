@@ -55,6 +55,8 @@ Models use **concerns for behavior composition**. Each concern lives in a direct
 app/models/user.rb                    # class User includes concerns
 app/models/user/named.rb              # module User::Named (concern)
 app/models/user/authenticatable.rb    # module User::Authenticatable (concern)
+app/models/user/api_tokenable.rb     # module User::ApiTokenable (concern)
+app/models/api_token.rb              # Token generation, digest lookup, revocation
 ```
 
 Keep model files under 200 lines — extract behavior into concerns when they grow.
@@ -64,7 +66,7 @@ Skinny controllers that delegate to models/services. Controllers handle only HTT
 
 ### Service Layer
 - **Form Objects** for multi-model input (e.g., `Registration`)
-- **Service Objects** in `app/services/` for business operations (e.g., `Ai::SystemPrompts`, `Ai::PostContextBuilder`)
+- **Service Objects** in `app/services/` for business operations (e.g., `Ai::SystemPrompts`, `Ai::PostContextBuilder`, `Mcp::Tools::*`)
 - **Query Objects** in `app/queries/` for complex queries (e.g., `PostViewsQuery`, `SubscriberGrowthQuery`, `PostEngagementQuery`)
 
 ### Background Jobs
@@ -82,9 +84,43 @@ Uses the `admin_editor` layout. Autosave triggers on a 3-second debounce, serial
 ### Social Embeds
 `XPost` and `YouTubeVideo` models with oEmbed fetching, embedded in rich text via ActionText.
 
+### MCP Server (Model Context Protocol)
+Prose exposes an MCP endpoint at `POST /mcp` for AI assistants to manage blog content. See `docs/mcp_setup.md` for the full client setup guide.
+
+**Authentication**: Bearer token via `Authorization` header. Tokens are prefixed with `prose_`, stored as SHA256 digests (never raw), and support instant revocation. The `ApiToken` model handles generation, lookup, and usage tracking (last used time/IP). The `User::ApiTokenable` concern adds `has_many :api_tokens` and a convenience `generate_api_token!` method.
+
+**Controller**: `Mcp::SessionsController` (inherits `ActionController::API`) — a single endpoint that authenticates the token, sets `Current.user`, and delegates to the `MCP::Server` gem for JSON-RPC dispatch. Rate limited at 60 req/min per IP.
+
+**Tool architecture**: 14 tools in `app/services/mcp/tools/`, all inheriting from `MCP::Tool`. Each declares a `description`, `input_schema`, and `call(server_context:, **params)` class method. Tools are registered via `Mcp::ToolRegistry.all`.
+
+```
+app/services/mcp/
+├── tool_registry.rb          # Central registry of all tool classes
+├── post_serializer.rb        # Consistent post JSON serialization
+├── markdown_converter.rb     # Markdown → HTML (Commonmarker, GFM)
+└── tools/
+    ├── list_posts.rb          # Filter by status/category/tag/search, paginated
+    ├── get_post.rb            # Full post by slug or ID
+    ├── create_post.rb         # New draft from markdown
+    ├── update_post.rb         # Partial updates
+    ├── delete_post.rb         # Permanent deletion
+    ├── publish_post.rb        # Immediate publish + subscriber notifications
+    ├── schedule_post.rb       # Future publication (ISO 8601)
+    ├── unpublish_post.rb      # Revert to draft
+    ├── get_site_info.rb       # Site metadata + counts
+    ├── list_categories.rb     # Categories with post counts
+    ├── list_tags.rb           # Tags with post counts
+    ├── create_tag.rb          # Find or create tag
+    ├── upload_asset.rb        # Base64 file → ActiveStorage blob
+    └── set_featured_image.rb  # Attach featured image to post
+```
+
+**Admin UI**: `Admin::ApiTokensController` with token CRUD at `/admin/api_tokens`. Admins see all tokens; writers see only their own. Raw token shown once via flash on creation.
+
 ### Authentication
 - **Admin**: session-based (signed cookie, 14-day expiry)
 - **Subscribers**: passwordless magic-link (15-minute token expiry)
+- **MCP/API**: Bearer token (`prose_`-prefixed, SHA256 digest stored)
 
 ## Git Workflow
 
