@@ -158,4 +158,10 @@ gh pr create                          # Open pull request against master
 
 ## Deployment
 
-Docker + Kamal. SQLite databases persisted via volume mount (`prose_storage:/rails/storage`). Solid Queue runs in-process with Puma (`SOLID_QUEUE_IN_PUMA=true`).
+Docker + Kamal. SQLite databases persisted via volume mount (`prose_storage:/rails/storage`). Solid Queue runs in-process with Puma (`SOLID_QUEUE_IN_PUMA=true`). See the README for the full deployment guide.
+
+**No credentials file** — the project does not use `config/credentials.yml.enc` or `config/master.key`. Instead:
+- **Development/Test**: hardcoded Active Record Encryption keys in `config/environments/development.rb` and `test.rb`
+- **Production**: all secrets come from ENV variables (`SECRET_KEY_BASE`, `ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY`, etc.)
+- **Secret generation**: `bin/rails prose:generate_secrets` produces all required production secrets
+- **Kamal secrets**: stored in `.kamal/.env` (gitignored), sourced by `.kamal/secrets`
