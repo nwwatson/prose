@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_19_222045) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_20_192218) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -229,10 +229,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_222045) do
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.integer "identity_id", null: false
+    t.integer "source_post_id"
     t.datetime "updated_at", null: false
     t.index ["auth_token"], name: "index_subscribers_on_auth_token", unique: true
     t.index ["email"], name: "index_subscribers_on_email", unique: true
     t.index ["identity_id"], name: "index_subscribers_on_identity_id"
+    t.index ["source_post_id"], name: "index_subscribers_on_source_post_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -308,6 +310,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_222045) do
   add_foreign_key "posts", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "subscribers", "identities"
+  add_foreign_key "subscribers", "posts", column: "source_post_id"
   add_foreign_key "tool_calls", "messages"
   add_foreign_key "users", "identities"
 end

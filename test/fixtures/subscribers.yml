@@ -21,3 +21,15 @@ expired_token:
   auth_token: expired_token_456
   auth_token_sent_at: <%= 1.hour.ago %>
   identity: expired_token_identity
+
+from_published_post:
+  email: frompost@example.com
+  confirmed_at: <%= 3.days.ago %>
+  identity: from_published_post_identity
+  source_post: published_post
+
+from_featured_post:
+  email: fromfeatured@example.com
+  confirmed_at: <%= 2.days.ago %>
+  identity: from_featured_post_identity
+  source_post: featured_post

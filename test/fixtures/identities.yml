@@ -16,3 +16,9 @@ with_token_identity:
 
 expired_token_identity:
   name: expired
+
+from_published_post_identity:
+  name: frompost
+
+from_featured_post_identity:
+  name: fromfeatured

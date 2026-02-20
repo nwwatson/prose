@@ -16,7 +16,7 @@
     <div class="rounded-lg border border-gray-200 p-4 text-center text-sm text-gray-500">
       <p>Subscribe to join the conversation.</p>
       <div class="mx-auto mt-3 max-w-sm">
-        <%= render "subscriptions/form" %>
+        <%= render "subscriptions/form", source_post_id: post.id %>
       </div>
     </div>
   <% end %>

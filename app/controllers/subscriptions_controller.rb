@@ -3,6 +3,7 @@ class SubscriptionsController < ApplicationController
     @subscriber = Subscriber.find_or_initialize_by(email: params[:email])
 
     if @subscriber.new_record?
+      @subscriber.source_post_id = params[:source_post_id] if params[:source_post_id].present?
       @subscriber.save!
       @subscriber.generate_auth_token!
       SubscriberMailer.confirmation(@subscriber).deliver_later
