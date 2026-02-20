@@ -1,0 +1,74 @@
+<%# locals: (form:, field:, tags:, selected_ids:, form_attr: nil, create_url: nil) %>
+<%
+  field_name = "#{form.object_name}[#{field}][]"
+  selected_set = selected_ids.to_set
+%>
+<div data-controller="tag-select"
+     data-tag-select-create-url-value="<%= create_url %>"
+     data-tag-select-form-attr-value="<%= form_attr %>"
+     data-tag-select-field-name-value="<%= field_name %>"
+     class="relative mt-2">
+
+  <%# Empty sentinel so tag_ids is always submitted (clears all tags when none selected) %>
+  <input type="hidden" name="<%= field_name %>" value="" form="<%= form_attr %>" data-tag-select-target="emptyInput">
+
+  <%# Container for hidden inputs (one per selected tag) %>
+  <div data-tag-select-target="hiddenInputs">
+    <% tags.select { |t| selected_set.include?(t.id) }.each do |tag| %>
+      <input type="hidden" name="<%= field_name %>" value="<%= tag.id %>" form="<%= form_attr %>" data-tag-id="<%= tag.id %>">
+    <% end %>
+  </div>
+
+  <%# Combo box: pills + search input %>
+  <div data-tag-select-target="comboBox"
+       data-action="click->tag-select#focusInput"
+       class="flex flex-wrap items-center gap-1 rounded-md bg-white px-2 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 cursor-text min-h-[38px]">
+    <div data-tag-select-target="pills" class="contents">
+      <% tags.select { |t| selected_set.include?(t.id) }.each do |tag| %>
+        <span class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700" data-tag-id="<%= tag.id %>">
+          <%= tag.name %>
+          <button type="button" data-action="click->tag-select#removeTag" data-tag-id="<%= tag.id %>" class="ml-0.5 inline-flex items-center rounded-full hover:bg-blue-200 focus:outline-none" tabindex="-1">
+            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </span>
+      <% end %>
+    </div>
+    <input type="text"
+           data-tag-select-target="searchInput"
+           data-action="input->tag-select#filter focus->tag-select#open keydown->tag-select#handleKeydown"
+           class="flex-1 min-w-[80px] border-0 bg-transparent p-0 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-0 focus:outline-none"
+           placeholder="Search or create tags..."
+           autocomplete="off">
+  </div>
+
+  <%# Dropdown %>
+  <ul data-tag-select-target="dropdown"
+      role="listbox"
+      class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 hidden focus:outline-none sm:text-sm">
+    <% tags.each do |tag| %>
+      <li data-tag-select-target="option"
+          data-tag-id="<%= tag.id %>"
+          data-tag-name="<%= tag.name.downcase %>"
+          data-action="click->tag-select#toggleTag"
+          role="option"
+          class="relative cursor-pointer select-none py-2 pl-3 pr-9 text-gray-900 hover:bg-gray-100 <%= 'bg-blue-600 text-white hover:bg-blue-700' if selected_set.include?(tag.id) %>">
+        <span class="block truncate"><%= tag.name %></span>
+        <% if selected_set.include?(tag.id) %>
+          <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-white">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+          </span>
+        <% end %>
+      </li>
+    <% end %>
+    <li data-tag-select-target="createOption"
+        data-action="click->tag-select#createTag"
+        role="option"
+        class="relative cursor-pointer select-none py-2 pl-3 pr-9 text-blue-600 hover:bg-blue-50 hidden">
+      <span class="block truncate">Create "<span data-tag-select-target="createLabel"></span>"</span>
+    </li>
+  </ul>
+</div>

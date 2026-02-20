@@ -110,7 +110,9 @@
   <% end %>
 
   <%# Settings tab content %>
-  <div data-editor-drawer-target="tabContent" data-tab="settings" class="hidden flex-1 overflow-y-auto">
+  <div data-editor-drawer-target="tabContent" data-tab="settings"
+       data-action="change->autosave#handleChange input->autosave#scheduleAutosave"
+       class="hidden flex-1 overflow-y-auto">
     <%= render "admin/posts/settings_fields", post: post %>
   </div>
 </div>
