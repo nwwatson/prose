@@ -48,6 +48,12 @@ gem "lexxy", "~> 0.7.4.beta"
 # Unified LLM interface for Claude, Gemini, and more [https://github.com/crmne/ruby_llm]
 gem "ruby_llm"
 
+# Model Context Protocol server for Claude Desktop integration [https://github.com/modelcontextprotocol/ruby-sdk]
+gem "mcp", "~> 0.7"
+
+# Rust-backed CommonMark/GFM markdown to HTML [https://github.com/gjtorikian/commonmarker]
+gem "commonmarker", "~> 2.3"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include Authenticatable
+  include ApiTokenable
 
   has_secure_password
 
