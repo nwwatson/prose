@@ -11,6 +11,7 @@ class Post < ApplicationRecord
   has_many :loves, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :post_views, dependent: :destroy
+  has_many :attributed_subscribers, class_name: "Subscriber", foreign_key: :source_post_id, dependent: :nullify
   has_many :chats, dependent: :destroy
   has_rich_text :content
   has_one_attached :featured_image
