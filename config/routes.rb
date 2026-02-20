@@ -36,6 +36,7 @@ Rails.application.routes.draw do
     resources :categories
     resources :comments, only: [ :index, :update, :destroy ]
     resources :subscribers, only: [ :index, :show ]
+    resource :growth, only: [ :show ], controller: "growth"
     resource :settings, only: [ :edit, :update ]
   end
 
