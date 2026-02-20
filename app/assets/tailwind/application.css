@@ -30,6 +30,15 @@ input[data-range-slider-target="input"]::-moz-range-track {
   @apply h-2 rounded-full bg-transparent;
 }
 
+/* Subtle pulse animation for hamburger menu */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
 /* Focused editor: strip rich-text editor chrome */
 .editor-writing-area lexxy-editor {
   border: none;

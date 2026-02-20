@@ -1,9 +1,3 @@
 <% content_for(:title, "Edit Post — #{site_name}") %>
 
-<% content_for(:top_bar_actions) do %>
-  <%= button_to "Delete", admin_post_path(@post), method: :delete,
-        data: { turbo_confirm: "Are you sure you want to delete this post?" },
-        class: "rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-red-500" %>
-<% end %>
-
 <%= render "form", post: @post %>

@@ -1,37 +1,62 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["panel", "overlay", "mainContent", "messageInput", "messagesContainer",
-                     "titleField", "subtitleField", "contentField"]
+  static targets = [
+    "panel", "overlay", "mainContent",
+    "hamburgerIcon", "closeIcon",
+    "pinIcon",
+    "tabButton", "tabContent",
+    "messageInput", "messagesContainer"
+  ]
+
   static values = {
     pinned: { type: Boolean, default: false },
-    postSlug: String
+    postSlug: String,
+    aiAvailable: { type: Boolean, default: false },
+    activeTab: { type: String, default: "settings" }
   }
 
   connect() {
     this.boundKeydown = this.keydown.bind(this)
     document.addEventListener("keydown", this.boundKeydown)
+    this.hasBeenOpened = false
   }
 
   disconnect() {
     document.removeEventListener("keydown", this.boundKeydown)
   }
 
+  get isOpen() {
+    return this.hasPanelTarget && !this.panelTarget.classList.contains("translate-x-full")
+  }
+
   toggle() {
-    if (this.panelTarget.classList.contains("translate-x-full")) {
-      this.open()
-    } else {
+    if (this.isOpen) {
       this.close()
+    } else {
+      this.open()
     }
   }
 
-  open() {
+  open(tabName = null) {
+    if (!this.hasBeenOpened) {
+      this.hasBeenOpened = true
+      this.element.querySelector(".animate-pulse-subtle")?.classList.remove("animate-pulse-subtle")
+    }
+
+    if (tabName) {
+      this.activeTabValue = tabName
+    }
+
+    this.showTab(this.activeTabValue)
+
+    if (this.hasHamburgerIconTarget) this.hamburgerIconTarget.classList.add("hidden")
+    if (this.hasCloseIconTarget) this.closeIconTarget.classList.remove("hidden")
+
     if (this.pinnedValue) {
       this.panelTarget.classList.remove("translate-x-full")
       this.panelTarget.classList.add("translate-x-0")
-      if (this.hasMainContentTarget) {
-        this.mainContentTarget.classList.add("mr-96")
-      }
+      this.applyPinnedMargin()
     } else {
       this.overlayTarget.classList.remove("hidden")
       requestAnimationFrame(() => {
@@ -40,44 +65,63 @@ export default class extends Controller {
         this.panelTarget.classList.add("translate-x-0")
       })
     }
-    this.scrollToBottom()
+
+    if (this.activeTabValue === "ai") {
+      this.scrollToBottom()
+    }
   }
 
   close() {
+    if (this.hasHamburgerIconTarget) this.hamburgerIconTarget.classList.remove("hidden")
+    if (this.hasCloseIconTarget) this.closeIconTarget.classList.add("hidden")
+
     if (this.pinnedValue) {
-      this.panelTarget.classList.remove("translate-x-0")
-      this.panelTarget.classList.add("translate-x-full")
-      if (this.hasMainContentTarget) {
-        this.mainContentTarget.classList.remove("mr-96")
-      }
-    } else {
+      this.removePinnedMargin()
+    }
+
+    this.panelTarget.classList.remove("translate-x-0")
+    this.panelTarget.classList.add("translate-x-full")
+
+    if (!this.pinnedValue) {
       this.overlayTarget.classList.add("opacity-0")
-      this.panelTarget.classList.remove("translate-x-0")
-      this.panelTarget.classList.add("translate-x-full")
       this.panelTarget.addEventListener("transitionend", () => {
         this.overlayTarget.classList.add("hidden")
       }, { once: true })
     }
   }
 
-  pin() {
-    this.pinnedValue = true
-    this.overlayTarget.classList.add("hidden")
-    this.overlayTarget.classList.add("opacity-0")
-    if (this.hasMainContentTarget) {
-      this.mainContentTarget.classList.add("mr-96")
+  // Tab switching
+  switchTab(event) {
+    const tabName = event.currentTarget.dataset.tab
+    this.activeTabValue = tabName
+    this.showTab(tabName)
+
+    if (tabName === "ai") {
+      this.scrollToBottom()
     }
-    this.element.querySelector("[data-pin-icon]")?.classList.add("text-indigo-600")
   }
 
-  unpin() {
-    this.pinnedValue = false
-    if (this.hasMainContentTarget) {
-      this.mainContentTarget.classList.remove("mr-96")
-    }
-    this.element.querySelector("[data-pin-icon]")?.classList.remove("text-indigo-600")
+  showTab(tabName) {
+    this.tabButtonTargets.forEach(btn => {
+      if (btn.dataset.tab === tabName) {
+        btn.classList.add("border-blue-500", "text-blue-600")
+        btn.classList.remove("border-transparent", "text-gray-500", "hover:border-gray-300", "hover:text-gray-700")
+      } else {
+        btn.classList.remove("border-blue-500", "text-blue-600")
+        btn.classList.add("border-transparent", "text-gray-500", "hover:border-gray-300", "hover:text-gray-700")
+      }
+    })
+
+    this.tabContentTargets.forEach(content => {
+      if (content.dataset.tab === tabName) {
+        content.classList.remove("hidden")
+      } else {
+        content.classList.add("hidden")
+      }
+    })
   }
 
+  // Pin/unpin
   togglePin() {
     if (this.pinnedValue) {
       this.unpin()
@@ -86,15 +130,55 @@ export default class extends Controller {
     }
   }
 
+  pin() {
+    this.pinnedValue = true
+    this.overlayTarget.classList.add("hidden")
+    this.overlayTarget.classList.add("opacity-0")
+    this.applyPinnedMargin()
+    if (this.hasPinIconTarget) {
+      this.pinIconTarget.classList.add("text-blue-600")
+      this.pinIconTarget.classList.remove("text-gray-400")
+    }
+  }
+
+  unpin() {
+    this.pinnedValue = false
+    this.removePinnedMargin()
+    if (this.hasPinIconTarget) {
+      this.pinIconTarget.classList.remove("text-blue-600")
+      this.pinIconTarget.classList.add("text-gray-400")
+    }
+    // Show overlay since panel is open and now unpinned
+    if (this.isOpen) {
+      this.overlayTarget.classList.remove("hidden")
+      requestAnimationFrame(() => {
+        this.overlayTarget.classList.remove("opacity-0")
+      })
+    }
+  }
+
+  applyPinnedMargin() {
+    if (this.hasMainContentTarget) {
+      this.mainContentTarget.style.marginRight = "28rem"
+    }
+  }
+
+  removePinnedMargin() {
+    if (this.hasMainContentTarget) {
+      this.mainContentTarget.style.marginRight = ""
+    }
+  }
+
+  // AI messaging
   submitMessage(event) {
     event.preventDefault()
-    const input = this.messageInputTarget
-    const content = input.value.trim()
+    if (!this.hasMessageInputTarget) return
+    const content = this.messageInputTarget.value.trim()
     if (!content) return
 
     this.sendMessage(content)
-    input.value = ""
-    input.focus()
+    this.messageInputTarget.value = ""
+    this.messageInputTarget.focus()
   }
 
   quickAction(event) {
@@ -114,7 +198,6 @@ export default class extends Controller {
     form.action = `/admin/posts/${this.postSlugValue}/ai/messages`
     form.style.display = "none"
 
-    // CSRF token
     const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
     if (csrfToken) {
       const csrfField = document.createElement("input")
@@ -124,14 +207,12 @@ export default class extends Controller {
       form.appendChild(csrfField)
     }
 
-    // Content
     const contentField = document.createElement("input")
     contentField.type = "hidden"
     contentField.name = "content"
     contentField.value = content
     form.appendChild(contentField)
 
-    // Quick action
     if (quickAction) {
       const actionField = document.createElement("input")
       actionField.type = "hidden"
@@ -140,7 +221,6 @@ export default class extends Controller {
       form.appendChild(actionField)
     }
 
-    // Live content sync - grab current editor content
     const titleEl = document.querySelector("[name='post[title]']")
     const subtitleEl = document.querySelector("[name='post[subtitle]']")
     if (titleEl) {
@@ -158,7 +238,6 @@ export default class extends Controller {
       form.appendChild(f)
     }
 
-    // Accept turbo stream
     form.setAttribute("data-turbo", "true")
     form.setAttribute("accept", "text/vnd.turbo-stream.html")
 
@@ -184,19 +263,6 @@ export default class extends Controller {
     }
   }
 
-  keydown(event) {
-    // Cmd/Ctrl + Shift + A to toggle panel
-    if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key === "A") {
-      event.preventDefault()
-      this.toggle()
-    }
-
-    // Escape to close
-    if (event.key === "Escape" && !this.panelTarget.classList.contains("translate-x-full")) {
-      this.close()
-    }
-  }
-
   clearConversation() {
     const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
     fetch(`/admin/posts/${this.postSlugValue}/ai/conversation`, {
@@ -213,5 +279,26 @@ export default class extends Controller {
         window.Turbo.visit(response.url)
       }
     })
+  }
+
+  keydown(event) {
+    // Cmd/Ctrl + Shift + A to toggle AI tab
+    if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key === "A") {
+      if (!this.aiAvailableValue) return
+      event.preventDefault()
+      if (this.isOpen && this.activeTabValue === "ai") {
+        this.close()
+      } else {
+        this.open("ai")
+      }
+      return
+    }
+
+    // Escape to close (skip if a custom-select dropdown is open)
+    if (event.key === "Escape" && this.isOpen) {
+      const openDropdown = document.querySelector("[data-custom-select-target='dropdown']:not(.hidden)")
+      if (openDropdown) return
+      this.close()
+    }
   }
 }
