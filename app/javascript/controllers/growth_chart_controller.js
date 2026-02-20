@@ -25,7 +25,7 @@ export default class extends Controller {
   }
 
   updateButtons() {
-    const activeClasses = "bg-indigo-600 text-white hover:bg-indigo-700"
+    const activeClasses = "bg-blue-600 text-white hover:bg-blue-700"
     const inactiveClasses = "bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
 
     if (this.mode === "monthly") {
@@ -107,7 +107,7 @@ export default class extends Controller {
       rect.setAttribute("width", barWidth)
       rect.setAttribute("height", barHeight)
       rect.setAttribute("rx", Math.min(barWidth / 4, 4))
-      rect.setAttribute("fill", "#4f46e5")
+      rect.setAttribute("fill", "#2563eb")
 
       const title = document.createElementNS(ns, "title")
       title.textContent = `${labels[i]}: ${v}`
