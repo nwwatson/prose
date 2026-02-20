@@ -1,17 +1,19 @@
-<%# locals: (form:, field:, options: nil, collection: nil, value_method: nil, text_method: nil, include_blank: nil, data: {}) %>
+<%# locals: (form:, field:, options: nil, collection: nil, value_method: nil, text_method: nil, include_blank: nil, data: {}, form_attr: nil) %>
 <%
   extra_action = data.delete(:action)
   merged_data = data.merge(custom_select_target: "select")
   merged_data[:action] = extra_action if extra_action
+  html_opts = { data: merged_data }
+  html_opts[:form] = form_attr if form_attr
 %>
 <div data-controller="custom-select" class="relative mt-2">
   <div class="sr-only" aria-hidden="true">
     <% if collection %>
       <%= form.collection_select field, collection, value_method, text_method,
             { include_blank: include_blank },
-            data: merged_data %>
+            html_opts %>
     <% else %>
-      <%= form.select field, options, { include_blank: include_blank }, data: merged_data %>
+      <%= form.select field, options, { include_blank: include_blank }, html_opts %>
     <% end %>
   </div>
 

@@ -1,0 +1,116 @@
+<%# locals: (post:, ai_available:, chat: nil, messages: []) %>
+
+<div data-editor-drawer-target="panel"
+     class="fixed top-14 right-0 bottom-0 z-50 flex w-full translate-x-full flex-col border-l border-gray-200 bg-white shadow-xl transition-transform duration-300 ease-in-out sm:w-[28rem]">
+
+  <%# Panel header with pin button %>
+  <div class="flex items-center justify-between border-b border-gray-200 px-4 py-2">
+    <span class="text-sm font-semibold text-gray-900">Editor Panel</span>
+    <div class="flex items-center gap-1">
+      <% if ai_available %>
+        <button type="button" data-action="click->editor-drawer#clearConversation" title="New AI conversation"
+                class="rounded-md p-1.5 text-gray-400 hover:text-gray-600 focus:outline-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
+      <% end %>
+      <button type="button" data-action="click->editor-drawer#togglePin" title="Pin panel"
+              class="hidden rounded-md p-1.5 text-gray-400 hover:text-gray-600 focus:outline-none sm:inline-flex">
+        <svg data-editor-drawer-target="pinIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <%# Tab bar %>
+  <div class="flex border-b border-gray-200">
+    <% if ai_available %>
+      <button type="button"
+              data-editor-drawer-target="tabButton"
+              data-tab="ai"
+              data-action="click->editor-drawer#switchTab"
+              class="flex-1 border-b-2 px-4 py-2.5 text-center text-sm font-medium border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700">
+        AI Assistant
+      </button>
+    <% end %>
+    <button type="button"
+            data-editor-drawer-target="tabButton"
+            data-tab="settings"
+            data-action="click->editor-drawer#switchTab"
+            class="flex-1 border-b-2 px-4 py-2.5 text-center text-sm font-medium border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700">
+      Settings
+    </button>
+  </div>
+
+  <% if ai_available %>
+    <%# AI tab content %>
+    <div data-editor-drawer-target="tabContent" data-tab="ai" class="hidden flex flex-1 flex-col overflow-hidden">
+      <%# Quick actions %>
+      <div class="flex flex-wrap gap-1.5 border-b border-gray-100 px-4 py-2.5">
+        <button type="button" data-action="click->editor-drawer#quickAction" data-quick-action="proofread"
+                class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-200 transition-colors">
+          Proofread
+        </button>
+        <button type="button" data-action="click->editor-drawer#quickAction" data-quick-action="critique"
+                class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-200 transition-colors">
+          Critique
+        </button>
+        <button type="button" data-action="click->editor-drawer#quickAction" data-quick-action="brainstorm"
+                class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-200 transition-colors">
+          Brainstorm
+        </button>
+        <button type="button" data-action="click->editor-drawer#quickAction" data-quick-action="social"
+                class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-200 transition-colors">
+          Social
+        </button>
+      </div>
+
+      <%# Messages area %>
+      <div data-editor-drawer-target="messagesContainer"
+           class="flex-1 overflow-y-auto px-4 py-4 space-y-3"
+           id="ai-messages-container">
+        <% if chat %>
+          <%= turbo_stream_from "chat_#{chat.id}" %>
+        <% end %>
+        <div id="ai-messages">
+          <% messages.each do |message| %>
+            <%= render "admin/ai/messages/message", message: message %>
+          <% end %>
+        </div>
+        <% if messages.empty? %>
+          <div id="ai-empty-state" class="flex flex-col items-center justify-center py-12 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+            <p class="mt-2 text-sm text-gray-500">Ask AI for writing help or use a quick action above.</p>
+          </div>
+        <% end %>
+      </div>
+
+      <%# Input area %>
+      <div class="border-t border-gray-200 px-4 py-3">
+        <div class="flex gap-2">
+          <textarea data-editor-drawer-target="messageInput"
+                    data-action="keydown->editor-drawer#handleKeydown"
+                    placeholder="Ask AI..."
+                    rows="1"
+                    class="flex-1 resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+          <button type="button" data-action="click->editor-drawer#submitMessage"
+                  class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+          </button>
+        </div>
+        <p class="mt-1.5 text-xs text-gray-400">Press Enter to send, Shift+Enter for new line</p>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Settings tab content %>
+  <div data-editor-drawer-target="tabContent" data-tab="settings" class="hidden flex-1 overflow-y-auto">
+    <%= render "admin/posts/settings_fields", post: post %>
+  </div>
+</div>
