@@ -31,9 +31,15 @@ module Admin
       @post = current_user.posts.build(post_params)
 
       if @post.save
-        redirect_to edit_admin_post_path(@post), notice: "Post created."
+        respond_to do |format|
+          format.html { redirect_to edit_admin_post_path(@post), notice: "Post created." }
+          format.json { render json: post_json(@post), status: :created }
+        end
       else
-        render :new, status: :unprocessable_entity
+        respond_to do |format|
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity }
+        end
       end
     end
 
@@ -42,9 +48,15 @@ module Admin
 
     def update
       if @post.update(post_params)
-        redirect_to edit_admin_post_path(@post), notice: "Post updated."
+        respond_to do |format|
+          format.html { redirect_to edit_admin_post_path(@post), notice: "Post updated." }
+          format.json { render json: post_json(@post), status: :ok }
+        end
       else
-        render :edit, status: :unprocessable_entity
+        respond_to do |format|
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity }
+        end
       end
     end
 
@@ -61,6 +73,14 @@ module Admin
 
     def post_params
       params.require(:post).permit(:title, :subtitle, :slug, :status, :published_at, :scheduled_at, :featured, :category_id, :content, :meta_description, :featured_image, tag_ids: [])
+    end
+
+    def post_json(post)
+      {
+        slug: post.to_param,
+        url: admin_post_path(post),
+        edit_url: edit_admin_post_path(post)
+      }
     end
 
     def choose_layout
