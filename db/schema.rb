@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_19_201804) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_19_222045) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -275,6 +275,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_201804) do
     t.datetime "updated_at", null: false
     t.string "url", null: false
     t.index ["url"], name: "index_x_posts_on_url", unique: true
+  end
+
+  create_table "youtube_videos", force: :cascade do |t|
+    t.string "author_name"
+    t.datetime "created_at", null: false
+    t.text "thumbnail_url"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.string "url", null: false
+    t.string "video_id", null: false
+    t.index ["url"], name: "index_youtube_videos_on_url", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
