@@ -129,10 +129,171 @@ This project uses **GitHub Flow**. The `master` branch is always deployable — 
 
 ## Deployment
 
-Prose deploys as a Docker container via [Kamal](https://kamal-deploy.org). SQLite databases are persisted through a volume mount. Solid Queue runs in-process with Puma.
+Prose deploys as a Docker container via [Kamal](https://kamal-deploy.org). SQLite databases are persisted through a Docker volume mount. Solid Queue runs in-process with Puma.
+
+### Prerequisites
+
+- A VPS or dedicated server with Docker installed (Ubuntu 22.04+ recommended)
+- A domain name pointed at your server's IP address
+- SSH access to the server as root (or a user with Docker privileges)
+- A container registry account (Docker Hub, GitHub Container Registry, etc.) — or use a local registry
+
+Optional:
+- SMTP credentials for email delivery (subscriber notifications, magic links)
+- S3-compatible storage for file uploads (AWS S3, DigitalOcean Spaces, Cloudflare R2, MinIO)
+
+### Step 1: Configure `config/deploy.yml`
+
+Edit the deployment configuration for your environment:
+
+```yaml
+# Set your server IP
+servers:
+  web:
+    - YOUR_SERVER_IP
+
+# Enable SSL with Let's Encrypt (uncomment and set your domain)
+proxy:
+  ssl: true
+  host: yourdomain.com
+
+# Configure your container registry
+registry:
+  server: ghcr.io          # or hub.docker.com, registry.digitalocean.com
+  username: your-username
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Set your domain and any optional services
+env:
+  clear:
+    SOLID_QUEUE_IN_PUMA: true
+    APP_HOST: yourdomain.com
+    # SMTP_ADDRESS: smtp.example.com
+    # SMTP_PORT: 587
+    # SMTP_USERNAME: your-username
+    # SMTP_FROM: noreply@yourdomain.com
+    # ACTIVE_STORAGE_SERVICE: amazon
+```
+
+### Step 2: Generate Secrets
+
+Generate the required production secrets:
 
 ```bash
-SOLID_QUEUE_IN_PUMA=true
+bin/rails prose:generate_secrets
+```
+
+Save the output to `.kamal/.env` (this file is gitignored):
+
+```bash
+# .kamal/.env
+SECRET_KEY_BASE=<generated value>
+ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=<generated value>
+ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=<generated value>
+ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=<generated value>
+```
+
+Then update `.kamal/secrets` to source them:
+
+```bash
+source .kamal/.env
+```
+
+> **Warning:** These secrets encrypt your AI API keys and other sensitive data. If lost, encrypted data becomes unrecoverable. Back them up securely. Do not change `SECRET_KEY_BASE` after deployment — it is used for IP anonymization in analytics.
+
+### Step 3: Configure Container Registry
+
+If using GitHub Container Registry:
+
+```bash
+# Add to .kamal/.env
+KAMAL_REGISTRY_PASSWORD=ghp_your_github_token
+
+# Uncomment in .kamal/secrets
+KAMAL_REGISTRY_PASSWORD=$KAMAL_REGISTRY_PASSWORD
+```
+
+### Step 4: Deploy
+
+```bash
+kamal setup    # First deploy — provisions server, pushes image, starts containers
+```
+
+### Step 5: Post-Deployment
+
+1. Visit `https://yourdomain.com/admin/setup` to create your admin account
+2. Configure your site name and settings in **Admin > System > Site Settings**
+3. Add AI API keys (Anthropic, OpenAI, Google) in site settings to enable AI features
+
+### Optional: Email (SMTP)
+
+Set these environment variables in `config/deploy.yml` under `env.clear` (and `SMTP_PASSWORD` is already in `env.secret`):
+
+```yaml
+env:
+  clear:
+    SMTP_ADDRESS: smtp.example.com
+    SMTP_PORT: 587
+    SMTP_USERNAME: your-username
+    SMTP_FROM: noreply@yourdomain.com
+```
+
+### Optional: S3-Compatible Storage
+
+For file uploads stored in S3 instead of local disk:
+
+1. Uncomment `gem "aws-sdk-s3"` in the `Gemfile` and run `bundle install`
+2. Set environment variables:
+
+```yaml
+env:
+  clear:
+    ACTIVE_STORAGE_SERVICE: amazon
+    AWS_REGION: us-east-1
+    AWS_BUCKET: your-bucket-name
+    # AWS_ENDPOINT: https://your-endpoint.com  # For S3-compatible services
+  secret:
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+```
+
+### Environment Variables Reference
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `SECRET_KEY_BASE` | Yes | — | Rails secret key for sessions and signed cookies |
+| `ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY` | Yes | — | Encrypts sensitive model attributes (AI API keys) |
+| `ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY` | Yes | — | Deterministic encryption for queryable fields |
+| `ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT` | Yes | — | Salt for encryption key derivation |
+| `APP_HOST` | No | `example.com` | Your domain name (enables host authorization) |
+| `RAILS_ASSUME_SSL` | No | `true` | Set to `false` if not using SSL |
+| `SOLID_QUEUE_IN_PUMA` | No | `true` | Run background jobs in the web process |
+| `ACTIVE_STORAGE_SERVICE` | No | `local` | Storage backend: `local` or `amazon` |
+| `SMTP_ADDRESS` | No | — | SMTP server address (enables email delivery) |
+| `SMTP_PORT` | No | `587` | SMTP server port |
+| `SMTP_USERNAME` | No | — | SMTP authentication username |
+| `SMTP_PASSWORD` | No | — | SMTP authentication password |
+| `SMTP_FROM` | No | `noreply@example.com` | Default sender email address |
+| `SMTP_DOMAIN` | No | `APP_HOST` | HELO domain for SMTP |
+| `SMTP_AUTHENTICATION` | No | `plain` | SMTP auth method (`plain`, `login`, `cram_md5`) |
+| `WEB_CONCURRENCY` | No | `1` | Number of Puma worker processes |
+| `JOB_CONCURRENCY` | No | `1` | Number of Solid Queue worker threads |
+| `RAILS_LOG_LEVEL` | No | `info` | Log verbosity (`debug`, `info`, `warn`, `error`) |
+
+### Updating
+
+```bash
+kamal deploy   # Build, push, and deploy the latest code
+```
+
+### Useful Kamal Commands
+
+```bash
+kamal console  # Open Rails console on the server
+kamal shell    # Open bash shell in the container
+kamal logs     # Tail application logs
+kamal details  # Show running containers and health status
 ```
 
 ## License
