@@ -62,16 +62,29 @@ Keep model files under 200 lines — extract behavior into concerns when they gr
 ### Controller Pattern
 Skinny controllers that delegate to models/services. Controllers handle only HTTP concerns.
 
-### Multi-Tenancy
-Account-scoped resources using `Current.account` for request-scoped context. Default scopes filter by current account.
-
 ### Service Layer
 - **Form Objects** for multi-model input (e.g., `Registration`)
-- **Service Objects** in `app/services/` for business operations
-- **Query Objects** in `app/queries/` for complex queries
+- **Service Objects** in `app/services/` for business operations (e.g., `Ai::SystemPrompts`, `Ai::PostContextBuilder`)
+- **Query Objects** in `app/queries/` for complex queries (e.g., `PostViewsQuery`, `SubscriberGrowthQuery`, `PostEngagementQuery`)
 
 ### Background Jobs
 Solid Queue (database-backed). Jobs organized by domain in `app/jobs/`. Recurring tasks configured in `config/recurring.yml`.
+
+### AI Integration
+Uses the **RubyLLM** gem for a unified LLM interface across providers (Claude for text, Gemini/OpenAI for images). API keys are stored with Active Record Encryption on `SiteSetting` — key presence enables a feature, `nil` disables it (no separate toggle). The `Ai::Configurable` concern handles provider configuration. AI controllers are nested under `admin/posts/:id/ai/` and streaming responses use Turbo Streams + Solid Cable (`AiResponseJob` broadcasts chunks).
+
+### Post Editor
+Uses the `admin_editor` layout. Autosave triggers on a 3-second debounce, serializing `#post_form` FormData. The editor drawer is a tabbed panel (AI + Settings). Settings fields use `form="post_form"` attribute with event listeners on the settings tab container to trigger autosave.
+
+### Key Stimulus Controllers
+`autosave`, `editor_drawer`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`
+
+### Social Embeds
+`XPost` and `YouTubeVideo` models with oEmbed fetching, embedded in rich text via ActionText.
+
+### Authentication
+- **Admin**: session-based (signed cookie, 14-day expiry)
+- **Subscribers**: passwordless magic-link (15-minute token expiry)
 
 ## Git Workflow
 
