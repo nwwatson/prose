@@ -294,10 +294,11 @@ export default class extends Controller {
       return
     }
 
-    // Escape to close (skip if a custom-select dropdown is open)
+    // Escape to close (skip if a custom-select or tag-select dropdown is open)
     if (event.key === "Escape" && this.isOpen) {
       const openDropdown = document.querySelector("[data-custom-select-target='dropdown']:not(.hidden)")
-      if (openDropdown) return
+      const openTagSelect = document.querySelector("[data-tag-select-target='dropdown']:not(.hidden)")
+      if (openDropdown || openTagSelect) return
       this.close()
     }
   }

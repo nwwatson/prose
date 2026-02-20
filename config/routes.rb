@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     end
     resources :x_posts, only: [ :create ]
     resources :youtube_videos, only: [ :create ]
+    resources :tags, only: [ :create ]
     resources :categories
     resources :comments, only: [ :index, :update, :destroy ]
     resources :subscribers, only: [ :index, :show ]

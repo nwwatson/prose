@@ -39,15 +39,13 @@
 
     <div>
       <%= f.label :tag_ids, "Tags", class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <input type="hidden" name="post[tag_ids][]" value="" form="post_form">
-        <%= f.collection_check_boxes :tag_ids, Tag.all.order(:name), :id, :name do |b| %>
-          <label class="flex items-center space-x-2 py-1">
-            <%= b.check_box class: "rounded border-gray-300 text-gray-600 focus:ring-gray-600", form: "post_form" %>
-            <span class="text-sm text-gray-700"><%= b.text %></span>
-          </label>
-        <% end %>
-      </div>
+      <%= render "shared/tag_select",
+            form: f,
+            field: :tag_ids,
+            tags: Tag.all.order(:name),
+            selected_ids: post.tag_ids,
+            form_attr: "post_form",
+            create_url: admin_tags_path %>
     </div>
 
     <div class="flex items-center">
