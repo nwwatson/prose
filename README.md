@@ -4,14 +4,14 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 
 ## Features
 
-- Rich text editing with [Lexxy](https://github.com/basecamp/lexxy)
-- Categories and tags for organizing content
-- Subscriber management with email notifications
-- RSS feed and sitemap generation
-- Post scheduling and analytics (views, loves, comments)
-- Customizable typography with live preview
-- Admin dashboard for managing posts, comments, and subscribers
-- SEO-friendly slugged URLs
+- **Writing & Editing** — Rich text with [Lexxy](https://github.com/basecamp/lexxy), autosave, post scheduling, featured posts
+- **AI Assistant** — Chat (proofread, critique, brainstorm), SEO/social metadata generation, featured image generation (Gemini/OpenAI), streaming responses
+- **Content Organization** — Categories, tags with searchable combo box and inline creation
+- **Reader Engagement** — Comments with threading and moderation, loves, subscriber magic-link auth, email notifications
+- **Social Embeds** — X/Twitter and YouTube via oEmbed
+- **Analytics** — Dashboard with view tracking, subscriber growth, post engagement
+- **Customization** — 30+ Google Fonts, adjustable typography, live preview
+- **SEO** — Slugged URLs, meta descriptions, RSS feed, XML sitemap
 
 ## Tech Stack
 
@@ -20,6 +20,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **Solid Queue** — database-backed background jobs
 - **Solid Cache** — database-backed caching
 - **Solid Cable** — database-backed WebSockets
+- **RubyLLM** — unified AI interface (Claude, Gemini, OpenAI)
 - **Hotwire** (Turbo + Stimulus) — SPA-like interactivity
 - **Tailwind CSS** — utility-first styling
 - **Propshaft** — asset pipeline
