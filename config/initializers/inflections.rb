@@ -12,4 +12,5 @@
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular "love", "loves"
+  inflect.acronym "YouTube"
 end
