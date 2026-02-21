@@ -24,6 +24,9 @@ Rails.application.routes.draw do
     resource :setup, only: [ :new, :create ], controller: "setup"
     resource :session, only: [ :new, :create, :destroy ]
     resources :posts do
+      member do
+        get :preview
+      end
       resource :dashboard, only: [ :show ], controller: "post_dashboard"
       namespace :ai do
         resource :conversation, only: [ :show, :create ]

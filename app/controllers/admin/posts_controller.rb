@@ -2,7 +2,7 @@ module Admin
   class PostsController < BaseController
     layout :choose_layout
 
-    before_action :set_post, only: [ :edit, :update, :destroy ]
+    before_action :set_post, only: [ :edit, :update, :destroy, :preview ]
 
     def index
       @posts = Post.includes(:user, :category)
@@ -58,6 +58,11 @@ module Admin
           format.json { render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity }
         end
       end
+    end
+
+    def preview
+      @post = Post.includes(:user, :category, :tags).find_by!(slug: params[:id])
+      render partial: "preview", locals: { post: @post }, layout: false
     end
 
     def destroy
