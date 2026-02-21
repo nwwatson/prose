@@ -65,4 +65,25 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
     patch admin_settings_path, params: { site_setting: { heading_font: "Comic Sans MS" } }
     assert_response :unprocessable_entity
   end
+
+  test "PATCH update persists background_color" do
+    sign_in_as(:admin)
+    patch admin_settings_path, params: { site_setting: { background_color: "sage" } }
+    assert_redirected_to edit_admin_settings_path
+
+    assert_equal "sage", SiteSetting.current.background_color
+  end
+
+  test "PATCH update rejects invalid background_color" do
+    sign_in_as(:admin)
+    patch admin_settings_path, params: { site_setting: { background_color: "neon_pink" } }
+    assert_response :unprocessable_entity
+  end
+
+  test "GET edit renders background_color select" do
+    sign_in_as(:admin)
+    get edit_admin_settings_path
+    assert_response :success
+    assert_select "select[name='site_setting[background_color]']"
+  end
 end
