@@ -20,6 +20,7 @@ module Admin
         :site_name, :site_description, :default_og_image,
         :heading_font, :subtitle_font, :body_font,
         :heading_font_size, :subtitle_font_size, :body_font_size,
+        :background_color,
         :claude_api_key, :gemini_api_key, :openai_api_key, :ai_model, :ai_max_tokens, :image_model
       )
     end

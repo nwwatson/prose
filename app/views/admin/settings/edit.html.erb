@@ -43,6 +43,32 @@
       <p class="mt-1 text-xs text-gray-500">Used as the default image for social sharing (og:image) when a post has no featured image.</p>
     </div>
 
+    <%# Appearance %>
+    <% colors_json = SiteSetting::Appearance::BACKGROUND_COLORS.transform_values { |v| v[:hex] }.to_json %>
+    <fieldset class="border-t border-gray-200 pt-6" data-controller="background-preview" data-background-preview-colors-value="<%= colors_json %>">
+      <legend class="text-lg font-semibold text-gray-900">Appearance</legend>
+      <p class="mt-1 text-sm text-gray-600">Choose a background color for your site. Changes apply to all public pages.</p>
+
+      <div class="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <div class="space-y-4">
+          <div>
+            <%= f.label :background_color, "Background color", class: "block text-sm font-medium text-gray-900" %>
+            <%= render "shared/custom_select", form: f, field: :background_color,
+                  options: SiteSetting::Appearance::BACKGROUND_COLORS.map { |key, meta| [meta[:name], key, { data: { color: meta[:hex] } }] },
+                  data: { action: "change->background-preview#update" } %>
+          </div>
+        </div>
+
+        <div class="lg:sticky lg:top-20 lg:self-start">
+          <div class="rounded-md border border-gray-200 p-6" data-background-preview-target="preview" style="background-color: <%= @site_setting.background_hex %>;">
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400">Preview</p>
+            <h2 class="text-xl font-bold text-gray-900">Your site background</h2>
+            <p class="mt-2 text-sm text-gray-700">This is how your site background will look with the selected color.</p>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
     <%# Typography %>
     <fieldset class="border-t border-gray-200 pt-6" data-controller="typography-preview">
       <legend class="text-lg font-semibold text-gray-900">Typography</legend>

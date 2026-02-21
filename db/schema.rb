@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_20_192258) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_21_144107) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -220,6 +220,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_20_192258) do
   create_table "site_settings", force: :cascade do |t|
     t.integer "ai_max_tokens", default: 4096
     t.string "ai_model", default: "claude-sonnet-4-5-20250929"
+    t.string "background_color", default: "cream"
     t.string "body_font", default: "Source Serif 4"
     t.decimal "body_font_size", precision: 4, scale: 2, default: "1.13"
     t.string "claude_api_key"

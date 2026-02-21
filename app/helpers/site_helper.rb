@@ -26,6 +26,11 @@ module SiteHelper
     ], "\n")
   end
 
+  def background_style_tag
+    hex = SiteSetting.current.background_hex
+    tag.style(":root { --color-cream: #{hex}; }".html_safe)
+  end
+
   def typography_style_tag
     setting = SiteSetting.current
 
