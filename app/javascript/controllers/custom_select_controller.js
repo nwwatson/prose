@@ -29,8 +29,14 @@ export default class extends Controller {
       li.setAttribute("data-value", option.value)
       li.setAttribute("data-action", "click->custom-select#pick")
       li.className = this.optionClasses(option.value === this.selectTarget.value)
+      const color = option.dataset.color
+      const swatchHtml = color
+        ? `<span class="inline-block h-5 w-5 rounded border border-gray-300 shrink-0" style="background-color: ${this.escapeHtml(color)}"></span>`
+        : ""
+      const flexClass = color ? "flex items-center gap-2" : ""
+
       li.innerHTML = `
-        <span class="block truncate">${this.escapeHtml(option.textContent)}</span>
+        <span class="${flexClass} block truncate">${swatchHtml}${this.escapeHtml(option.textContent)}</span>
         <span class="absolute inset-y-0 right-0 flex items-center pr-3 ${option.value === this.selectTarget.value ? "text-white" : "hidden"}">
           <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
@@ -52,7 +58,12 @@ export default class extends Controller {
   syncTriggerText() {
     const selected = this.selectTarget.options[this.selectTarget.selectedIndex]
     if (selected) {
-      this.triggerTextTarget.textContent = selected.textContent
+      const color = selected.dataset.color
+      if (color) {
+        this.triggerTextTarget.innerHTML = `<span class="flex items-center gap-2"><span class="inline-block h-5 w-5 rounded border border-gray-300 shrink-0" style="background-color: ${this.escapeHtml(color)}"></span>${this.escapeHtml(selected.textContent)}</span>`
+      } else {
+        this.triggerTextTarget.textContent = selected.textContent
+      }
     }
   }
 
