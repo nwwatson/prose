@@ -8,7 +8,7 @@ module Mcp
           status: { type: "string", enum: %w[draft scheduled published], description: "Filter by post status" },
           category: { type: "string", description: "Filter by category name" },
           tag: { type: "string", description: "Filter by tag name" },
-          search: { type: "string", description: "Search posts by title or subtitle" },
+          search: { type: "string", description: "Search posts by title, subtitle, or body content" },
           page: { type: "integer", description: "Page number (default: 1)", minimum: 1 },
           per_page: { type: "integer", description: "Results per page (default: 20, max: 50)", minimum: 1, maximum: 50 }
         }

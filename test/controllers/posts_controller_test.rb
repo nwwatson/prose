@@ -42,4 +42,21 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     get post_path(posts(:published_post), slug: posts(:published_post).slug)
     assert_select "script[type='application/ld+json']"
   end
+
+  test "GET index with search query filters results" do
+    get root_path(q: "Published")
+    assert_response :success
+    assert_select "h3", text: posts(:published_post).title
+  end
+
+  test "GET index with search shows body snippet" do
+    get root_path(q: "innovation")
+    assert_response :success
+    assert_select "mark"
+  end
+
+  test "GET index with non-matching search shows no posts" do
+    get root_path(q: "xyznonexistent")
+    assert_response :success
+  end
 end

@@ -6,6 +6,17 @@
     <%= link_to "New Post", new_admin_post_path, class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700" %>
   </div>
 
+  <%# Search %>
+  <div>
+    <%= form_tag admin_posts_path, method: :get, class: "flex items-center gap-2" do %>
+      <% if params[:status].present? %>
+        <input type="hidden" name="status" value="<%= params[:status] %>">
+      <% end %>
+      <input type="search" name="search" value="<%= params[:search] %>" placeholder="Search posts..." class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-900 sm:max-w-xs sm:text-sm sm:leading-6">
+      <button type="submit" class="rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-200">Search</button>
+    <% end %>
+  </div>
+
   <%# Status tabs %>
   <div class="border-b border-gray-200">
     <nav class="-mb-px flex space-x-8">

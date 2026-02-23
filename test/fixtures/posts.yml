@@ -6,6 +6,7 @@ published_post:
   published_at: <%= 1.day.ago %>
   featured: false
   reading_time_minutes: 3
+  body_plain: "This is the body content of the published post about technology and innovation."
   user: admin
   category: technology
 
@@ -15,6 +16,7 @@ draft_post:
   status: 0
   featured: false
   reading_time_minutes: 1
+  body_plain: "Draft content about quantum computing and artificial intelligence."
   user: writer
 
 scheduled_post:
@@ -24,6 +26,7 @@ scheduled_post:
   scheduled_at: <%= 1.day.from_now %>
   featured: false
   reading_time_minutes: 2
+  body_plain: "Scheduled content discussing upcoming features and improvements."
   user: admin
 
 featured_post:
@@ -33,5 +36,6 @@ featured_post:
   published_at: <%= 2.hours.ago %>
   featured: true
   reading_time_minutes: 5
+  body_plain: "Featured article exploring advanced programming patterns and best practices."
   user: admin
   category: technology

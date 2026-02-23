@@ -15,6 +15,8 @@ class PostsController < ApplicationController
     @posts = all_posts.offset(offset).limit(PER_PAGE)
     @next_page = @page + 1 if all_posts.offset(offset + PER_PAGE).exists?
 
+    @snippets = @query ? Post.search_with_snippets(@query) : {}
+
     if turbo_frame_request_id&.start_with?("posts_page_")
       render partial: "posts/post_page", locals: { posts: @posts, page: @page, next_page: @next_page, query: @query }, layout: false
     end
