@@ -29,7 +29,7 @@
 
       <% if post.featured_image.attached? %>
         <div class="mb-8">
-          <%= image_tag post.featured_image, class: "w-full rounded-lg", alt: post.title %>
+          <%= optimized_featured_image_tag(post, class: "w-full rounded-lg", alt: post.title) %>
         </div>
       <% end %>
 
