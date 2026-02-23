@@ -5,3 +5,7 @@ ruby:
 rails:
   name: Rails
   slug: rails
+
+css:
+  name: CSS
+  slug: css

@@ -24,6 +24,9 @@ class PostsController < ApplicationController
 
   def show
     @post = Post.live.includes(:user, :category, :tags).find_by!(slug: params[:slug])
+    @related_posts = @post.related_posts
+    @previous_post = @post.previous_post
+    @next_post = @post.next_post
     track_post_view(@post)
   end
 end

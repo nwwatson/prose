@@ -1,0 +1,27 @@
+<% if related_posts.any? %>
+  <section class="mt-10 border-t border-gray-200 dark:border-gray-700 pt-8">
+    <h3 class="font-display text-xl font-bold mb-6">You might also like</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <% related_posts.each do |post| %>
+        <article>
+          <% if post.featured_image.attached? %>
+            <%= link_to post_path(post, slug: post.slug) do %>
+              <%= image_tag post.featured_image.variant(resize_to_fill: [400, 225]),
+                    class: "w-full aspect-video object-cover rounded-lg",
+                    alt: post.title,
+                    loading: "lazy" %>
+            <% end %>
+          <% end %>
+          <h4 class="font-display font-bold mt-3 leading-snug">
+            <%= link_to post.title, post_path(post, slug: post.slug),
+                  class: "text-charcoal hover:text-ink-blue transition-colors" %>
+          </h4>
+          <time class="text-sm text-gray-500 dark:text-gray-400 mt-1 block"
+                datetime="<%= post.published_at.iso8601 %>">
+            <%= post.published_at.strftime("%B %-d, %Y") %>
+          </time>
+        </article>
+      <% end %>
+    </div>
+  </section>
+<% end %>

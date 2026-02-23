@@ -39,3 +39,36 @@ featured_post:
   body_plain: "Featured article exploring advanced programming patterns and best practices."
   user: admin
   category: technology
+
+related_ruby_post:
+  title: Ruby Tips and Tricks
+  slug: ruby-tips-and-tricks
+  status: 2
+  published_at: <%= 3.days.ago %>
+  featured: false
+  reading_time_minutes: 4
+  body_plain: "A collection of useful Ruby tips."
+  user: admin
+  category: technology
+
+related_rails_post:
+  title: Rails Best Practices
+  slug: rails-best-practices
+  status: 2
+  published_at: <%= 5.days.ago %>
+  featured: false
+  reading_time_minutes: 6
+  body_plain: "Best practices for building Rails applications."
+  user: writer
+  category: technology
+
+design_post:
+  title: Modern UI Design
+  slug: modern-ui-design
+  status: 2
+  published_at: <%= 4.days.ago %>
+  featured: false
+  reading_time_minutes: 3
+  body_plain: "Exploring modern UI design patterns."
+  user: admin
+  category: design

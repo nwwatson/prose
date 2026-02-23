@@ -1,3 +1,27 @@
 published_ruby:
   post: published_post
   tag: ruby
+
+published_rails:
+  post: published_post
+  tag: rails
+
+related_ruby_ruby:
+  post: related_ruby_post
+  tag: ruby
+
+related_ruby_rails:
+  post: related_ruby_post
+  tag: rails
+
+related_rails_rails:
+  post: related_rails_post
+  tag: rails
+
+featured_ruby:
+  post: featured_post
+  tag: ruby
+
+design_css:
+  post: design_post
+  tag: css
