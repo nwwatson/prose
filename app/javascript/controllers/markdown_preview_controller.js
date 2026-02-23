@@ -36,10 +36,16 @@ export default class extends Controller {
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       // Italic
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      // Unordered lists
-      .replace(/^[-*] (.+)$/gm, '<li class="ml-4 list-disc">$1</li>')
-      // Ordered lists
-      .replace(/^\d+\. (.+)$/gm, '<li class="ml-4 list-decimal">$1</li>')
+      // Unordered lists (group consecutive lines)
+      .replace(/(^[-*] .+$(\n|$))+/gm, (match) => {
+        const items = match.trim().split('\n').map(line => `<li>${line.replace(/^[-*] /, '')}</li>`).join('')
+        return `<ul>${items}</ul>`
+      })
+      // Ordered lists (group consecutive lines)
+      .replace(/(^\d+\. .+$(\n|$))+/gm, (match) => {
+        const items = match.trim().split('\n').map(line => `<li>${line.replace(/^\d+\. /, '')}</li>`).join('')
+        return `<ol>${items}</ol>`
+      })
       // Links
       .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-ink-blue underline" rel="nofollow noopener" target="_blank">$1</a>')
       // Blockquotes
