@@ -1,0 +1,96 @@
+<% content_for(:title, "#{@newsletter.title} — #{site_name}") %>
+
+<div class="max-w-4xl">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900"><%= @newsletter.title %></h1>
+      <div class="mt-1 flex items-center gap-3 text-sm text-gray-500">
+        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+          <%= case @newsletter.status
+              when 'sent' then 'bg-green-100 text-green-800'
+              when 'sending' then 'bg-yellow-100 text-yellow-800'
+              when 'scheduled' then 'bg-blue-100 text-blue-800'
+              else 'bg-gray-100 text-gray-800'
+              end %>">
+          <%= @newsletter.status.capitalize %>
+        </span>
+        <% if @newsletter.sent_at %>
+          <span>Sent <%= time_ago_in_words(@newsletter.sent_at) %> ago</span>
+        <% end %>
+        <span>by <%= @newsletter.user.display_name %></span>
+      </div>
+    </div>
+    <%= link_to "Back to Newsletters", admin_newsletters_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
+  </div>
+
+  <%# Stats cards %>
+  <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="text-sm font-medium text-gray-500 truncate">Recipients</div>
+        <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @analytics.deliveries_count %></div>
+      </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="text-sm font-medium text-gray-500 truncate">Opens</div>
+        <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @analytics.opens_count %></div>
+        <div class="text-sm text-gray-500"><%= @analytics.open_rate %>%</div>
+      </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="text-sm font-medium text-gray-500 truncate">Clicks</div>
+        <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @analytics.clicks_count %></div>
+        <div class="text-sm text-gray-500"><%= @analytics.click_rate %>%</div>
+      </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="text-sm font-medium text-gray-500 truncate">Bounces</div>
+        <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @analytics.bounces_count %></div>
+        <div class="text-sm text-gray-500"><%= @analytics.bounce_rate %>%</div>
+      </div>
+    </div>
+  </div>
+
+  <%# Body preview %>
+  <div class="mt-8 bg-white shadow rounded-lg p-6">
+    <h2 class="text-lg font-medium text-gray-900 mb-4">Content Preview</h2>
+    <div class="prose max-w-none">
+      <%= @newsletter.body %>
+    </div>
+  </div>
+
+  <%# Delivery log %>
+  <% if @deliveries.any? %>
+    <div class="mt-8 bg-white shadow rounded-lg p-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-4">Delivery Log</h2>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Subscriber</th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Sent</th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Opened</th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Clicked</th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Bounced</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @deliveries.each do |delivery| %>
+            <tr>
+              <td class="py-2 text-sm text-gray-900"><%= delivery.subscriber.email %></td>
+              <td class="py-2 text-sm text-gray-500"><%= delivery.sent_at&.strftime("%b %d, %H:%M") %></td>
+              <td class="py-2 text-sm text-gray-500"><%= delivery.opened_at&.strftime("%b %d, %H:%M") || "—" %></td>
+              <td class="py-2 text-sm text-gray-500"><%= delivery.clicked_at&.strftime("%b %d, %H:%M") || "—" %></td>
+              <td class="py-2 text-sm text-gray-500"><%= delivery.bounced_at&.strftime("%b %d, %H:%M") || "—" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

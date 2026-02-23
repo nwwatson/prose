@@ -1,0 +1,23 @@
+draft_newsletter:
+  title: Draft Newsletter
+  status: 0
+  user: admin
+
+scheduled_newsletter:
+  title: Scheduled Newsletter
+  status: 1
+  scheduled_for: <%= 1.day.from_now %>
+  user: admin
+
+sent_newsletter:
+  title: Sent Newsletter
+  status: 3
+  sent_at: <%= 1.day.ago %>
+  recipients_count: 5
+  user: admin
+
+sending_newsletter:
+  title: Sending Newsletter
+  status: 2
+  sent_at: <%= 1.minute.ago %>
+  user: admin

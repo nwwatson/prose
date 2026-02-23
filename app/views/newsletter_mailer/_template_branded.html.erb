@@ -1,0 +1,50 @@
+<%# locals: (content:, settings:) %>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: <%= settings[:background_color] %>;">
+  <tr>
+    <td align="center" style="padding: 24px 16px;">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%;">
+        <%# Accent bar %>
+        <tr>
+          <td style="background-color: <%= settings[:accent_color] %>; height: 8px; border-radius: 8px 8px 0 0; font-size: 0; line-height: 0;">&nbsp;</td>
+        </tr>
+
+        <%# Header %>
+        <tr>
+          <td align="center" style="background-color: #ffffff; padding: 24px 32px 16px; border-left: 1px solid #e4e4e7; border-right: 1px solid #e4e4e7;">
+            <% if settings[:logo_url].present? %>
+              <img src="<%= settings[:logo_url] %>" alt="<%= settings[:site_name] %>" style="max-height: 48px; max-width: 200px;" />
+            <% else %>
+              <span style="font-size: 22px; font-weight: 700; color: <%= settings[:heading_color] %>; font-family: <%= settings[:font_family] %>;">
+                <%= settings[:site_name] %>
+              </span>
+            <% end %>
+          </td>
+        </tr>
+
+        <%# Content %>
+        <tr>
+          <td style="background-color: #ffffff; padding: 16px 32px 32px; border-left: 1px solid #e4e4e7; border-right: 1px solid #e4e4e7; border-bottom: 1px solid #e4e4e7; border-radius: 0 0 8px 8px;">
+            <%= raw content %>
+          </td>
+        </tr>
+
+        <%# Social links %>
+        <% if settings[:social_twitter].present? || settings[:social_github].present? || settings[:social_linkedin].present? || settings[:social_website].present? %>
+          <tr>
+            <td align="center" style="padding: 16px 0 0;">
+              <%= render "newsletter_mailer/social_links", settings: settings %>
+            </td>
+          </tr>
+        <% end %>
+
+        <%# Footer %>
+        <tr>
+          <td style="padding: 16px 0;">
+            <%= render "newsletter_mailer/footer", settings: settings %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

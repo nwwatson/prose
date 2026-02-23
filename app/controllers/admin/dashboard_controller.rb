@@ -11,6 +11,9 @@ module Admin
       @top_posts = views_query.top_posts(limit: 5, since: 30.days.ago)
 
       @recent_posts = Post.published.by_publication_date.limit(5).includes(:user)
+
+      @newsletters_sent_30d = Newsletter.sent.where("sent_at >= ?", 30.days.ago).count
+      @recent_newsletters = Newsletter.sent.order(sent_at: :desc).limit(5)
     end
   end
 end

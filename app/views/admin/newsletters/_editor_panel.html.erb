@@ -1,0 +1,165 @@
+<%# locals: (newsletter:) %>
+
+<div data-editor-drawer-target="panel"
+     class="fixed top-14 right-0 bottom-0 z-50 flex w-full translate-x-full flex-col border-l border-gray-200 bg-white shadow-xl transition-transform duration-300 ease-in-out sm:w-[28rem]">
+
+  <%# Panel header with pin button %>
+  <div class="flex items-center justify-between border-b border-gray-200 px-4 py-2">
+    <span class="text-sm font-semibold text-gray-900">Newsletter Settings</span>
+    <div class="flex items-center gap-1">
+      <button type="button" data-action="click->editor-drawer#togglePin" title="Pin panel"
+              class="hidden rounded-md p-1.5 text-gray-400 hover:text-gray-600 focus:outline-none sm:inline-flex">
+        <svg data-editor-drawer-target="pinIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <%# Tab bar — single Settings tab %>
+  <div class="flex border-b border-gray-200">
+    <button type="button"
+            data-editor-drawer-target="tabButton"
+            data-tab="settings"
+            data-action="click->editor-drawer#switchTab"
+            class="flex-1 border-b-2 px-4 py-2.5 text-center text-sm font-medium border-blue-500 text-blue-600">
+      Settings
+    </button>
+  </div>
+
+  <%# Settings tab content %>
+  <div data-editor-drawer-target="tabContent" data-tab="settings"
+       class="flex-1 overflow-y-auto">
+    <div class="space-y-6 p-6">
+      <%# Design section %>
+      <div data-controller="template-select">
+        <p class="text-sm font-medium text-gray-900 mb-3">Template</p>
+        <div class="grid grid-cols-1 gap-2" data-template-select-target="cards">
+          <label class="relative cursor-pointer rounded-md border p-3 hover:bg-gray-50 <%= newsletter.template.blank? ? 'border-blue-500 ring-2 ring-blue-500' : 'border-gray-200' %>"
+                 data-action="click->template-select#select"
+                 data-template-select-target="card"
+                 data-value="">
+            <input type="radio" name="newsletter[template]" value="" form="newsletter_form"
+                   class="sr-only" data-template-select-target="input" data-action="change->autosave#handleChange"
+                   <%= "checked" if newsletter.template.blank? %>>
+            <span class="text-sm font-medium text-gray-900">Site Default</span>
+            <span class="block text-xs text-gray-500">Use the template set in site settings</span>
+          </label>
+          <% SiteSetting::EmailBranding::EMAIL_TEMPLATES.each do |key, meta| %>
+            <label class="relative cursor-pointer rounded-md border p-3 hover:bg-gray-50 <%= newsletter.template == key ? 'border-blue-500 ring-2 ring-blue-500' : 'border-gray-200' %>"
+                   data-action="click->template-select#select"
+                   data-template-select-target="card"
+                   data-value="<%= key %>">
+              <input type="radio" name="newsletter[template]" value="<%= key %>" form="newsletter_form"
+                     class="sr-only" data-template-select-target="input" data-action="change->autosave#handleChange"
+                     <%= "checked" if newsletter.template == key %>>
+              <span class="text-sm font-medium text-gray-900"><%= meta[:name] %></span>
+              <span class="block text-xs text-gray-500"><%= meta[:description] %></span>
+            </label>
+          <% end %>
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-sm font-medium text-gray-900 mb-1">Accent color</label>
+          <div class="flex items-center gap-2">
+            <input type="color" name="newsletter[accent_color]" form="newsletter_form"
+                   value="<%= newsletter.accent_color.presence || newsletter.resolved_accent_color %>"
+                   data-action="change->autosave#handleChange"
+                   class="h-8 w-8 cursor-pointer rounded border border-gray-300 p-0.5">
+            <input type="text" name="newsletter[accent_color]" form="newsletter_form"
+                   value="<%= newsletter.accent_color %>"
+                   placeholder="<%= SiteSetting.current.email_accent_color %>"
+                   data-action="change->autosave#handleChange"
+                   class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm">
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Leave blank to use site default.</p>
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-sm font-medium text-gray-900 mb-1">Preheader text</label>
+          <input type="text" name="newsletter[preheader_text]" form="newsletter_form"
+                 value="<%= newsletter.preheader_text %>"
+                 maxlength="150"
+                 placeholder="<%= SiteSetting.current.email_preheader_text.presence || 'Preview text shown in inbox...' %>"
+                 data-action="change->autosave#handleChange"
+                 class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm">
+          <p class="mt-1 text-xs text-gray-500">Short text shown in email clients before opening. Max 150 characters.</p>
+        </div>
+      </div>
+
+      <hr class="border-gray-200">
+
+      <%# Subscriber count %>
+      <div class="rounded-md bg-gray-50 p-4">
+        <p class="text-sm font-medium text-gray-900">Audience</p>
+        <p class="mt-1 text-2xl font-bold text-gray-900"><%= Subscriber.confirmed.count %></p>
+        <p class="text-xs text-gray-500">confirmed subscribers</p>
+      </div>
+
+      <% if newsletter.sent? %>
+        <%# Sent stats %>
+        <div class="rounded-md bg-green-50 p-4">
+          <p class="text-sm font-medium text-green-800">Sent</p>
+          <p class="mt-1 text-sm text-green-700">
+            Delivered to <strong><%= newsletter.recipients_count %></strong> subscribers
+            on <%= newsletter.sent_at&.strftime("%b %-d, %Y at %-I:%M %p") %>
+          </p>
+        </div>
+      <% elsif newsletter.sending? %>
+        <%# Sending in progress %>
+        <div class="rounded-md bg-blue-50 p-4">
+          <p class="text-sm font-medium text-blue-800">Sending in progress...</p>
+          <p class="mt-1 text-sm text-blue-700">Your newsletter is being delivered to subscribers.</p>
+        </div>
+      <% elsif newsletter.scheduled? %>
+        <%# Scheduled info %>
+        <div class="rounded-md bg-yellow-50 p-4">
+          <p class="text-sm font-medium text-yellow-800">Scheduled</p>
+          <p class="mt-1 text-sm text-yellow-700">
+            Will be sent on <%= newsletter.scheduled_for&.strftime("%b %-d, %Y at %-I:%M %p") %>
+          </p>
+        </div>
+        <%= button_to "Cancel schedule", admin_newsletter_path(newsletter),
+              method: :patch,
+              params: { newsletter: { status: "draft" } },
+              class: "w-full rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200" %>
+      <% else %>
+        <%# Send / Schedule controls for drafts %>
+        <% if newsletter.persisted? %>
+          <div class="space-y-3">
+            <%= button_to "Send Now", send_newsletter_admin_newsletter_path(newsletter),
+                  data: { turbo_confirm: "Send this newsletter to all confirmed subscribers?" },
+                  class: "w-full rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700" %>
+
+            <%= form_with url: schedule_admin_newsletter_path(newsletter), method: :post, class: "space-y-2" do |f| %>
+              <label class="block text-sm font-medium text-gray-900">Schedule for later</label>
+              <%= f.datetime_local_field :scheduled_for,
+                    class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+              <%= f.submit "Schedule", class: "w-full rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200 cursor-pointer" %>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-sm text-gray-500">Save the newsletter first to enable send and schedule options.</p>
+        <% end %>
+      <% end %>
+
+      <%# Preview link %>
+      <% if newsletter.persisted? %>
+        <div>
+          <%= link_to "Preview", preview_admin_newsletter_path(newsletter),
+                target: "_blank",
+                class: "inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900" %>
+        </div>
+      <% end %>
+
+      <%# Delete %>
+      <% if newsletter.persisted? && newsletter.draft? %>
+        <div class="border-t border-gray-200 pt-6">
+          <%= button_to "Delete newsletter", admin_newsletter_path(newsletter), method: :delete,
+                data: { turbo_confirm: "Are you sure you want to delete this newsletter?" },
+                class: "w-full rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

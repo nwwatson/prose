@@ -1,0 +1,8 @@
+<%= @newsletter.title %>
+
+<%= @newsletter.body&.to_plain_text %>
+
+—
+<%= @site_name %>
+
+Unsubscribe: <%= @unsubscribe_url %>

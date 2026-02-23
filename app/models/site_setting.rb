@@ -3,6 +3,8 @@ class SiteSetting < ApplicationRecord
   include Appearance
   include DarkTheme
   include AiConfiguration
+  include EmailConfiguration
+  include EmailBranding
 
   has_one_attached :default_og_image
 

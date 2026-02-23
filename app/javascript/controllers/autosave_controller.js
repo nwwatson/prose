@@ -6,7 +6,9 @@ export default class extends Controller {
     url: String,
     method: { type: String, default: "POST" },
     persisted: { type: Boolean, default: false },
-    backUrl: String
+    backUrl: String,
+    formSelector: { type: String, default: "#post_form" },
+    titleSelector: { type: String, default: "#post_title" }
   }
 
   connect() {
@@ -46,7 +48,7 @@ export default class extends Controller {
   }
 
   async save() {
-    const titleInput = this.element.querySelector("#post_title")
+    const titleInput = this.element.querySelector(this.titleSelectorValue)
     if (titleInput && !titleInput.value.trim()) return
 
     if (this.saving) {
@@ -57,7 +59,7 @@ export default class extends Controller {
     this.saving = true
     this.updateStatus("saving")
 
-    const form = this.element.querySelector("#post_form")
+    const form = this.element.querySelector(this.formSelectorValue)
     const formData = new FormData(form)
 
     // Remove empty file inputs to avoid re-uploading
@@ -120,7 +122,7 @@ export default class extends Controller {
   async handleBack(event) {
     event.preventDefault()
 
-    const titleInput = this.element.querySelector("#post_title")
+    const titleInput = this.element.querySelector(this.titleSelectorValue)
     const hasTitle = titleInput && titleInput.value.trim()
 
     if (!this.persistedValue && !hasTitle) {

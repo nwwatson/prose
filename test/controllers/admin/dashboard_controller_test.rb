@@ -18,4 +18,11 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
     get admin_root_path
     assert_response :success
   end
+
+  test "GET show displays newsletter stats" do
+    sign_in_as(:admin)
+    get admin_root_path
+    assert_response :success
+    assert_select "div", text: /Newsletters Sent/
+  end
 end
