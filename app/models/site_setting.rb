@@ -1,6 +1,7 @@
 class SiteSetting < ApplicationRecord
   include Typography
   include Appearance
+  include DarkTheme
   include AiConfiguration
 
   has_one_attached :default_og_image

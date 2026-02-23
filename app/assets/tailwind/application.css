@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-serif: "Source Serif 4", Georgia, serif;
   --font-display: "Playfair Display", Georgia, serif;
@@ -7,6 +9,18 @@
   --color-cream: #faf7f2;
   --color-charcoal: #2c2c2c;
   --color-ink-blue: #3d5a80;
+  --color-dark-bg: #1a1a2e;
+  --color-dark-text: #e0def4;
+  --color-dark-accent: #7ba4cc;
+  --color-dark-surface: #232340;
+  --color-dark-muted: #908caa;
+}
+
+/* Dark mode: override semantic colors when .dark is on <html> */
+.dark {
+  --color-cream: var(--color-dark-bg);
+  --color-charcoal: var(--color-dark-text);
+  --color-ink-blue: var(--color-dark-accent);
 }
 
 /* Range slider component */

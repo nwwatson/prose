@@ -31,6 +31,18 @@ module SiteHelper
     tag.style(":root { --color-cream: #{hex}; }".html_safe)
   end
 
+  def dark_theme_style_tag
+    setting = SiteSetting.current
+    css = ":root.dark { " \
+      "--color-cream: #{setting.dark_bg_hex}; " \
+      "--color-charcoal: #{setting.dark_text_hex}; " \
+      "--color-ink-blue: #{setting.dark_accent_hex}; " \
+      "--color-dark-bg: #{setting.dark_bg_hex}; " \
+      "--color-dark-text: #{setting.dark_text_hex}; " \
+      "--color-dark-accent: #{setting.dark_accent_hex}; }"
+    tag.style(css.html_safe)
+  end
+
   def typography_style_tag
     setting = SiteSetting.current
 
