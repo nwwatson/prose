@@ -56,6 +56,7 @@ app/models/user.rb                    # class User includes concerns
 app/models/user/named.rb              # module User::Named (concern)
 app/models/user/authenticatable.rb    # module User::Authenticatable (concern)
 app/models/user/api_tokenable.rb     # module User::ApiTokenable (concern)
+app/models/post/discoverable.rb      # module Post::Discoverable (related posts, prev/next)
 app/models/api_token.rb              # Token generation, digest lookup, revocation
 ```
 

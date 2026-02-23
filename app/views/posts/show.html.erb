@@ -51,6 +51,9 @@
     <%= render "loves/button", post: @post %>
   </div>
 
+  <%= render "posts/post_navigation", previous_post: @previous_post, next_post: @next_post %>
+  <%= render "posts/related_posts", related_posts: @related_posts %>
+
   <%# Comments %>
   <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
     <h3 class="font-display text-xl font-bold">Comments</h3>

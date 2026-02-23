@@ -2,6 +2,7 @@ class Post < ApplicationRecord
   include Sluggable
   include Publishable
   include Searchable
+  include Discoverable
 
   enum :status, { draft: 0, scheduled: 1, published: 2 }
 
