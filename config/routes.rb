@@ -55,6 +55,7 @@ Rails.application.routes.draw do
     resources :subscribers, only: [ :index, :show ]
     resource :growth, only: [ :show ], controller: "growth"
     resource :settings, only: [ :edit, :update ]
+    resource :newsletter_settings, only: [ :edit, :update ]
     resources :api_tokens, only: [ :index, :create, :destroy ]
   end
 
