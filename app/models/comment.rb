@@ -12,6 +12,10 @@ class Comment < ApplicationRecord
   scope :pending_moderation, -> { where(approved: false) }
   scope :recent, -> { order(created_at: :desc) }
 
+  def rendered_body
+    MarkdownRenderer.to_html(body)
+  end
+
   private
 
   def max_one_level_nesting

@@ -57,7 +57,7 @@ module SiteHelper
       }
       article h1 { font-size: var(--heading-font-size); }
       .font-subtitle { font-size: var(--subtitle-font-size); }
-      .prose { font-size: var(--body-font-size); }
+      .prose, .prose-comment { font-size: var(--body-font-size); }
     CSS
 
     tag.style(css.html_safe)
