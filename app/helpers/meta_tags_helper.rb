@@ -47,7 +47,7 @@ module MetaTagsHelper
   def meta_tags_for_post(post)
     description = post.seo_description
     url = post_url(post, slug: post.slug)
-    image = post.featured_image.attached? ? rails_storage_proxy_url(post.featured_image) : nil
+    image = post.featured_image.attached? ? optimized_og_image_url(post) : nil
 
     tags = []
     tags << meta_description_tag(description)
@@ -85,7 +85,7 @@ module MetaTagsHelper
     data[:description] = description if description.present?
 
     if post.featured_image.attached?
-      data[:image] = rails_storage_proxy_url(post.featured_image)
+      data[:image] = optimized_og_image_url(post)
     end
 
     data[:wordCount] = post.reading_time_minutes * 238
