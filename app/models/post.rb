@@ -1,6 +1,7 @@
 class Post < ApplicationRecord
   include Sluggable
   include Publishable
+  include Searchable
 
   enum :status, { draft: 0, scheduled: 1, published: 2 }
 
@@ -29,16 +30,13 @@ class Post < ApplicationRecord
 
   scope :featured, -> { where(featured: true) }
   scope :by_publication_date, -> { order(published_at: :desc) }
-  scope :search, ->(query) {
-    where("title LIKE :q OR subtitle LIKE :q", q: "%#{sanitize_sql_like(query)}%")
-  }
 
   before_save :calculate_reading_time
 
   private
 
   def calculate_reading_time
-    text = content&.to_plain_text.to_s
+    text = body_plain.to_s
     words = text.split.size
     self.reading_time_minutes = [ (words / 238.0).ceil, 1 ].max
   end

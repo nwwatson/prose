@@ -16,9 +16,7 @@ module Admin
         @posts = @posts.draft
       end
 
-      if params[:search].present?
-        @posts = @posts.where("title LIKE ?", "%#{Post.sanitize_sql_like(params[:search])}%")
-      end
+      @posts = @posts.search(params[:search]) if params[:search].present?
 
       @posts = @posts.order(updated_at: :desc)
     end

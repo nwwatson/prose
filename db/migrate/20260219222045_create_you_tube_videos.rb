@@ -1,4 +1,4 @@
-class CreateYoutubeVideos < ActiveRecord::Migration[8.1]
+class CreateYouTubeVideos < ActiveRecord::Migration[8.1]
   def change
     create_table :youtube_videos do |t|
       t.string :url, null: false
