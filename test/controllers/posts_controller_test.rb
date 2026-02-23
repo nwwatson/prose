@@ -59,4 +59,10 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     get root_path(q: "xyznonexistent")
     assert_response :success
   end
+
+  test "GET index includes dark theme style tag" do
+    get root_path
+    assert_response :success
+    assert_select "style", /root\.dark/
+  end
 end

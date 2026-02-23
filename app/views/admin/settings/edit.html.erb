@@ -69,6 +69,67 @@
       </div>
     </fieldset>
 
+    <%# Dark Theme %>
+    <% dark_themes_json = SiteSetting::DarkTheme::DARK_THEMES.reject { |k, _| k == "custom" }.transform_values { |v| { bg: v[:bg], text: v[:text], accent: v[:accent] } }.to_json %>
+    <fieldset class="border-t border-gray-200 pt-6" data-controller="dark-theme-preview" data-dark-theme-preview-themes-value="<%= dark_themes_json %>">
+      <legend class="text-lg font-semibold text-gray-900">Dark Theme</legend>
+      <p class="mt-1 text-sm text-gray-600">Configure the dark mode appearance for your site. Visitors can toggle dark mode using the sun/moon icon in the header.</p>
+
+      <div class="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <div class="space-y-4">
+          <div>
+            <%= f.label :dark_theme, "Dark theme", class: "block text-sm font-medium text-gray-900" %>
+            <%= render "shared/custom_select", form: f, field: :dark_theme,
+                  options: SiteSetting::DarkTheme::DARK_THEMES.map { |key, meta| [meta[:name], key] },
+                  data: { dark_theme_preview_target: "themeSelect", action: "change->dark-theme-preview#update" } %>
+          </div>
+
+          <div data-dark-theme-preview-target="customFields" class="<%= @site_setting.dark_theme == 'custom' ? '' : 'hidden' %> space-y-4">
+            <div>
+              <%= f.label :dark_bg_color, "Background color", class: "block text-sm font-medium text-gray-900" %>
+              <div class="mt-2 flex items-center gap-3">
+                <%= f.color_field :dark_bg_color, class: "h-9 w-14 cursor-pointer rounded border border-gray-300",
+                      data: { dark_theme_preview_target: "bgColor", action: "input->dark-theme-preview#updateCustom" } %>
+                <%= f.text_field :dark_bg_color, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm font-mono",
+                      data: { dark_theme_preview_target: "bgColorText", action: "input->dark-theme-preview#updateCustomText" } %>
+              </div>
+            </div>
+
+            <div>
+              <%= f.label :dark_text_color, "Text color", class: "block text-sm font-medium text-gray-900" %>
+              <div class="mt-2 flex items-center gap-3">
+                <%= f.color_field :dark_text_color, class: "h-9 w-14 cursor-pointer rounded border border-gray-300",
+                      data: { dark_theme_preview_target: "textColor", action: "input->dark-theme-preview#updateCustom" } %>
+                <%= f.text_field :dark_text_color, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm font-mono",
+                      data: { dark_theme_preview_target: "textColorText", action: "input->dark-theme-preview#updateCustomText" } %>
+              </div>
+            </div>
+
+            <div>
+              <%= f.label :dark_accent_color, "Accent color", class: "block text-sm font-medium text-gray-900" %>
+              <div class="mt-2 flex items-center gap-3">
+                <%= f.color_field :dark_accent_color, class: "h-9 w-14 cursor-pointer rounded border border-gray-300",
+                      data: { dark_theme_preview_target: "accentColor", action: "input->dark-theme-preview#updateCustom" } %>
+                <%= f.text_field :dark_accent_color, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm font-mono",
+                      data: { dark_theme_preview_target: "accentColorText", action: "input->dark-theme-preview#updateCustomText" } %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:sticky lg:top-20 lg:self-start">
+          <div class="rounded-md border border-gray-200 p-6" data-dark-theme-preview-target="preview"
+               style="background-color: <%= @site_setting.dark_bg_hex %>; color: <%= @site_setting.dark_text_hex %>;">
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide" style="opacity: 0.5;">Preview</p>
+            <h2 class="text-xl font-bold">Your dark theme</h2>
+            <p class="mt-2 text-sm" style="opacity: 0.7;">This is how your site will look in dark mode.</p>
+            <a href="#" class="mt-2 inline-block text-sm underline" data-dark-theme-preview-target="previewLink"
+               style="color: <%= @site_setting.dark_accent_hex %>;" onclick="return false;">Sample link</a>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
     <%# Typography %>
     <fieldset class="border-t border-gray-200 pt-6" data-controller="typography-preview">
       <legend class="text-lg font-semibold text-gray-900">Typography</legend>

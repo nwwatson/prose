@@ -346,3 +346,51 @@ trix-editor > *:last-child,
 .trix-content > *:last-child {
   margin-bottom: 0;
 }
+
+/* -- Dark mode overrides -------------------------------------------------- */
+
+.dark .trix-content a {
+  color: var(--color-dark-accent, #7ba4cc);
+}
+
+.dark .trix-content a:hover {
+  color: #9dcbf0;
+}
+
+.dark .trix-content h6 {
+  color: #908caa;
+}
+
+.dark .trix-content blockquote {
+  border-left-color: #4a4a6a;
+  color: #b0adc4;
+}
+
+.dark .trix-content th {
+  border-color: #4a4a6a;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark .trix-content td {
+  border-color: #4a4a6a;
+}
+
+.dark .trix-content hr {
+  border-top-color: #4a4a6a;
+}
+
+.dark .trix-content pre {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark .trix-content code {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .trix-content pre code {
+  background: none;
+}
+
+.dark .trix-content .attachment__caption {
+  color: #908caa;
+}

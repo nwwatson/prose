@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script>
+      (function() {
+        var p = localStorage.getItem('theme');
+        if (p === 'dark' || (!p && matchMedia('(prefers-color-scheme:dark)').matches))
+          document.documentElement.classList.add('dark');
+      })();
+    </script>
     <title><%= content_for(:title) || site_name %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,6 +27,7 @@
 
     <%= font_stylesheet_tags %>
     <%= background_style_tag %>
+    <%= dark_theme_style_tag %>
     <%= typography_style_tag %>
 
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -28,14 +36,30 @@
 
   <body class="bg-cream text-charcoal font-serif min-h-screen flex flex-col">
     <%# Masthead %>
-    <header class="border-b border-gray-300 py-6">
+    <header class="border-b border-gray-300 dark:border-gray-700 py-6">
       <div class="mx-auto max-w-3xl px-4">
-        <div class="text-center">
+        <div class="flex items-center justify-center relative">
           <%= link_to site_name, root_path, class: "font-display text-4xl font-bold tracking-tight text-charcoal hover:text-ink-blue transition-colors no-underline" %>
+          <div class="absolute right-0" data-controller="theme-toggle">
+            <button type="button" data-action="click->theme-toggle#toggle" data-theme-toggle-target="button"
+                    class="rounded-md p-2 text-gray-500 dark:text-gray-400 hover:text-charcoal transition-colors"
+                    aria-label="Toggle dark mode">
+              <span data-theme-toggle-target="icon">
+                <%# Moon icon (shown in light mode) %>
+                <svg class="h-5 w-5 dark:hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                </svg>
+                <%# Sun icon (shown in dark mode) %>
+                <svg class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+              </span>
+            </button>
+          </div>
         </div>
         <nav class="mt-3 flex justify-center space-x-6 text-sm">
-          <%= link_to "Home", root_path, class: "text-gray-600 hover:text-charcoal" %>
-          <%= link_to "About", about_path, class: "text-gray-600 hover:text-charcoal" %>
+          <%= link_to "Home", root_path, class: "text-gray-600 dark:text-gray-400 hover:text-charcoal" %>
+          <%= link_to "About", about_path, class: "text-gray-600 dark:text-gray-400 hover:text-charcoal" %>
         </nav>
       </div>
     </header>
@@ -43,8 +67,8 @@
     <%# Flash messages %>
     <% if notice %>
       <div class="mx-auto max-w-3xl px-4 mt-4">
-        <div class="rounded-md bg-green-50 p-4">
-          <p class="text-sm text-green-800"><%= notice %></p>
+        <div class="rounded-md bg-green-50 dark:bg-green-900/30 p-4">
+          <p class="text-sm text-green-800 dark:text-green-300"><%= notice %></p>
         </div>
       </div>
     <% end %>
@@ -55,8 +79,8 @@
     </main>
 
     <%# Footer %>
-    <footer class="border-t border-gray-300 py-8">
-      <div class="mx-auto max-w-3xl px-4 text-center text-sm text-gray-500">
+    <footer class="border-t border-gray-300 dark:border-gray-700 py-8">
+      <div class="mx-auto max-w-3xl px-4 text-center text-sm text-gray-500 dark:text-gray-400">
         <p>&copy; <%= Date.current.year %> <%= site_name %>. All rights reserved.</p>
       </div>
     </footer>
