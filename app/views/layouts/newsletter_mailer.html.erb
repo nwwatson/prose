@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--[if mso]>
+    <noscript>
+      <xml>
+        <o:OfficeDocumentSettings>
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+      </xml>
+    </noscript>
+    <![endif]-->
+  </head>
+
+  <body style="margin: 0; padding: 0; background-color: <%= @email_settings[:background_color] %>; font-family: <%= @email_settings[:font_family] %>;">
+    <% if @email_settings[:preheader_text].present? %>
+      <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
+        <%= @email_settings[:preheader_text] %>
+      </div>
+    <% end %>
+
+    <%= render partial: "newsletter_mailer/template_#{@email_settings[:template]}", locals: { content: yield, settings: @email_settings } %>
+  </body>
+</html>

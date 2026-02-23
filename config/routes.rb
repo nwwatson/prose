@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   # MCP endpoint for Claude Desktop integration
   post "mcp", to: "mcp/sessions#create"
 
+  # Webhooks (public, no auth)
+  post "webhooks/sendgrid", to: "webhooks/sendgrid#create"
+
   # Public
   root "posts#index"
   resources :posts, only: [ :index, :show ], param: :slug do
@@ -14,6 +17,7 @@ Rails.application.routes.draw do
   resource :subscriber_session, only: [ :show, :destroy ]
   resource :handle, only: [ :update ]
   resource :handle_availability, only: [ :show ]
+  resource :unsubscribe, only: [ :show, :create ]
   get "feed" => "feeds#index", defaults: { format: :xml }
   get "sitemap" => "sitemaps#index", defaults: { format: :xml }
   get "about" => "pages#about"
@@ -41,6 +45,13 @@ Rails.application.routes.draw do
     resources :tags, only: [ :create ]
     resources :categories
     resources :comments, only: [ :index, :update, :destroy ]
+    resources :newsletters do
+      member do
+        post :send_newsletter
+        post :schedule
+        get :preview
+      end
+    end
     resources :subscribers, only: [ :index, :show ]
     resource :growth, only: [ :show ], controller: "growth"
     resource :settings, only: [ :edit, :update ]

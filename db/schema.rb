@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_21_144107) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_23_200006) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -160,6 +160,38 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_21_144107) do
     t.index ["provider"], name: "index_models_on_provider"
   end
 
+  create_table "newsletter_deliveries", force: :cascade do |t|
+    t.datetime "bounced_at"
+    t.datetime "clicked_at"
+    t.datetime "created_at", null: false
+    t.integer "newsletter_id", null: false
+    t.integer "open_count", default: 0
+    t.datetime "opened_at"
+    t.datetime "sent_at"
+    t.integer "subscriber_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["newsletter_id", "subscriber_id"], name: "index_newsletter_deliveries_on_newsletter_id_and_subscriber_id", unique: true
+    t.index ["newsletter_id"], name: "index_newsletter_deliveries_on_newsletter_id"
+    t.index ["subscriber_id"], name: "index_newsletter_deliveries_on_subscriber_id"
+  end
+
+  create_table "newsletters", force: :cascade do |t|
+    t.string "accent_color"
+    t.datetime "created_at", null: false
+    t.string "preheader_text"
+    t.integer "recipients_count", default: 0
+    t.datetime "scheduled_for"
+    t.datetime "sent_at"
+    t.integer "status", default: 0, null: false
+    t.string "template"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["scheduled_for"], name: "index_newsletters_on_scheduled_for"
+    t.index ["status"], name: "index_newsletters_on_status"
+    t.index ["user_id"], name: "index_newsletters_on_user_id"
+  end
+
   create_table "post_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "post_id", null: false
@@ -225,11 +257,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_21_144107) do
     t.decimal "body_font_size", precision: 4, scale: 2, default: "1.13"
     t.string "claude_api_key"
     t.datetime "created_at", null: false
+    t.string "email_accent_color", default: "#18181b"
+    t.string "email_background_color", default: "#f4f4f5"
+    t.string "email_body_text_color", default: "#3f3f46"
+    t.string "email_default_template", default: "minimal"
+    t.string "email_font_family", default: "system"
+    t.text "email_footer_text", default: ""
+    t.string "email_heading_color", default: "#18181b"
+    t.string "email_preheader_text", default: ""
+    t.string "email_provider", default: "smtp"
+    t.string "email_social_github"
+    t.string "email_social_linkedin"
+    t.string "email_social_twitter"
+    t.string "email_social_website"
     t.string "gemini_api_key"
     t.string "heading_font", default: "Playfair Display"
     t.decimal "heading_font_size", precision: 4, scale: 2, default: "2.25"
     t.string "image_model", default: "imagen-4.0-generate-001"
     t.string "openai_api_key"
+    t.string "sendgrid_api_key"
     t.text "site_description", default: ""
     t.string "site_name", default: "Prose", null: false
     t.string "subtitle_font", default: "Source Serif 4"
@@ -245,6 +291,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_21_144107) do
     t.string "email", null: false
     t.integer "identity_id", null: false
     t.integer "source_post_id"
+    t.datetime "unsubscribed_at"
     t.datetime "updated_at", null: false
     t.index ["auth_token"], name: "index_subscribers_on_auth_token", unique: true
     t.index ["email"], name: "index_subscribers_on_email", unique: true
@@ -319,6 +366,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_21_144107) do
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "models"
   add_foreign_key "messages", "tool_calls"
+  add_foreign_key "newsletter_deliveries", "newsletters"
+  add_foreign_key "newsletter_deliveries", "subscribers"
+  add_foreign_key "newsletters", "users"
   add_foreign_key "post_tags", "posts"
   add_foreign_key "post_tags", "tags"
   add_foreign_key "post_views", "posts"

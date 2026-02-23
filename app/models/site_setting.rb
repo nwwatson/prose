@@ -2,6 +2,8 @@ class SiteSetting < ApplicationRecord
   include Typography
   include Appearance
   include AiConfiguration
+  include EmailConfiguration
+  include EmailBranding
 
   has_one_attached :default_og_image
 

@@ -47,9 +47,51 @@ class SubscriberTest < ActiveSupport::TestCase
     assert subscriber.confirmed?
   end
 
-  test "confirmed scope" do
+  test "confirmed scope excludes unconfirmed" do
     confirmed = Subscriber.confirmed
     assert_includes confirmed, subscribers(:confirmed)
     assert_not_includes confirmed, subscribers(:unconfirmed)
+  end
+
+  test "confirmed scope excludes unsubscribed" do
+    subscriber = subscribers(:confirmed)
+    subscriber.unsubscribe!
+    assert_not_includes Subscriber.confirmed, subscriber
+  end
+
+  test "active scope excludes unsubscribed" do
+    subscriber = subscribers(:confirmed)
+    assert_includes Subscriber.active, subscriber
+
+    subscriber.unsubscribe!
+    assert_not_includes Subscriber.active, subscriber
+  end
+
+  test "unsubscribe! sets unsubscribed_at" do
+    subscriber = subscribers(:confirmed)
+    assert_not subscriber.unsubscribed?
+
+    subscriber.unsubscribe!
+    assert subscriber.unsubscribed?
+    assert_not_nil subscriber.unsubscribed_at
+  end
+
+  test "unsubscribe! is idempotent" do
+    subscriber = subscribers(:confirmed)
+    subscriber.unsubscribe!
+    original_time = subscriber.unsubscribed_at
+
+    subscriber.unsubscribe!
+    assert_equal original_time.to_i, subscriber.unsubscribed_at.to_i
+  end
+
+  test "resubscribe! clears unsubscribed_at" do
+    subscriber = subscribers(:confirmed)
+    subscriber.unsubscribe!
+    assert subscriber.unsubscribed?
+
+    subscriber.resubscribe!
+    assert_not subscriber.unsubscribed?
+    assert_nil subscriber.unsubscribed_at
   end
 end

@@ -1,0 +1,25 @@
+sent_to_confirmed:
+  newsletter: sent_newsletter
+  subscriber: confirmed
+  sent_at: <%= 1.day.ago %>
+
+opened_delivery:
+  newsletter: sent_newsletter
+  subscriber: with_token
+  sent_at: <%= 1.day.ago %>
+  opened_at: <%= 12.hours.ago %>
+  open_count: 2
+
+clicked_delivery:
+  newsletter: sent_newsletter
+  subscriber: from_published_post
+  sent_at: <%= 1.day.ago %>
+  opened_at: <%= 12.hours.ago %>
+  clicked_at: <%= 6.hours.ago %>
+  open_count: 1
+
+bounced_delivery:
+  newsletter: sent_newsletter
+  subscriber: from_featured_post
+  sent_at: <%= 1.day.ago %>
+  bounced_at: <%= 23.hours.ago %>

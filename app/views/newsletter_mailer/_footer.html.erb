@@ -1,0 +1,17 @@
+<%# locals: (settings:) %>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td align="center" style="color: #71717a; font-size: 13px; line-height: 20px; font-family: <%= settings[:font_family] %>;">
+      <p style="margin: 0 0 8px;">&copy; <%= Date.current.year %> <%= settings[:site_name] %></p>
+      <% if settings[:footer_text].present? %>
+        <p style="margin: 0 0 8px;"><%= settings[:footer_text] %></p>
+      <% end %>
+      <% if @unsubscribe_url.present? %>
+        <p style="margin: 0;">
+          <a href="<%= @unsubscribe_url %>" style="color: #71717a; text-decoration: underline;">Unsubscribe</a>
+        </p>
+      <% end %>
+    </td>
+  </tr>
+</table>
