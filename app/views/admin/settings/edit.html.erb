@@ -209,11 +209,9 @@
       <p class="mt-1 text-sm text-gray-600">Control how search engine crawlers interact with your site.</p>
 
       <div class="mt-4">
-        <div class="flex items-center">
-          <%= f.check_box :block_crawlers, class: "rounded border-gray-300 text-gray-600 focus:ring-gray-600" %>
-          <%= f.label :block_crawlers, "Block all crawlers", class: "ml-2 text-sm font-medium text-gray-900" %>
-        </div>
-        <p class="mt-1 text-xs text-gray-500 ml-6">When enabled, <code class="bg-gray-100 px-1 rounded">robots.txt</code> will tell all search engines not to index your site. Useful during development or for private sites.</p>
+        <%= render "shared/toggle", form: f, field: :block_crawlers,
+              label: "Block all crawlers",
+              description: "When enabled, robots.txt will tell all search engines not to index your site. Useful during development or for private sites.".html_safe %>
       </div>
     </fieldset>
 
