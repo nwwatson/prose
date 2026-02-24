@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resource :love, only: [ :create, :destroy ]
     resources :comments, only: [ :create ]
   end
+  resources :authors, only: [ :index, :show ], param: :handle
   resources :categories, only: [ :show ], param: :slug
   resources :tags, only: [ :show ], param: :slug
   resources :subscriptions, only: [ :create ]
@@ -55,6 +56,7 @@ Rails.application.routes.draw do
     end
     resources :subscribers, only: [ :index, :show ]
     resource :growth, only: [ :show ], controller: "growth"
+    resource :profile, only: [ :edit, :update ]
     resource :settings, only: [ :edit, :update ]
     resource :newsletter_settings, only: [ :edit, :update ]
     resources :api_tokens, only: [ :index, :create, :destroy ]

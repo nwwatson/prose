@@ -1,0 +1,117 @@
+<% content_for(:title, "Edit Profile — #{site_name}") %>
+
+<div class="max-w-4xl">
+  <h1 class="text-2xl font-bold text-gray-900">Author Profile</h1>
+  <p class="mt-1 text-sm text-gray-600">Manage your public author profile. This information appears on your author page and posts.</p>
+
+  <%= form_with model: @identity, url: admin_profile_path, class: "mt-8 space-y-6" do |f| %>
+    <% if @identity.errors.any? %>
+      <div class="rounded-md bg-red-50 p-4">
+        <h3 class="text-sm font-medium text-red-800"><%= pluralize(@identity.errors.count, "error") %> prevented your profile from being saved:</h3>
+        <ul class="mt-2 list-disc pl-5 text-sm text-red-700">
+          <% @identity.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%# Avatar %>
+    <div>
+      <%= f.label :avatar, class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2 flex items-center gap-4">
+        <% if @identity.avatar.attached? %>
+          <%= image_tag @identity.avatar.variant(resize_to_fill: [96, 96]),
+                class: "h-16 w-16 rounded-full object-cover" %>
+        <% else %>
+          <div class="flex h-16 w-16 items-center justify-center rounded-full bg-gray-200">
+            <span class="text-xl font-bold text-gray-500"><%= @identity.name.first.upcase %></span>
+          </div>
+        <% end %>
+        <div>
+          <%= f.file_field :avatar, accept: "image/*",
+                class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200" %>
+          <p class="mt-1 text-xs text-gray-500">Square image recommended. Will be cropped to a circle.</p>
+        </div>
+      </div>
+    </div>
+
+    <%# Name %>
+    <div>
+      <%= f.label :name, "Display name", class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= f.text_field :name, required: true,
+              class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+      </div>
+    </div>
+
+    <%# Handle %>
+    <div>
+      <%= f.label :handle, class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2 flex rounded-md shadow-sm">
+        <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">/authors/</span>
+        <%= f.text_field :handle,
+              class: "block w-full min-w-0 flex-1 rounded-none rounded-r-md bg-white px-3 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+              placeholder: "your_handle" %>
+      </div>
+      <p class="mt-1 text-xs text-gray-500">Letters, numbers, and underscores only. This is used in your author page URL.</p>
+    </div>
+
+    <%# Bio %>
+    <div>
+      <%= f.label :bio, class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= f.text_area :bio, rows: 5,
+              class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+              placeholder: "Tell readers about yourself..." %>
+      </div>
+      <p class="mt-1 text-xs text-gray-500">Supports Markdown formatting (bold, italic, links, etc.).</p>
+    </div>
+
+    <%# Social links %>
+    <fieldset class="border-t border-gray-200 pt-6">
+      <legend class="text-lg font-semibold text-gray-900">Social Links</legend>
+      <p class="mt-1 text-sm text-gray-600">Optional links displayed on your author profile.</p>
+
+      <div class="mt-4 space-y-4">
+        <div>
+          <%= f.label :website_url, "Website", class: "block text-sm font-medium text-gray-900" %>
+          <div class="mt-2">
+            <%= f.url_field :website_url,
+                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+                  placeholder: "https://example.com" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :twitter_handle, "X (Twitter) handle", class: "block text-sm font-medium text-gray-900" %>
+          <div class="mt-2 flex rounded-md shadow-sm">
+            <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">@</span>
+            <%= f.text_field :twitter_handle,
+                  class: "block w-full min-w-0 flex-1 rounded-none rounded-r-md bg-white px-3 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+                  placeholder: "username" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :github_handle, "GitHub username", class: "block text-sm font-medium text-gray-900" %>
+          <div class="mt-2 flex rounded-md shadow-sm">
+            <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">github.com/</span>
+            <%= f.text_field :github_handle,
+                  class: "block w-full min-w-0 flex-1 rounded-none rounded-r-md bg-white px-3 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+                  placeholder: "username" %>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="flex items-center gap-4 border-t border-gray-200 pt-6">
+      <%= f.submit "Save Profile", class: "rounded-md bg-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-pointer" %>
+
+      <% if @identity.handle.present? %>
+        <%= link_to "View public profile", author_path(@identity, handle: @identity.handle),
+              class: "text-sm text-gray-600 hover:text-gray-900", target: "_blank" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

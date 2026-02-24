@@ -48,6 +48,9 @@ writer = User.create!(
   role: :writer
 )
 
+admin.identity.update!(handle: "alice_thornton", bio: "Editor-in-chief and lead author. Writing about technology, culture, and the future.", website_url: "https://alicethornton.com", twitter_handle: "alicethornton")
+writer.identity.update!(handle: "ben_carroway", bio: "Staff writer covering science, philosophy, and everyday observations.")
+
 staff_users = [ admin, writer ]
 puts "  Created #{staff_users.size} staff users"
 

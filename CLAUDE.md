@@ -57,6 +57,8 @@ app/models/user/named.rb              # module User::Named (concern)
 app/models/user/authenticatable.rb    # module User::Authenticatable (concern)
 app/models/user/api_tokenable.rb     # module User::ApiTokenable (concern)
 app/models/post/discoverable.rb      # module Post::Discoverable (related posts, prev/next)
+app/models/identity/handleable.rb    # module Identity::Handleable (handle validation/normalization)
+app/models/identity/profileable.rb   # module Identity::Profileable (avatar, bio, social links)
 app/models/api_token.rb              # Token generation, digest lookup, revocation
 ```
 
@@ -81,6 +83,9 @@ Uses the `admin_editor` layout. Autosave triggers on a 3-second debounce, serial
 
 ### Key Stimulus Controllers
 `autosave`, `editor_drawer`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`, `markdown_preview`
+
+### Author Profiles
+Profile data (bio, avatar, social links) lives on the `Identity` model via `Identity::Profileable` concern. Public author pages at `/authors` (index) and `/authors/:handle` (show) are served by `AuthorsController`. Admin profile editing at `/admin/profile` via `Admin::ProfilesController`. Author names on posts link to their profile pages. Bios support markdown via `MarkdownRenderer`.
 
 ### Social Embeds
 `XPost` and `YouTubeVideo` models with oEmbed fetching, embedded in rich text via ActionText.

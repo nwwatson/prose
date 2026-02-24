@@ -1,8 +1,14 @@
 admin_identity:
   name: Admin User
+  handle: admin_user
+  bio: "Site administrator and lead author."
+  website_url: "https://example.com"
+  twitter_handle: "adminuser"
+  github_handle: "adminuser"
 
 writer_identity:
   name: Writer User
+  handle: writer_user
 
 subscriber_identity:
   name: subscriber1

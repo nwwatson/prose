@@ -59,7 +59,11 @@ module MetaTagsHelper
       image: image
     )
     tags << tag.meta(property: "article:published_time", content: post.published_at&.iso8601)
-    tags << tag.meta(property: "article:author", content: post.user.display_name)
+    if post.user.identity.handle.present?
+      tags << tag.meta(property: "article:author", content: author_url(post.user.identity, handle: post.user.identity.handle))
+    else
+      tags << tag.meta(property: "article:author", content: post.user.display_name)
+    end
     post.tags.each do |t|
       tags << tag.meta(property: "article:tag", content: t.name)
     end
@@ -76,10 +80,7 @@ module MetaTagsHelper
       headline: post.title,
       datePublished: post.published_at&.iso8601,
       dateModified: post.updated_at.iso8601,
-      author: {
-        "@type": "Person",
-        name: post.user.display_name
-      }
+      author: author_json_ld(post.user.identity)
     }
     description = post.seo_description
     data[:description] = description if description.present?
@@ -93,6 +94,19 @@ module MetaTagsHelper
     if post.tags.any?
       data[:keywords] = post.tags.map(&:name).join(", ")
     end
+
+    json_ld_tag(data)
+  end
+
+  def json_ld_for_author(identity)
+    data = {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: identity.name,
+      url: author_url(identity, handle: identity.handle)
+    }
+    data[:description] = strip_tags(identity.bio_html).truncate(160) if identity.bio.present?
+    data[:sameAs] = [ identity.website_url, identity.twitter_url, identity.github_url ].compact if identity.has_social_links?
 
     json_ld_tag(data)
   end
@@ -154,5 +168,13 @@ module MetaTagsHelper
     items << tag.span(post.title, class: "text-gray-600 dark:text-gray-400")
 
     safe_join(items, " > ")
+  end
+
+  private
+
+  def author_json_ld(identity)
+    data = { "@type": "Person", name: identity.name }
+    data[:url] = author_url(identity, handle: identity.handle) if identity.handle.present?
+    data
   end
 end
