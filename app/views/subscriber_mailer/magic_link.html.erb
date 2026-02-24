@@ -1,7 +1,21 @@
-<h1><%= t('subscriber_mailer.magic_link.sign_in_to', site_name: @site_name) %></h1>
+<h1 style="margin: 0 0 16px; font-size: 22px; font-weight: 700; color: <%= @email_heading_color %>;">
+  <%= t('subscriber_mailer.magic_link.sign_in_to', site_name: @site_name) %>
+</h1>
 
-<p><%= t('subscriber_mailer.magic_link.click_to_sign_in') %></p>
+<p style="margin: 0 0 16px; font-size: 15px; line-height: 24px; color: <%= @email_body_text_color %>;">
+  <%= t('subscriber_mailer.magic_link.click_to_sign_in') %>
+</p>
 
-<p><%= link_to t('subscriber_mailer.magic_link.sign_in'), @magic_link %></p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 24px 0;">
+  <tr>
+    <td style="background-color: <%= @email_accent_color %>; border-radius: 6px; padding: 12px 24px;">
+      <a href="<%= @magic_link %>" style="color: #ffffff; font-size: 15px; font-weight: 600; text-decoration: none; display: inline-block;">
+        <%= t('subscriber_mailer.magic_link.sign_in') %>
+      </a>
+    </td>
+  </tr>
+</table>
 
-<p><%= t('subscriber_mailer.magic_link.link_expiry') %></p>
+<p style="margin: 0; font-size: 13px; line-height: 20px; color: #71717a;">
+  <%= t('subscriber_mailer.magic_link.link_expiry') %>
+</p>
