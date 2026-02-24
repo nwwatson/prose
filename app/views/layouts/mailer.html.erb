@@ -14,17 +14,21 @@
     <![endif]-->
   </head>
 
-  <body style="margin: 0; padding: 0; background-color: #f4f4f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f5;">
+  <body style="margin: 0; padding: 0; background-color: <%= @email_background_color || '#f4f4f5' %>; font-family: <%= @email_font_family || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" %>;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: <%= @email_background_color || '#f4f4f5' %>;">
       <tr>
         <td align="center" style="padding: 24px 16px;">
           <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%;">
             <%# Header %>
             <tr>
               <td align="center" style="padding: 24px 0 16px;">
-                <span style="font-size: 20px; font-weight: 700; color: #18181b; text-decoration: none;">
-                  <%= @site_name || SiteSetting.current.site_name %>
-                </span>
+                <% if @email_logo_url.present? %>
+                  <img src="<%= @email_logo_url %>" alt="<%= @site_name %>" style="max-height: 48px; max-width: 200px; display: block;">
+                <% else %>
+                  <span style="font-size: 20px; font-weight: 700; color: <%= @email_heading_color || '#18181b' %>; text-decoration: none;">
+                    <%= @site_name || SiteSetting.current.site_name %>
+                  </span>
+                <% end %>
               </td>
             </tr>
 
@@ -38,7 +42,10 @@
             <%# Footer %>
             <tr>
               <td align="center" style="padding: 24px 0; color: #71717a; font-size: 13px; line-height: 20px;">
-                <p style="margin: 0 0 8px;">
+                <% if @email_footer_text.present? %>
+                  <p style="margin: 0 0 8px; color: #71717a;"><%= @email_footer_text %></p>
+                <% end %>
+                <p style="margin: 0 0 8px; color: #71717a;">
                   &copy; <%= Date.current.year %> <%= @site_name || SiteSetting.current.site_name %>
                 </p>
                 <% if @unsubscribe_url.present? %>

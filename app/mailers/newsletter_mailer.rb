@@ -15,14 +15,4 @@ class NewsletterMailer < ApplicationMailer
 
     mail(to: subscriber.email, subject: newsletter.title)
   end
-
-  private
-
-  def generate_unsubscribe_url(subscriber)
-    token = Rails.application.message_verifier("unsubscribe").generate(
-      subscriber.id,
-      expires_in: 30.days
-    )
-    unsubscribe_url(token: token)
-  end
 end
