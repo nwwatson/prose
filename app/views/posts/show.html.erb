@@ -3,9 +3,15 @@
 <% content_for(:head) do %>
   <%= meta_tags_for_post(@post) %>
   <%= json_ld_for_post(@post) %>
+  <%= json_ld_breadcrumb_list(@post) %>
 <% end %>
 
 <article>
+  <%# Breadcrumb Navigation %>
+  <nav class="mb-4 text-sm text-gray-600 dark:text-gray-400" aria-label="breadcrumb">
+    <%= breadcrumb_navigation(@post) %>
+  </nav>
+
   <header class="mb-8 border-b border-gray-300 dark:border-gray-700 pb-8">
     <h1 class="font-display text-4xl font-bold leading-tight lg:text-5xl"><%= @post.title %></h1>
     <% if @post.subtitle.present? %>
