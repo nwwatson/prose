@@ -1,0 +1,17 @@
+<%# locals: (headings:) %>
+<nav class="toc mb-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-5"
+     aria-label="Table of contents">
+  <h2 class="font-display text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-3">
+    Table of Contents
+  </h2>
+  <ol class="toc-list space-y-1 text-sm">
+    <% headings.each do |heading| %>
+      <li class="<%= "ml-#{(heading.level - 2) * 4}" %>">
+        <a href="#<%= heading.id %>"
+           class="toc-link text-ink-blue hover:underline"
+           data-toc-target="link"
+           data-action="click->toc#scrollTo"><%= heading.text %></a>
+      </li>
+    <% end %>
+  </ol>
+</nav>
