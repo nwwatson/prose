@@ -70,6 +70,7 @@ es:
       profile: "Perfil"
       pages: "Páginas"
       settings: "Configuración"
+      passkeys: "Claves de acceso"
       api_tokens: "Tokens de API"
 
   posts:
@@ -149,6 +150,7 @@ es:
     sessions:
       new:
         sign_in: "Iniciar sesión"
+        sign_in_with_passkey: "Iniciar sesión con clave de acceso"
     setup:
       new:
         create_account_message: "Crea tu cuenta de administrador para comenzar."
@@ -260,6 +262,19 @@ es:
         reject: "Rechazar"
         delete_confirm: "¿Eliminar este comentario?"
         no_comments: "Aún no hay comentarios."
+    passkeys:
+      index:
+        title: "Claves de acceso"
+        register_new: "Registrar nueva clave de acceso"
+        passkey_name: "Nombre de la clave"
+        passkey_name_placeholder: "ej., MacBook Touch ID"
+        register_passkey: "Registrar clave"
+        name: "Nombre"
+        registered: "Registrada"
+        last_used: "Último uso"
+        remove: "Eliminar"
+        remove_confirm: "¿Eliminar esta clave de acceso? Ya no podrás iniciar sesión con ella."
+        no_passkeys: "No hay claves de acceso registradas. Agrega una para habilitar el inicio de sesión sin contraseña."
     api_tokens:
       index:
         title: "Tokens de API"
@@ -566,6 +581,9 @@ es:
         created: "Categoría creada."
         updated: "Categoría actualizada."
         deleted: "Categoría eliminada."
+      passkeys:
+        registered: "Clave de acceso registrada exitosamente."
+        removed: "Clave de acceso eliminada."
       api_tokens:
         created: "Token de API creado."
         revoked: "Token de API revocado."

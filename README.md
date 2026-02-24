@@ -260,6 +260,19 @@ env:
     - AWS_SECRET_ACCESS_KEY
 ```
 
+### Optional: Passkey Authentication (WebAuthn)
+
+Admin users can register passkeys (Touch ID, Face ID, security keys) for passwordless sign-in. Passkeys work out of the box in development. For production, set the origin and relying party ID to match your domain:
+
+```yaml
+env:
+  clear:
+    WEBAUTHN_ORIGIN: https://yourdomain.com
+    WEBAUTHN_RP_ID: yourdomain.com
+```
+
+Manage passkeys at `/admin/passkeys` after signing in.
+
 ### Environment Variables Reference
 
 | Variable | Required | Default | Description |
@@ -281,6 +294,8 @@ env:
 | `SMTP_AUTHENTICATION` | No | `plain` | SMTP auth method (`plain`, `login`, `cram_md5`) |
 | `WEB_CONCURRENCY` | No | `1` | Number of Puma worker processes |
 | `JOB_CONCURRENCY` | No | `1` | Number of Solid Queue worker threads |
+| `WEBAUTHN_ORIGIN` | No | `http://localhost:3000` | Full origin URL for passkey/WebAuthn verification |
+| `WEBAUTHN_RP_ID` | No | `localhost` | Relying Party ID for passkeys (usually your domain) |
 | `RAILS_LOG_LEVEL` | No | `info` | Log verbosity (`debug`, `info`, `warn`, `error`) |
 
 ### Updating

@@ -21,3 +21,24 @@
     <%= f.submit t('shared.sign_in'), class: "flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-pointer" %>
   </div>
 <% end %>
+
+<% if Passkey.any? %>
+  <div data-controller="passkey" class="mt-6">
+    <div class="relative">
+      <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-gray-300"></div>
+      </div>
+      <div class="relative flex justify-center text-sm">
+        <span class="bg-gray-50 px-2 text-gray-500"><%= t('shared.or') %></span>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <p data-passkey-target="error" class="hidden mb-3 rounded-md bg-red-50 p-3 text-sm text-red-800"></p>
+      <button type="button" data-action="passkey#authenticate"
+              class="flex w-full justify-center rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 cursor-pointer">
+        <%= t('admin.sessions.new.sign_in_with_passkey') %>
+      </button>
+    </div>
+  </div>
+<% end %>

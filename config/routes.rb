@@ -28,6 +28,19 @@ Rails.application.routes.draw do
     root "dashboard#show"
     resource :setup, only: [ :new, :create ], controller: "setup"
     resource :session, only: [ :new, :create, :destroy ]
+
+    # Passkey authentication (unauthenticated)
+    namespace :passkey_authentication do
+      post :options
+      post :verify
+    end
+
+    # Passkey management (authenticated)
+    resources :passkeys, only: [ :index, :create, :destroy ] do
+      collection do
+        post :registration_options
+      end
+    end
     resources :posts do
       member do
         get :preview

@@ -56,6 +56,7 @@ app/models/user.rb                    # class User includes concerns
 app/models/user/named.rb              # module User::Named (concern)
 app/models/user/authenticatable.rb    # module User::Authenticatable (concern)
 app/models/user/api_tokenable.rb     # module User::ApiTokenable (concern)
+app/models/user/passkey_authenticatable.rb # module User::PasskeyAuthenticatable (WebAuthn passkeys)
 app/models/post/discoverable.rb      # module Post::Discoverable (related posts, prev/next)
 app/models/page.rb                    # class Page (custom static pages)
 app/models/page/sluggable.rb         # module Page::Sluggable (auto-generated URL slugs)
@@ -65,6 +66,7 @@ app/models/site_setting/localization.rb  # module SiteSetting::Localization (i18
 app/models/identity/handleable.rb    # module Identity::Handleable (handle validation/normalization)
 app/models/identity/profileable.rb   # module Identity::Profileable (avatar, bio, social links)
 app/models/api_token.rb              # Token generation, digest lookup, revocation
+app/models/passkey.rb                # WebAuthn passkey credentials for admin sign-in
 ```
 
 Keep model files under 200 lines — extract behavior into concerns when they grow.
@@ -136,6 +138,7 @@ app/services/mcp/
 
 ### Authentication
 - **Admin**: session-based (signed cookie, 14-day expiry)
+- **Admin Passkeys**: optional WebAuthn/passkey sign-in alongside password. Configured via `WEBAUTHN_ORIGIN` and `WEBAUTHN_RP_ID` env vars. Managed at `/admin/passkeys`.
 - **Subscribers**: passwordless magic-link (15-minute token expiry)
 - **MCP/API**: Bearer token (`prose_`-prefixed, SHA256 digest stored)
 
