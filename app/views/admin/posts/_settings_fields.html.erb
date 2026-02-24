@@ -53,6 +53,11 @@
       <%= f.label :featured, class: "ml-2 text-sm font-medium text-gray-900" %>
     </div>
 
+    <div class="flex items-center">
+      <%= f.check_box :show_toc, form: "post_form", class: "rounded border-gray-300 text-gray-600 focus:ring-gray-600" %>
+      <%= f.label :show_toc, "Table of Contents", class: "ml-2 text-sm font-medium text-gray-900" %>
+    </div>
+
     <div <% if SiteSetting.current.image_ai_configured? && post.persisted? %>
            data-controller="ai-image-modal"
            data-ai-image-modal-suggest-url-value="<%= suggest_prompt_admin_post_ai_featured_image_path(post) %>"
