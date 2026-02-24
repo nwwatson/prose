@@ -1,0 +1,21 @@
+<%# locals: (form:, field:, label:, description: nil, data: {}) %>
+<div data-controller="toggle" class="flex items-start gap-3">
+  <button type="button"
+    data-action="toggle#toggle"
+    data-toggle-target="track"
+    class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 <%= form.object.send(field) ? 'bg-blue-600' : 'bg-gray-200' %>"
+    role="switch"
+    aria-checked="<%= form.object.send(field) %>">
+    <span
+      data-toggle-target="knob"
+      class="pointer-events-none inline-block size-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out <%= form.object.send(field) ? 'translate-x-5' : 'translate-x-0' %>">
+    </span>
+  </button>
+  <%= form.check_box field, class: "hidden", data: { toggle_target: "checkbox" }.merge(data) %>
+  <div>
+    <%= form.label field, label, class: "text-sm font-medium text-gray-900 cursor-pointer", data: { action: "click->toggle#toggle" } %>
+    <% if description %>
+      <p class="mt-0.5 text-xs text-gray-500"><%= description %></p>
+    <% end %>
+  </div>
+</div>

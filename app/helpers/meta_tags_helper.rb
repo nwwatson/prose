@@ -111,6 +111,65 @@ module MetaTagsHelper
     json_ld_tag(data)
   end
 
+  def json_ld_breadcrumb_list(post)
+    items = []
+
+    # Home item
+    items << {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: root_url
+    }
+
+    # Category item (if post has a category)
+    if post.category.present?
+      items << {
+        "@type": "ListItem",
+        position: 2,
+        name: post.category.name,
+        item: category_url(post.category, slug: post.category.slug)
+      }
+    end
+
+    # Post item (always last, no URL)
+    position = items.size + 1
+    items << {
+      "@type": "ListItem",
+      position: position,
+      name: post.title
+    }
+
+    data = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: items
+    }
+
+    json_ld_tag(data)
+  end
+
+  def breadcrumb_navigation(post)
+    items = []
+
+    # Home
+    items << link_to("Home", root_path, class: "text-ink-blue hover:underline")
+
+    # Category
+    if post.category.present?
+      items << link_to(
+        post.category.name,
+        category_path(post.category, slug: post.category.slug),
+        class: "text-ink-blue hover:underline"
+      )
+    end
+
+    # Current page (not a link)
+    items << tag.span(post.title, class: "text-gray-600 dark:text-gray-400")
+
+    safe_join(items, " > ")
+  end
+
   private
 
   def author_json_ld(identity)
