@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   resource :unsubscribe, only: [ :show, :create ]
   get "feed" => "feeds#index", defaults: { format: :xml }
   get "sitemap" => "sitemaps#index", defaults: { format: :xml }
+  get "robots" => "robots#index", defaults: { format: :text }, as: :robots
   get "about" => "pages#about"
 
   # Admin
