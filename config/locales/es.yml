@@ -339,6 +339,7 @@ es:
         max_tokens: "Tokens máximos de respuesta"
         max_tokens_help: "Número máximo de tokens en respuestas de IA (256-16384)."
         save_settings: "Guardar configuración"
+        language: "Idioma"
         locale: "Idioma"
         locale_description: "Elige el idioma de la interfaz de usuario de tu sitio."
     newsletter_settings:

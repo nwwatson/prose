@@ -343,6 +343,7 @@ en:
         max_tokens: "Max Response Tokens"
         max_tokens_help: "Maximum number of tokens in AI responses (256-16384)."
         save_settings: "Save settings"
+        language: "Language"
         locale: "Language"
         locale_description: "Choose the language for your site's user interface."
     newsletter_settings:

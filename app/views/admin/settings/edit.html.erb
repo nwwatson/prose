@@ -30,14 +30,19 @@
       </div>
     </div>
 
-    <div>
-      <%= f.label :locale, t('admin.settings.edit.locale'), class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <%= f.select :locale, SiteSetting::Localization::SUPPORTED_LOCALES.map { |k, v| [v, k] },
-              {}, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+    <%# Language %>
+    <fieldset class="border-t border-gray-200 pt-6">
+      <legend class="text-lg font-semibold text-gray-900"><%= t('admin.settings.edit.language') %></legend>
+      <p class="mt-1 text-sm text-gray-600"><%= t('admin.settings.edit.locale_description') %></p>
+
+      <div class="mt-4">
+        <div>
+          <%= f.label :locale, t('admin.settings.edit.locale'), class: "block text-sm font-medium text-gray-900" %>
+          <%= render "shared/custom_select", form: f, field: :locale,
+                options: SiteSetting::Localization::SUPPORTED_LOCALES.map { |k, v| [v, k] } %>
+        </div>
       </div>
-      <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.locale_description') %></p>
-    </div>
+    </fieldset>
 
     <div>
       <%= f.label :default_og_image, t('admin.settings.edit.default_og_image'), class: "block text-sm font-medium text-gray-900" %>
