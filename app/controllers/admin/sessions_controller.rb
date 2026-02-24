@@ -15,7 +15,7 @@ module Admin
 
       if user
         start_session(user, ip_address: request.remote_ip, user_agent: request.user_agent)
-        redirect_to admin_root_path, notice: "Signed in successfully."
+        redirect_to admin_root_path, notice: t("flash.admin.sessions.signed_in")
       else
         flash.now[:alert] = "Invalid email or password."
         render :new, status: :unprocessable_entity
@@ -25,7 +25,7 @@ module Admin
     def destroy
       resume_session
       end_session
-      redirect_to new_admin_session_path, notice: "Signed out successfully."
+      redirect_to new_admin_session_path, notice: t("flash.admin.sessions.signed_out")
     end
 
     private

@@ -4,7 +4,7 @@
       <div class="flex-1 min-w-0">
         <% if previous_post %>
           <%= link_to post_path(previous_post, slug: previous_post.slug), class: "group block" do %>
-            <span class="text-sm text-gray-500 dark:text-gray-400">&larr; Previous Post</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">&larr; <%= t('posts.post_navigation.previous_post') %></span>
             <p class="mt-1 font-display font-bold text-charcoal group-hover:text-ink-blue transition-colors truncate"><%= previous_post.title %></p>
           <% end %>
         <% end %>
@@ -12,7 +12,7 @@
       <div class="flex-1 min-w-0 text-right">
         <% if next_post %>
           <%= link_to post_path(next_post, slug: next_post.slug), class: "group block" do %>
-            <span class="text-sm text-gray-500 dark:text-gray-400">Next Post &rarr;</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400"><%= t('posts.post_navigation.next_post') %> &rarr;</span>
             <p class="mt-1 font-display font-bold text-charcoal group-hover:text-ink-blue transition-colors truncate"><%= next_post.title %></p>
           <% end %>
         <% end %>

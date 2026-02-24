@@ -14,12 +14,12 @@ class SubscriptionsController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to root_path, notice: "Check your email for a sign-in link." }
+      format.html { redirect_to root_path, notice: t("flash.subscriptions.check_email") }
     end
   rescue ActiveRecord::RecordInvalid
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("subscription_form", partial: "subscriptions/form", locals: { error: "Please enter a valid email address." }) }
-      format.html { redirect_to root_path, alert: "Please enter a valid email address." }
+      format.html { redirect_to root_path, alert: t("flash.subscriptions.invalid_email") }
     end
   end
 end

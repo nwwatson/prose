@@ -14,7 +14,7 @@ class CommentsController < ApplicationController
     else
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_form", partial: "comments/form", locals: { post: @post, comment: @comment }) }
-        format.html { redirect_to post_path(@post, slug: @post.slug), alert: "Comment could not be saved." }
+        format.html { redirect_to post_path(@post, slug: @post.slug), alert: t("flash.comments.could_not_save") }
       end
     end
   end

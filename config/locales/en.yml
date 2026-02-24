@@ -1,31 +1,543 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  # Shared / common strings
+  shared:
+    home: "Home"
+    about: "About"
+    search: "Search"
+    edit: "Edit"
+    delete: "Delete"
+    cancel: "Cancel"
+    save: "Save"
+    preview: "Preview"
+    subscribe: "Subscribe"
+    sign_in: "Sign in"
+    sign_out: "Sign out"
+    all: "All"
+    actions: "Actions"
+    loading: "Loading..."
+    never: "Never"
+    ago: "ago"
+    by: "By"
+    on: "on"
+    or: "or"
+    min_read: "min read"
+    draft: "Draft"
+    published: "Published"
+    scheduled: "Scheduled"
+    pending: "Pending"
+    confirmed: "Confirmed"
+    active: "Active"
+    revoked: "Revoked"
+    sent: "Sent"
+    drafts: "Drafts"
+    all_rights_reserved: "All rights reserved."
+    are_you_sure: "Are you sure?"
+    no_category: "No category"
+    not_set: "Not set"
+
+  # Public-facing layouts
+  layouts:
+    application:
+      toggle_dark_mode: "Toggle dark mode"
+      copyright_html: "&copy; %{year} %{site_name}. All rights reserved."
+    mailer:
+      unsubscribe: "Unsubscribe"
+    admin_editor:
+      posts: "Posts"
+      discard_post: "Discard post?"
+      discard_post_message: "This post hasn't been saved yet. Are you sure you want to discard it?"
+      keep_editing: "Keep editing"
+      discard: "Discard"
+    newsletter_editor:
+      newsletters: "Newsletters"
+      discard_newsletter: "Discard newsletter?"
+      discard_newsletter_message: "This newsletter hasn't been saved yet. Are you sure you want to discard it?"
+      keep_editing: "Keep editing"
+      discard: "Discard"
+    admin:
+      content: "Content"
+      all_posts: "All Posts"
+      audience: "Audience"
+      subscribers: "Subscribers"
+      newsletters: "Newsletters"
+      newsletter_settings: "Newsletter Settings"
+      growth: "Growth"
+      system: "System"
+      profile: "Profile"
+      settings: "Settings"
+      api_tokens: "API Tokens"
+
+  # Public views
+  posts:
+    index:
+      search_placeholder: "Search posts…"
+      no_posts_found: "No posts found for \"%{query}\"."
+      no_posts_yet: "No posts yet. Check back soon."
+      subscribe_to: "Subscribe to %{site_name}"
+      get_notified: "Get notified when new posts are published."
+    show:
+      comments: "Comments"
+    post_navigation:
+      previous_post: "Previous Post"
+      next_post: "Next Post"
+    related_posts:
+      you_might_also_like: "You might also like"
+    post_page:
+      load_more: "Load more"
+      loading_more: "Loading more posts…"
+
+  subscriptions:
+    form:
+      email_placeholder: "your@email.com"
+
+  comments:
+    form:
+      write: "Write"
+      preview: "Preview"
+      placeholder: "Share your thoughts... (markdown supported)"
+      comment: "Comment"
+      subscribe_to_join: "Subscribe to join the conversation."
+
+  authors:
+    index:
+      title: "Authors"
+      meet_the_authors: "Meet the authors of %{site_name}"
+      meet_the_people: "Meet the people behind %{site_name}."
+      website: "Website"
+    show:
+      posts_by: "Posts by %{name} on %{site_name}"
+      posts_published:
+        one: "1 post published"
+        other: "%{count} posts published"
+      posts_by_author: "Posts by %{name}"
+      load_more: "Load more"
+      no_posts: "No published posts yet."
+
+  tags:
+    show:
+      tagged: "Tagged: %{name}"
+
+  pages:
+    about:
+      about_site: "About %{site_name}"
+      about_description: "%{site_name} is a thoughtfully crafted publication focused on delivering quality writing and ideas."
+
+  unsubscribes:
+    show:
+      title: "Unsubscribe"
+      confirm_message_html: "Are you sure you want to unsubscribe <strong>%{email}</strong> from our newsletter?"
+      yes_unsubscribe: "Yes, unsubscribe me"
+    create:
+      title: "You've been unsubscribed"
+      removed_html: "<strong>%{email}</strong> has been removed from our mailing list."
+      no_more_newsletters: "You will no longer receive newsletters from us."
+      return_to_site: "Return to site"
+
+  handles:
+    form:
+      choose_handle: "Choose a handle"
+
+  tag_select:
+    search_placeholder: "Search or create tags..."
+
+  # Admin views
+  admin:
+    sessions:
+      new:
+        sign_in: "Sign in"
+    setup:
+      new:
+        create_account_message: "Create your admin account to get started."
+        create_account: "Create account"
+    dashboard:
+      show:
+        title: "Dashboard"
+        welcome_back: "Welcome back, %{name}."
+        total_subscribers: "Total Subscribers"
+        new_subscribers_30d: "New Subscribers (30d)"
+        total_views_30d: "Total Views (30d)"
+        published_posts: "Published Posts"
+        newsletters_sent_30d: "Newsletters Sent (30d)"
+        views_last_30_days: "Views (Last 30 Days)"
+        no_view_data: "No view data yet."
+        subscriber_growth_30d: "Subscriber Growth (Last 30 Days)"
+        no_subscriber_data: "No subscriber data yet."
+        top_posts_30d: "Top Posts (30 Days)"
+        post: "Post"
+        views: "Views"
+        no_views_recorded: "No views recorded yet."
+        recent_posts: "Recent Posts"
+        loves: "loves"
+        no_published_posts: "No published posts yet."
+        recent_newsletters: "Recent Newsletters"
+        newsletter: "Newsletter"
+        recipients: "Recipients"
+        no_newsletters_sent: "No newsletters sent yet."
+    posts:
+      index:
+        title: "Posts"
+        new_post: "New Post"
+        search_placeholder: "Search posts..."
+        title_header: "Title"
+        status: "Status"
+        author: "Author"
+        date: "Date"
+        no_posts: "No posts"
+        get_started: "Get started by creating a new post."
+      form:
+        errors_prevented_html: "%{count} prevented this post from being saved:"
+        title_placeholder: "Post title"
+        subtitle_placeholder: "Add a subtitle..."
+      settings_fields:
+        schedule_help: "Set when this post should be published."
+        slug_placeholder: "auto-generated-from-title"
+        slug_help: "Leave blank to auto-generate from title."
+        category: "Category"
+        tags: "Tags"
+        featured: "Featured"
+        generate_with_ai: "Generate with AI"
+        meta_description: "Meta description"
+        meta_description_placeholder: "Brief description for search engines (max 160 characters)"
+        meta_description_help: "Max 160 characters. Falls back to subtitle or content excerpt if blank."
+        delete_post: "Delete post"
+        delete_post_confirm: "Are you sure you want to delete this post?"
+      editor_panel:
+        title: "Editor Panel"
+        new_ai_conversation: "New AI conversation"
+        pin_panel: "Pin panel"
+        ai_assistant: "AI Assistant"
+        settings: "Settings"
+        proofread: "Proofread"
+        critique: "Critique"
+        brainstorm: "Brainstorm"
+        social: "Social"
+        ai_empty_state: "Ask AI for writing help or use a quick action above."
+        ai_placeholder: "Ask AI..."
+        ai_send_hint: "Press Enter to send, Shift+Enter for new line"
+      featured_image_modal:
+        title: "Generate Featured Image"
+        suggesting_prompt: "Suggesting a prompt..."
+      preview:
+        preview: "Preview"
+    categories:
+      index:
+        title: "Categories"
+        new_category: "New Category"
+        name: "Name"
+        slug: "Slug"
+        posts: "Posts"
+        no_categories: "No categories"
+        get_started: "Get started by creating a new category."
+      new:
+        title: "New Category"
+      edit:
+        title: "Edit Category"
+      form:
+        slug_placeholder: "auto-generated-from-name"
+        slug_help: "Leave blank to auto-generate from name."
+    subscribers:
+      index:
+        title: "Subscribers"
+        confirmed_of_total: "%{confirmed} confirmed of %{total} total"
+        email: "Email"
+        handle: "Handle"
+        status: "Status"
+        subscribed: "Subscribed"
+        no_subscribers: "No subscribers yet."
+      show:
+        handle: "Handle"
+        status: "Status"
+        subscribed: "Subscribed"
+    comments:
+      index:
+        title: "Comments"
+        approved: "Approved"
+        approve: "Approve"
+        reject: "Reject"
+        delete_confirm: "Delete this comment?"
+        no_comments: "No comments yet."
+    api_tokens:
+      index:
+        title: "API Tokens"
+        token_created: "Your new API token (copy it now — it won't be shown again):"
+        copy: "Copy"
+        create_new_token: "Create New Token"
+        token_name: "Token Name"
+        token_name_placeholder: "e.g., Claude Desktop"
+        generate_token: "Generate Token"
+        name: "Name"
+        prefix: "Prefix"
+        owner: "Owner"
+        last_used: "Last Used"
+        created: "Created"
+        status: "Status"
+        revoke: "Revoke"
+        revoke_confirm: "Revoke this token? Any applications using it will lose access."
+        no_tokens: "No API tokens yet. Create one to connect Claude Desktop or other MCP clients."
+    newsletters:
+      index:
+        title: "Newsletters"
+        new_newsletter: "New Newsletter"
+        title_header: "Title"
+        status: "Status"
+        recipients: "Recipients"
+        date: "Date"
+        no_newsletters: "No newsletters"
+        get_started: "Get started by creating a new newsletter."
+      form:
+        errors_prevented_html: "%{count} prevented this newsletter from being saved:"
+        title_placeholder: "Newsletter subject"
+      editor_panel:
+        title: "Newsletter Settings"
+        template: "Template"
+        site_default: "Site Default"
+        site_default_description: "Use the template set in site settings"
+        accent_color: "Accent color"
+        accent_color_help: "Leave blank to use site default."
+        preheader_text: "Preheader text"
+        preheader_placeholder: "Preview text shown in inbox..."
+        preheader_help: "Short text shown in email clients before opening. Max 150 characters."
+        audience: "Audience"
+        confirmed_subscribers: "confirmed subscribers"
+        sent: "Sent"
+        delivered_to: "Delivered to"
+        subscribers_on: "subscribers on"
+        sending_in_progress: "Sending in progress..."
+        sending_message: "Your newsletter is being delivered to subscribers."
+        scheduled: "Scheduled"
+        will_be_sent_on: "Will be sent on"
+        cancel_schedule: "Cancel schedule"
+        send_now: "Send Now"
+        send_confirm: "Send this newsletter to all confirmed subscribers?"
+        schedule_for_later: "Schedule for later"
+        schedule: "Schedule"
+        save_first: "Save the newsletter first to enable send and schedule options."
+        delete_newsletter: "Delete newsletter"
+        delete_confirm: "Are you sure you want to delete this newsletter?"
+    settings:
+      edit:
+        title: "Site Settings"
+        subtitle: "Configure your site name, description, and default social sharing image."
+        errors_prevented_html: "%{count} prevented settings from being saved:"
+        description_placeholder: "A brief description of your site"
+        default_og_image: "Default social sharing image"
+        og_image_help: "Used as the default image for social sharing (og:image) when a post has no featured image."
+        appearance: "Appearance"
+        appearance_description: "Choose a background color for your site. Changes apply to all public pages."
+        background_color: "Background color"
+        your_site_background: "Your site background"
+        background_preview_help: "This is how your site background will look with the selected color."
+        dark_theme: "Dark Theme"
+        dark_theme_description: "Configure the dark mode appearance for your site. Visitors can toggle dark mode using the sun/moon icon in the header."
+        dark_theme_label: "Dark theme"
+        text_color: "Text color"
+        accent_color: "Accent color"
+        your_dark_theme: "Your dark theme"
+        dark_theme_preview_help: "This is how your site will look in dark mode."
+        sample_link: "Sample link"
+        typography: "Typography"
+        typography_description: "Choose fonts and sizes for your site. Changes apply to all public pages."
+        heading: "Heading"
+        font_family: "Font family"
+        font_size: "Font size"
+        subtitle_group: "Subtitle"
+        body: "Body"
+        preview_heading: "The quick brown fox"
+        preview_subtitle: "Jumps over the lazy dog"
+        preview_body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris."
+        ai_configuration: "AI Configuration"
+        ai_description: "Provide your API keys to enable AI writing features. Remove keys to disable all AI features."
+        anthropic_api_key: "Anthropic API Key"
+        anthropic_help: "Required for AI chat, writing assistance, SEO, and social media features."
+        gemini_api_key: "Google Gemini API Key"
+        gemini_help: "Required for Google Imagen image models. Only needed if you select a Gemini image model below."
+        openai_api_key: "OpenAI API Key"
+        openai_help: "Required for OpenAI image models (GPT Image, DALL-E). Only needed if you select an OpenAI image model below."
+        ai_model: "AI Model"
+        image_model: "Image Generation Model"
+        image_model_help: "Select which AI model to use for featured image generation."
+        max_tokens: "Max Response Tokens"
+        max_tokens_help: "Maximum number of tokens in AI responses (256-16384)."
+        search_engines: "Search Engines"
+        search_engines_description: "Control how search engine crawlers interact with your site."
+        block_crawlers: "Block all crawlers"
+        block_crawlers_description: "When enabled, robots.txt will tell all search engines not to index your site. Useful during development or for private sites."
+        save_settings: "Save settings"
+        language: "Language"
+        locale: "Language"
+        locale_description: "Choose the language for your site's user interface."
+    newsletter_settings:
+      edit:
+        title: "Newsletter Settings"
+        subtitle: "Configure email branding and delivery for your newsletters."
+        errors_prevented_html: "%{count} prevented settings from being saved:"
+        email_branding: "Email Branding"
+        email_branding_description: "Customize the look of your newsletter emails. These are site-wide defaults that can be overridden per newsletter."
+        default_template: "Default template"
+        header_logo: "Header logo"
+        header_logo_help: "Displayed in the Branded template header. Recommended max height: 48px."
+        colors: "Colors"
+        accent_color: "Accent color"
+        background_color: "Background color"
+        body_text_color: "Body text color"
+        heading_color: "Heading color"
+        font_family: "Font family"
+        default_preheader: "Default preheader text"
+        preheader_help: "Short text shown in email clients before opening the message."
+        custom_footer: "Custom footer text"
+        footer_placeholder: "e.g. 123 Main St, City, State 12345"
+        footer_help: "Appears in the footer of all newsletter emails."
+        social_links: "Social Links"
+        twitter: "Twitter / X"
+        github: "GitHub"
+        linkedin: "LinkedIn"
+        website: "Website"
+        preheader_preview: "Preheader"
+        template_label: "Template:"
+        font_label: "Font:"
+        newsletter_heading_preview: "Newsletter Heading"
+        newsletter_body_preview: "This is how your newsletter body text will look with the selected colors and font."
+        email_service: "Email Service"
+        email_service_description: "Configure how newsletters are delivered. SMTP uses your default mail settings. SendGrid provides delivery tracking and analytics."
+        email_provider: "Email Provider"
+        sendgrid_api_key: "SendGrid API Key"
+        sendgrid_help_html: "Required when using SendGrid. Get your API key from <strong>Settings &rarr; API Keys</strong> in your SendGrid dashboard."
+        webhook_url: "Webhook URL:"
+        webhook_description: "To enable open/click tracking, configure the SendGrid Event Webhook to POST to:"
+        save_settings: "Save settings"
+    growth:
+      show:
+        title: "Subscriber Growth"
+        subtitle: "Track how your audience is growing over time."
+        total_subscribers: "Total Subscribers"
+        new_subscribers: "New Subscribers (%{range})"
+        latest_post_subscribers: "Latest Post Subscribers"
+        subscriber_growth: "Subscriber Growth"
+        monthly: "Monthly"
+        cumulative: "Cumulative"
+        no_data: "No subscriber data for this period."
+        top_posts_by_subscribers: "Top Posts by Subscribers"
+        post: "Post"
+        subscribers: "Subscribers"
+        no_post_subscribers: "No post-attributed subscribers yet. Subscribers who sign up from a post page will be tracked here going forward."
+    post_dashboard:
+      show:
+        edit_post: "Edit Post"
+        view_live: "View Live"
+        total_views: "Total Views"
+        unique_viewers: "Unique Viewers"
+        loves: "Loves"
+        engagement_rate: "Engagement Rate"
+        views_last_30_days: "Views (Last 30 Days)"
+        no_view_data: "No view data yet."
+        traffic_sources: "Traffic Sources"
+        views: "views"
+        no_traffic_data: "No traffic data yet."
+        comments: "Comments (%{count})"
+        no_comments: "No comments yet."
+    profiles:
+      edit:
+        title: "Author Profile"
+        subtitle: "Manage your public author profile. This information appears on your author page and posts."
+        errors_prevented_html: "%{count} prevented your profile from being saved:"
+        avatar_help: "Square image recommended. Will be cropped to a circle."
+        display_name: "Display name"
+        handle_help: "Letters, numbers, and underscores only. This is used in your author page URL."
+        bio_placeholder: "Tell readers about yourself..."
+        bio_help: "Supports Markdown formatting (bold, italic, links, etc.)."
+        social_links: "Social Links"
+        social_links_description: "Optional links displayed on your author profile."
+        website: "Website"
+        twitter_handle: "X (Twitter) handle"
+        github_handle: "GitHub username"
+        save_profile: "Save Profile"
+        view_public_profile: "View public profile"
+    ai:
+      featured_image_preview:
+        generated_image: "Generated Featured Image"
+        save_as_featured: "Save as Featured Image"
+        regenerate: "Regenerate"
+
+  # Mailers
+  subscriber_mailer:
+    confirmation:
+      subject: "Confirm your subscription to %{site_name}"
+      welcome: "Welcome to %{site_name}"
+      thanks: "Thanks for subscribing! Click the link below to confirm your subscription and sign in:"
+      confirm_link: "Confirm and sign in"
+      link_expiry: "This link will expire in 15 minutes."
+    magic_link:
+      subject: "Sign in to %{site_name}"
+      sign_in_to: "Sign in to %{site_name}"
+      click_to_sign_in: "Click the link below to sign in:"
+      sign_in: "Sign in"
+      link_expiry: "This link will expire in 15 minutes."
+  post_notification_mailer:
+    new_post:
+      read_full_post: "Read the full post"
+      subject: "New post: %{title}"
+  newsletter_mailer:
+    footer:
+      unsubscribe: "Unsubscribe"
+    social_links:
+      twitter: "Twitter/X"
+      github: "GitHub"
+      linkedin: "LinkedIn"
+      website: "Website"
+
+  # Flash messages
+  flash:
+    ai:
+      configurable:
+        add_api_keys: "Add your API keys in Settings to enable AI features."
+    subscriptions:
+      check_email: "Check your email for a sign-in link."
+      invalid_email: "Please enter a valid email address."
+    subscriber_sessions:
+      signed_in: "You're now signed in."
+      link_expired: "This link has expired or is invalid. Please request a new one."
+      signed_out: "Signed out."
+    authentication:
+      sign_in_required: "Please sign in to continue."
+    identity_authentication:
+      sign_in_required: "Please sign in to continue."
+    authorization:
+      not_authorized: "You are not authorized to perform this action."
+    unsubscribes:
+      invalid_link: "Invalid or expired unsubscribe link."
+    comments:
+      could_not_save: "Comment could not be saved."
+      approved: "Comment approved."
+      rejected: "Comment rejected."
+      deleted: "Comment deleted."
+    admin:
+      settings:
+        saved: "Settings saved."
+      newsletter_settings:
+        saved: "Newsletter settings saved."
+      posts:
+        created: "Post created."
+        updated: "Post updated."
+        deleted: "Post deleted."
+      sessions:
+        signed_in: "Signed in successfully."
+        signed_out: "Signed out successfully."
+      newsletters:
+        created: "Newsletter created."
+        updated: "Newsletter updated."
+        deleted: "Newsletter deleted."
+        sending: "Newsletter is being sent."
+        cannot_send: "This newsletter cannot be sent."
+        scheduled: "Newsletter scheduled."
+        cannot_schedule: "Could not schedule newsletter."
+      categories:
+        created: "Category created."
+        updated: "Category updated."
+        deleted: "Category deleted."
+      api_tokens:
+        created: "API token created."
+        revoked: "API token revoked."
+      setup:
+        welcome: "Welcome to %{site_name}! Your admin account has been created."
+      ai:
+        generating_image: "Generating featured image..."

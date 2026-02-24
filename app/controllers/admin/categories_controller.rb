@@ -14,7 +14,7 @@ module Admin
       @category = Category.new(category_params)
 
       if @category.save
-        redirect_to admin_categories_path, notice: "Category created."
+        redirect_to admin_categories_path, notice: t("flash.admin.categories.created")
       else
         render :new, status: :unprocessable_entity
       end
@@ -25,7 +25,7 @@ module Admin
 
     def update
       if @category.update(category_params)
-        redirect_to admin_categories_path, notice: "Category updated."
+        redirect_to admin_categories_path, notice: t("flash.admin.categories.updated")
       else
         render :edit, status: :unprocessable_entity
       end
@@ -33,7 +33,7 @@ module Admin
 
     def destroy
       @category.destroy
-      redirect_to admin_categories_path, notice: "Category deleted."
+      redirect_to admin_categories_path, notice: t("flash.admin.categories.deleted")
     end
 
     private

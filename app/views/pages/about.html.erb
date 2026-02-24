@@ -1,4 +1,4 @@
-<% content_for(:title, page_title("About")) %>
+<% content_for(:title, page_title(t('shared.about'))) %>
 
 <% content_for(:head) do %>
   <%= meta_description_tag("Learn more about #{site_name}") %>
@@ -8,8 +8,8 @@
 <% end %>
 
 <article>
-  <h1 class="font-display text-3xl font-bold">About <%= site_name %></h1>
+  <h1 class="font-display text-3xl font-bold"><%= t('pages.about.about_site', site_name: site_name) %></h1>
   <div class="mt-6 space-y-4 text-lg leading-relaxed text-gray-700 dark:text-gray-300">
-    <p><%= site_name %> is a thoughtfully crafted publication focused on delivering quality writing and ideas.</p>
+    <p><%= t('pages.about.about_description', site_name: site_name) %></p>
   </div>
 </article>

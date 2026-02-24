@@ -12,6 +12,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **Social Embeds** — X/Twitter and YouTube via oEmbed
 - **Analytics** — Dashboard with view tracking, subscriber growth, post engagement
 - **Customization** — 30+ Google Fonts, adjustable typography, live preview
+- **Internationalization** — Full i18n support with English and Spanish included; site-wide locale setting
 - **SEO** — Slugged URLs, meta descriptions, RSS feed, XML sitemap
 
 ## Tech Stack

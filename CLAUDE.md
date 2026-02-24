@@ -57,6 +57,7 @@ app/models/user/named.rb              # module User::Named (concern)
 app/models/user/authenticatable.rb    # module User::Authenticatable (concern)
 app/models/user/api_tokenable.rb     # module User::ApiTokenable (concern)
 app/models/post/discoverable.rb      # module Post::Discoverable (related posts, prev/next)
+app/models/site_setting/localization.rb  # module SiteSetting::Localization (i18n)
 app/models/identity/handleable.rb    # module Identity::Handleable (handle validation/normalization)
 app/models/identity/profileable.rb   # module Identity::Profileable (avatar, bio, social links)
 app/models/api_token.rb              # Token generation, digest lookup, revocation
@@ -71,6 +72,9 @@ Skinny controllers that delegate to models/services. Controllers handle only HTT
 - **Form Objects** for multi-model input (e.g., `Registration`)
 - **Service Objects** in `app/services/` for business operations (e.g., `Ai::SystemPrompts`, `Ai::PostContextBuilder`, `MarkdownRenderer`, `Mcp::Tools::*`)
 - **Query Objects** in `app/queries/` for complex queries (e.g., `PostViewsQuery`, `SubscriberGrowthQuery`, `PostEngagementQuery`)
+
+### Internationalization (i18n)
+Site-wide locale configured via `SiteSetting.locale` (default: `"en"`). The `SiteSetting::Localization` concern defines `SUPPORTED_LOCALES` and validates the locale value. `ApplicationController` sets `I18n.locale` from the site setting on every request. All UI strings live in `config/locales/en.yml` and `config/locales/es.yml`. To add a new locale: add the language code to `SUPPORTED_LOCALES` in `app/models/site_setting/localization.rb`, add it to `config.i18n.available_locales` in `config/application.rb`, and create the corresponding YAML file in `config/locales/`.
 
 ### Background Jobs
 Solid Queue (database-backed). Jobs organized by domain in `app/jobs/`. Recurring tasks configured in `config/recurring.yml`.

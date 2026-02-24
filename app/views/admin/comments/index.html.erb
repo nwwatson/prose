@@ -1,13 +1,13 @@
 <% content_for(:title, "Comments — #{site_name}") %>
 
 <div class="space-y-6">
-  <h1 class="text-2xl font-bold text-gray-900">Comments</h1>
+  <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.comments.index.title') %></h1>
 
   <div class="border-b border-gray-200">
     <nav class="-mb-px flex space-x-8">
-      <%= link_to "All", admin_comments_path, class: "border-b-2 #{params[:filter].blank? ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
-      <%= link_to "Pending", admin_comments_path(filter: "pending"), class: "border-b-2 #{params[:filter] == 'pending' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
-      <%= link_to "Approved", admin_comments_path(filter: "approved"), class: "border-b-2 #{params[:filter] == 'approved' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
+      <%= link_to t('shared.all'), admin_comments_path, class: "border-b-2 #{params[:filter].blank? ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
+      <%= link_to t('shared.pending'), admin_comments_path(filter: "pending"), class: "border-b-2 #{params[:filter] == 'pending' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
+      <%= link_to t('admin.comments.index.approved'), admin_comments_path(filter: "approved"), class: "border-b-2 #{params[:filter] == 'approved' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
     </nav>
   </div>
 
@@ -19,21 +19,21 @@
             <div class="flex-1">
               <div class="flex items-center space-x-2 text-sm">
                 <span class="font-medium text-gray-900"><%= comment.identity.handle || comment.identity.name %></span>
-                <span class="text-gray-500">on</span>
+                <span class="text-gray-500"><%= t('shared.on') %></span>
                 <span class="font-medium text-gray-900"><%= comment.post.title %></span>
                 <span class="text-gray-500">&middot;</span>
-                <time class="text-gray-500"><%= time_ago_in_words(comment.created_at) %> ago</time>
+                <time class="text-gray-500"><%= time_ago_in_words(comment.created_at) %> <%= t('shared.ago') %></time>
               </div>
               <div class="mt-2 text-gray-700 prose-comment"><%= sanitize_markdown(comment.rendered_body) %></div>
             </div>
             <div class="ml-4 flex items-center space-x-2">
               <% unless comment.approved? %>
-                <%= button_to "Approve", admin_comment_path(comment), params: { approved: true }, method: :patch, class: "rounded bg-green-50 px-2 py-1 text-xs font-medium text-green-700 hover:bg-green-100" %>
+                <%= button_to t('admin.comments.index.approve'), admin_comment_path(comment), params: { approved: true }, method: :patch, class: "rounded bg-green-50 px-2 py-1 text-xs font-medium text-green-700 hover:bg-green-100" %>
               <% end %>
               <% if comment.approved? %>
-                <%= button_to "Reject", admin_comment_path(comment), params: { approved: false }, method: :patch, class: "rounded bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 hover:bg-yellow-100" %>
+                <%= button_to t('admin.comments.index.reject'), admin_comment_path(comment), params: { approved: false }, method: :patch, class: "rounded bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 hover:bg-yellow-100" %>
               <% end %>
-              <%= button_to "Delete", admin_comment_path(comment), method: :delete, data: { turbo_confirm: "Delete this comment?" }, class: "rounded bg-red-50 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-100" %>
+              <%= button_to t('shared.delete'), admin_comment_path(comment), method: :delete, data: { turbo_confirm: t('admin.comments.index.delete_confirm') }, class: "rounded bg-red-50 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-100" %>
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@
     </div>
   <% else %>
     <div class="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
-      <p class="text-sm text-gray-500">No comments yet.</p>
+      <p class="text-sm text-gray-500"><%= t('admin.comments.index.no_comments') %></p>
     </div>
   <% end %>
 </div>

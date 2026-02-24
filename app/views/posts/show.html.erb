@@ -18,11 +18,11 @@
       <p class="mt-3 text-xl text-gray-600 dark:text-gray-400 font-subtitle"><%= @post.subtitle %></p>
     <% end %>
     <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
-      <span>By <strong><%= author_link(@post.user, class: "text-charcoal hover:text-ink-blue transition-colors font-bold") %></strong></span>
+      <span><%= t('shared.by') %> <strong><%= author_link(@post.user, class: "text-charcoal hover:text-ink-blue transition-colors font-bold") %></strong></span>
       <span>&middot;</span>
       <time datetime="<%= @post.published_at.iso8601 %>"><%= @post.published_at.strftime("%B %-d, %Y") %></time>
       <span>&middot;</span>
-      <span><%= @post.reading_time_minutes %> min read</span>
+      <span><%= @post.reading_time_minutes %> <%= t('shared.min_read') %></span>
       <% if @post.category %>
         <span>&middot;</span>
         <%= link_to @post.category.name, category_path(@post.category, slug: @post.category.slug), class: "text-ink-blue hover:underline" %>
@@ -62,7 +62,7 @@
 
   <%# Comments %>
   <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
-    <h3 class="font-display text-xl font-bold">Comments</h3>
+    <h3 class="font-display text-xl font-bold"><%= t('posts.show.comments') %></h3>
 
     <div id="comments" class="mt-4 divide-y divide-gray-100 dark:divide-gray-700">
       <% @post.comments.approved.top_level.includes(:identity, replies: :identity).each do |comment| %>

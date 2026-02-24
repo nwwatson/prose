@@ -9,7 +9,7 @@
 <% end %>
 
 <div>
-  <h1 class="font-display text-3xl font-bold">Tagged: <%= @tag.name %></h1>
+  <h1 class="font-display text-3xl font-bold"><%= t('tags.show.tagged', name: @tag.name) %></h1>
 </div>
 
 <div class="mt-8 space-y-8">
@@ -19,7 +19,7 @@
         <%= link_to post.title, post_path(post, slug: post.slug), class: "text-charcoal hover:text-ink-blue transition-colors no-underline" %>
       </h3>
       <div class="mt-2 flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400">
-        <span>By <%= author_link(post.user) %></span>
+        <span><%= t('shared.by') %> <%= author_link(post.user) %></span>
         <span>&middot;</span>
         <time datetime="<%= post.published_at.iso8601 %>"><%= post.published_at.strftime("%B %-d, %Y") %></time>
       </div>

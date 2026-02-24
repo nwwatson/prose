@@ -30,7 +30,7 @@ module Admin
 
       if @post.save
         respond_to do |format|
-          format.html { redirect_to edit_admin_post_path(@post), notice: "Post created." }
+          format.html { redirect_to edit_admin_post_path(@post), notice: t("flash.admin.posts.created") }
           format.json { render json: post_json(@post), status: :created }
         end
       else
@@ -47,7 +47,7 @@ module Admin
     def update
       if @post.update(post_params)
         respond_to do |format|
-          format.html { redirect_to edit_admin_post_path(@post), notice: "Post updated." }
+          format.html { redirect_to edit_admin_post_path(@post), notice: t("flash.admin.posts.updated") }
           format.json { render json: post_json(@post), status: :ok }
         end
       else
@@ -65,7 +65,7 @@ module Admin
 
     def destroy
       @post.destroy
-      redirect_to admin_posts_path, notice: "Post deleted."
+      redirect_to admin_posts_path, notice: t("flash.admin.posts.deleted")
     end
 
     private

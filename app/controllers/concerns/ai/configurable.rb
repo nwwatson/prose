@@ -15,7 +15,7 @@ module Ai
 
     def require_ai_configured
       unless SiteSetting.current.ai_configured?
-        redirect_to edit_admin_settings_path, alert: "Add your API keys in Settings to enable AI features."
+        redirect_to edit_admin_settings_path, alert: t("flash.ai.configurable.add_api_keys")
       end
     end
 

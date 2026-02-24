@@ -4,6 +4,6 @@
   <p><em><%= @post.subtitle %></em></p>
 <% end %>
 
-<p>By <%= @post.user.display_name %></p>
+<p><%= t('shared.by') %> <%= @post.user.display_name %></p>
 
-<p><%= link_to "Read the full post", post_url(@post, slug: @post.slug) %></p>
+<p><%= link_to t('post_notification_mailer.new_post.read_full_post'), post_url(@post, slug: @post.slug) %></p>

@@ -15,6 +15,6 @@ class UnsubscribesController < ApplicationController
     subscriber_id = Rails.application.message_verifier("unsubscribe").verify(params[:token])
     @subscriber = Subscriber.find(subscriber_id)
   rescue ActiveSupport::MessageVerifier::InvalidSignature
-    redirect_to root_path, alert: "Invalid or expired unsubscribe link."
+    redirect_to root_path, alert: t("flash.unsubscribes.invalid_link")
   end
 end

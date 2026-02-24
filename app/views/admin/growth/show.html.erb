@@ -1,29 +1,29 @@
 <% content_for(:title, "Growth — #{site_name}") %>
 
 <div>
-  <h1 class="text-2xl font-bold text-gray-900">Subscriber Growth</h1>
-  <p class="mt-2 text-sm text-gray-600">Track how your audience is growing over time.</p>
+  <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.growth.show.title') %></h1>
+  <p class="mt-2 text-sm text-gray-600"><%= t('admin.growth.show.subtitle') %></p>
 </div>
 
 <%# Stat Cards %>
 <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
   <div class="bg-white overflow-hidden shadow rounded-lg">
     <div class="p-5">
-      <div class="text-sm font-medium text-gray-500 truncate">Total Subscribers</div>
+      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.growth.show.total_subscribers') %></div>
       <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @total_subscribers %></div>
     </div>
   </div>
 
   <div class="bg-white overflow-hidden shadow rounded-lg">
     <div class="p-5">
-      <div class="text-sm font-medium text-gray-500 truncate">New Subscribers (<%= @range %>)</div>
+      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.growth.show.new_subscribers', range: @range) %></div>
       <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @new_subscribers %></div>
     </div>
   </div>
 
   <div class="bg-white overflow-hidden shadow rounded-lg">
     <div class="p-5">
-      <div class="text-sm font-medium text-gray-500 truncate">Latest Post Subscribers</div>
+      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.growth.show.latest_post_subscribers') %></div>
       <% if @latest_post_data %>
         <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @latest_post_data[:count] %></div>
         <p class="mt-1 text-xs text-gray-500 truncate"><%= @latest_post_data[:post].title %></p>
@@ -41,7 +41,7 @@
      data-growth-chart-cumulative-value="<%= @cumulative_data.to_json %>">
 
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-    <h2 class="text-lg font-medium text-gray-900">Subscriber Growth</h2>
+    <h2 class="text-lg font-medium text-gray-900"><%= t('admin.growth.show.subscriber_growth') %></h2>
 
     <div class="flex items-center gap-4">
       <%# Chart mode toggle %>
@@ -50,13 +50,13 @@
                 data-growth-chart-target="monthlyBtn"
                 data-action="growth-chart#showMonthly"
                 class="rounded-l-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700">
-          Monthly
+          <%= t('admin.growth.show.monthly') %>
         </button>
         <button type="button"
                 data-growth-chart-target="cumulativeBtn"
                 data-action="growth-chart#showCumulative"
                 class="-ml-px rounded-r-md bg-white px-3 py-1.5 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-          Cumulative
+          <%= t('admin.growth.show.cumulative') %>
         </button>
       </div>
 
@@ -87,19 +87,19 @@
   <div data-growth-chart-target="canvas" class="w-full" style="height: 300px;"></div>
 
   <% if @monthly_data.empty? %>
-    <p class="mt-4 text-sm text-gray-500 text-center">No subscriber data for this period.</p>
+    <p class="mt-4 text-sm text-gray-500 text-center"><%= t('admin.growth.show.no_data') %></p>
   <% end %>
 </div>
 
 <%# Top Posts by Subscribers %>
 <div class="mt-8 bg-white shadow rounded-lg p-6">
-  <h2 class="text-lg font-medium text-gray-900 mb-4">Top Posts by Subscribers</h2>
+  <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.growth.show.top_posts_by_subscribers') %></h2>
   <% if @top_posts.any? %>
     <table class="min-w-full divide-y divide-gray-200">
       <thead>
         <tr>
-          <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Post</th>
-          <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2">Subscribers</th>
+          <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.growth.show.post') %></th>
+          <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.growth.show.subscribers') %></th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
@@ -114,6 +114,6 @@
       </tbody>
     </table>
   <% else %>
-    <p class="text-sm text-gray-500">No post-attributed subscribers yet. Subscribers who sign up from a post page will be tracked here going forward.</p>
+    <p class="text-sm text-gray-500"><%= t('admin.growth.show.no_post_subscribers') %></p>
   <% end %>
 </div>

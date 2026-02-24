@@ -1,6 +1,6 @@
 <% if related_posts.any? %>
   <section class="mt-10 border-t border-gray-200 dark:border-gray-700 pt-8">
-    <h3 class="font-display text-xl font-bold mb-6">You might also like</h3>
+    <h3 class="font-display text-xl font-bold mb-6"><%= t('posts.related_posts.you_might_also_like') %></h3>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
       <% related_posts.each do |post| %>
         <article>

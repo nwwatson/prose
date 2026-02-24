@@ -1,7 +1,7 @@
-<% content_for(:title, page_title("Authors")) %>
+<% content_for(:title, page_title(t('authors.index.title'))) %>
 
 <% content_for(:head) do %>
-  <% description = "Meet the authors of #{site_name}" %>
+  <% description = t('authors.index.meet_the_authors', site_name: site_name) %>
   <%= meta_description_tag(description) %>
   <%= open_graph_tags(title: "Authors — #{site_name}", description: description, url: authors_url) %>
   <%= twitter_card_tags(title: "Authors — #{site_name}", description: description) %>
@@ -9,8 +9,8 @@
 <% end %>
 
 <div>
-  <h1 class="font-display text-3xl font-bold">Authors</h1>
-  <p class="mt-2 text-gray-600 dark:text-gray-400">Meet the people behind <%= site_name %>.</p>
+  <h1 class="font-display text-3xl font-bold"><%= t('authors.index.title') %></h1>
+  <p class="mt-2 text-gray-600 dark:text-gray-400"><%= t('authors.index.meet_the_people', site_name: site_name) %></p>
 </div>
 
 <div class="mt-8 space-y-8">
@@ -43,7 +43,7 @@
               <span>&middot;</span>
               <div class="flex items-center gap-2">
                 <% if identity.website_url.present? %>
-                  <%= link_to "Website", identity.website_url, class: "hover:text-ink-blue", target: "_blank", rel: "noopener" %>
+                  <%= link_to t('authors.index.website'), identity.website_url, class: "hover:text-ink-blue", target: "_blank", rel: "noopener" %>
                 <% end %>
                 <% if identity.twitter_url.present? %>
                   <%= link_to "X", identity.twitter_url, class: "hover:text-ink-blue", target: "_blank", rel: "noopener" %>

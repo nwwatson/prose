@@ -5,6 +5,7 @@ class SiteSetting < ApplicationRecord
   include AiConfiguration
   include EmailConfiguration
   include EmailBranding
+  include Localization
   include Crawlers
 
   has_one_attached :default_og_image

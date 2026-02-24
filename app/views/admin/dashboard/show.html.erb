@@ -1,42 +1,42 @@
 <% content_for(:title, "Dashboard — #{site_name}") %>
 
 <div>
-  <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-  <p class="mt-2 text-sm text-gray-600">Welcome back, <%= current_user.display_name %>.</p>
+  <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.dashboard.show.title') %></h1>
+  <p class="mt-2 text-sm text-gray-600"><%= t('admin.dashboard.show.welcome_back', name: current_user.display_name) %></p>
 </div>
 
 <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
   <div class="bg-white overflow-hidden shadow rounded-lg">
     <div class="p-5">
-      <div class="text-sm font-medium text-gray-500 truncate">Total Subscribers</div>
+      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.dashboard.show.total_subscribers') %></div>
       <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @total_subscribers %></div>
     </div>
   </div>
 
   <div class="bg-white overflow-hidden shadow rounded-lg">
     <div class="p-5">
-      <div class="text-sm font-medium text-gray-500 truncate">New Subscribers (30d)</div>
+      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.dashboard.show.new_subscribers_30d') %></div>
       <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @new_subscribers_30d %></div>
     </div>
   </div>
 
   <div class="bg-white overflow-hidden shadow rounded-lg">
     <div class="p-5">
-      <div class="text-sm font-medium text-gray-500 truncate">Total Views (30d)</div>
+      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.dashboard.show.total_views_30d') %></div>
       <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @total_views_30d %></div>
     </div>
   </div>
 
   <div class="bg-white overflow-hidden shadow rounded-lg">
     <div class="p-5">
-      <div class="text-sm font-medium text-gray-500 truncate">Published Posts</div>
+      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.dashboard.show.published_posts') %></div>
       <div class="mt-1 text-3xl font-semibold text-gray-900"><%= Post.published.count %></div>
     </div>
   </div>
 
   <div class="bg-white overflow-hidden shadow rounded-lg">
     <div class="p-5">
-      <div class="text-sm font-medium text-gray-500 truncate">Newsletters Sent (30d)</div>
+      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.dashboard.show.newsletters_sent_30d') %></div>
       <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @newsletters_sent_30d %></div>
     </div>
   </div>
@@ -44,35 +44,35 @@
 
 <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
   <div class="bg-white shadow rounded-lg p-6">
-    <h2 class="text-lg font-medium text-gray-900">Views (Last 30 Days)</h2>
+    <h2 class="text-lg font-medium text-gray-900"><%= t('admin.dashboard.show.views_last_30_days') %></h2>
     <div class="mt-4" data-controller="chart" data-chart-type-value="line" data-chart-data-value="<%= @views_by_day.to_json %>">
       <canvas data-chart-target="canvas" class="w-full" height="200"></canvas>
     </div>
     <% if @views_by_day.empty? %>
-      <p class="mt-4 text-sm text-gray-500">No view data yet.</p>
+      <p class="mt-4 text-sm text-gray-500"><%= t('admin.dashboard.show.no_view_data') %></p>
     <% end %>
   </div>
 
   <div class="bg-white shadow rounded-lg p-6">
-    <h2 class="text-lg font-medium text-gray-900">Subscriber Growth (Last 30 Days)</h2>
+    <h2 class="text-lg font-medium text-gray-900"><%= t('admin.dashboard.show.subscriber_growth_30d') %></h2>
     <div class="mt-4" data-controller="chart" data-chart-type-value="line" data-chart-data-value="<%= @subscriber_growth.to_json %>">
       <canvas data-chart-target="canvas" class="w-full" height="200"></canvas>
     </div>
     <% if @subscriber_growth.empty? %>
-      <p class="mt-4 text-sm text-gray-500">No subscriber data yet.</p>
+      <p class="mt-4 text-sm text-gray-500"><%= t('admin.dashboard.show.no_subscriber_data') %></p>
     <% end %>
   </div>
 </div>
 
 <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
   <div class="bg-white shadow rounded-lg p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">Top Posts (30 Days)</h2>
+    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.dashboard.show.top_posts_30d') %></h2>
     <% if @top_posts.any? %>
       <table class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
-            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Post</th>
-            <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2">Views</th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.dashboard.show.post') %></th>
+            <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.dashboard.show.views') %></th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -87,12 +87,12 @@
         </tbody>
       </table>
     <% else %>
-      <p class="text-sm text-gray-500">No views recorded yet.</p>
+      <p class="text-sm text-gray-500"><%= t('admin.dashboard.show.no_views_recorded') %></p>
     <% end %>
   </div>
 
   <div class="bg-white shadow rounded-lg p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">Recent Posts</h2>
+    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.dashboard.show.recent_posts') %></h2>
     <% if @recent_posts.any? %>
       <div class="space-y-3">
         <% @recent_posts.each do |post| %>
@@ -101,26 +101,26 @@
               <p class="text-sm font-medium text-gray-900"><%= link_to post.title, edit_admin_post_path(post), class: "hover:text-indigo-600" %></p>
               <p class="text-xs text-gray-500"><%= post.published_at&.strftime("%b %d, %Y") %> · <%= post.user.display_name %></p>
             </div>
-            <div class="text-sm text-gray-500"><%= post.loves_count %> loves</div>
+            <div class="text-sm text-gray-500"><%= post.loves_count %> <%= t('admin.dashboard.show.loves') %></div>
           </div>
         <% end %>
       </div>
     <% else %>
-      <p class="text-sm text-gray-500">No published posts yet.</p>
+      <p class="text-sm text-gray-500"><%= t('admin.dashboard.show.no_published_posts') %></p>
     <% end %>
   </div>
 </div>
 
 <div class="mt-8">
   <div class="bg-white shadow rounded-lg p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">Recent Newsletters</h2>
+    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.dashboard.show.recent_newsletters') %></h2>
     <% if @recent_newsletters.any? %>
       <table class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
-            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Newsletter</th>
-            <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2">Recipients</th>
-            <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2">Sent</th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.dashboard.show.newsletter') %></th>
+            <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.dashboard.show.recipients') %></th>
+            <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('shared.sent') %></th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -136,7 +136,7 @@
         </tbody>
       </table>
     <% else %>
-      <p class="text-sm text-gray-500">No newsletters sent yet.</p>
+      <p class="text-sm text-gray-500"><%= t('admin.dashboard.show.no_newsletters_sent') %></p>
     <% end %>
   </div>
 </div>

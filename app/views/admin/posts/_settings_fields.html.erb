@@ -15,7 +15,7 @@
               form: "post_form",
               class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
       </div>
-      <p class="mt-1 text-xs text-gray-500">Set when this post should be published.</p>
+      <p class="mt-1 text-xs text-gray-500"><%= t('admin.posts.settings_fields.schedule_help') %></p>
     </div>
 
     <div>
@@ -24,21 +24,21 @@
         <%= f.text_field :slug,
               form: "post_form",
               class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
-              placeholder: "auto-generated-from-title" %>
+              placeholder: t('admin.posts.settings_fields.slug_placeholder') %>
       </div>
-      <p class="mt-1 text-xs text-gray-500">Leave blank to auto-generate from title.</p>
+      <p class="mt-1 text-xs text-gray-500"><%= t('admin.posts.settings_fields.slug_help') %></p>
     </div>
 
     <div>
-      <%= f.label :category_id, "Category", class: "block text-sm font-medium text-gray-900" %>
+      <%= f.label :category_id, t('admin.posts.settings_fields.category'), class: "block text-sm font-medium text-gray-900" %>
       <%= render "shared/custom_select", form: f, field: :category_id,
             collection: Category.ordered, value_method: :id, text_method: :name,
-            include_blank: "No category",
+            include_blank: t('shared.no_category'),
             form_attr: "post_form" %>
     </div>
 
     <div>
-      <%= f.label :tag_ids, "Tags", class: "block text-sm font-medium text-gray-900" %>
+      <%= f.label :tag_ids, t('admin.posts.settings_fields.tags'), class: "block text-sm font-medium text-gray-900" %>
       <%= render "shared/tag_select",
             form: f,
             field: :tag_ids,
@@ -75,7 +75,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
-            Generate with AI
+            <%= t('admin.posts.settings_fields.generate_with_ai') %>
           </button>
         <% end %>
       </div>
@@ -85,19 +85,19 @@
     </div>
 
     <div>
-      <%= f.label :meta_description, "Meta description", class: "block text-sm font-medium text-gray-900" %>
+      <%= f.label :meta_description, t('admin.posts.settings_fields.meta_description'), class: "block text-sm font-medium text-gray-900" %>
       <div class="mt-2">
         <%= f.text_area :meta_description, rows: 3, maxlength: 160, form: "post_form",
               class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
-              placeholder: "Brief description for search engines (max 160 characters)" %>
+              placeholder: t('admin.posts.settings_fields.meta_description_placeholder') %>
       </div>
-      <p class="mt-1 text-xs text-gray-500">Max 160 characters. Falls back to subtitle or content excerpt if blank.</p>
+      <p class="mt-1 text-xs text-gray-500"><%= t('admin.posts.settings_fields.meta_description_help') %></p>
     </div>
 
     <% if post.persisted? %>
       <div class="border-t border-gray-200 pt-6">
-        <%= button_to "Delete post", admin_post_path(post), method: :delete,
-              data: { turbo_confirm: "Are you sure you want to delete this post?" },
+        <%= button_to t('admin.posts.settings_fields.delete_post'), admin_post_path(post), method: :delete,
+              data: { turbo_confirm: t('admin.posts.settings_fields.delete_post_confirm') },
               class: "w-full rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500" %>
       </div>
     <% end %>

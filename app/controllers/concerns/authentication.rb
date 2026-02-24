@@ -59,7 +59,7 @@ module Authentication
     if User.none?
       redirect_to new_admin_setup_path
     else
-      redirect_to new_admin_session_path, alert: "Please sign in to continue."
+      redirect_to new_admin_session_path, alert: t("flash.authentication.sign_in_required")
     end
   end
 end

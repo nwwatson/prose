@@ -20,11 +20,11 @@
           <p class="mt-2 text-xl text-gray-600 dark:text-gray-400 font-subtitle"><%= post.subtitle %></p>
         <% end %>
         <div class="mt-3 flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400">
-          <span>By <%= author_link(post.user) %></span>
+          <span><%= t('shared.by') %> <%= author_link(post.user) %></span>
           <span>&middot;</span>
           <time datetime="<%= post.published_at.iso8601 %>"><%= post.published_at.strftime("%B %-d, %Y") %></time>
           <span>&middot;</span>
-          <span><%= post.reading_time_minutes %> min read</span>
+          <span><%= post.reading_time_minutes %> <%= t('shared.min_read') %></span>
         </div>
       </header>
       <% if post.content.present? %>
@@ -39,8 +39,8 @@
 <%# Search %>
 <div class="mb-8 border-b border-gray-300 dark:border-gray-700 pb-8">
   <%= form_with url: posts_path, method: :get, data: { turbo_action: "advance" }, class: "flex items-center gap-3" do |f| %>
-    <%= f.search_field :q, value: @query, placeholder: "Search posts…", class: "flex-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-white/5 px-4 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-ink-blue focus:outline-none focus:ring-1 focus:ring-ink-blue" %>
-    <%= f.submit "Search", class: "rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors cursor-pointer" %>
+    <%= f.search_field :q, value: @query, placeholder: t('posts.index.search_placeholder'), class: "flex-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-white/5 px-4 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-ink-blue focus:outline-none focus:ring-1 focus:ring-ink-blue" %>
+    <%= f.submit t('shared.search'), class: "rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors cursor-pointer" %>
   <% end %>
 </div>
 
@@ -51,18 +51,18 @@
   </div>
 <% elsif @query.present? %>
   <div class="py-16 text-center">
-    <p class="text-lg text-gray-500 dark:text-gray-400">No posts found for "<%= @query %>".</p>
+    <p class="text-lg text-gray-500 dark:text-gray-400"><%= t('posts.index.no_posts_found', query: @query) %></p>
   </div>
 <% elsif @featured_posts.empty? %>
   <div class="py-16 text-center">
-    <p class="text-lg text-gray-500 dark:text-gray-400">No posts yet. Check back soon.</p>
+    <p class="text-lg text-gray-500 dark:text-gray-400"><%= t('posts.index.no_posts_yet') %></p>
   </div>
 <% end %>
 
 <%# Subscribe section %>
 <div class="mt-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-white/5 p-8 text-center">
-  <h3 class="font-display text-xl font-bold text-charcoal">Subscribe to <%= site_name %></h3>
-  <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Get notified when new posts are published.</p>
+  <h3 class="font-display text-xl font-bold text-charcoal"><%= t('posts.index.subscribe_to', site_name: site_name) %></h3>
+  <p class="mt-2 text-sm text-gray-600 dark:text-gray-400"><%= t('posts.index.get_notified') %></p>
   <div class="mx-auto mt-4 max-w-md">
     <%= render "subscriptions/form" %>
   </div>
