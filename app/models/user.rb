@@ -9,6 +9,7 @@ class User < ApplicationRecord
   belongs_to :identity
   has_many :sessions, dependent: :destroy
   has_many :posts, dependent: :nullify
+  has_many :pages, dependent: :nullify
   has_many :newsletters, dependent: :nullify
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: URI::MailTo::EMAIL_REGEXP }

@@ -57,6 +57,10 @@ app/models/user/named.rb              # module User::Named (concern)
 app/models/user/authenticatable.rb    # module User::Authenticatable (concern)
 app/models/user/api_tokenable.rb     # module User::ApiTokenable (concern)
 app/models/post/discoverable.rb      # module Post::Discoverable (related posts, prev/next)
+app/models/page.rb                    # class Page (custom static pages)
+app/models/page/sluggable.rb         # module Page::Sluggable (auto-generated URL slugs)
+app/models/page/publishable.rb       # module Page::Publishable (live scope, publish/draft)
+app/models/page/navigable.rb         # module Page::Navigable (navigation menu scope)
 app/models/site_setting/localization.rb  # module SiteSetting::Localization (i18n)
 app/models/identity/handleable.rb    # module Identity::Handleable (handle validation/normalization)
 app/models/identity/profileable.rb   # module Identity::Profileable (avatar, bio, social links)
@@ -81,6 +85,9 @@ Solid Queue (database-backed). Jobs organized by domain in `app/jobs/`. Recurrin
 
 ### AI Integration
 Uses the **RubyLLM** gem for a unified LLM interface across providers (Claude for text, Gemini/OpenAI for images). API keys are stored with Active Record Encryption on `SiteSetting` — key presence enables a feature, `nil` disables it (no separate toggle). The `Ai::Configurable` concern handles provider configuration. AI controllers are nested under `admin/posts/:id/ai/` and streaming responses use Turbo Streams + Solid Cable (`AiResponseJob` broadcasts chunks).
+
+### Custom Static Pages
+Pages (`Page` model) provide custom static content at top-level URLs (`/:slug`). The catch-all route **must remain last** in `config/routes.rb` (after admin namespace and health check) to avoid intercepting other routes. Pages use `admin_page_editor` layout (simplified editor without AI/preview). Reserved slugs (admin, posts, feed, etc.) are validated at the model level. Published pages with `show_in_navigation: true` appear in the site header automatically via `Page.navigation` scope.
 
 ### Post Editor
 Uses the `admin_editor` layout. Autosave triggers on a 3-second debounce, serializing `#post_form` FormData. The editor drawer is a tabbed panel (AI + Settings). Settings fields use `form="post_form"` attribute with event listeners on the settings tab container to trigger autosave.

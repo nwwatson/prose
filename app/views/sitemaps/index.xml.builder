@@ -6,10 +6,13 @@ xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9" do
     xml.priority 1.0
   end
 
-  xml.url do
-    xml.loc about_url
-    xml.changefreq "monthly"
-    xml.priority 0.5
+  @pages.each do |pg|
+    xml.url do
+      xml.loc page_url(pg.slug)
+      xml.lastmod pg.updated_at.iso8601
+      xml.changefreq "monthly"
+      xml.priority 0.5
+    end
   end
 
   @posts.each do |post|

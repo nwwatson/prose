@@ -11,6 +11,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **Reader Engagement** — Comments with threading and moderation, loves, subscriber magic-link auth, email notifications
 - **Social Embeds** — X/Twitter and YouTube via oEmbed
 - **Analytics** — Dashboard with view tracking, subscriber growth, post engagement
+- **Custom Pages** — Static pages with rich text editor, top-level URLs (e.g. `/about`), optional navigation menu integration
 - **Customization** — 30+ Google Fonts, adjustable typography, live preview
 - **Internationalization** — Full i18n support with English and Spanish included; site-wide locale setting
 - **SEO** — Slugged URLs, meta descriptions, RSS feed, XML sitemap

@@ -1,4 +1,5 @@
 class PagesController < ApplicationController
-  def about
+  def show
+    @page = Page.live.find_by!(slug: params[:slug])
   end
 end

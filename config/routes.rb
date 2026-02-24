@@ -22,7 +22,6 @@ Rails.application.routes.draw do
   get "feed" => "feeds#index", defaults: { format: :xml }
   get "sitemap" => "sitemaps#index", defaults: { format: :xml }
   get "robots" => "robots#index", defaults: { format: :text }, as: :robots
-  get "about" => "pages#about"
 
   # Admin
   namespace :admin do
@@ -59,9 +58,13 @@ Rails.application.routes.draw do
     resource :profile, only: [ :edit, :update ]
     resource :settings, only: [ :edit, :update ]
     resource :newsletter_settings, only: [ :edit, :update ]
+    resources :pages
     resources :api_tokens, only: [ :index, :create, :destroy ]
   end
 
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
+
+  # Static pages — catch-all must be last
+  get ":slug" => "pages#show", as: :page, constraints: { slug: /[a-z0-9]+(?:-[a-z0-9]+)*/ }
 end

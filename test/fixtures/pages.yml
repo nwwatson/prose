@@ -1,0 +1,27 @@
+published_page:
+  title: About Us
+  slug: about-us
+  status: 1
+  meta_description: "Learn more about us"
+  show_in_navigation: true
+  position: 1
+  published_at: <%= 1.day.ago %>
+  user: admin
+
+draft_page:
+  title: Draft Page
+  slug: draft-page
+  status: 0
+  show_in_navigation: false
+  position: 0
+  user: writer
+
+contact_page:
+  title: Contact
+  slug: contact
+  status: 1
+  meta_description: "Get in touch with us"
+  show_in_navigation: true
+  position: 2
+  published_at: <%= 2.days.ago %>
+  user: admin
