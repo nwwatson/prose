@@ -63,6 +63,7 @@ en:
       newsletter_settings: "Newsletter Settings"
       growth: "Growth"
       system: "System"
+      profile: "Profile"
       settings: "Settings"
       api_tokens: "API Tokens"
 
@@ -96,6 +97,21 @@ en:
       placeholder: "Share your thoughts... (markdown supported)"
       comment: "Comment"
       subscribe_to_join: "Subscribe to join the conversation."
+
+  authors:
+    index:
+      title: "Authors"
+      meet_the_authors: "Meet the authors of %{site_name}"
+      meet_the_people: "Meet the people behind %{site_name}."
+      website: "Website"
+    show:
+      posts_by: "Posts by %{name} on %{site_name}"
+      posts_published:
+        one: "1 post published"
+        other: "%{count} posts published"
+      posts_by_author: "Posts by %{name}"
+      load_more: "Load more"
+      no_posts: "No published posts yet."
 
   tags:
     show:
@@ -342,6 +358,10 @@ en:
         image_model_help: "Select which AI model to use for featured image generation."
         max_tokens: "Max Response Tokens"
         max_tokens_help: "Maximum number of tokens in AI responses (256-16384)."
+        search_engines: "Search Engines"
+        search_engines_description: "Control how search engine crawlers interact with your site."
+        block_crawlers: "Block all crawlers"
+        block_crawlers_description: "When enabled, robots.txt will tell all search engines not to index your site. Useful during development or for private sites."
         save_settings: "Save settings"
         language: "Language"
         locale: "Language"
@@ -415,6 +435,23 @@ en:
         no_traffic_data: "No traffic data yet."
         comments: "Comments (%{count})"
         no_comments: "No comments yet."
+    profiles:
+      edit:
+        title: "Author Profile"
+        subtitle: "Manage your public author profile. This information appears on your author page and posts."
+        errors_prevented_html: "%{count} prevented your profile from being saved:"
+        avatar_help: "Square image recommended. Will be cropped to a circle."
+        display_name: "Display name"
+        handle_help: "Letters, numbers, and underscores only. This is used in your author page URL."
+        bio_placeholder: "Tell readers about yourself..."
+        bio_help: "Supports Markdown formatting (bold, italic, links, etc.)."
+        social_links: "Social Links"
+        social_links_description: "Optional links displayed on your author profile."
+        website: "Website"
+        twitter_handle: "X (Twitter) handle"
+        github_handle: "GitHub username"
+        save_profile: "Save Profile"
+        view_public_profile: "View public profile"
     ai:
       featured_image_preview:
         generated_image: "Generated Featured Image"

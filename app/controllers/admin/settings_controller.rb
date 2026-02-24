@@ -23,7 +23,8 @@ module Admin
         :background_color,
         :dark_theme, :dark_bg_color, :dark_text_color, :dark_accent_color,
         :claude_api_key, :gemini_api_key, :openai_api_key, :ai_model, :ai_max_tokens, :image_model,
-        :locale
+        :locale,
+        :block_crawlers
       )
     end
 

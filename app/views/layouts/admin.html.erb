@@ -52,6 +52,7 @@
             <div class="pt-4">
               <p class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-400"><%= t('layouts.admin.system') %></p>
               <div class="mt-2 space-y-1">
+                <%= admin_nav_link t('layouts.admin.profile'), edit_admin_profile_path, icon: "user-circle" %>
                 <%= admin_nav_link t('layouts.admin.settings'), edit_admin_settings_path, icon: "cog" %>
                 <%= admin_nav_link t('layouts.admin.api_tokens'), admin_api_tokens_path, icon: "key" %>
               </div>

@@ -3,16 +3,22 @@
 <% content_for(:head) do %>
   <%= meta_tags_for_post(@post) %>
   <%= json_ld_for_post(@post) %>
+  <%= json_ld_breadcrumb_list(@post) %>
 <% end %>
 
 <article>
+  <%# Breadcrumb Navigation %>
+  <nav class="mb-4 text-sm text-gray-600 dark:text-gray-400" aria-label="breadcrumb">
+    <%= breadcrumb_navigation(@post) %>
+  </nav>
+
   <header class="mb-8 border-b border-gray-300 dark:border-gray-700 pb-8">
     <h1 class="font-display text-4xl font-bold leading-tight lg:text-5xl"><%= @post.title %></h1>
     <% if @post.subtitle.present? %>
       <p class="mt-3 text-xl text-gray-600 dark:text-gray-400 font-subtitle"><%= @post.subtitle %></p>
     <% end %>
     <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
-      <span><%= t('shared.by') %> <strong class="text-charcoal"><%= @post.user.display_name %></strong></span>
+      <span><%= t('shared.by') %> <strong><%= author_link(@post.user, class: "text-charcoal hover:text-ink-blue transition-colors font-bold") %></strong></span>
       <span>&middot;</span>
       <time datetime="<%= @post.published_at.iso8601 %>"><%= @post.published_at.strftime("%B %-d, %Y") %></time>
       <span>&middot;</span>

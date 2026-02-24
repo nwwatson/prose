@@ -59,7 +59,11 @@ module MetaTagsHelper
       image: image
     )
     tags << tag.meta(property: "article:published_time", content: post.published_at&.iso8601)
-    tags << tag.meta(property: "article:author", content: post.user.display_name)
+    if post.user.identity.handle.present?
+      tags << tag.meta(property: "article:author", content: author_url(post.user.identity, handle: post.user.identity.handle))
+    else
+      tags << tag.meta(property: "article:author", content: post.user.display_name)
+    end
     post.tags.each do |t|
       tags << tag.meta(property: "article:tag", content: t.name)
     end
@@ -76,10 +80,7 @@ module MetaTagsHelper
       headline: post.title,
       datePublished: post.published_at&.iso8601,
       dateModified: post.updated_at.iso8601,
-      author: {
-        "@type": "Person",
-        name: post.user.display_name
-      }
+      author: author_json_ld(post.user.identity)
     }
     description = post.seo_description
     data[:description] = description if description.present?
@@ -95,5 +96,85 @@ module MetaTagsHelper
     end
 
     json_ld_tag(data)
+  end
+
+  def json_ld_for_author(identity)
+    data = {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: identity.name,
+      url: author_url(identity, handle: identity.handle)
+    }
+    data[:description] = strip_tags(identity.bio_html).truncate(160) if identity.bio.present?
+    data[:sameAs] = [ identity.website_url, identity.twitter_url, identity.github_url ].compact if identity.has_social_links?
+
+    json_ld_tag(data)
+  end
+
+  def json_ld_breadcrumb_list(post)
+    items = []
+
+    # Home item
+    items << {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: root_url
+    }
+
+    # Category item (if post has a category)
+    if post.category.present?
+      items << {
+        "@type": "ListItem",
+        position: 2,
+        name: post.category.name,
+        item: category_url(post.category, slug: post.category.slug)
+      }
+    end
+
+    # Post item (always last, no URL)
+    position = items.size + 1
+    items << {
+      "@type": "ListItem",
+      position: position,
+      name: post.title
+    }
+
+    data = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: items
+    }
+
+    json_ld_tag(data)
+  end
+
+  def breadcrumb_navigation(post)
+    items = []
+
+    # Home
+    items << link_to("Home", root_path, class: "text-ink-blue hover:underline")
+
+    # Category
+    if post.category.present?
+      items << link_to(
+        post.category.name,
+        category_path(post.category, slug: post.category.slug),
+        class: "text-ink-blue hover:underline"
+      )
+    end
+
+    # Current page (not a link)
+    items << tag.span(post.title, class: "text-gray-600 dark:text-gray-400")
+
+    safe_join(items, " > ")
+  end
+
+  private
+
+  def author_json_ld(identity)
+    data = { "@type": "Person", name: identity.name }
+    data[:url] = author_url(identity, handle: identity.handle) if identity.handle.present?
+    data
   end
 end

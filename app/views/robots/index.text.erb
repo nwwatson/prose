@@ -1,0 +1,10 @@
+User-agent: *
+<% if @block_crawlers %>
+Disallow: /
+<% else %>
+Allow: /
+Disallow: /admin/
+Disallow: /mcp
+<% end %>
+
+Sitemap: <%= sitemap_url(format: :xml) %>

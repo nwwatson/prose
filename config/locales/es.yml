@@ -61,6 +61,7 @@ es:
       newsletter_settings: "Configuración de boletín"
       growth: "Crecimiento"
       system: "Sistema"
+      profile: "Perfil"
       settings: "Configuración"
       api_tokens: "Tokens de API"
 
@@ -93,6 +94,21 @@ es:
       placeholder: "Comparte tus pensamientos... (markdown compatible)"
       comment: "Comentar"
       subscribe_to_join: "Suscríbete para unirte a la conversación."
+
+  authors:
+    index:
+      title: "Autores"
+      meet_the_authors: "Conoce a los autores de %{site_name}"
+      meet_the_people: "Conoce a las personas detrás de %{site_name}."
+      website: "Sitio web"
+    show:
+      posts_by: "Publicaciones de %{name} en %{site_name}"
+      posts_published:
+        one: "1 publicación publicada"
+        other: "%{count} publicaciones publicadas"
+      posts_by_author: "Publicaciones de %{name}"
+      load_more: "Cargar más"
+      no_posts: "Aún no hay publicaciones publicadas."
 
   tags:
     show:
@@ -338,6 +354,10 @@ es:
         image_model_help: "Selecciona qué modelo de IA usar para la generación de imágenes destacadas."
         max_tokens: "Tokens máximos de respuesta"
         max_tokens_help: "Número máximo de tokens en respuestas de IA (256-16384)."
+        search_engines: "Motores de búsqueda"
+        search_engines_description: "Controla cómo los rastreadores de motores de búsqueda interactúan con tu sitio."
+        block_crawlers: "Bloquear todos los rastreadores"
+        block_crawlers_description: "Cuando está habilitado, robots.txt le dirá a todos los motores de búsqueda que no indexen tu sitio. Útil durante el desarrollo o para sitios privados."
         save_settings: "Guardar configuración"
         language: "Idioma"
         locale: "Idioma"
@@ -411,6 +431,23 @@ es:
         no_traffic_data: "Aún no hay datos de tráfico."
         comments: "Comentarios (%{count})"
         no_comments: "Aún no hay comentarios."
+    profiles:
+      edit:
+        title: "Perfil de autor"
+        subtitle: "Administra tu perfil público de autor. Esta información aparece en tu página de autor y publicaciones."
+        errors_prevented_html: "%{count} impidieron que tu perfil se guardara:"
+        avatar_help: "Se recomienda una imagen cuadrada. Se recortará en forma circular."
+        display_name: "Nombre para mostrar"
+        handle_help: "Solo letras, números y guiones bajos. Se usa en la URL de tu página de autor."
+        bio_placeholder: "Cuéntale a los lectores sobre ti..."
+        bio_help: "Soporta formato Markdown (negrita, cursiva, enlaces, etc.)."
+        social_links: "Enlaces sociales"
+        social_links_description: "Enlaces opcionales que se muestran en tu perfil de autor."
+        website: "Sitio web"
+        twitter_handle: "Usuario de X (Twitter)"
+        github_handle: "Usuario de GitHub"
+        save_profile: "Guardar perfil"
+        view_public_profile: "Ver perfil público"
     ai:
       featured_image_preview:
         generated_image: "Imagen destacada generada"

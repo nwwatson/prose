@@ -1,0 +1,61 @@
+<% content_for(:title, page_title(t('authors.index.title'))) %>
+
+<% content_for(:head) do %>
+  <% description = t('authors.index.meet_the_authors', site_name: site_name) %>
+  <%= meta_description_tag(description) %>
+  <%= open_graph_tags(title: "Authors — #{site_name}", description: description, url: authors_url) %>
+  <%= twitter_card_tags(title: "Authors — #{site_name}", description: description) %>
+  <%= canonical_tag(authors_url) %>
+<% end %>
+
+<div>
+  <h1 class="font-display text-3xl font-bold"><%= t('authors.index.title') %></h1>
+  <p class="mt-2 text-gray-600 dark:text-gray-400"><%= t('authors.index.meet_the_people', site_name: site_name) %></p>
+</div>
+
+<div class="mt-8 space-y-8">
+  <% @authors.each do |identity| %>
+    <div class="border-b border-gray-200 dark:border-gray-700 pb-8">
+      <div class="flex items-start gap-4">
+        <% if identity.avatar.attached? %>
+          <%= image_tag identity.avatar.variant(resize_to_fill: [96, 96]),
+                class: "h-16 w-16 rounded-full object-cover flex-shrink-0",
+                alt: identity.name %>
+        <% else %>
+          <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700">
+            <span class="text-xl font-bold text-gray-500 dark:text-gray-400"><%= identity.name.first.upcase %></span>
+          </div>
+        <% end %>
+
+        <div class="flex-1 min-w-0">
+          <h2 class="font-display text-xl font-bold">
+            <%= link_to identity.name, author_path(identity, handle: identity.handle),
+                  class: "text-charcoal hover:text-ink-blue transition-colors no-underline" %>
+          </h2>
+
+          <% if identity.bio.present? %>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-2"><%= strip_tags(identity.bio_html).truncate(200) %></p>
+          <% end %>
+
+          <div class="mt-2 flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+            <span><%= pluralize(identity.user.posts.live.count, "post") %></span>
+            <% if identity.has_social_links? %>
+              <span>&middot;</span>
+              <div class="flex items-center gap-2">
+                <% if identity.website_url.present? %>
+                  <%= link_to t('authors.index.website'), identity.website_url, class: "hover:text-ink-blue", target: "_blank", rel: "noopener" %>
+                <% end %>
+                <% if identity.twitter_url.present? %>
+                  <%= link_to "X", identity.twitter_url, class: "hover:text-ink-blue", target: "_blank", rel: "noopener" %>
+                <% end %>
+                <% if identity.github_url.present? %>
+                  <%= link_to "GitHub", identity.github_url, class: "hover:text-ink-blue", target: "_blank", rel: "noopener" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
