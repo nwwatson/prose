@@ -203,6 +203,18 @@
       </div>
     </fieldset>
 
+    <%# Search Engines %>
+    <fieldset class="border-t border-gray-200 pt-6">
+      <legend class="text-lg font-semibold text-gray-900">Search Engines</legend>
+      <p class="mt-1 text-sm text-gray-600">Control how search engine crawlers interact with your site.</p>
+
+      <div class="mt-4">
+        <%= render "shared/toggle", form: f, field: :block_crawlers,
+              label: "Block all crawlers",
+              description: "When enabled, robots.txt will tell all search engines not to index your site. Useful during development or for private sites.".html_safe %>
+      </div>
+    </fieldset>
+
     <%# AI Configuration %>
     <fieldset class="border-t border-gray-200 pt-6">
       <legend class="text-lg font-semibold text-gray-900">AI Configuration</legend>
