@@ -1,0 +1,27 @@
+<%= form_with model: [:admin, page], id: "page_form",
+    data: { action: "input->autosave#scheduleAutosave change->autosave#handleChange lexxy:change->autosave#scheduleAutosave submit->autosave#preventSubmit" } do |f| %>
+  <% if page.errors.any? %>
+    <div class="mb-6 rounded-md bg-red-50 p-4">
+      <h3 class="text-sm font-medium text-red-800"><%= t("admin.pages.form.errors_prevented_html", count: pluralize(page.errors.count, "error")) %></h3>
+      <ul class="mt-2 list-disc pl-5 text-sm text-red-700">
+        <% page.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%# Writing area %>
+  <div class="space-y-4">
+    <%= f.text_area :title, rows: 1,
+          class: "block w-full resize-none overflow-hidden border-0 bg-transparent p-0 font-display text-4xl font-bold leading-tight text-gray-900 placeholder:text-gray-300 focus:ring-0 lg:text-5xl",
+          placeholder: t("admin.pages.form.title_placeholder"),
+          data: { controller: "autogrow", action: "input->autogrow#resize" } %>
+
+    <hr class="border-gray-200">
+
+    <div class="editor-writing-area">
+      <%= f.rich_text_area :content, class: "min-h-[60vh] block w-full font-serif text-lg" %>
+    </div>
+  </div>
+<% end %>

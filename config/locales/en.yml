@@ -48,6 +48,12 @@ en:
       discard_post_message: "This post hasn't been saved yet. Are you sure you want to discard it?"
       keep_editing: "Keep editing"
       discard: "Discard"
+    admin_page_editor:
+      pages: "Pages"
+      discard_page: "Discard page?"
+      discard_page_message: "This page hasn't been saved yet. Are you sure you want to discard it?"
+      keep_editing: "Keep editing"
+      discard: "Discard"
     newsletter_editor:
       newsletters: "Newsletters"
       discard_newsletter: "Discard newsletter?"
@@ -64,6 +70,7 @@ en:
       growth: "Growth"
       system: "System"
       profile: "Profile"
+      pages: "Pages"
       settings: "Settings"
       api_tokens: "API Tokens"
 
@@ -121,6 +128,7 @@ en:
     about:
       about_site: "About %{site_name}"
       about_description: "%{site_name} is a thoughtfully crafted publication focused on delivering quality writing and ideas."
+    show: {}
 
   unsubscribes:
     show:
@@ -435,6 +443,33 @@ en:
         no_traffic_data: "No traffic data yet."
         comments: "Comments (%{count})"
         no_comments: "No comments yet."
+    pages:
+      index:
+        title: "Pages"
+        new_page: "New Page"
+        title_header: "Title"
+        status: "Status"
+        nav: "Nav"
+        slug: "Slug"
+        in_nav: "In Nav"
+        no_pages: "No pages yet"
+        get_started: "Create your first page to get started."
+      form:
+        title_placeholder: "Page title"
+        errors_prevented_html: "%{count} prevented this page from being saved:"
+      editor_panel:
+        title: "Page Settings"
+      settings_fields:
+        slug_placeholder: "auto-generated-from-title"
+        slug_help: "URL-friendly identifier. Pages are served at /{slug}."
+        show_in_navigation: "Show in navigation"
+        show_in_navigation_help: "Display this page in the site header."
+        position_help: "Lower numbers appear first in navigation."
+        meta_description: "Meta description"
+        meta_description_placeholder: "Brief description for search engines..."
+        meta_description_help: "Up to 160 characters. Used by search engines."
+        delete_page: "Delete page"
+        delete_page_confirm: "Are you sure you want to delete this page? This cannot be undone."
     profiles:
       edit:
         title: "Author Profile"
@@ -530,6 +565,10 @@ en:
         cannot_send: "This newsletter cannot be sent."
         scheduled: "Newsletter scheduled."
         cannot_schedule: "Could not schedule newsletter."
+      pages:
+        created: "Page created."
+        updated: "Page updated."
+        deleted: "Page deleted."
       categories:
         created: "Category created."
         updated: "Category updated."

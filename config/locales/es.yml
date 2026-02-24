@@ -46,6 +46,12 @@ es:
       discard_post_message: "Esta publicación aún no se ha guardado. ¿Estás seguro de que quieres descartarla?"
       keep_editing: "Seguir editando"
       discard: "Descartar"
+    admin_page_editor:
+      pages: "Páginas"
+      discard_page: "¿Descartar página?"
+      discard_page_message: "Esta página aún no se ha guardado. ¿Estás seguro de que quieres descartarla?"
+      keep_editing: "Seguir editando"
+      discard: "Descartar"
     newsletter_editor:
       newsletters: "Boletines"
       discard_newsletter: "¿Descartar boletín?"
@@ -62,6 +68,7 @@ es:
       growth: "Crecimiento"
       system: "Sistema"
       profile: "Perfil"
+      pages: "Páginas"
       settings: "Configuración"
       api_tokens: "Tokens de API"
 
@@ -118,6 +125,7 @@ es:
     about:
       about_site: "Acerca de %{site_name}"
       about_description: "%{site_name} es una publicación cuidadosamente elaborada enfocada en ofrecer escritura e ideas de calidad."
+    show: {}
 
   unsubscribes:
     show:
@@ -431,6 +439,33 @@ es:
         no_traffic_data: "Aún no hay datos de tráfico."
         comments: "Comentarios (%{count})"
         no_comments: "Aún no hay comentarios."
+    pages:
+      index:
+        title: "Páginas"
+        new_page: "Nueva página"
+        title_header: "Título"
+        status: "Estado"
+        nav: "Nav"
+        slug: "Slug"
+        in_nav: "En Nav"
+        no_pages: "Aún no hay páginas"
+        get_started: "Crea tu primera página para comenzar."
+      form:
+        title_placeholder: "Título de la página"
+        errors_prevented_html: "%{count} impidieron que esta página se guardara:"
+      editor_panel:
+        title: "Configuración de página"
+      settings_fields:
+        slug_placeholder: "generado-automaticamente"
+        slug_help: "Identificador amigable para URL. Las páginas se sirven en /{slug}."
+        show_in_navigation: "Mostrar en la navegación"
+        show_in_navigation_help: "Mostrar esta página en el encabezado del sitio."
+        position_help: "Los números más bajos aparecen primero en la navegación."
+        meta_description: "Meta descripción"
+        meta_description_placeholder: "Breve descripción para motores de búsqueda..."
+        meta_description_help: "Hasta 160 caracteres. Usado por motores de búsqueda."
+        delete_page: "Eliminar página"
+        delete_page_confirm: "¿Estás seguro de que quieres eliminar esta página? Esta acción no se puede deshacer."
     profiles:
       edit:
         title: "Perfil de autor"
@@ -523,6 +558,10 @@ es:
         cannot_send: "Este boletín no se puede enviar."
         scheduled: "Boletín programado."
         cannot_schedule: "No se pudo programar el boletín."
+      pages:
+        created: "Página creada."
+        updated: "Página actualizada."
+        deleted: "Página eliminada."
       categories:
         created: "Categoría creada."
         updated: "Categoría actualizada."

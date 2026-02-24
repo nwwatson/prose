@@ -1,0 +1,56 @@
+<%# locals: (page:) %>
+<%= fields_for :page, page do |f| %>
+  <div class="space-y-6 p-6">
+    <div>
+      <%= f.label :status, class: "block text-sm font-medium text-gray-900" %>
+      <%= render "shared/custom_select", form: f, field: :status,
+            options: Page.statuses.keys.map { |s| [s.capitalize, s] },
+            form_attr: "page_form" %>
+    </div>
+
+    <div>
+      <%= f.label :slug, class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= f.text_field :slug,
+              form: "page_form",
+              class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+              placeholder: t("admin.pages.settings_fields.slug_placeholder") %>
+      </div>
+      <p class="mt-1 text-xs text-gray-500"><%= t("admin.pages.settings_fields.slug_help") %></p>
+    </div>
+
+    <div class="flex items-center">
+      <%= f.check_box :show_in_navigation, form: "page_form", class: "rounded border-gray-300 text-gray-600 focus:ring-gray-600" %>
+      <%= f.label :show_in_navigation, t("admin.pages.settings_fields.show_in_navigation"), class: "ml-2 text-sm font-medium text-gray-900" %>
+      <p class="ml-2 text-xs text-gray-500"><%= t("admin.pages.settings_fields.show_in_navigation_help") %></p>
+    </div>
+
+    <div>
+      <%= f.label :position, class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= f.number_field :position, min: 0, step: 1,
+              form: "page_form",
+              class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+      </div>
+      <p class="mt-1 text-xs text-gray-500"><%= t("admin.pages.settings_fields.position_help") %></p>
+    </div>
+
+    <div>
+      <%= f.label :meta_description, t("admin.pages.settings_fields.meta_description"), class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= f.text_area :meta_description, rows: 3, maxlength: 160, form: "page_form",
+              class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+              placeholder: t("admin.pages.settings_fields.meta_description_placeholder") %>
+      </div>
+      <p class="mt-1 text-xs text-gray-500"><%= t("admin.pages.settings_fields.meta_description_help") %></p>
+    </div>
+
+    <% if page.persisted? %>
+      <div class="border-t border-gray-200 pt-6">
+        <%= button_to t("admin.pages.settings_fields.delete_page"), admin_page_path(page), method: :delete,
+              data: { turbo_confirm: t("admin.pages.settings_fields.delete_page_confirm") },
+              class: "w-full rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

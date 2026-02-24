@@ -1,0 +1,17 @@
+<% content_for(:title, page_title(@page.title)) %>
+
+<% content_for(:head) do %>
+  <%= meta_description_tag(@page.seo_description) %>
+  <%= open_graph_tags(title: "#{@page.title} — #{site_name}", description: @page.seo_description, url: page_url(@page.slug)) %>
+  <%= twitter_card_tags(title: "#{@page.title} — #{site_name}", description: @page.seo_description) %>
+  <%= canonical_tag(page_url(@page.slug)) %>
+<% end %>
+
+<article>
+  <h1 class="font-display text-3xl font-bold"><%= @page.title %></h1>
+  <% if @page.content.present? %>
+    <div class="mt-6 prose prose-lg prose-gray dark:prose-invert max-w-none">
+      <%= @page.content %>
+    </div>
+  <% end %>
+</article>
