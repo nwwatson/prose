@@ -54,7 +54,7 @@ FOREIGN KEY ("post_id")
 CREATE INDEX "index_post_views_on_post_id" ON "post_views" ("post_id") /*application='Prose'*/;
 CREATE INDEX "index_post_views_on_created_at" ON "post_views" ("created_at") /*application='Prose'*/;
 CREATE INDEX "index_post_views_on_post_id_and_created_at" ON "post_views" ("post_id", "created_at") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "identities" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "handle" varchar, "settings" json DEFAULT '{}', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
+CREATE TABLE IF NOT EXISTS "identities" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "handle" varchar, "settings" json DEFAULT '{}', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "bio" text /*application='Prose'*/, "website_url" varchar /*application='Prose'*/, "twitter_handle" varchar /*application='Prose'*/, "github_handle" varchar /*application='Prose'*/);
 CREATE UNIQUE INDEX "index_identities_on_handle" ON "identities" ("handle") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "comments" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "post_id" integer NOT NULL, "parent_comment_id" integer, "body" text NOT NULL, "approved" boolean DEFAULT TRUE NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "identity_id" integer NOT NULL, CONSTRAINT "fk_rails_2530bf1cd4"
 FOREIGN KEY ("identity_id")
@@ -186,6 +186,8 @@ CREATE INDEX "index_newsletter_deliveries_on_newsletter_id" ON "newsletter_deliv
 CREATE INDEX "index_newsletter_deliveries_on_subscriber_id" ON "newsletter_deliveries" ("subscriber_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_newsletter_deliveries_on_newsletter_id_and_subscriber_id" ON "newsletter_deliveries" ("newsletter_id", "subscriber_id") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260224135457'),
+('20260224135449'),
 ('20260223200006'),
 ('20260223200005'),
 ('20260223200004'),
