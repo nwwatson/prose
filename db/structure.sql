@@ -192,7 +192,14 @@ FOREIGN KEY ("user_id")
 CREATE INDEX "index_pages_on_user_id" ON "pages" ("user_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_pages_on_slug" ON "pages" ("slug") /*application='Prose'*/;
 CREATE INDEX "index_pages_on_status" ON "pages" ("status") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "passkeys" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "credential_id" varchar NOT NULL, "public_key" varchar NOT NULL, "name" varchar NOT NULL, "sign_count" integer DEFAULT 0 NOT NULL, "last_used_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_902db11bce"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+);
+CREATE INDEX "index_passkeys_on_user_id" ON "passkeys" ("user_id") /*application='Prose'*/;
+CREATE UNIQUE INDEX "index_passkeys_on_credential_id" ON "passkeys" ("credential_id") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260224192846'),
 ('20260224183928'),
 ('20260224183914'),
 ('20260224135703'),

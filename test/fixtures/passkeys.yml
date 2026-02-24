@@ -1,0 +1,9 @@
+admin_passkey:
+  user: admin
+  credential_id: "dGVzdC1jcmVkZW50aWFsLWlkLWFkbWlu"
+  public_key: "dGVzdC1wdWJsaWMta2V5LWFkbWlu"
+  name: "MacBook Touch ID"
+  sign_count: 5
+  last_used_at: <%= 1.day.ago %>
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.day.ago %>

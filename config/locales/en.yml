@@ -72,6 +72,7 @@ en:
       profile: "Profile"
       pages: "Pages"
       settings: "Settings"
+      passkeys: "Passkeys"
       api_tokens: "API Tokens"
 
   # Public views
@@ -153,6 +154,7 @@ en:
     sessions:
       new:
         sign_in: "Sign in"
+        sign_in_with_passkey: "Sign in with passkey"
     setup:
       new:
         create_account_message: "Create your admin account to get started."
@@ -264,6 +266,19 @@ en:
         reject: "Reject"
         delete_confirm: "Delete this comment?"
         no_comments: "No comments yet."
+    passkeys:
+      index:
+        title: "Passkeys"
+        register_new: "Register New Passkey"
+        passkey_name: "Passkey Name"
+        passkey_name_placeholder: "e.g., MacBook Touch ID"
+        register_passkey: "Register Passkey"
+        name: "Name"
+        registered: "Registered"
+        last_used: "Last Used"
+        remove: "Remove"
+        remove_confirm: "Remove this passkey? You won't be able to sign in with it anymore."
+        no_passkeys: "No passkeys registered. Add one to enable passwordless sign-in."
     api_tokens:
       index:
         title: "API Tokens"
@@ -573,6 +588,9 @@ en:
         created: "Category created."
         updated: "Category updated."
         deleted: "Category deleted."
+      passkeys:
+        registered: "Passkey registered successfully."
+        removed: "Passkey removed."
       api_tokens:
         created: "API token created."
         revoked: "API token revoked."
