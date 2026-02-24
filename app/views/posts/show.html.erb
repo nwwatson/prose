@@ -36,10 +36,22 @@
     </div>
   <% end %>
 
-  <div class="prose prose-lg dark:prose-invert max-w-none prose-headings:font-display prose-a:text-ink-blue"
-       data-controller="x-post-widget code-highlight">
-    <%= @post.content %>
-  </div>
+  <% toc = TocExtractor.new(@post.content) %>
+  <% if @post.show_toc && toc.has_toc? %>
+    <div data-controller="toc">
+      <%= render "posts/table_of_contents", headings: toc.headings %>
+
+      <div class="prose prose-lg dark:prose-invert max-w-none prose-headings:font-display prose-a:text-ink-blue"
+           data-controller="x-post-widget code-highlight">
+        <%= sanitize toc.content_with_anchors, tags: ActionText::ContentHelper.allowed_tags + %w[id], attributes: ActionText::ContentHelper.allowed_attributes + %w[id] %>
+      </div>
+    </div>
+  <% else %>
+    <div class="prose prose-lg dark:prose-invert max-w-none prose-headings:font-display prose-a:text-ink-blue"
+         data-controller="x-post-widget code-highlight">
+      <%= @post.content %>
+    </div>
+  <% end %>
 
   <% if @post.tags.any? %>
     <footer class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">

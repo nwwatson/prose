@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS "categories" ("id" integer PRIMARY KEY AUTOINCREMENT 
 CREATE UNIQUE INDEX "index_categories_on_slug" ON "categories" ("slug") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "tags" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "slug" varchar NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
 CREATE UNIQUE INDEX "index_tags_on_slug" ON "tags" ("slug") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "subtitle" varchar, "slug" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "published_at" datetime(6), "scheduled_at" datetime(6), "featured" boolean DEFAULT FALSE NOT NULL, "reading_time_minutes" integer DEFAULT 0, "category_id" integer, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "loves_count" integer DEFAULT 0 NOT NULL /*application='Prose'*/, "meta_description" text /*application='Prose'*/, "body_plain" text /*application='Prose'*/, CONSTRAINT "fk_rails_9b1b26f040"
+CREATE TABLE IF NOT EXISTS "posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "subtitle" varchar, "slug" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "published_at" datetime(6), "scheduled_at" datetime(6), "featured" boolean DEFAULT FALSE NOT NULL, "reading_time_minutes" integer DEFAULT 0, "category_id" integer, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "loves_count" integer DEFAULT 0 NOT NULL /*application='Prose'*/, "meta_description" text /*application='Prose'*/, "body_plain" text /*application='Prose'*/, "show_toc" boolean DEFAULT FALSE NOT NULL, CONSTRAINT "fk_rails_9b1b26f040"
 FOREIGN KEY ("category_id")
   REFERENCES "categories" ("id")
 , CONSTRAINT "fk_rails_5b5ddfd518"
@@ -194,6 +194,7 @@ CREATE UNIQUE INDEX "index_pages_on_slug" ON "pages" ("slug") /*application='Pro
 CREATE INDEX "index_pages_on_status" ON "pages" ("status") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260224183928'),
+('20260224183914'),
 ('20260224135703'),
 ('20260224135457'),
 ('20260224135449'),
