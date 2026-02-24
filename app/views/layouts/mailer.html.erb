@@ -43,7 +43,7 @@
                 </p>
                 <% if @unsubscribe_url.present? %>
                   <p style="margin: 0;">
-                    <a href="<%= @unsubscribe_url %>" style="color: #71717a; text-decoration: underline;">Unsubscribe</a>
+                    <a href="<%= @unsubscribe_url %>" style="color: #71717a; text-decoration: underline;"><%= t('layouts.mailer.unsubscribe') %></a>
                   </p>
                 <% end %>
               </td>

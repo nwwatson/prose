@@ -86,4 +86,27 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "select[name='site_setting[background_color]']"
   end
+
+  test "GET edit renders locale select" do
+    sign_in_as(:admin)
+    get edit_admin_settings_path
+    assert_response :success
+    assert_select "select[name='site_setting[locale]']"
+  end
+
+  test "PATCH update persists locale" do
+    sign_in_as(:admin)
+    patch admin_settings_path, params: { site_setting: { locale: "es" } }
+    assert_redirected_to edit_admin_settings_path
+
+    assert_equal "es", SiteSetting.current.locale
+  ensure
+    SiteSetting.current.update!(locale: "en")
+  end
+
+  test "PATCH update rejects invalid locale" do
+    sign_in_as(:admin)
+    patch admin_settings_path, params: { site_setting: { locale: "fr" } }
+    assert_response :unprocessable_entity
+  end
 end

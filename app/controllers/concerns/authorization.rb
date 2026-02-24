@@ -5,7 +5,7 @@ module Authorization
 
   def require_admin
     unless current_user&.admin?
-      redirect_to admin_root_path, alert: "You are not authorized to perform this action."
+      redirect_to admin_root_path, alert: t("flash.authorization.not_authorized")
     end
   end
 

@@ -11,13 +11,13 @@ module Admin
     def create
       record, raw_token = current_user.generate_api_token!(name: params[:name])
       flash[:raw_token] = raw_token
-      redirect_to admin_api_tokens_path, notice: "API token created."
+      redirect_to admin_api_tokens_path, notice: t("flash.admin.api_tokens.created")
     end
 
     def destroy
       token = find_token
       token.revoke!
-      redirect_to admin_api_tokens_path, notice: "API token revoked."
+      redirect_to admin_api_tokens_path, notice: t("flash.admin.api_tokens.revoked")
     end
 
     private

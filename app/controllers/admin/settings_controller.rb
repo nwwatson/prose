@@ -7,7 +7,7 @@ module Admin
     def update
       @site_setting = SiteSetting.current
       if @site_setting.update(filtered_site_setting_params)
-        redirect_to edit_admin_settings_path, notice: "Settings saved."
+        redirect_to edit_admin_settings_path, notice: t("flash.admin.settings.saved")
       else
         render :edit, status: :unprocessable_entity
       end
@@ -22,7 +22,8 @@ module Admin
         :heading_font_size, :subtitle_font_size, :body_font_size,
         :background_color,
         :dark_theme, :dark_bg_color, :dark_text_color, :dark_accent_color,
-        :claude_api_key, :gemini_api_key, :openai_api_key, :ai_model, :ai_max_tokens, :image_model
+        :claude_api_key, :gemini_api_key, :openai_api_key, :ai_model, :ai_max_tokens, :image_model,
+        :locale
       )
     end
 

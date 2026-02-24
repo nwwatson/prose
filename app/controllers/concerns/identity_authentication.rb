@@ -17,7 +17,7 @@ module IdentityAuthentication
   end
 
   def require_identity
-    redirect_to root_path, alert: "Please sign in to continue." unless identity_signed_in?
+    redirect_to root_path, alert: t("flash.identity_authentication.sign_in_required") unless identity_signed_in?
   end
 
   def resume_user_session_if_present

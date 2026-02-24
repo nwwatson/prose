@@ -37,7 +37,7 @@ module Admin
 
       if @newsletter.save
         respond_to do |format|
-          format.html { redirect_to edit_admin_newsletter_path(@newsletter), notice: "Newsletter created." }
+          format.html { redirect_to edit_admin_newsletter_path(@newsletter), notice: t("flash.admin.newsletters.created") }
           format.json { render json: newsletter_json(@newsletter), status: :created }
         end
       else
@@ -54,7 +54,7 @@ module Admin
     def update
       if @newsletter.update(newsletter_params)
         respond_to do |format|
-          format.html { redirect_to edit_admin_newsletter_path(@newsletter), notice: "Newsletter updated." }
+          format.html { redirect_to edit_admin_newsletter_path(@newsletter), notice: t("flash.admin.newsletters.updated") }
           format.json { render json: newsletter_json(@newsletter), status: :ok }
         end
       else
@@ -67,15 +67,15 @@ module Admin
 
     def destroy
       @newsletter.destroy
-      redirect_to admin_newsletters_path, notice: "Newsletter deleted."
+      redirect_to admin_newsletters_path, notice: t("flash.admin.newsletters.deleted")
     end
 
     def send_newsletter
       if @newsletter.sendable?
         @newsletter.send_newsletter!
-        redirect_to admin_newsletters_path, notice: "Newsletter is being sent."
+        redirect_to admin_newsletters_path, notice: t("flash.admin.newsletters.sending")
       else
-        redirect_to edit_admin_newsletter_path(@newsletter), alert: "This newsletter cannot be sent."
+        redirect_to edit_admin_newsletter_path(@newsletter), alert: t("flash.admin.newsletters.cannot_send")
       end
     end
 
@@ -83,9 +83,9 @@ module Admin
       scheduled_for = params[:scheduled_for]
       if scheduled_for.present? && @newsletter.sendable?
         @newsletter.schedule!(Time.zone.parse(scheduled_for))
-        redirect_to admin_newsletters_path, notice: "Newsletter scheduled."
+        redirect_to admin_newsletters_path, notice: t("flash.admin.newsletters.scheduled")
       else
-        redirect_to edit_admin_newsletter_path(@newsletter), alert: "Could not schedule newsletter."
+        redirect_to edit_admin_newsletter_path(@newsletter), alert: t("flash.admin.newsletters.cannot_schedule")
       end
     end
 

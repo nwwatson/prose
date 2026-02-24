@@ -3,10 +3,10 @@
 <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
   <tr>
     <% links = [] %>
-    <% links << ["Twitter/X", settings[:social_twitter]] if settings[:social_twitter].present? %>
-    <% links << ["GitHub", settings[:social_github]] if settings[:social_github].present? %>
-    <% links << ["LinkedIn", settings[:social_linkedin]] if settings[:social_linkedin].present? %>
-    <% links << ["Website", settings[:social_website]] if settings[:social_website].present? %>
+    <% links << [t('newsletter_mailer.social_links.twitter'), settings[:social_twitter]] if settings[:social_twitter].present? %>
+    <% links << [t('newsletter_mailer.social_links.github'), settings[:social_github]] if settings[:social_github].present? %>
+    <% links << [t('newsletter_mailer.social_links.linkedin'), settings[:social_linkedin]] if settings[:social_linkedin].present? %>
+    <% links << [t('newsletter_mailer.social_links.website'), settings[:social_website]] if settings[:social_website].present? %>
     <% links.each_with_index do |(label, url), index| %>
       <td style="padding: 0 8px; font-size: 13px; font-family: <%= settings[:font_family] %>;">
         <% if index > 0 %>

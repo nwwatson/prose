@@ -14,13 +14,13 @@ module Admin
     def update
       @comment = Comment.find(params[:id])
       @comment.update!(approved: params[:approved])
-      redirect_to admin_comments_path, notice: "Comment #{@comment.approved? ? 'approved' : 'rejected'}."
+      redirect_to admin_comments_path, notice: @comment.approved? ? t("flash.comments.approved") : t("flash.comments.rejected")
     end
 
     def destroy
       @comment = Comment.find(params[:id])
       @comment.destroy
-      redirect_to admin_comments_path, notice: "Comment deleted."
+      redirect_to admin_comments_path, notice: t("flash.comments.deleted")
     end
   end
 end

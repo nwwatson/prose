@@ -2,8 +2,8 @@
 
 <div class="space-y-6">
   <div class="flex items-center justify-between">
-    <h1 class="text-2xl font-bold text-gray-900">Edit Category</h1>
-    <%= button_to "Delete", admin_category_path(@category), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500" %>
+    <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.categories.edit.title') %></h1>
+    <%= button_to t('shared.delete'), admin_category_path(@category), method: :delete, data: { turbo_confirm: t('shared.are_you_sure') }, class: "rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500" %>
   </div>
   <%= render "form", category: @category %>
 </div>

@@ -2,7 +2,7 @@
       data: { action: "input->autosave#scheduleAutosave change->autosave#handleChange lexxy:change->autosave#scheduleAutosave submit->autosave#preventSubmit" } do |f| %>
   <% if post.errors.any? %>
     <div class="mb-6 rounded-md bg-red-50 p-4">
-      <h3 class="text-sm font-medium text-red-800"><%= pluralize(post.errors.count, "error") %> prevented this post from being saved:</h3>
+      <h3 class="text-sm font-medium text-red-800"><%= t('admin.posts.form.errors_prevented_html', count: pluralize(post.errors.count, "error")) %></h3>
       <ul class="mt-2 list-disc pl-5 text-sm text-red-700">
         <% post.errors.full_messages.each do |message| %>
           <li><%= message %></li>
@@ -15,12 +15,12 @@
   <div class="space-y-4">
     <%= f.text_area :title, rows: 1,
           class: "block w-full resize-none overflow-hidden border-0 bg-transparent p-0 font-display text-4xl font-bold leading-tight text-gray-900 placeholder:text-gray-300 focus:ring-0 lg:text-5xl",
-          placeholder: "Post title",
+          placeholder: t('admin.posts.form.title_placeholder'),
           data: { controller: "autogrow", action: "input->autogrow#resize" } %>
 
     <%= f.text_area :subtitle, rows: 1,
           class: "block w-full resize-none overflow-hidden border-0 bg-transparent p-0 text-xl text-gray-500 placeholder:text-gray-300 focus:ring-0",
-          placeholder: "Add a subtitle...",
+          placeholder: t('admin.posts.form.subtitle_placeholder'),
           data: { controller: "autogrow", action: "input->autogrow#resize" } %>
 
     <hr class="border-gray-200">

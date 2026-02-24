@@ -8,10 +8,10 @@
   <% if next_page %>
     <%= turbo_frame_tag "posts_page_#{next_page}", target: "_top" do %>
       <div data-infinite-scroll-target="sentinel">
-        <%= link_to "Load more", posts_path(page: next_page, q: query), data: { turbo_frame: "posts_page_#{next_page}" }, class: "hidden" %>
+        <%= link_to t('posts.post_page.load_more'), posts_path(page: next_page, q: query), data: { turbo_frame: "posts_page_#{next_page}" }, class: "hidden" %>
       </div>
       <div data-infinite-scroll-target="loading" class="hidden py-8 text-center text-gray-500">
-        Loading more posts…
+        <%= t('posts.post_page.loading_more') %>
       </div>
     <% end %>
   <% end %>

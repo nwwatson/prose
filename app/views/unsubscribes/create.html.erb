@@ -1,14 +1,14 @@
-<% content_for(:title, "Unsubscribed") %>
+<% content_for(:title, t('unsubscribes.create.title')) %>
 
 <div class="mx-auto max-w-md py-16 text-center">
-  <h1 class="text-2xl font-bold text-gray-900">You've been unsubscribed</h1>
+  <h1 class="text-2xl font-bold text-gray-900"><%= t('unsubscribes.create.title') %></h1>
   <p class="mt-4 text-gray-600">
-    <strong><%= @subscriber.email %></strong> has been removed from our mailing list.
+    <%= t('unsubscribes.create.removed_html', email: @subscriber.email) %>
   </p>
-  <p class="mt-2 text-sm text-gray-500">You will no longer receive newsletters from us.</p>
+  <p class="mt-2 text-sm text-gray-500"><%= t('unsubscribes.create.no_more_newsletters') %></p>
 
   <div class="mt-6">
-    <%= link_to "Return to site", root_path,
+    <%= link_to t('unsubscribes.create.return_to_site'), root_path,
           class: "rounded-md bg-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700" %>
   </div>
 </div>

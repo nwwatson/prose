@@ -1,4 +1,4 @@
-<% content_for(:title, "Sign in — #{site_name}") %>
+<% content_for(:title, "#{t('shared.sign_in')} — #{site_name}") %>
 
 <%= form_with url: admin_session_path, class: "space-y-6" do |f| %>
   <div>
@@ -18,6 +18,6 @@
   </div>
 
   <div>
-    <%= f.submit "Sign in", class: "flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-pointer" %>
+    <%= f.submit t('shared.sign_in'), class: "flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-pointer" %>
   </div>
 <% end %>

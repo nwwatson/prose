@@ -7,11 +7,11 @@
       <p class="mt-1 text-gray-600 dark:text-gray-400 font-subtitle"><%= post.subtitle %></p>
     <% end %>
     <div class="mt-2 flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400">
-      <span>By <%= post.user.display_name %></span>
+      <span><%= t('shared.by') %> <%= post.user.display_name %></span>
       <span>&middot;</span>
       <time datetime="<%= post.published_at.iso8601 %>"><%= post.published_at.strftime("%B %-d, %Y") %></time>
       <span>&middot;</span>
-      <span><%= post.reading_time_minutes %> min read</span>
+      <span><%= post.reading_time_minutes %> <%= t('shared.min_read') %></span>
       <% if post.category %>
         <span>&middot;</span>
         <%= link_to post.category.name, category_path(post.category, slug: post.category.slug), class: "text-ink-blue hover:underline" %>

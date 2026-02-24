@@ -20,9 +20,9 @@
     <div>
       <%= f.label :slug, class: "block text-sm font-medium text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :slug, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm", placeholder: "auto-generated-from-name" %>
+        <%= f.text_field :slug, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm", placeholder: t('admin.categories.form.slug_placeholder') %>
       </div>
-      <p class="mt-1 text-xs text-gray-500">Leave blank to auto-generate from name.</p>
+      <p class="mt-1 text-xs text-gray-500"><%= t('admin.categories.form.slug_help') %></p>
     </div>
 
     <div>
@@ -40,7 +40,7 @@
     </div>
 
     <div class="flex justify-end space-x-3">
-      <%= link_to "Cancel", admin_categories_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <%= link_to t('shared.cancel'), admin_categories_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
       <%= f.submit class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
     </div>
   </div>

@@ -51,7 +51,7 @@ module Admin
               partial: "admin/ai/featured_image_loading"
             )
           }
-          format.html { redirect_to edit_admin_post_path(@post), notice: "Generating featured image..." }
+          format.html { redirect_to edit_admin_post_path(@post), notice: t("flash.admin.ai.generating_image") }
         end
       end
     end

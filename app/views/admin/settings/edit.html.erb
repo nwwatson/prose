@@ -1,13 +1,13 @@
 <% content_for(:title, "Settings — #{site_name}") %>
 
 <div class="max-w-4xl">
-  <h1 class="text-2xl font-bold text-gray-900">Site Settings</h1>
-  <p class="mt-1 text-sm text-gray-600">Configure your site name, description, and default social sharing image.</p>
+  <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.settings.edit.title') %></h1>
+  <p class="mt-1 text-sm text-gray-600"><%= t('admin.settings.edit.subtitle') %></p>
 
   <%= form_with model: @site_setting, url: admin_settings_path, class: "mt-8 space-y-6" do |f| %>
     <% if @site_setting.errors.any? %>
       <div class="rounded-md bg-red-50 p-4">
-        <h3 class="text-sm font-medium text-red-800"><%= pluralize(@site_setting.errors.count, "error") %> prevented settings from being saved:</h3>
+        <h3 class="text-sm font-medium text-red-800"><%= t('admin.settings.edit.errors_prevented_html', count: pluralize(@site_setting.errors.count, "error")) %></h3>
         <ul class="mt-2 list-disc pl-5 text-sm text-red-700">
           <% @site_setting.errors.full_messages.each do |message| %>
             <li><%= message %></li>
@@ -26,12 +26,21 @@
     <div>
       <%= f.label :site_description, class: "block text-sm font-medium text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_area :site_description, rows: 3, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm", placeholder: "A brief description of your site" %>
+        <%= f.text_area :site_description, rows: 3, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm", placeholder: t('admin.settings.edit.description_placeholder') %>
       </div>
     </div>
 
     <div>
-      <%= f.label :default_og_image, "Default social sharing image", class: "block text-sm font-medium text-gray-900" %>
+      <%= f.label :locale, t('admin.settings.edit.locale'), class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= f.select :locale, SiteSetting::Localization::SUPPORTED_LOCALES.map { |k, v| [v, k] },
+              {}, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+      </div>
+      <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.locale_description') %></p>
+    </div>
+
+    <div>
+      <%= f.label :default_og_image, t('admin.settings.edit.default_og_image'), class: "block text-sm font-medium text-gray-900" %>
       <div class="mt-2">
         <% if @site_setting.default_og_image.attached? %>
           <div class="mb-3">
@@ -40,19 +49,19 @@
         <% end %>
         <%= f.file_field :default_og_image, accept: "image/*", class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200" %>
       </div>
-      <p class="mt-1 text-xs text-gray-500">Used as the default image for social sharing (og:image) when a post has no featured image.</p>
+      <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.og_image_help') %></p>
     </div>
 
     <%# Appearance %>
     <% colors_json = SiteSetting::Appearance::BACKGROUND_COLORS.transform_values { |v| v[:hex] }.to_json %>
     <fieldset class="border-t border-gray-200 pt-6" data-controller="background-preview" data-background-preview-colors-value="<%= colors_json %>">
-      <legend class="text-lg font-semibold text-gray-900">Appearance</legend>
-      <p class="mt-1 text-sm text-gray-600">Choose a background color for your site. Changes apply to all public pages.</p>
+      <legend class="text-lg font-semibold text-gray-900"><%= t('admin.settings.edit.appearance') %></legend>
+      <p class="mt-1 text-sm text-gray-600"><%= t('admin.settings.edit.appearance_description') %></p>
 
       <div class="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2">
         <div class="space-y-4">
           <div>
-            <%= f.label :background_color, "Background color", class: "block text-sm font-medium text-gray-900" %>
+            <%= f.label :background_color, t('admin.settings.edit.background_color'), class: "block text-sm font-medium text-gray-900" %>
             <%= render "shared/custom_select", form: f, field: :background_color,
                   options: SiteSetting::Appearance::BACKGROUND_COLORS.map { |key, meta| [meta[:name], key, { data: { color: meta[:hex] } }] },
                   data: { action: "change->background-preview#update" } %>
@@ -61,9 +70,9 @@
 
         <div class="lg:sticky lg:top-20 lg:self-start">
           <div class="rounded-md border border-gray-200 p-6" data-background-preview-target="preview" style="background-color: <%= @site_setting.background_hex %>;">
-            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400">Preview</p>
-            <h2 class="text-xl font-bold text-gray-900">Your site background</h2>
-            <p class="mt-2 text-sm text-gray-700">This is how your site background will look with the selected color.</p>
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400"><%= t('shared.preview') %></p>
+            <h2 class="text-xl font-bold text-gray-900"><%= t('admin.settings.edit.your_site_background') %></h2>
+            <p class="mt-2 text-sm text-gray-700"><%= t('admin.settings.edit.background_preview_help') %></p>
           </div>
         </div>
       </div>
@@ -72,13 +81,13 @@
     <%# Dark Theme %>
     <% dark_themes_json = SiteSetting::DarkTheme::DARK_THEMES.reject { |k, _| k == "custom" }.transform_values { |v| { bg: v[:bg], text: v[:text], accent: v[:accent] } }.to_json %>
     <fieldset class="border-t border-gray-200 pt-6" data-controller="dark-theme-preview" data-dark-theme-preview-themes-value="<%= dark_themes_json %>">
-      <legend class="text-lg font-semibold text-gray-900">Dark Theme</legend>
-      <p class="mt-1 text-sm text-gray-600">Configure the dark mode appearance for your site. Visitors can toggle dark mode using the sun/moon icon in the header.</p>
+      <legend class="text-lg font-semibold text-gray-900"><%= t('admin.settings.edit.dark_theme') %></legend>
+      <p class="mt-1 text-sm text-gray-600"><%= t('admin.settings.edit.dark_theme_description') %></p>
 
       <div class="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2">
         <div class="space-y-4">
           <div>
-            <%= f.label :dark_theme, "Dark theme", class: "block text-sm font-medium text-gray-900" %>
+            <%= f.label :dark_theme, t('admin.settings.edit.dark_theme_label'), class: "block text-sm font-medium text-gray-900" %>
             <%= render "shared/custom_select", form: f, field: :dark_theme,
                   options: SiteSetting::DarkTheme::DARK_THEMES.map { |key, meta| [meta[:name], key] },
                   data: { dark_theme_preview_target: "themeSelect", action: "change->dark-theme-preview#update" } %>
@@ -86,7 +95,7 @@
 
           <div data-dark-theme-preview-target="customFields" class="<%= @site_setting.dark_theme == 'custom' ? '' : 'hidden' %> space-y-4">
             <div>
-              <%= f.label :dark_bg_color, "Background color", class: "block text-sm font-medium text-gray-900" %>
+              <%= f.label :dark_bg_color, t('admin.settings.edit.background_color'), class: "block text-sm font-medium text-gray-900" %>
               <div class="mt-2 flex items-center gap-3">
                 <%= f.color_field :dark_bg_color, class: "h-9 w-14 cursor-pointer rounded border border-gray-300",
                       data: { dark_theme_preview_target: "bgColor", action: "input->dark-theme-preview#updateCustom" } %>
@@ -96,7 +105,7 @@
             </div>
 
             <div>
-              <%= f.label :dark_text_color, "Text color", class: "block text-sm font-medium text-gray-900" %>
+              <%= f.label :dark_text_color, t('admin.settings.edit.text_color'), class: "block text-sm font-medium text-gray-900" %>
               <div class="mt-2 flex items-center gap-3">
                 <%= f.color_field :dark_text_color, class: "h-9 w-14 cursor-pointer rounded border border-gray-300",
                       data: { dark_theme_preview_target: "textColor", action: "input->dark-theme-preview#updateCustom" } %>
@@ -106,7 +115,7 @@
             </div>
 
             <div>
-              <%= f.label :dark_accent_color, "Accent color", class: "block text-sm font-medium text-gray-900" %>
+              <%= f.label :dark_accent_color, t('admin.settings.edit.accent_color'), class: "block text-sm font-medium text-gray-900" %>
               <div class="mt-2 flex items-center gap-3">
                 <%= f.color_field :dark_accent_color, class: "h-9 w-14 cursor-pointer rounded border border-gray-300",
                       data: { dark_theme_preview_target: "accentColor", action: "input->dark-theme-preview#updateCustom" } %>
@@ -120,11 +129,11 @@
         <div class="lg:sticky lg:top-20 lg:self-start">
           <div class="rounded-md border border-gray-200 p-6" data-dark-theme-preview-target="preview"
                style="background-color: <%= @site_setting.dark_bg_hex %>; color: <%= @site_setting.dark_text_hex %>;">
-            <p class="mb-2 text-xs font-medium uppercase tracking-wide" style="opacity: 0.5;">Preview</p>
-            <h2 class="text-xl font-bold">Your dark theme</h2>
-            <p class="mt-2 text-sm" style="opacity: 0.7;">This is how your site will look in dark mode.</p>
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide" style="opacity: 0.5;"><%= t('shared.preview') %></p>
+            <h2 class="text-xl font-bold"><%= t('admin.settings.edit.your_dark_theme') %></h2>
+            <p class="mt-2 text-sm" style="opacity: 0.7;"><%= t('admin.settings.edit.dark_theme_preview_help') %></p>
             <a href="#" class="mt-2 inline-block text-sm underline" data-dark-theme-preview-target="previewLink"
-               style="color: <%= @site_setting.dark_accent_hex %>;" onclick="return false;">Sample link</a>
+               style="color: <%= @site_setting.dark_accent_hex %>;" onclick="return false;"><%= t('admin.settings.edit.sample_link') %></a>
           </div>
         </div>
       </div>
@@ -132,18 +141,18 @@
 
     <%# Typography %>
     <fieldset class="border-t border-gray-200 pt-6" data-controller="typography-preview">
-      <legend class="text-lg font-semibold text-gray-900">Typography</legend>
-      <p class="mt-1 text-sm text-gray-600">Choose fonts and sizes for your site. Changes apply to all public pages.</p>
+      <legend class="text-lg font-semibold text-gray-900"><%= t('admin.settings.edit.typography') %></legend>
+      <p class="mt-1 text-sm text-gray-600"><%= t('admin.settings.edit.typography_description') %></p>
 
       <div class="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2">
         <%# Left column — Controls %>
         <div class="space-y-6">
           <%# Heading group %>
           <div>
-            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Heading</h3>
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500"><%= t('admin.settings.edit.heading') %></h3>
             <div class="mt-3 space-y-4">
               <div>
-                <%= f.label :heading_font, "Font family", class: "block text-sm font-medium text-gray-900" %>
+                <%= f.label :heading_font, t('admin.settings.edit.font_family'), class: "block text-sm font-medium text-gray-900" %>
                 <%= render "shared/custom_select", form: f, field: :heading_font,
                       options: SiteSetting::Typography::GOOGLE_FONTS,
                       data: { typography_preview_target: "headingFont", action: "typography-preview#update" } %>
@@ -158,10 +167,10 @@
 
           <%# Subtitle group %>
           <div>
-            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Subtitle</h3>
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500"><%= t('admin.settings.edit.subtitle_group') %></h3>
             <div class="mt-3 space-y-4">
               <div>
-                <%= f.label :subtitle_font, "Font family", class: "block text-sm font-medium text-gray-900" %>
+                <%= f.label :subtitle_font, t('admin.settings.edit.font_family'), class: "block text-sm font-medium text-gray-900" %>
                 <%= render "shared/custom_select", form: f, field: :subtitle_font,
                       options: SiteSetting::Typography::GOOGLE_FONTS,
                       data: { typography_preview_target: "subtitleFont", action: "typography-preview#update" } %>
@@ -176,10 +185,10 @@
 
           <%# Body group %>
           <div>
-            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Body</h3>
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500"><%= t('admin.settings.edit.body') %></h3>
             <div class="mt-3 space-y-4">
               <div>
-                <%= f.label :body_font, "Font family", class: "block text-sm font-medium text-gray-900" %>
+                <%= f.label :body_font, t('admin.settings.edit.font_family'), class: "block text-sm font-medium text-gray-900" %>
                 <%= render "shared/custom_select", form: f, field: :body_font,
                       options: SiteSetting::Typography::GOOGLE_FONTS,
                       data: { typography_preview_target: "bodyFont", action: "typography-preview#update" } %>
@@ -194,10 +203,10 @@
         <%# Right column — Sticky preview %>
         <div class="lg:sticky lg:top-20 lg:self-start">
           <div class="rounded-md border border-gray-200 bg-white p-6">
-            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400">Preview</p>
-            <h2 data-typography-preview-target="previewHeading" class="text-3xl font-bold">The quick brown fox</h2>
-            <p data-typography-preview-target="previewSubtitle" class="mt-1 text-lg text-gray-600">Jumps over the lazy dog</p>
-            <p data-typography-preview-target="previewBody" class="mt-3 text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400"><%= t('shared.preview') %></p>
+            <h2 data-typography-preview-target="previewHeading" class="text-3xl font-bold"><%= t('admin.settings.edit.preview_heading') %></h2>
+            <p data-typography-preview-target="previewSubtitle" class="mt-1 text-lg text-gray-600"><%= t('admin.settings.edit.preview_subtitle') %></p>
+            <p data-typography-preview-target="previewBody" class="mt-3 text-gray-700"><%= t('admin.settings.edit.preview_body') %></p>
           </div>
         </div>
       </div>
@@ -205,12 +214,12 @@
 
     <%# AI Configuration %>
     <fieldset class="border-t border-gray-200 pt-6">
-      <legend class="text-lg font-semibold text-gray-900">AI Configuration</legend>
-      <p class="mt-1 text-sm text-gray-600">Provide your API keys to enable AI writing features. Remove keys to disable all AI features.</p>
+      <legend class="text-lg font-semibold text-gray-900"><%= t('admin.settings.edit.ai_configuration') %></legend>
+      <p class="mt-1 text-sm text-gray-600"><%= t('admin.settings.edit.ai_description') %></p>
 
       <div class="mt-4 space-y-4">
         <div>
-          <%= f.label :claude_api_key, "Anthropic API Key", class: "block text-sm font-medium text-gray-900" %>
+          <%= f.label :claude_api_key, t('admin.settings.edit.anthropic_api_key'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.password_field :claude_api_key,
                   value: @site_setting.claude_api_key.present? ? "••••••••" : "",
@@ -218,11 +227,11 @@
                   autocomplete: "off",
                   class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
           </div>
-          <p class="mt-1 text-xs text-gray-500">Required for AI chat, writing assistance, SEO, and social media features.</p>
+          <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.anthropic_help') %></p>
         </div>
 
         <div>
-          <%= f.label :gemini_api_key, "Google Gemini API Key", class: "block text-sm font-medium text-gray-900" %>
+          <%= f.label :gemini_api_key, t('admin.settings.edit.gemini_api_key'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.password_field :gemini_api_key,
                   value: @site_setting.gemini_api_key.present? ? "••••••••" : "",
@@ -230,11 +239,11 @@
                   autocomplete: "off",
                   class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
           </div>
-          <p class="mt-1 text-xs text-gray-500">Required for Google Imagen image models. Only needed if you select a Gemini image model below.</p>
+          <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.gemini_help') %></p>
         </div>
 
         <div>
-          <%= f.label :openai_api_key, "OpenAI API Key", class: "block text-sm font-medium text-gray-900" %>
+          <%= f.label :openai_api_key, t('admin.settings.edit.openai_api_key'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.password_field :openai_api_key,
                   value: @site_setting.openai_api_key.present? ? "••••••••" : "",
@@ -242,35 +251,35 @@
                   autocomplete: "off",
                   class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
           </div>
-          <p class="mt-1 text-xs text-gray-500">Required for OpenAI image models (GPT Image, DALL-E). Only needed if you select an OpenAI image model below.</p>
+          <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.openai_help') %></p>
         </div>
 
         <div>
-          <%= f.label :ai_model, "AI Model", class: "block text-sm font-medium text-gray-900" %>
+          <%= f.label :ai_model, t('admin.settings.edit.ai_model'), class: "block text-sm font-medium text-gray-900" %>
           <%= render "shared/custom_select", form: f, field: :ai_model,
                 options: SiteSetting::AiConfiguration::AI_MODELS.map { |m| [m, m] } %>
         </div>
 
         <div>
-          <%= f.label :image_model, "Image Generation Model", class: "block text-sm font-medium text-gray-900" %>
+          <%= f.label :image_model, t('admin.settings.edit.image_model'), class: "block text-sm font-medium text-gray-900" %>
           <%= render "shared/custom_select", form: f, field: :image_model,
                 options: SiteSetting::AiConfiguration::IMAGE_MODELS.keys.map { |m| [m, m] } %>
-          <p class="mt-1 text-xs text-gray-500">Select which AI model to use for featured image generation.</p>
+          <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.image_model_help') %></p>
         </div>
 
         <div>
-          <%= f.label :ai_max_tokens, "Max Response Tokens", class: "block text-sm font-medium text-gray-900" %>
+          <%= f.label :ai_max_tokens, t('admin.settings.edit.max_tokens'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.number_field :ai_max_tokens, min: 256, max: 16384, step: 256,
                   class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
           </div>
-          <p class="mt-1 text-xs text-gray-500">Maximum number of tokens in AI responses (256-16384).</p>
+          <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.max_tokens_help') %></p>
         </div>
       </div>
     </fieldset>
 
     <div class="flex justify-end border-t border-gray-200 pt-6">
-      <%= f.submit "Save settings", class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
+      <%= f.submit t('admin.settings.edit.save_settings'), class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
     </div>
   <% end %>
 </div>

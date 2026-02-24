@@ -1,0 +1,498 @@
+es:
+  shared:
+    home: "Inicio"
+    about: "Acerca de"
+    search: "Buscar"
+    edit: "Editar"
+    delete: "Eliminar"
+    cancel: "Cancelar"
+    save: "Guardar"
+    preview: "Vista previa"
+    subscribe: "Suscribirse"
+    sign_in: "Iniciar sesión"
+    sign_out: "Cerrar sesión"
+    all: "Todos"
+    actions: "Acciones"
+    loading: "Cargando..."
+    never: "Nunca"
+    ago: "hace"
+    by: "Por"
+    on: "en"
+    or: "o"
+    min_read: "min de lectura"
+    draft: "Borrador"
+    published: "Publicado"
+    scheduled: "Programado"
+    pending: "Pendiente"
+    confirmed: "Confirmado"
+    active: "Activo"
+    revoked: "Revocado"
+    sent: "Enviado"
+    drafts: "Borradores"
+    all_rights_reserved: "Todos los derechos reservados."
+    are_you_sure: "¿Estás seguro?"
+    no_category: "Sin categoría"
+    not_set: "No establecido"
+
+  layouts:
+    application:
+      toggle_dark_mode: "Alternar modo oscuro"
+      copyright_html: "&copy; %{year} %{site_name}. Todos los derechos reservados."
+    mailer:
+      unsubscribe: "Cancelar suscripción"
+    admin_editor:
+      posts: "Publicaciones"
+      discard_post: "¿Descartar publicación?"
+      discard_post_message: "Esta publicación aún no se ha guardado. ¿Estás seguro de que quieres descartarla?"
+      keep_editing: "Seguir editando"
+      discard: "Descartar"
+    newsletter_editor:
+      newsletters: "Boletines"
+      discard_newsletter: "¿Descartar boletín?"
+      discard_newsletter_message: "Este boletín aún no se ha guardado. ¿Estás seguro de que quieres descartarlo?"
+      keep_editing: "Seguir editando"
+      discard: "Descartar"
+    admin:
+      content: "Contenido"
+      all_posts: "Todas las publicaciones"
+      audience: "Audiencia"
+      subscribers: "Suscriptores"
+      newsletters: "Boletines"
+      newsletter_settings: "Configuración de boletín"
+      growth: "Crecimiento"
+      system: "Sistema"
+      settings: "Configuración"
+      api_tokens: "Tokens de API"
+
+  posts:
+    index:
+      search_placeholder: "Buscar publicaciones…"
+      no_posts_found: "No se encontraron publicaciones para \"%{query}\"."
+      no_posts_yet: "Aún no hay publicaciones. Vuelve pronto."
+      subscribe_to: "Suscríbete a %{site_name}"
+      get_notified: "Recibe notificaciones cuando se publiquen nuevas publicaciones."
+    show:
+      comments: "Comentarios"
+    post_navigation:
+      previous_post: "Publicación anterior"
+      next_post: "Siguiente publicación"
+    related_posts:
+      you_might_also_like: "También te puede gustar"
+    post_page:
+      load_more: "Cargar más"
+      loading_more: "Cargando más publicaciones…"
+
+  subscriptions:
+    form:
+      email_placeholder: "tu@email.com"
+
+  comments:
+    form:
+      write: "Escribir"
+      preview: "Vista previa"
+      placeholder: "Comparte tus pensamientos... (markdown compatible)"
+      comment: "Comentar"
+      subscribe_to_join: "Suscríbete para unirte a la conversación."
+
+  tags:
+    show:
+      tagged: "Etiquetado: %{name}"
+
+  pages:
+    about:
+      about_site: "Acerca de %{site_name}"
+      about_description: "%{site_name} es una publicación cuidadosamente elaborada enfocada en ofrecer escritura e ideas de calidad."
+
+  unsubscribes:
+    show:
+      title: "Cancelar suscripción"
+      confirm_message_html: "¿Estás seguro de que quieres cancelar la suscripción de <strong>%{email}</strong> a nuestro boletín?"
+      yes_unsubscribe: "Sí, cancelar mi suscripción"
+    create:
+      title: "Te has dado de baja"
+      removed_html: "<strong>%{email}</strong> ha sido eliminado de nuestra lista de correo."
+      no_more_newsletters: "Ya no recibirás boletines de nuestra parte."
+      return_to_site: "Volver al sitio"
+
+  handles:
+    form:
+      choose_handle: "Elige un nombre de usuario"
+
+  tag_select:
+    search_placeholder: "Buscar o crear etiquetas..."
+
+  admin:
+    sessions:
+      new:
+        sign_in: "Iniciar sesión"
+    setup:
+      new:
+        create_account_message: "Crea tu cuenta de administrador para comenzar."
+        create_account: "Crear cuenta"
+    dashboard:
+      show:
+        title: "Panel de control"
+        welcome_back: "Bienvenido de nuevo, %{name}."
+        total_subscribers: "Total de suscriptores"
+        new_subscribers_30d: "Nuevos suscriptores (30d)"
+        total_views_30d: "Vistas totales (30d)"
+        published_posts: "Publicaciones publicadas"
+        newsletters_sent_30d: "Boletines enviados (30d)"
+        views_last_30_days: "Vistas (últimos 30 días)"
+        no_view_data: "Aún no hay datos de vistas."
+        subscriber_growth_30d: "Crecimiento de suscriptores (últimos 30 días)"
+        no_subscriber_data: "Aún no hay datos de suscriptores."
+        top_posts_30d: "Publicaciones principales (30 días)"
+        post: "Publicación"
+        views: "Vistas"
+        no_views_recorded: "Aún no se han registrado vistas."
+        recent_posts: "Publicaciones recientes"
+        loves: "me gusta"
+        no_published_posts: "Aún no hay publicaciones publicadas."
+        recent_newsletters: "Boletines recientes"
+        newsletter: "Boletín"
+        recipients: "Destinatarios"
+        no_newsletters_sent: "Aún no se han enviado boletines."
+    posts:
+      index:
+        title: "Publicaciones"
+        new_post: "Nueva publicación"
+        search_placeholder: "Buscar publicaciones..."
+        title_header: "Título"
+        status: "Estado"
+        author: "Autor"
+        date: "Fecha"
+        no_posts: "No hay publicaciones"
+        get_started: "Comienza creando una nueva publicación."
+      form:
+        errors_prevented_html: "%{count} impidieron que esta publicación se guardara:"
+        title_placeholder: "Título de la publicación"
+        subtitle_placeholder: "Agregar un subtítulo..."
+      settings_fields:
+        schedule_help: "Establece cuándo se debe publicar esta publicación."
+        slug_placeholder: "generado-automáticamente-del-título"
+        slug_help: "Deja en blanco para generar automáticamente desde el título."
+        category: "Categoría"
+        tags: "Etiquetas"
+        featured: "Destacado"
+        generate_with_ai: "Generar con IA"
+        meta_description: "Meta descripción"
+        meta_description_placeholder: "Breve descripción para motores de búsqueda (máx. 160 caracteres)"
+        meta_description_help: "Máx. 160 caracteres. Si está en blanco, se usa el subtítulo o un extracto del contenido."
+        delete_post: "Eliminar publicación"
+        delete_post_confirm: "¿Estás seguro de que quieres eliminar esta publicación?"
+      editor_panel:
+        title: "Panel del editor"
+        new_ai_conversation: "Nueva conversación con IA"
+        pin_panel: "Fijar panel"
+        ai_assistant: "Asistente de IA"
+        settings: "Configuración"
+        proofread: "Revisar"
+        critique: "Criticar"
+        brainstorm: "Lluvia de ideas"
+        social: "Social"
+        ai_empty_state: "Pide ayuda a la IA para escribir o usa una acción rápida arriba."
+        ai_placeholder: "Pregunta a la IA..."
+        ai_send_hint: "Presiona Enter para enviar, Shift+Enter para nueva línea"
+      featured_image_modal:
+        title: "Generar imagen destacada"
+        suggesting_prompt: "Sugiriendo un prompt..."
+      preview:
+        preview: "Vista previa"
+    categories:
+      index:
+        title: "Categorías"
+        new_category: "Nueva categoría"
+        name: "Nombre"
+        slug: "Slug"
+        posts: "Publicaciones"
+        no_categories: "No hay categorías"
+        get_started: "Comienza creando una nueva categoría."
+      new:
+        title: "Nueva categoría"
+      edit:
+        title: "Editar categoría"
+      form:
+        slug_placeholder: "generado-automáticamente-del-nombre"
+        slug_help: "Deja en blanco para generar automáticamente desde el nombre."
+    subscribers:
+      index:
+        title: "Suscriptores"
+        confirmed_of_total: "%{confirmed} confirmados de %{total} en total"
+        email: "Correo electrónico"
+        handle: "Nombre de usuario"
+        status: "Estado"
+        subscribed: "Suscrito"
+        no_subscribers: "Aún no hay suscriptores."
+      show:
+        handle: "Nombre de usuario"
+        status: "Estado"
+        subscribed: "Suscrito"
+    comments:
+      index:
+        title: "Comentarios"
+        approved: "Aprobados"
+        approve: "Aprobar"
+        reject: "Rechazar"
+        delete_confirm: "¿Eliminar este comentario?"
+        no_comments: "Aún no hay comentarios."
+    api_tokens:
+      index:
+        title: "Tokens de API"
+        token_created: "Tu nuevo token de API (cópialo ahora — no se mostrará de nuevo):"
+        copy: "Copiar"
+        create_new_token: "Crear nuevo token"
+        token_name: "Nombre del token"
+        token_name_placeholder: "ej., Claude Desktop"
+        generate_token: "Generar token"
+        name: "Nombre"
+        prefix: "Prefijo"
+        owner: "Propietario"
+        last_used: "Último uso"
+        created: "Creado"
+        status: "Estado"
+        revoke: "Revocar"
+        revoke_confirm: "¿Revocar este token? Las aplicaciones que lo usen perderán acceso."
+        no_tokens: "Aún no hay tokens de API. Crea uno para conectar Claude Desktop u otros clientes MCP."
+    newsletters:
+      index:
+        title: "Boletines"
+        new_newsletter: "Nuevo boletín"
+        title_header: "Título"
+        status: "Estado"
+        recipients: "Destinatarios"
+        date: "Fecha"
+        no_newsletters: "No hay boletines"
+        get_started: "Comienza creando un nuevo boletín."
+      form:
+        errors_prevented_html: "%{count} impidieron que este boletín se guardara:"
+        title_placeholder: "Asunto del boletín"
+      editor_panel:
+        title: "Configuración del boletín"
+        template: "Plantilla"
+        site_default: "Predeterminado del sitio"
+        site_default_description: "Usar la plantilla configurada en la configuración del sitio"
+        accent_color: "Color de acento"
+        accent_color_help: "Deja en blanco para usar el predeterminado del sitio."
+        preheader_text: "Texto de preencabezado"
+        preheader_placeholder: "Texto de vista previa en la bandeja de entrada..."
+        preheader_help: "Texto corto que se muestra en los clientes de correo antes de abrir. Máx. 150 caracteres."
+        audience: "Audiencia"
+        confirmed_subscribers: "suscriptores confirmados"
+        sent: "Enviado"
+        delivered_to: "Entregado a"
+        subscribers_on: "suscriptores el"
+        sending_in_progress: "Envío en progreso..."
+        sending_message: "Tu boletín se está entregando a los suscriptores."
+        scheduled: "Programado"
+        will_be_sent_on: "Se enviará el"
+        cancel_schedule: "Cancelar programación"
+        send_now: "Enviar ahora"
+        send_confirm: "¿Enviar este boletín a todos los suscriptores confirmados?"
+        schedule_for_later: "Programar para después"
+        schedule: "Programar"
+        save_first: "Guarda el boletín primero para habilitar las opciones de envío y programación."
+        delete_newsletter: "Eliminar boletín"
+        delete_confirm: "¿Estás seguro de que quieres eliminar este boletín?"
+    settings:
+      edit:
+        title: "Configuración del sitio"
+        subtitle: "Configura el nombre, descripción e imagen de compartir social predeterminada de tu sitio."
+        errors_prevented_html: "%{count} impidieron que la configuración se guardara:"
+        description_placeholder: "Una breve descripción de tu sitio"
+        default_og_image: "Imagen de compartir social predeterminada"
+        og_image_help: "Se usa como imagen predeterminada para compartir en redes sociales (og:image) cuando una publicación no tiene imagen destacada."
+        appearance: "Apariencia"
+        appearance_description: "Elige un color de fondo para tu sitio. Los cambios se aplican a todas las páginas públicas."
+        background_color: "Color de fondo"
+        your_site_background: "Fondo de tu sitio"
+        background_preview_help: "Así se verá el fondo de tu sitio con el color seleccionado."
+        dark_theme: "Tema oscuro"
+        dark_theme_description: "Configura la apariencia del modo oscuro de tu sitio. Los visitantes pueden alternar el modo oscuro usando el ícono de sol/luna en el encabezado."
+        dark_theme_label: "Tema oscuro"
+        text_color: "Color del texto"
+        accent_color: "Color de acento"
+        your_dark_theme: "Tu tema oscuro"
+        dark_theme_preview_help: "Así se verá tu sitio en modo oscuro."
+        sample_link: "Enlace de ejemplo"
+        typography: "Tipografía"
+        typography_description: "Elige fuentes y tamaños para tu sitio. Los cambios se aplican a todas las páginas públicas."
+        heading: "Encabezado"
+        font_family: "Familia de fuente"
+        font_size: "Tamaño de fuente"
+        subtitle_group: "Subtítulo"
+        body: "Cuerpo"
+        preview_heading: "El veloz murciélago hindú"
+        preview_subtitle: "Comía feliz cardillo y kiwi"
+        preview_body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris."
+        ai_configuration: "Configuración de IA"
+        ai_description: "Proporciona tus claves de API para habilitar las funciones de escritura con IA. Elimina las claves para desactivar todas las funciones de IA."
+        anthropic_api_key: "Clave de API de Anthropic"
+        anthropic_help: "Requerida para chat con IA, asistencia de escritura, SEO y funciones de redes sociales."
+        gemini_api_key: "Clave de API de Google Gemini"
+        gemini_help: "Requerida para modelos de imagen Google Imagen. Solo necesaria si seleccionas un modelo de imagen Gemini abajo."
+        openai_api_key: "Clave de API de OpenAI"
+        openai_help: "Requerida para modelos de imagen OpenAI (GPT Image, DALL-E). Solo necesaria si seleccionas un modelo de imagen OpenAI abajo."
+        ai_model: "Modelo de IA"
+        image_model: "Modelo de generación de imágenes"
+        image_model_help: "Selecciona qué modelo de IA usar para la generación de imágenes destacadas."
+        max_tokens: "Tokens máximos de respuesta"
+        max_tokens_help: "Número máximo de tokens en respuestas de IA (256-16384)."
+        save_settings: "Guardar configuración"
+        locale: "Idioma"
+        locale_description: "Elige el idioma de la interfaz de usuario de tu sitio."
+    newsletter_settings:
+      edit:
+        title: "Configuración del boletín"
+        subtitle: "Configura la marca del correo electrónico y la entrega de tus boletines."
+        errors_prevented_html: "%{count} impidieron que la configuración se guardara:"
+        email_branding: "Marca de correo electrónico"
+        email_branding_description: "Personaliza el aspecto de tus correos de boletín. Estos son los valores predeterminados del sitio que se pueden anular por boletín."
+        default_template: "Plantilla predeterminada"
+        header_logo: "Logo del encabezado"
+        header_logo_help: "Se muestra en el encabezado de la plantilla con marca. Altura máxima recomendada: 48px."
+        colors: "Colores"
+        accent_color: "Color de acento"
+        background_color: "Color de fondo"
+        body_text_color: "Color del texto del cuerpo"
+        heading_color: "Color del encabezado"
+        font_family: "Familia de fuente"
+        default_preheader: "Texto de preencabezado predeterminado"
+        preheader_help: "Texto corto que se muestra en los clientes de correo antes de abrir el mensaje."
+        custom_footer: "Texto de pie de página personalizado"
+        footer_placeholder: "ej. Calle Principal 123, Ciudad, Estado 12345"
+        footer_help: "Aparece en el pie de página de todos los correos de boletín."
+        social_links: "Enlaces sociales"
+        twitter: "Twitter / X"
+        github: "GitHub"
+        linkedin: "LinkedIn"
+        website: "Sitio web"
+        preheader_preview: "Preencabezado"
+        template_label: "Plantilla:"
+        font_label: "Fuente:"
+        newsletter_heading_preview: "Encabezado del boletín"
+        newsletter_body_preview: "Así se verá el texto del cuerpo de tu boletín con los colores y la fuente seleccionados."
+        email_service: "Servicio de correo electrónico"
+        email_service_description: "Configura cómo se entregan los boletines. SMTP usa tu configuración de correo predeterminada. SendGrid proporciona seguimiento de entrega y análisis."
+        email_provider: "Proveedor de correo"
+        sendgrid_api_key: "Clave de API de SendGrid"
+        sendgrid_help_html: "Requerida cuando se usa SendGrid. Obtén tu clave de API en <strong>Configuración &rarr; Claves de API</strong> en tu panel de SendGrid."
+        webhook_url: "URL del webhook:"
+        webhook_description: "Para habilitar el seguimiento de aperturas y clics, configura el Event Webhook de SendGrid para hacer POST a:"
+        save_settings: "Guardar configuración"
+    growth:
+      show:
+        title: "Crecimiento de suscriptores"
+        subtitle: "Rastrea cómo crece tu audiencia con el tiempo."
+        total_subscribers: "Total de suscriptores"
+        new_subscribers: "Nuevos suscriptores (%{range})"
+        latest_post_subscribers: "Suscriptores de la última publicación"
+        subscriber_growth: "Crecimiento de suscriptores"
+        monthly: "Mensual"
+        cumulative: "Acumulativo"
+        no_data: "No hay datos de suscriptores para este período."
+        top_posts_by_subscribers: "Publicaciones principales por suscriptores"
+        post: "Publicación"
+        subscribers: "Suscriptores"
+        no_post_subscribers: "Aún no hay suscriptores atribuidos a publicaciones. Los suscriptores que se registren desde una página de publicación se rastrearán aquí en adelante."
+    post_dashboard:
+      show:
+        edit_post: "Editar publicación"
+        view_live: "Ver en vivo"
+        total_views: "Vistas totales"
+        unique_viewers: "Visitantes únicos"
+        loves: "Me gusta"
+        engagement_rate: "Tasa de interacción"
+        views_last_30_days: "Vistas (últimos 30 días)"
+        no_view_data: "Aún no hay datos de vistas."
+        traffic_sources: "Fuentes de tráfico"
+        views: "vistas"
+        no_traffic_data: "Aún no hay datos de tráfico."
+        comments: "Comentarios (%{count})"
+        no_comments: "Aún no hay comentarios."
+    ai:
+      featured_image_preview:
+        generated_image: "Imagen destacada generada"
+        save_as_featured: "Guardar como imagen destacada"
+        regenerate: "Regenerar"
+
+  subscriber_mailer:
+    confirmation:
+      subject: "Confirma tu suscripción a %{site_name}"
+      welcome: "Bienvenido a %{site_name}"
+      thanks: "¡Gracias por suscribirte! Haz clic en el enlace de abajo para confirmar tu suscripción e iniciar sesión:"
+      confirm_link: "Confirmar e iniciar sesión"
+      link_expiry: "Este enlace expirará en 15 minutos."
+    magic_link:
+      sign_in_to: "Iniciar sesión en %{site_name}"
+      click_to_sign_in: "Haz clic en el enlace de abajo para iniciar sesión:"
+      sign_in: "Iniciar sesión"
+      link_expiry: "Este enlace expirará en 15 minutos."
+  post_notification_mailer:
+    new_post:
+      read_full_post: "Leer la publicación completa"
+      subject: "Nueva publicación: %{title}"
+  newsletter_mailer:
+    footer:
+      unsubscribe: "Cancelar suscripción"
+    social_links:
+      twitter: "Twitter/X"
+      github: "GitHub"
+      linkedin: "LinkedIn"
+      website: "Sitio web"
+
+  flash:
+    ai:
+      configurable:
+        add_api_keys: "Agrega tus claves de API en Configuración para habilitar las funciones de IA."
+    subscriptions:
+      check_email: "Revisa tu correo electrónico para obtener un enlace de inicio de sesión."
+      invalid_email: "Por favor ingresa una dirección de correo electrónico válida."
+    subscriber_sessions:
+      signed_in: "Has iniciado sesión."
+      link_expired: "Este enlace ha expirado o no es válido. Por favor solicita uno nuevo."
+      signed_out: "Sesión cerrada."
+    authentication:
+      sign_in_required: "Por favor inicia sesión para continuar."
+    identity_authentication:
+      sign_in_required: "Por favor inicia sesión para continuar."
+    authorization:
+      not_authorized: "No estás autorizado para realizar esta acción."
+    unsubscribes:
+      invalid_link: "Enlace de cancelación de suscripción inválido o expirado."
+    comments:
+      could_not_save: "No se pudo guardar el comentario."
+      approved: "Comentario aprobado."
+      rejected: "Comentario rechazado."
+      deleted: "Comentario eliminado."
+    admin:
+      settings:
+        saved: "Configuración guardada."
+      newsletter_settings:
+        saved: "Configuración del boletín guardada."
+      posts:
+        created: "Publicación creada."
+        updated: "Publicación actualizada."
+        deleted: "Publicación eliminada."
+      sessions:
+        signed_in: "Inicio de sesión exitoso."
+        signed_out: "Sesión cerrada exitosamente."
+      newsletters:
+        created: "Boletín creado."
+        updated: "Boletín actualizado."
+        deleted: "Boletín eliminado."
+        sending: "El boletín se está enviando."
+        cannot_send: "Este boletín no se puede enviar."
+        scheduled: "Boletín programado."
+        cannot_schedule: "No se pudo programar el boletín."
+      categories:
+        created: "Categoría creada."
+        updated: "Categoría actualizada."
+        deleted: "Categoría eliminada."
+      api_tokens:
+        created: "Token de API creado."
+        revoked: "Token de API revocado."
+      setup:
+        welcome: "¡Bienvenido a %{site_name}! Tu cuenta de administrador ha sido creada."
+      ai:
+        generating_image: "Generando imagen destacada..."

@@ -43,7 +43,7 @@
           <div class="absolute right-0" data-controller="theme-toggle">
             <button type="button" data-action="click->theme-toggle#toggle" data-theme-toggle-target="button"
                     class="rounded-md p-2 text-gray-500 dark:text-gray-400 hover:text-charcoal transition-colors"
-                    aria-label="Toggle dark mode">
+                    aria-label="<%= t('layouts.application.toggle_dark_mode') %>">
               <span data-theme-toggle-target="icon">
                 <%# Moon icon (shown in light mode) %>
                 <svg class="h-5 w-5 dark:hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -58,8 +58,8 @@
           </div>
         </div>
         <nav class="mt-3 flex justify-center space-x-6 text-sm">
-          <%= link_to "Home", root_path, class: "text-gray-600 dark:text-gray-400 hover:text-charcoal" %>
-          <%= link_to "About", about_path, class: "text-gray-600 dark:text-gray-400 hover:text-charcoal" %>
+          <%= link_to t('shared.home'), root_path, class: "text-gray-600 dark:text-gray-400 hover:text-charcoal" %>
+          <%= link_to t('shared.about'), about_path, class: "text-gray-600 dark:text-gray-400 hover:text-charcoal" %>
         </nav>
       </div>
     </header>
@@ -81,7 +81,7 @@
     <%# Footer %>
     <footer class="border-t border-gray-300 dark:border-gray-700 py-8">
       <div class="mx-auto max-w-3xl px-4 text-center text-sm text-gray-500 dark:text-gray-400">
-        <p>&copy; <%= Date.current.year %> <%= site_name %>. All rights reserved.</p>
+        <p><%= t('layouts.application.copyright_html', year: Date.current.year, site_name: site_name) %></p>
       </div>
     </footer>
   </body>

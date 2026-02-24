@@ -16,7 +16,7 @@ module Admin
 
       if @user.save
         start_session(@user, ip_address: request.remote_ip, user_agent: request.user_agent)
-        redirect_to admin_root_path, notice: "Welcome to #{SiteSetting.current.site_name}! Your admin account has been created."
+        redirect_to admin_root_path, notice: t("flash.admin.setup.welcome", site_name: SiteSetting.current.site_name)
       else
         render :new, status: :unprocessable_entity
       end

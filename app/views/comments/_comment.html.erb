@@ -2,7 +2,7 @@
   <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
     <span class="font-medium text-charcoal"><%= comment.identity.handle || comment.identity.name %></span>
     <span>&middot;</span>
-    <time datetime="<%= comment.created_at.iso8601 %>"><%= time_ago_in_words(comment.created_at) %> ago</time>
+    <time datetime="<%= comment.created_at.iso8601 %>"><%= time_ago_in_words(comment.created_at) %> <%= t('shared.ago') %></time>
   </div>
   <div class="mt-1 text-gray-700 dark:text-gray-300 prose-comment"><%= sanitize_markdown(comment.rendered_body) %></div>
 </div>

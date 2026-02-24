@@ -5,15 +5,15 @@
 
   <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
     <div class="rounded-lg bg-white p-4 shadow ring-1 ring-gray-200">
-      <dt class="text-sm font-medium text-gray-500">Handle</dt>
-      <dd class="mt-1 text-sm text-gray-900"><%= @subscriber.identity&.handle || "Not set" %></dd>
+      <dt class="text-sm font-medium text-gray-500"><%= t('admin.subscribers.show.handle') %></dt>
+      <dd class="mt-1 text-sm text-gray-900"><%= @subscriber.identity&.handle || t('shared.not_set') %></dd>
     </div>
     <div class="rounded-lg bg-white p-4 shadow ring-1 ring-gray-200">
-      <dt class="text-sm font-medium text-gray-500">Status</dt>
-      <dd class="mt-1 text-sm text-gray-900"><%= @subscriber.confirmed? ? "Confirmed" : "Pending" %></dd>
+      <dt class="text-sm font-medium text-gray-500"><%= t('admin.subscribers.show.status') %></dt>
+      <dd class="mt-1 text-sm text-gray-900"><%= @subscriber.confirmed? ? t('shared.confirmed') : t('shared.pending') %></dd>
     </div>
     <div class="rounded-lg bg-white p-4 shadow ring-1 ring-gray-200">
-      <dt class="text-sm font-medium text-gray-500">Subscribed</dt>
+      <dt class="text-sm font-medium text-gray-500"><%= t('admin.subscribers.show.subscribed') %></dt>
       <dd class="mt-1 text-sm text-gray-900"><%= @subscriber.created_at.strftime("%B %-d, %Y") %></dd>
     </div>
   </dl>

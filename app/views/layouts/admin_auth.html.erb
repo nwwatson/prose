@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="h-full bg-gray-50">
   <head>
-    <title><%= content_for(:title) || "Sign in — #{site_name}" %></title>
+    <title><%= content_for(:title) || "#{t('shared.sign_in')} — #{site_name}" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="robots" content="noindex,nofollow">
     <%= csrf_meta_tags %>

@@ -7,7 +7,7 @@ module Admin
     def update
       @site_setting = SiteSetting.current
       if @site_setting.update(filtered_site_setting_params)
-        redirect_to edit_admin_newsletter_settings_path, notice: "Newsletter settings saved."
+        redirect_to edit_admin_newsletter_settings_path, notice: t("flash.admin.newsletter_settings.saved")
       else
         render :edit, status: :unprocessable_entity
       end
