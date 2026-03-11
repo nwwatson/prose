@@ -87,7 +87,7 @@
   <% if @next_page %>
     <div class="mt-8 text-center">
       <%= link_to t('authors.show.load_more'), author_path(@identity, handle: @identity.handle, page: @next_page),
-            class: "inline-block rounded-md bg-charcoal px-6 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors" %>
+            class: "inline-block rounded-md bg-charcoal dark:bg-gray-700 px-6 py-2 text-sm font-medium text-white dark:text-gray-100 hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors" %>
     </div>
   <% end %>
 <% else %>

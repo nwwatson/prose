@@ -40,7 +40,7 @@
 <div class="mb-8 border-b border-gray-300 dark:border-gray-700 pb-8">
   <%= form_with url: posts_path, method: :get, data: { turbo_action: "advance" }, class: "flex items-center gap-3" do |f| %>
     <%= f.search_field :q, value: @query, placeholder: t('posts.index.search_placeholder'), class: "flex-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-white/5 px-4 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-ink-blue focus:outline-none focus:ring-1 focus:ring-ink-blue" %>
-    <%= f.submit t('shared.search'), class: "rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors cursor-pointer" %>
+    <%= f.submit t('shared.search'), class: "rounded-md bg-charcoal dark:bg-gray-700 px-4 py-2 text-sm font-medium text-white dark:text-gray-100 hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors cursor-pointer" %>
   <% end %>
 </div>
 
