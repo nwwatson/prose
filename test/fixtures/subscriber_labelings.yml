@@ -1,0 +1,15 @@
+confirmed_vip:
+  subscriber: confirmed
+  subscriber_label: vip
+
+confirmed_beta:
+  subscriber: confirmed
+  subscriber_label: beta_tester
+
+with_token_vip:
+  subscriber: with_token
+  subscriber_label: vip
+
+from_published_post_inactive:
+  subscriber: from_published_post
+  subscriber_label: inactive

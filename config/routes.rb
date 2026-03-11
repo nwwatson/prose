@@ -66,7 +66,13 @@ Rails.application.routes.draw do
         get :preview
       end
     end
-    resources :subscribers, only: [ :index, :show ]
+    resources :subscriber_labels
+    resources :segments do
+      member { get :count }
+    end
+    resources :subscribers, only: [ :index, :show ] do
+      resources :subscriber_labelings, only: [ :create, :destroy ]
+    end
     resource :growth, only: [ :show ], controller: "growth"
     resource :traffic, only: [ :show ], controller: "traffic"
     resource :profile, only: [ :edit, :update ]

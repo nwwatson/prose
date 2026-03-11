@@ -5,6 +5,8 @@ class Subscriber < ApplicationRecord
   belongs_to :source_post, class_name: "Post", optional: true
   has_many :loves, through: :identity
   has_many :comments, through: :identity
+  has_many :subscriber_labelings, dependent: :destroy
+  has_many :subscriber_labels, through: :subscriber_labelings
   has_many :newsletter_deliveries, dependent: :destroy
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: URI::MailTo::EMAIL_REGEXP }

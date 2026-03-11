@@ -1,0 +1,14 @@
+vip_segment:
+  name: VIP Subscribers
+  description: All subscribers with VIP label
+  filter_criteria: <%= { labels: { ids: [ActiveRecord::FixtureSet.identify(:vip)], mode: "any_of" } }.to_json %>
+
+engaged_segment:
+  name: Engaged Subscribers
+  description: Subscribers who opened or clicked recently
+  filter_criteria: <%= { engagement: "active" }.to_json %>
+
+recent_segment:
+  name: Recent Subscribers
+  description: Subscribers from the last 30 days
+  filter_criteria: <%= { subscribed_after: 30.days.ago.to_date.to_s }.to_json %>

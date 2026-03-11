@@ -5,6 +5,7 @@ class Newsletter < ApplicationRecord
   enum :status, { draft: 0, scheduled: 1, sending: 2, sent: 3 }
 
   belongs_to :user
+  belongs_to :segment, optional: true
   has_many :newsletter_deliveries, dependent: :destroy
   has_rich_text :body
 

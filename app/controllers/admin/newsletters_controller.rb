@@ -103,7 +103,7 @@ module Admin
     end
 
     def newsletter_params
-      params.require(:newsletter).permit(:title, :body, :template, :accent_color, :preheader_text)
+      params.require(:newsletter).permit(:title, :body, :template, :accent_color, :preheader_text, :segment_id)
     end
 
     def newsletter_json(newsletter)

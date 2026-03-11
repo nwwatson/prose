@@ -24,6 +24,10 @@ module Newsletter::Sendable
     update!(status: :draft, sent_at: nil, scheduled_for: nil)
   end
 
+  def target_subscribers
+    segment.present? ? segment.resolve : Subscriber.confirmed
+  end
+
   def sendable?
     draft? || scheduled?
   end
