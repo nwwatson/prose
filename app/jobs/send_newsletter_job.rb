@@ -5,7 +5,7 @@ class SendNewsletterJob < ApplicationJob
     newsletter = Newsletter.find(newsletter_id)
     count = 0
 
-    Subscriber.confirmed.find_each do |subscriber|
+    newsletter.target_subscribers.find_each do |subscriber|
       next if newsletter.newsletter_deliveries.exists?(subscriber: subscriber)
 
       newsletter.newsletter_deliveries.create!(subscriber: subscriber, sent_at: Time.current)

@@ -65,6 +65,8 @@ en:
       all_posts: "All Posts"
       audience: "Audience"
       subscribers: "Subscribers"
+      labels: "Labels"
+      segments: "Segments"
       newsletters: "Newsletters"
       newsletter_settings: "Newsletter Settings"
       growth: "Growth"
@@ -260,13 +262,62 @@ en:
         confirmed_of_total: "%{confirmed} confirmed of %{total} total"
         email: "Email"
         handle: "Handle"
+        labels: "Labels"
         status: "Status"
         subscribed: "Subscribed"
+        filter_by_label: "Filter by label:"
         no_subscribers: "No subscribers yet."
       show:
         handle: "Handle"
         status: "Status"
         subscribed: "Subscribed"
+        labels: "Labels"
+        add_label: "Add label"
+    subscriber_labels:
+      index:
+        title: "Subscriber Labels"
+        new_label: "New Label"
+        name: "Name"
+        color: "Color"
+        subscribers: "Subscribers"
+        no_labels: "No labels"
+        get_started: "Create labels to organize your subscribers."
+      new:
+        title: "New Label"
+      edit:
+        title: "Edit Label"
+    segments:
+      index:
+        title: "Segments"
+        new_segment: "New Segment"
+        name: "Name"
+        description: "Description"
+        subscribers: "Subscribers"
+        no_segments: "No segments"
+        get_started: "Create a segment to target specific subscribers."
+      new:
+        title: "New Segment"
+      edit:
+        title: "Edit Segment"
+      show:
+        matching_subscribers: "Matching subscribers"
+        labels: "Labels"
+        no_subscribers: "No subscribers match this segment."
+      form:
+        filter_criteria: "Filter Criteria"
+        labels: "Labels"
+        any_of: "Has any of these labels"
+        all_of: "Has all of these labels"
+        none_of: "Has none of these labels"
+        subscribed_after: "Subscribed after"
+        subscribed_before: "Subscribed before"
+        engagement: "Engagement"
+        any_engagement: "Any engagement level"
+        active: "Active (opened/clicked in last 90 days)"
+        inactive: "Inactive (no opens/clicks in last 90 days)"
+        engagement_help: "Based on newsletter open and click activity in the last 90 days."
+      count:
+        matching_subscribers: "Matching subscribers"
     comments:
       index:
         title: "Comments"
@@ -330,6 +381,8 @@ en:
         preheader_placeholder: "Preview text shown in inbox..."
         preheader_help: "Short text shown in email clients before opening. Max 150 characters."
         audience: "Audience"
+        all_subscribers: "All confirmed subscribers"
+        target_audience: "Target Audience"
         confirmed_subscribers: "confirmed subscribers"
         sent: "Sent"
         delivered_to: "Delivered to"
@@ -615,6 +668,16 @@ en:
         created: "Page created."
         updated: "Page updated."
         deleted: "Page deleted."
+      subscriber_labels:
+        created: "Label created."
+        updated: "Label updated."
+        deleted: "Label deleted."
+      segments:
+        created: "Segment created."
+        updated: "Segment updated."
+        deleted: "Segment deleted."
+      subscriber_labelings:
+        already_assigned: "Label is already assigned to this subscriber."
       categories:
         created: "Category created."
         updated: "Category updated."

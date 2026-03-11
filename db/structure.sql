@@ -168,13 +168,6 @@ CREATE TRIGGER posts_fts_delete AFTER DELETE ON posts BEGIN
   INSERT INTO posts_fts(posts_fts, rowid, title, subtitle, body_plain)
   VALUES ('delete', OLD.id, OLD.title, OLD.subtitle, OLD.body_plain);
 END;
-CREATE TABLE IF NOT EXISTS "newsletters" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "sent_at" datetime(6), "scheduled_for" datetime(6), "recipients_count" integer DEFAULT 0, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "template" varchar /*application='Prose'*/, "accent_color" varchar /*application='Prose'*/, "preheader_text" varchar /*application='Prose'*/, CONSTRAINT "fk_rails_e6829818c0"
-FOREIGN KEY ("user_id")
-  REFERENCES "users" ("id")
-);
-CREATE INDEX "index_newsletters_on_user_id" ON "newsletters" ("user_id") /*application='Prose'*/;
-CREATE INDEX "index_newsletters_on_status" ON "newsletters" ("status") /*application='Prose'*/;
-CREATE INDEX "index_newsletters_on_scheduled_for" ON "newsletters" ("scheduled_for") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "newsletter_deliveries" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "newsletter_id" integer NOT NULL, "subscriber_id" integer NOT NULL, "sent_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "opened_at" datetime(6) /*application='Prose'*/, "clicked_at" datetime(6) /*application='Prose'*/, "bounced_at" datetime(6) /*application='Prose'*/, "open_count" integer DEFAULT 0 /*application='Prose'*/, CONSTRAINT "fk_rails_216f0edfce"
 FOREIGN KEY ("newsletter_id")
   REFERENCES "newsletters" ("id")
@@ -201,7 +194,35 @@ CREATE UNIQUE INDEX "index_passkeys_on_credential_id" ON "passkeys" ("credential
 CREATE INDEX "index_post_views_on_referrer_domain" ON "post_views" ("referrer_domain") /*application='Prose'*/;
 CREATE INDEX "index_post_views_on_utm_source" ON "post_views" ("utm_source") /*application='Prose'*/;
 CREATE INDEX "index_post_views_on_utm_campaign" ON "post_views" ("utm_campaign") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "subscriber_labels" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "color" varchar DEFAULT '#6B7280' NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
+CREATE UNIQUE INDEX "index_subscriber_labels_on_name" ON "subscriber_labels" ("name") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "subscriber_labelings" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "subscriber_id" integer NOT NULL, "subscriber_label_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_8124998c69"
+FOREIGN KEY ("subscriber_id")
+  REFERENCES "subscribers" ("id")
+, CONSTRAINT "fk_rails_61edd4dd7d"
+FOREIGN KEY ("subscriber_label_id")
+  REFERENCES "subscriber_labels" ("id")
+);
+CREATE INDEX "index_subscriber_labelings_on_subscriber_id" ON "subscriber_labelings" ("subscriber_id") /*application='Prose'*/;
+CREATE INDEX "index_subscriber_labelings_on_subscriber_label_id" ON "subscriber_labelings" ("subscriber_label_id") /*application='Prose'*/;
+CREATE UNIQUE INDEX "idx_subscriber_labelings_uniqueness" ON "subscriber_labelings" ("subscriber_id", "subscriber_label_id") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "segments" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "description" text, "filter_criteria" json DEFAULT '{}' NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
+CREATE TABLE IF NOT EXISTS "newsletters" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "sent_at" datetime(6), "scheduled_for" datetime(6), "recipients_count" integer DEFAULT 0, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "template" varchar, "accent_color" varchar, "preheader_text" varchar, "segment_id" integer, CONSTRAINT "fk_rails_e6829818c0"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_99b32dc07a"
+FOREIGN KEY ("segment_id")
+  REFERENCES "segments" ("id")
+);
+CREATE INDEX "index_newsletters_on_user_id" ON "newsletters" ("user_id") /*application='Prose'*/;
+CREATE INDEX "index_newsletters_on_status" ON "newsletters" ("status") /*application='Prose'*/;
+CREATE INDEX "index_newsletters_on_scheduled_for" ON "newsletters" ("scheduled_for") /*application='Prose'*/;
+CREATE INDEX "index_newsletters_on_segment_id" ON "newsletters" ("segment_id") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260311160003'),
+('20260311160002'),
+('20260311160001'),
+('20260311160000'),
 ('20260311142140'),
 ('20260224192846'),
 ('20260224183928'),

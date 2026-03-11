@@ -17,4 +17,26 @@
       <dd class="mt-1 text-sm text-gray-900"><%= @subscriber.created_at.strftime("%B %-d, %Y") %></dd>
     </div>
   </dl>
+
+  <%# Labels management %>
+  <div class="rounded-lg bg-white p-6 shadow ring-1 ring-gray-200">
+    <h2 class="text-sm font-semibold text-gray-900 mb-4"><%= t('admin.subscribers.show.labels') %></h2>
+
+    <div id="subscriber_labels" class="flex flex-wrap gap-2 mb-4">
+      <% @subscriber.subscriber_labelings.includes(:subscriber_label).each do |labeling| %>
+        <%= render "admin/subscriber_labelings/labeling", labeling: labeling, subscriber: @subscriber %>
+      <% end %>
+    </div>
+
+    <% if @available_labels.any? %>
+      <%= form_with url: admin_subscriber_subscriber_labelings_path(@subscriber), class: "flex items-center gap-2" do |f| %>
+        <select name="subscriber_label_id" class="rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600">
+          <% @available_labels.each do |label| %>
+            <option value="<%= label.id %>"><%= label.name %></option>
+          <% end %>
+        </select>
+        <%= f.submit t('admin.subscribers.show.add_label'), class: "rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
+      <% end %>
+    <% end %>
+  </div>
 </div>

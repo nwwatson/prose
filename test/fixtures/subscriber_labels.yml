@@ -1,0 +1,11 @@
+vip:
+  name: VIP
+  color: "#8B5CF6"
+
+beta_tester:
+  name: Beta Tester
+  color: "#3B82F6"
+
+inactive:
+  name: Inactive
+  color: "#EF4444"

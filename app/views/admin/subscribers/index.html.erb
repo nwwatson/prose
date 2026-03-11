@@ -6,13 +6,23 @@
     <p class="text-sm text-gray-500"><%= t('admin.subscribers.index.confirmed_of_total', confirmed: Subscriber.confirmed.count, total: Subscriber.count) %></p>
   </div>
 
+  <% if @labels.any? %>
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-gray-500"><%= t('admin.subscribers.index.filter_by_label') %></span>
+      <%= link_to t('shared.all'), admin_subscribers_path, class: "rounded-full px-3 py-1 text-xs font-medium #{params[:label].blank? ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" %>
+      <% @labels.each do |label| %>
+        <%= link_to label.name, admin_subscribers_path(label: label.id), class: "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium #{params[:label].to_s == label.id.to_s ? 'text-white' : 'text-gray-700 bg-gray-100 hover:bg-gray-200'}", style: params[:label].to_s == label.id.to_s ? "background-color: #{label.color}" : "" %>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if @subscribers.any? %>
     <div class="overflow-hidden bg-white shadow ring-1 ring-gray-200 sm:rounded-lg">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.subscribers.index.email') %></th>
-            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.subscribers.index.handle') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.subscribers.index.labels') %></th>
             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.subscribers.index.status') %></th>
             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.subscribers.index.subscribed') %></th>
           </tr>
@@ -20,8 +30,18 @@
         <tbody class="divide-y divide-gray-200 bg-white">
           <% @subscribers.each do |subscriber| %>
             <tr>
-              <td class="px-6 py-4 text-sm text-gray-900"><%= subscriber.email %></td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= subscriber.identity&.handle || "—" %></td>
+              <td class="px-6 py-4 text-sm text-gray-900">
+                <%= link_to subscriber.email, admin_subscriber_path(subscriber), class: "hover:text-gray-600" %>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex flex-wrap gap-1">
+                  <% subscriber.subscriber_labels.each do |label| %>
+                    <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium text-white" style="background-color: <%= label.color %>">
+                      <%= label.name %>
+                    </span>
+                  <% end %>
+                </div>
+              </td>
               <td class="whitespace-nowrap px-6 py-4">
                 <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium <%= subscriber.confirmed? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
                   <%= subscriber.confirmed? ? t('shared.confirmed') : t('shared.pending') %>

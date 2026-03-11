@@ -1,0 +1,9 @@
+<%# locals: (labeling:, subscriber:) %>
+<%= tag.div id: dom_id(labeling), class: "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium text-white", style: "background-color: #{labeling.subscriber_label.color}" do %>
+  <%= labeling.subscriber_label.name %>
+  <%= button_to admin_subscriber_subscriber_labeling_path(subscriber, labeling), method: :delete, class: "ml-1 hover:opacity-75", data: { turbo_confirm: t('shared.are_you_sure') } do %>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  <% end %>
+<% end %>

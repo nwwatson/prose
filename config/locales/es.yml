@@ -63,6 +63,8 @@ es:
       all_posts: "Todas las publicaciones"
       audience: "Audiencia"
       subscribers: "Suscriptores"
+      labels: "Etiquetas"
+      segments: "Segmentos"
       newsletters: "Boletines"
       newsletter_settings: "Configuración de boletín"
       growth: "Crecimiento"
@@ -256,13 +258,62 @@ es:
         confirmed_of_total: "%{confirmed} confirmados de %{total} en total"
         email: "Correo electrónico"
         handle: "Nombre de usuario"
+        labels: "Etiquetas"
         status: "Estado"
         subscribed: "Suscrito"
+        filter_by_label: "Filtrar por etiqueta:"
         no_subscribers: "Aún no hay suscriptores."
       show:
         handle: "Nombre de usuario"
         status: "Estado"
         subscribed: "Suscrito"
+        labels: "Etiquetas"
+        add_label: "Agregar etiqueta"
+    subscriber_labels:
+      index:
+        title: "Etiquetas de suscriptores"
+        new_label: "Nueva etiqueta"
+        name: "Nombre"
+        color: "Color"
+        subscribers: "Suscriptores"
+        no_labels: "No hay etiquetas"
+        get_started: "Crea etiquetas para organizar tus suscriptores."
+      new:
+        title: "Nueva etiqueta"
+      edit:
+        title: "Editar etiqueta"
+    segments:
+      index:
+        title: "Segmentos"
+        new_segment: "Nuevo segmento"
+        name: "Nombre"
+        description: "Descripción"
+        subscribers: "Suscriptores"
+        no_segments: "No hay segmentos"
+        get_started: "Crea un segmento para dirigirte a suscriptores específicos."
+      new:
+        title: "Nuevo segmento"
+      edit:
+        title: "Editar segmento"
+      show:
+        matching_subscribers: "Suscriptores coincidentes"
+        labels: "Etiquetas"
+        no_subscribers: "Ningún suscriptor coincide con este segmento."
+      form:
+        filter_criteria: "Criterios de filtro"
+        labels: "Etiquetas"
+        any_of: "Tiene alguna de estas etiquetas"
+        all_of: "Tiene todas estas etiquetas"
+        none_of: "No tiene ninguna de estas etiquetas"
+        subscribed_after: "Suscrito después de"
+        subscribed_before: "Suscrito antes de"
+        engagement: "Interacción"
+        any_engagement: "Cualquier nivel de interacción"
+        active: "Activo (abrió/hizo clic en los últimos 90 días)"
+        inactive: "Inactivo (sin aperturas/clics en los últimos 90 días)"
+        engagement_help: "Basado en la actividad de apertura y clics de boletines en los últimos 90 días."
+      count:
+        matching_subscribers: "Suscriptores coincidentes"
     comments:
       index:
         title: "Comentarios"
@@ -326,6 +377,8 @@ es:
         preheader_placeholder: "Texto de vista previa en la bandeja de entrada..."
         preheader_help: "Texto corto que se muestra en los clientes de correo antes de abrir. Máx. 150 caracteres."
         audience: "Audiencia"
+        all_subscribers: "Todos los suscriptores confirmados"
+        target_audience: "Audiencia objetivo"
         confirmed_subscribers: "suscriptores confirmados"
         sent: "Enviado"
         delivered_to: "Entregado a"
@@ -608,6 +661,16 @@ es:
         created: "Página creada."
         updated: "Página actualizada."
         deleted: "Página eliminada."
+      subscriber_labels:
+        created: "Etiqueta creada."
+        updated: "Etiqueta actualizada."
+        deleted: "Etiqueta eliminada."
+      segments:
+        created: "Segmento creado."
+        updated: "Segmento actualizado."
+        deleted: "Segmento eliminado."
+      subscriber_labelings:
+        already_assigned: "La etiqueta ya está asignada a este suscriptor."
       categories:
         created: "Categoría creada."
         updated: "Categoría actualizada."

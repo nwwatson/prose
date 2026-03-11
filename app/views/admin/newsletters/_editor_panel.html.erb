@@ -89,11 +89,24 @@
 
       <hr class="border-gray-200">
 
+      <%# Segment targeting %>
+      <div>
+        <label class="block text-sm font-medium text-gray-900 mb-1"><%= t('admin.newsletters.editor_panel.audience') %></label>
+        <select name="newsletter[segment_id]" form="newsletter_form"
+                data-action="change->autosave#handleChange"
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm">
+          <option value=""><%= t('admin.newsletters.editor_panel.all_subscribers') %></option>
+          <% Segment.order(:name).each do |segment| %>
+            <option value="<%= segment.id %>" <%= "selected" if newsletter.segment_id == segment.id %>><%= segment.name %> (<%= segment.subscriber_count %>)</option>
+          <% end %>
+        </select>
+      </div>
+
       <%# Subscriber count %>
       <div class="rounded-md bg-gray-50 p-4">
-        <p class="text-sm font-medium text-gray-900"><%= t('admin.newsletters.editor_panel.audience') %></p>
-        <p class="mt-1 text-2xl font-bold text-gray-900"><%= Subscriber.confirmed.count %></p>
-        <p class="text-xs text-gray-500"><%= t('admin.newsletters.editor_panel.confirmed_subscribers') %></p>
+        <p class="text-sm font-medium text-gray-900"><%= t('admin.newsletters.editor_panel.target_audience') %></p>
+        <p class="mt-1 text-2xl font-bold text-gray-900"><%= newsletter.target_subscribers.count %></p>
+        <p class="text-xs text-gray-500"><%= newsletter.segment.present? ? newsletter.segment.name : t('admin.newsletters.editor_panel.confirmed_subscribers') %></p>
       </div>
 
       <% if newsletter.sent? %>
