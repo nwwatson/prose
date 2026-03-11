@@ -47,7 +47,7 @@ FOREIGN KEY ("tag_id")
 CREATE INDEX "index_post_tags_on_post_id" ON "post_tags" ("post_id") /*application='Prose'*/;
 CREATE INDEX "index_post_tags_on_tag_id" ON "post_tags" ("tag_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_post_tags_on_post_id_and_tag_id" ON "post_tags" ("post_id", "tag_id") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "post_views" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "post_id" integer NOT NULL, "ip_hash" varchar, "user_agent" varchar, "referrer" varchar, "source" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_f2f2d28c2c"
+CREATE TABLE IF NOT EXISTS "post_views" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "post_id" integer NOT NULL, "ip_hash" varchar, "user_agent" varchar, "referrer" varchar, "source" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "referrer_domain" varchar /*application='Prose'*/, "utm_source" varchar /*application='Prose'*/, "utm_medium" varchar /*application='Prose'*/, "utm_campaign" varchar /*application='Prose'*/, CONSTRAINT "fk_rails_f2f2d28c2c"
 FOREIGN KEY ("post_id")
   REFERENCES "posts" ("id")
 );
@@ -198,7 +198,11 @@ FOREIGN KEY ("user_id")
 );
 CREATE INDEX "index_passkeys_on_user_id" ON "passkeys" ("user_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_passkeys_on_credential_id" ON "passkeys" ("credential_id") /*application='Prose'*/;
+CREATE INDEX "index_post_views_on_referrer_domain" ON "post_views" ("referrer_domain") /*application='Prose'*/;
+CREATE INDEX "index_post_views_on_utm_source" ON "post_views" ("utm_source") /*application='Prose'*/;
+CREATE INDEX "index_post_views_on_utm_campaign" ON "post_views" ("utm_campaign") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260311142140'),
 ('20260224192846'),
 ('20260224183928'),
 ('20260224183914'),

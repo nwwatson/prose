@@ -68,6 +68,7 @@ Rails.application.routes.draw do
     end
     resources :subscribers, only: [ :index, :show ]
     resource :growth, only: [ :show ], controller: "growth"
+    resource :traffic, only: [ :show ], controller: "traffic"
     resource :profile, only: [ :edit, :update ]
     resource :settings, only: [ :edit, :update ]
     resource :newsletter_settings, only: [ :edit, :update ]

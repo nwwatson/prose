@@ -25,4 +25,25 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "div", text: /Newsletters Sent/
   end
+
+  test "GET show displays traffic sources panel" do
+    sign_in_as(:admin)
+    get admin_root_path
+    assert_response :success
+    assert_select "h2", text: "Traffic Sources"
+  end
+
+  test "GET show displays top engaged posts" do
+    sign_in_as(:admin)
+    get admin_root_path
+    assert_response :success
+    assert_select "h2", text: "Top Engaged Posts"
+  end
+
+  test "GET show displays subscriber acquisition" do
+    sign_in_as(:admin)
+    get admin_root_path
+    assert_response :success
+    assert_select "h2", text: "Subscriber Acquisition"
+  end
 end

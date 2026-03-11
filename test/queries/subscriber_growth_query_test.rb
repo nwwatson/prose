@@ -65,4 +65,34 @@ class SubscriberGrowthQueryTest < ActiveSupport::TestCase
     result = @query.most_recent_post_subscribers
     assert_nil result
   end
+
+  test "trend_comparison returns current, previous, and change for month" do
+    result = @query.trend_comparison(period: :month)
+    assert result.key?(:current)
+    assert result.key?(:previous)
+    assert result.key?(:change)
+    assert result[:current].is_a?(Integer)
+    assert result[:previous].is_a?(Integer)
+  end
+
+  test "trend_comparison returns data for week" do
+    result = @query.trend_comparison(period: :week)
+    assert result.key?(:current)
+    assert result.key?(:change)
+  end
+
+  test "trend_comparison raises for invalid period" do
+    assert_raises(ArgumentError) do
+      @query.trend_comparison(period: :year)
+    end
+  end
+
+  test "acquisition_channels returns hash with channel counts" do
+    result = @query.acquisition_channels
+    assert_kind_of Hash, result
+    result.each do |channel, count|
+      assert_includes %w[post direct], channel
+      assert count.is_a?(Integer)
+    end
+  end
 end

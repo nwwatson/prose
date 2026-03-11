@@ -1,0 +1,88 @@
+google_view:
+  post: published_post
+  ip_hash: abc123
+  referrer: "https://www.google.com/search?q=test"
+  source: google
+  referrer_domain: google.com
+  created_at: <%= 2.days.ago %>
+
+google_view_with_utm:
+  post: published_post
+  ip_hash: abc124
+  referrer: "https://www.google.com/search?q=test&utm_source=google&utm_medium=cpc&utm_campaign=spring_sale"
+  source: google
+  referrer_domain: google.com
+  utm_source: google
+  utm_medium: cpc
+  utm_campaign: spring_sale
+  created_at: <%= 3.days.ago %>
+
+twitter_view:
+  post: published_post
+  ip_hash: def456
+  referrer: "https://t.co/abc123"
+  source: twitter
+  referrer_domain: t.co
+  created_at: <%= 1.day.ago %>
+
+twitter_view_utm:
+  post: featured_post
+  ip_hash: def457
+  referrer: "https://x.com/user/status/123?utm_source=twitter&utm_medium=social&utm_campaign=spring_sale"
+  source: twitter
+  referrer_domain: x.com
+  utm_source: twitter
+  utm_medium: social
+  utm_campaign: spring_sale
+  created_at: <%= 5.days.ago %>
+
+direct_view:
+  post: published_post
+  ip_hash: ghi789
+  source: direct
+  created_at: <%= 1.day.ago %>
+
+reddit_view:
+  post: featured_post
+  ip_hash: jkl012
+  referrer: "https://www.reddit.com/r/rails"
+  source: reddit
+  referrer_domain: reddit.com
+  created_at: <%= 2.days.ago %>
+
+newsletter_utm_view:
+  post: published_post
+  ip_hash: mno345
+  referrer: "https://example.com/newsletter?utm_source=newsletter&utm_medium=email&utm_campaign=weekly_digest"
+  source: other
+  referrer_domain: example.com
+  utm_source: newsletter
+  utm_medium: email
+  utm_campaign: weekly_digest
+  created_at: <%= 4.days.ago %>
+
+facebook_view:
+  post: related_ruby_post
+  ip_hash: pqr678
+  referrer: "https://www.facebook.com/share"
+  source: facebook
+  referrer_domain: facebook.com
+  created_at: <%= 3.days.ago %>
+
+old_view:
+  post: published_post
+  ip_hash: stu901
+  referrer: "https://news.ycombinator.com"
+  source: hackernews
+  referrer_domain: news.ycombinator.com
+  created_at: <%= 60.days.ago %>
+
+linkedin_view:
+  post: featured_post
+  ip_hash: vwx234
+  referrer: "https://www.linkedin.com/feed"
+  source: linkedin
+  referrer_domain: linkedin.com
+  utm_source: linkedin
+  utm_medium: social
+  created_at: <%= 6.days.ago %>

@@ -52,4 +52,43 @@ class SubscriberGrowthQuery
     count = @relation.where(source_post_id: post.id).count
     { post: post, count: count }
   end
+
+  def trend_comparison(period:)
+    case period
+    when :week
+      current_start = 7.days.ago
+      previous_start = 14.days.ago
+      previous_end = 7.days.ago
+    when :month
+      current_start = 30.days.ago
+      previous_start = 60.days.ago
+      previous_end = 30.days.ago
+    else
+      raise ArgumentError, "period must be :week or :month"
+    end
+
+    current_count = @relation.where(confirmed_at: current_start..).count
+    previous_count = @relation.where(confirmed_at: previous_start..previous_end).count
+
+    percentage_change = if previous_count.zero?
+      current_count.zero? ? 0.0 : 100.0
+    else
+      ((current_count - previous_count).to_f / previous_count * 100).round(1)
+    end
+
+    {
+      current: current_count,
+      previous: previous_count,
+      change: percentage_change
+    }
+  end
+
+  def acquisition_channels
+    @relation
+      .left_joins(:source_post)
+      .group(
+        Arel.sql("CASE WHEN source_post_id IS NOT NULL THEN 'post' ELSE 'direct' END")
+      )
+      .count
+  end
 end

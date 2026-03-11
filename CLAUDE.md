@@ -77,7 +77,7 @@ Skinny controllers that delegate to models/services. Controllers handle only HTT
 ### Service Layer
 - **Form Objects** for multi-model input (e.g., `Registration`)
 - **Service Objects** in `app/services/` for business operations (e.g., `Ai::SystemPrompts`, `Ai::PostContextBuilder`, `MarkdownRenderer`, `Mcp::Tools::*`)
-- **Query Objects** in `app/queries/` for complex queries (e.g., `PostViewsQuery`, `SubscriberGrowthQuery`, `PostEngagementQuery`)
+- **Query Objects** in `app/queries/` for complex queries (e.g., `PostViewsQuery`, `SubscriberGrowthQuery`, `PostEngagementQuery`, `ReferrerAnalyticsQuery`)
 
 ### Internationalization (i18n)
 Site-wide locale configured via `SiteSetting.locale` (default: `"en"`). The `SiteSetting::Localization` concern defines `SUPPORTED_LOCALES` and validates the locale value. `ApplicationController` sets `I18n.locale` from the site setting on every request. All UI strings live in `config/locales/en.yml` and `config/locales/es.yml`. To add a new locale: add the language code to `SUPPORTED_LOCALES` in `app/models/site_setting/localization.rb`, add it to `config.i18n.available_locales` in `config/application.rb`, and create the corresponding YAML file in `config/locales/`.
@@ -95,10 +95,13 @@ Pages (`Page` model) provide custom static content at top-level URLs (`/:slug`).
 Uses the `admin_editor` layout. Autosave triggers on a 3-second debounce, serializing `#post_form` FormData. The editor drawer is a tabbed panel (AI + Settings). Settings fields use `form="post_form"` attribute with event listeners on the settings tab container to trigger autosave.
 
 ### Key Stimulus Controllers
-`autosave`, `editor_drawer`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`, `markdown_preview`
+`autosave`, `editor_drawer`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`, `markdown_preview`, `traffic_chart`
 
 ### Author Profiles
 Profile data (bio, avatar, social links) lives on the `Identity` model via `Identity::Profileable` concern. Public author pages at `/authors` (index) and `/authors/:handle` (show) are served by `AuthorsController`. Admin profile editing at `/admin/profile` via `Admin::ProfilesController`. Author names on posts link to their profile pages. Bios support markdown via `MarkdownRenderer`.
+
+### Traffic Analytics
+`Admin::TrafficController` provides a dedicated deep-dive traffic page at `/admin/traffic` with referrer domain breakdown, UTM campaign/source/medium tables, and a configurable range selector (7d/30d/90d/all). `PostView` stores `referrer_domain`, `utm_source`, `utm_medium`, and `utm_campaign` extracted at write time by `TrackPostViewJob`. `ReferrerAnalyticsQuery` provides aggregation methods. Use `rake referrer:backfill` to populate columns from existing referrer URLs.
 
 ### Social Embeds
 `XPost` and `YouTubeVideo` models with oEmbed fetching, embedded in rich text via ActionText.
