@@ -1,0 +1,45 @@
+/* ==========================================================================
+ * .masthead — Site header BEM block
+ *
+ * Usage:
+ *   .masthead              Header container with bottom border
+ *   .masthead__inner       Centered content wrapper
+ *   .masthead__title-row   Flex row for title + theme toggle
+ *   .masthead__title       Site name link
+ *   .masthead__theme-toggle  Absolute-positioned toggle wrapper
+ *   .masthead__toggle-btn  Theme toggle button
+ *   .masthead__nav         Navigation link row
+ *   .masthead__nav-link    Individual nav link
+ * ========================================================================== */
+
+.masthead {
+  @apply border-b border-gray-300 dark:border-gray-700 py-6;
+}
+
+.masthead__inner {
+  @apply mx-auto max-w-3xl px-4;
+}
+
+.masthead__title-row {
+  @apply flex items-center justify-center relative;
+}
+
+.masthead__title {
+  @apply font-display text-4xl font-bold tracking-tight text-charcoal hover:text-ink-blue transition-colors no-underline;
+}
+
+.masthead__theme-toggle {
+  @apply absolute right-0;
+}
+
+.masthead__toggle-btn {
+  @apply rounded-md p-2 text-gray-500 dark:text-gray-400 hover:text-charcoal transition-colors;
+}
+
+.masthead__nav {
+  @apply mt-3 flex justify-center space-x-6 text-sm;
+}
+
+.masthead__nav-link {
+  @apply text-gray-600 dark:text-gray-400 hover:text-charcoal;
+}

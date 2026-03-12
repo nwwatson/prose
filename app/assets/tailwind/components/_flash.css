@@ -1,0 +1,29 @@
+/* ==========================================================================
+ * .flash — Flash message BEM block
+ *
+ * Usage:
+ *   .flash                Container with max-width and spacing
+ *   .flash__inner         Rounded card background
+ *   .flash--notice        Green notice variant
+ *   .flash__text          Message text
+ * ========================================================================== */
+
+.flash {
+  @apply mx-auto max-w-3xl px-4 mt-4;
+}
+
+.flash__inner {
+  @apply rounded-md p-4;
+}
+
+.flash--notice .flash__inner {
+  @apply bg-green-50 dark:bg-green-900/30;
+}
+
+.flash__text {
+  @apply text-sm;
+}
+
+.flash--notice .flash__text {
+  @apply text-green-800 dark:text-green-300;
+}
