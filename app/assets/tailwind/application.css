@@ -2,13 +2,39 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ==========================================================================
+ * Theme Variables
+ *
+ * Tailwind CSS v4 @theme — compile-time design tokens registered as utilities.
+ * These CANNOT be extracted to a separate file; they must live here.
+ *
+ * Runtime overrides: SiteHelper methods inject inline <style> tags on :root
+ * and .dark to let admins customize fonts and colors via SiteSetting.
+ * ========================================================================== */
 @theme {
+  /* -- Typography ----------------------------------------------------------
+   * --font-serif      Body text font stack.       Override: SiteHelper#font_style_tag (body_font)
+   * --font-display    Heading / display font.     Override: SiteHelper#font_style_tag (heading_font)
+   * --font-subtitle   Subtitle / sub-heading.     Override: SiteHelper#font_style_tag (subtitle_font)
+   * ----------------------------------------------------------------------- */
   --font-serif: "Source Serif 4", Georgia, serif;
   --font-display: "Playfair Display", Georgia, serif;
   --font-subtitle: "Source Serif 4", Georgia, serif;
+
+  /* -- Colors: Light Mode --------------------------------------------------
+   * --color-cream     Page background.            Override: SiteHelper#background_color_style_tag
+   * --color-charcoal  Primary text.               (no light-mode override — default only)
+   * --color-ink-blue  Accent / links.             (no light-mode override — default only)
+   * ----------------------------------------------------------------------- */
   --color-cream: #faf7f2;
   --color-charcoal: #2c2c2c;
   --color-ink-blue: #3d5a80;
+
+  /* -- Colors: Dark Mode Palette -------------------------------------------
+   * These define the raw dark-mode palette. The .dark {} block below remaps
+   * the semantic tokens (cream, charcoal, ink-blue) to these values.
+   * Override: SiteHelper#dark_mode_style_tag (dark_bg_hex, dark_text_hex, dark_accent_hex)
+   * ----------------------------------------------------------------------- */
   --color-dark-bg: #1a1a2e;
   --color-dark-text: #e0def4;
   --color-dark-accent: #7ba4cc;
@@ -16,12 +42,21 @@
   --color-dark-muted: #908caa;
 }
 
-/* Dark mode: override semantic colors when .dark is on <html> */
+/* Dark mode: remap semantic color tokens when .dark is on <html> */
 .dark {
   --color-cream: var(--color-dark-bg);
   --color-charcoal: var(--color-dark-text);
   --color-ink-blue: var(--color-dark-accent);
 }
+
+/* ==========================================================================
+ * BEM Components
+ * ========================================================================== */
+@import "./components/_index.css";
+
+/* ==========================================================================
+ * One-off Utilities & Overrides
+ * ========================================================================== */
 
 /* Range slider component */
 input[data-range-slider-target="input"] {

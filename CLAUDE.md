@@ -105,6 +105,9 @@ Uses the `admin_editor` layout. Autosave triggers on a 3-second debounce, serial
 ### Post Versioning
 `PostVersion` stores full snapshots (title, subtitle, content HTML, body plain text) on each save. Auto-versioning triggers on update with a 5-minute cooldown (`Post::Versionable`). Manual "Save version" button in the editor drawer's Versions tab. Diff view uses the `diffy` gem for plain-text comparison. "Restore" replaces the post's current content. Max 50 versions per post, pruned inline on version creation. Admin CRUD at `/admin/posts/:id/post_versions`.
 
+### BEM CSS Components
+Frontend component styles use BEM (Block Element Modifier) methodology in `app/assets/tailwind/components/`. Each component gets its own file (e.g., `_post-card.css`) imported via the `_index.css` manifest. Theme variables (fonts, colors) are defined in the `@theme` block of `application.css` — Tailwind v4's `@theme` directive cannot be extracted to a separate file. `SiteHelper` methods inject runtime overrides for admin-configurable fonts and colors.
+
 ### Key Stimulus Controllers
 `autosave`, `editor_drawer`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`, `markdown_preview`, `traffic_chart`, `segment_builder`, `comment_edit`
 
