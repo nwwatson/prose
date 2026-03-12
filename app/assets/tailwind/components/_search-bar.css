@@ -1,0 +1,16 @@
+/* ==========================================================================
+ * .search-bar — Search form BEM block
+ *
+ * Usage:
+ *   .search-bar          Flex container for input + submit
+ *   .search-bar__input   Search text input (compose with .form-input)
+ *   .search-bar__submit  Submit button (compose with .btn .btn--primary)
+ * ========================================================================== */
+
+.search-bar {
+  @apply flex items-center gap-3;
+}
+
+.search-bar__input {
+  @apply flex-1;
+}

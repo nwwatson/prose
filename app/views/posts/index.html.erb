@@ -37,9 +37,9 @@
 <% end %>
 
 <%# Search %>
-<div class="mb-8 border-b border-gray-300 dark:border-gray-700 pb-8">
-  <%= form_with url: posts_path, method: :get, data: { turbo_action: "advance" }, class: "flex items-center gap-3" do |f| %>
-    <%= f.search_field :q, value: @query, placeholder: t('posts.index.search_placeholder'), class: "form-input form-input--search" %>
+<div class="mb-8 section-divider pb-8">
+  <%= form_with url: posts_path, method: :get, data: { turbo_action: "advance" }, class: "search-bar" do |f| %>
+    <%= f.search_field :q, value: @query, placeholder: t('posts.index.search_placeholder'), class: "form-input search-bar__input" %>
     <%= f.submit t('shared.search'), class: "btn btn--primary" %>
   <% end %>
 </div>
@@ -60,10 +60,10 @@
 <% end %>
 
 <%# Subscribe section %>
-<div class="mt-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-white/5 p-8 text-center">
-  <h3 class="font-display text-xl font-bold text-charcoal"><%= t('posts.index.subscribe_to', site_name: site_name) %></h3>
-  <p class="mt-2 text-sm text-gray-600 dark:text-gray-400"><%= t('posts.index.get_notified') %></p>
-  <div class="mx-auto mt-4 max-w-md">
+<div class="subscribe-cta">
+  <h3 class="subscribe-cta__heading"><%= t('posts.index.subscribe_to', site_name: site_name) %></h3>
+  <p class="subscribe-cta__description"><%= t('posts.index.get_notified') %></p>
+  <div class="subscribe-cta__form-wrapper">
     <%= render "subscriptions/form" %>
   </div>
 </div>

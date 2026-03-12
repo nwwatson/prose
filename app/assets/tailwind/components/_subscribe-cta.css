@@ -1,0 +1,25 @@
+/* ==========================================================================
+ * .subscribe-cta — Subscribe call-to-action BEM block
+ *
+ * Usage:
+ *   .subscribe-cta               Outer card container
+ *   .subscribe-cta__heading      Title text
+ *   .subscribe-cta__description  Subtitle / description text
+ *   .subscribe-cta__form-wrapper Centered form container
+ * ========================================================================== */
+
+.subscribe-cta {
+  @apply mt-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-white/5 p-8 text-center;
+}
+
+.subscribe-cta__heading {
+  @apply font-display text-xl font-bold text-charcoal;
+}
+
+.subscribe-cta__description {
+  @apply mt-2 text-sm text-gray-600 dark:text-gray-400;
+}
+
+.subscribe-cta__form-wrapper {
+  @apply mx-auto mt-4 max-w-md;
+}
