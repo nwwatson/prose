@@ -1,0 +1,60 @@
+/* ==========================================================================
+ * .author-card — Author listing card BEM block (authors index)
+ *
+ * Usage:
+ *   .author-card                    Card container with bottom border
+ *   .author-card__inner             Flex row for avatar + info
+ *   .author-card__avatar            Avatar image
+ *   .author-card__avatar-placeholder  Placeholder circle when no avatar
+ *   .author-card__avatar-initial    Initial letter in placeholder
+ *   .author-card__info              Text content column
+ *   .author-card__name              Author name link
+ *   .author-card__bio               Truncated bio excerpt
+ *   .author-card__meta              Post count + social links row
+ *   .author-card__social-links      Social links container
+ *   .author-card__social-link       Individual social link
+ * ========================================================================== */
+
+.author-card {
+  @apply border-b border-gray-200 dark:border-gray-700 pb-8;
+}
+
+.author-card__inner {
+  @apply flex items-start gap-4;
+}
+
+.author-card__avatar {
+  @apply h-16 w-16 rounded-full object-cover flex-shrink-0;
+}
+
+.author-card__avatar-placeholder {
+  @apply flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700;
+}
+
+.author-card__avatar-initial {
+  @apply text-xl font-bold text-gray-500 dark:text-gray-400;
+}
+
+.author-card__info {
+  @apply flex-1 min-w-0;
+}
+
+.author-card__name {
+  @apply font-display text-xl font-bold text-charcoal hover:text-ink-blue transition-colors no-underline;
+}
+
+.author-card__bio {
+  @apply mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-2;
+}
+
+.author-card__meta {
+  @apply mt-2 flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400;
+}
+
+.author-card__social-links {
+  @apply flex items-center gap-2;
+}
+
+.author-card__social-link {
+  @apply hover:text-ink-blue;
+}

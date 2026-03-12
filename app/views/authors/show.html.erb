@@ -10,44 +10,44 @@
 <% end %>
 
 <%# Author header %>
-<div class="border-b border-gray-300 dark:border-gray-700 pb-8 mb-8">
-  <div class="flex items-start gap-5">
+<div class="author-profile">
+  <div class="author-profile__inner">
     <% if @identity.avatar.attached? %>
       <%= image_tag @identity.avatar.variant(resize_to_fill: [128, 128]),
-            class: "h-24 w-24 rounded-full object-cover flex-shrink-0",
+            class: "author-profile__avatar",
             alt: @identity.name %>
     <% else %>
-      <div class="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700">
-        <span class="text-3xl font-bold text-gray-500 dark:text-gray-400"><%= @identity.name.first.upcase %></span>
+      <div class="author-profile__avatar-placeholder">
+        <span class="author-profile__avatar-initial"><%= @identity.name.first.upcase %></span>
       </div>
     <% end %>
 
-    <div class="flex-1 min-w-0">
+    <div class="author-profile__info">
       <h1 class="page-heading"><%= @identity.name %></h1>
 
       <% if @identity.bio.present? %>
-        <div class="mt-3 prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-400">
+        <div class="author-profile__bio prose prose-sm dark:prose-invert">
           <%= sanitize @identity.bio_html %>
         </div>
       <% end %>
 
-      <div class="mt-3 post-meta">
+      <div class="author-profile__meta">
         <span><%= t('authors.show.posts_published', count: @total_posts) %></span>
 
         <% if @identity.has_social_links? %>
           <span class="post-meta__separator">&middot;</span>
-          <div class="flex items-center gap-3">
+          <div class="author-profile__social-links">
             <% if @identity.website_url.present? %>
               <%= link_to @identity.website_url.sub(%r{\Ahttps?://}, ""), @identity.website_url,
-                    class: "hover:text-ink-blue transition-colors", target: "_blank", rel: "noopener" %>
+                    class: "author-profile__social-link", target: "_blank", rel: "noopener" %>
             <% end %>
             <% if @identity.twitter_url.present? %>
               <%= link_to "@#{@identity.twitter_handle}", @identity.twitter_url,
-                    class: "hover:text-ink-blue transition-colors", target: "_blank", rel: "noopener" %>
+                    class: "author-profile__social-link", target: "_blank", rel: "noopener" %>
             <% end %>
             <% if @identity.github_url.present? %>
               <%= link_to @identity.github_handle, @identity.github_url,
-                    class: "hover:text-ink-blue transition-colors", target: "_blank", rel: "noopener" %>
+                    class: "author-profile__social-link", target: "_blank", rel: "noopener" %>
             <% end %>
           </div>
         <% end %>

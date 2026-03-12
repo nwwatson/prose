@@ -1,0 +1,60 @@
+/* ==========================================================================
+ * .author-profile — Author profile header BEM block (authors show)
+ *
+ * Larger variant of author-card for the dedicated profile page.
+ *
+ * Usage:
+ *   .author-profile                    Profile header container
+ *   .author-profile__inner             Flex row for avatar + info
+ *   .author-profile__avatar            Avatar image (larger)
+ *   .author-profile__avatar-placeholder  Placeholder circle
+ *   .author-profile__avatar-initial    Initial letter
+ *   .author-profile__info              Text content column
+ *   .author-profile__bio               Full bio (combine with prose prose-sm
+ *                                      dark:prose-invert in markup)
+ *   .author-profile__meta              Stats + social links row
+ *   .author-profile__social-links      Social links container
+ *   .author-profile__social-link       Individual social link
+ * ========================================================================== */
+
+.author-profile {
+  @apply border-b border-gray-300 dark:border-gray-700 pb-8 mb-8;
+}
+
+.author-profile__inner {
+  @apply flex items-start gap-5;
+}
+
+.author-profile__avatar {
+  @apply h-24 w-24 rounded-full object-cover flex-shrink-0;
+}
+
+.author-profile__avatar-placeholder {
+  @apply flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700;
+}
+
+.author-profile__avatar-initial {
+  @apply text-3xl font-bold text-gray-500 dark:text-gray-400;
+}
+
+.author-profile__info {
+  @apply flex-1 min-w-0;
+}
+
+/* NOTE: prose utilities from @tailwindcss/typography cannot be used with
+   @apply in Tailwind v4. The prose classes are kept inline in the template. */
+.author-profile__bio {
+  @apply mt-3 max-w-none text-gray-600 dark:text-gray-400;
+}
+
+.author-profile__meta {
+  @apply mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400;
+}
+
+.author-profile__social-links {
+  @apply flex items-center gap-3;
+}
+
+.author-profile__social-link {
+  @apply hover:text-ink-blue transition-colors;
+}
