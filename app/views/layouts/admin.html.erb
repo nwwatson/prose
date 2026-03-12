@@ -24,15 +24,7 @@
            class="fixed inset-0 z-40 bg-black/30 transition-opacity duration-300 hidden opacity-0 lg:hidden"></div>
       <aside data-admin-sidebar-target="sidebar"
              class="fixed inset-y-0 left-0 z-50 w-64 -translate-x-full border-r border-gray-200 bg-white transition-transform duration-300 ease-in-out lg:hidden">
-        <div class="absolute right-0 top-0 -mr-12 pt-2">
-          <button type="button" data-action="click->admin-sidebar#close"
-                  class="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none">
-            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        <%= render "layouts/admin_sidebar_content" %>
+        <%= render "layouts/admin_sidebar_content", show_close: true %>
       </aside>
 
       <%# Main content %>
