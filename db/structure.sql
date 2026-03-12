@@ -56,7 +56,7 @@ CREATE INDEX "index_post_views_on_created_at" ON "post_views" ("created_at") /*a
 CREATE INDEX "index_post_views_on_post_id_and_created_at" ON "post_views" ("post_id", "created_at") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "identities" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "handle" varchar, "settings" json DEFAULT '{}', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "bio" text /*application='Prose'*/, "website_url" varchar /*application='Prose'*/, "twitter_handle" varchar /*application='Prose'*/, "github_handle" varchar /*application='Prose'*/);
 CREATE UNIQUE INDEX "index_identities_on_handle" ON "identities" ("handle") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "comments" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "post_id" integer NOT NULL, "parent_comment_id" integer, "body" text NOT NULL, "approved" boolean DEFAULT TRUE NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "identity_id" integer NOT NULL, CONSTRAINT "fk_rails_2530bf1cd4"
+CREATE TABLE IF NOT EXISTS "comments" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "post_id" integer NOT NULL, "parent_comment_id" integer, "body" text NOT NULL, "approved" boolean DEFAULT TRUE NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "identity_id" integer NOT NULL, "edited_at" datetime(6) /*application='Prose'*/, "deleted_at" datetime(6) /*application='Prose'*/, "notify_on_reply" boolean DEFAULT FALSE NOT NULL /*application='Prose'*/, CONSTRAINT "fk_rails_2530bf1cd4"
 FOREIGN KEY ("identity_id")
   REFERENCES "identities" ("id")
 , CONSTRAINT "fk_rails_2fd19c0db7"
@@ -229,6 +229,7 @@ CREATE INDEX "index_post_versions_on_post_id" ON "post_versions" ("post_id") /*a
 CREATE INDEX "index_post_versions_on_user_id" ON "post_versions" ("user_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_post_versions_on_post_id_and_version_number" ON "post_versions" ("post_id", "version_number") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260312123354'),
 ('20260311171612'),
 ('20260311160003'),
 ('20260311160002'),

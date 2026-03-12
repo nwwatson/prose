@@ -1,0 +1,14 @@
+<%= form_with model: comment, url: post_comment_path(post, comment, slug: post.slug), method: :patch, class: "space-y-2" do |f| %>
+  <% if comment.errors.any? %>
+    <div class="text-sm text-red-600 dark:text-red-400"><%= comment.errors.full_messages.to_sentence %></div>
+  <% end %>
+  <%= f.text_area :body, rows: 3,
+        data: { controller: "autogrow", action: "input->autogrow#resize" },
+        class: "prose-comment font-serif block w-full resize-none rounded-md bg-white dark:bg-white/5 px-3 py-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-ink-blue" %>
+  <div class="flex items-center space-x-2">
+    <%= f.submit t('shared.save'), class: "rounded-md bg-charcoal dark:bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 dark:hover:bg-gray-500 cursor-pointer" %>
+    <button type="button" data-action="click->comment-edit#toggle" class="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+      <%= t('shared.cancel') %>
+    </button>
+  </div>
+<% end %>

@@ -3,12 +3,13 @@ top_level:
   identity_id: <%= ActiveRecord::FixtureSet.identify(:subscriber_identity) %>
   body: Great post!
   approved: true
+  notify_on_reply: true
   created_at: <%= 1.day.ago %>
   updated_at: <%= 1.day.ago %>
 
 reply:
   post_id: <%= ActiveRecord::FixtureSet.identify(:published_post) %>
-  identity_id: <%= ActiveRecord::FixtureSet.identify(:subscriber_identity) %>
+  identity_id: <%= ActiveRecord::FixtureSet.identify(:from_published_post_identity) %>
   parent_comment_id: <%= ActiveRecord::FixtureSet.identify(:top_level) %>
   body: Thanks for the feedback!
   approved: true
@@ -22,3 +23,20 @@ pending_comment:
   approved: false
   created_at: <%= 6.hours.ago %>
   updated_at: <%= 6.hours.ago %>
+
+recent_comment:
+  post_id: <%= ActiveRecord::FixtureSet.identify(:published_post) %>
+  identity_id: <%= ActiveRecord::FixtureSet.identify(:subscriber_identity) %>
+  body: A recent comment within edit window
+  approved: true
+  created_at: <%= 5.minutes.ago %>
+  updated_at: <%= 5.minutes.ago %>
+
+deleted_comment:
+  post_id: <%= ActiveRecord::FixtureSet.identify(:published_post) %>
+  identity_id: <%= ActiveRecord::FixtureSet.identify(:subscriber_identity) %>
+  body: "[deleted]"
+  approved: true
+  deleted_at: <%= 1.hour.ago %>
+  created_at: <%= 2.hours.ago %>
+  updated_at: <%= 1.hour.ago %>

@@ -60,6 +60,8 @@ app/models/user/passkey_authenticatable.rb # module User::PasskeyAuthenticatable
 app/models/post/discoverable.rb      # module Post::Discoverable (related posts, prev/next)
 app/models/post/versionable.rb      # module Post::Versionable (revision history, version cooldown)
 app/models/post_version.rb          # PostVersion: full snapshot of post content per version
+app/models/comment/editable.rb        # module Comment::Editable (15-min edit window, soft delete)
+app/models/comment/notifiable.rb      # module Comment::Notifiable (reply notification callbacks)
 app/models/page.rb                    # class Page (custom static pages)
 app/models/page/sluggable.rb         # module Page::Sluggable (auto-generated URL slugs)
 app/models/page/publishable.rb       # module Page::Publishable (live scope, publish/draft)
@@ -104,7 +106,7 @@ Uses the `admin_editor` layout. Autosave triggers on a 3-second debounce, serial
 `PostVersion` stores full snapshots (title, subtitle, content HTML, body plain text) on each save. Auto-versioning triggers on update with a 5-minute cooldown (`Post::Versionable`). Manual "Save version" button in the editor drawer's Versions tab. Diff view uses the `diffy` gem for plain-text comparison. "Restore" replaces the post's current content. Max 50 versions per post, pruned inline on version creation. Admin CRUD at `/admin/posts/:id/post_versions`.
 
 ### Key Stimulus Controllers
-`autosave`, `editor_drawer`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`, `markdown_preview`, `traffic_chart`, `segment_builder`
+`autosave`, `editor_drawer`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`, `markdown_preview`, `traffic_chart`, `segment_builder`, `comment_edit`
 
 ### Author Profiles
 Profile data (bio, avatar, social links) lives on the `Identity` model via `Identity::Profileable` concern. Public author pages at `/authors` (index) and `/authors/:handle` (show) are served by `AuthorsController`. Admin profile editing at `/admin/profile` via `Admin::ProfilesController`. Author names on posts link to their profile pages. Bios support markdown via `MarkdownRenderer`.
@@ -114,6 +116,11 @@ Profile data (bio, avatar, social links) lives on the `Identity` model via `Iden
 
 ### Subscriber Segmentation
 `SubscriberLabel` provides tagging for subscribers (name + hex color). `SubscriberLabeling` is the many-to-many join. `Segment` stores saved filter criteria as JSON (`filter_criteria` column) with a `Segment::Resolvable` concern that delegates to `SegmentSubscribersQuery`. Filters support: label matching (any_of/all_of/none_of), date ranges on `confirmed_at`, and engagement level (active/inactive derived from `newsletter_deliveries`). Newsletters have an optional `segment_id` — `Newsletter::Sendable#target_subscribers` returns the segment's resolved subscribers or all confirmed subscribers. Admin CRUD at `/admin/subscriber_labels`, `/admin/segments`. Labels are managed per-subscriber at `/admin/subscribers/:id`.
+
+### Comment Features
+Comments belong to `Identity` (not `Subscriber`), allowing both admins and subscribers to comment. One-level threading only. Features:
+- **Edit/Delete**: Authors can edit within 15 minutes (`Comment::Editable`). Soft delete sets `deleted_at` and replaces body with "[deleted]". Admin hard-delete unchanged.
+- **Reply Notifications**: Opt-in via `notify_on_reply` checkbox. `Comment::Notifiable` fires `CommentReplyNotificationJob` on reply creation. `CommentMailer#reply_notification` sends email with token-based unsubscribe (`CommentNotificationsController`).
 
 ### Social Embeds
 `XPost` and `YouTubeVideo` models with oEmbed fetching, embedded in rich text via ActionText.

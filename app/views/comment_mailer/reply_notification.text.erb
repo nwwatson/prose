@@ -1,0 +1,9 @@
+<%= t('comment_mailer.reply_notification.heading', site_name: @site_name) %>
+
+<%= t('comment_mailer.reply_notification.body', name: @replier_name, post_title: @post.title) %>
+
+"<%= truncate(strip_tags(@comment.rendered_body), length: 300) %>"
+
+<%= t('comment_mailer.reply_notification.view_comment') %>: <%= post_url(@post, slug: @post.slug, anchor: "comment_#{@comment.id}") %>
+
+<%= t('comment_mailer.reply_notification.unsubscribe_text') %>: <%= @unsubscribe_url %>

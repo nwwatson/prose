@@ -99,12 +99,16 @@ es:
       email_placeholder: "tu@email.com"
 
   comments:
+    deleted: "[eliminado]"
+    edited: "editado"
+    delete_confirm: "¿Eliminar este comentario?"
     form:
       write: "Escribir"
       preview: "Vista previa"
       placeholder: "Comparte tus pensamientos... (markdown compatible)"
       comment: "Comentar"
       subscribe_to_join: "Suscríbete para unirte a la conversación."
+      notify_on_reply: "Notificarme de respuestas"
 
   authors:
     index:
@@ -600,6 +604,15 @@ es:
         title_change: "Título cambiado"
         content_diff: "Cambios en el contenido"
 
+  comment_mailer:
+    reply_notification:
+      subject: "Nueva respuesta a tu comentario en %{site_name}"
+      heading: "Nueva respuesta en %{site_name}"
+      body: "%{name} respondió a tu comentario en \"%{post_title}\":"
+      view_comment: "Ver respuesta"
+      unsubscribe_html: "¿No quieres notificaciones de respuestas? <a href=\"%{url}\" style=\"color: #71717a;\">Cancelar suscripción</a>"
+      unsubscribe_text: "¿No quieres notificaciones de respuestas? Cancela aquí"
+
   subscriber_mailer:
     confirmation:
       subject: "Confirma tu suscripción a %{site_name}"
@@ -649,6 +662,11 @@ es:
       approved: "Comentario aprobado."
       rejected: "Comentario rechazado."
       deleted: "Comentario eliminado."
+      cannot_edit: "Este comentario ya no se puede editar."
+      cannot_delete: "No puedes eliminar este comentario."
+    comment_notifications:
+      unsubscribed: "Ya no recibirás notificaciones de respuestas para este comentario."
+      invalid_link: "Enlace de notificación inválido o expirado."
     admin:
       settings:
         saved: "Configuración guardada."

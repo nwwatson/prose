@@ -1,8 +1,35 @@
 <div id="comment_<%= comment.id %>" class="py-4 <%= comment.parent_comment_id? ? 'ml-8 border-l-2 border-gray-200 dark:border-gray-700 pl-4' : '' %>">
-  <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-    <span class="font-medium text-charcoal"><%= comment.identity.handle || comment.identity.name %></span>
-    <span>&middot;</span>
-    <time datetime="<%= comment.created_at.iso8601 %>"><%= time_ago_in_words(comment.created_at) %> <%= t('shared.ago') %></time>
-  </div>
-  <div class="mt-1 text-gray-700 dark:text-gray-300 prose-comment"><%= sanitize_markdown(comment.rendered_body) %></div>
+  <% if comment.deleted? %>
+    <p class="text-sm text-gray-400 dark:text-gray-500 italic"><%= t('comments.deleted') %></p>
+  <% else %>
+    <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+      <span class="font-medium text-charcoal"><%= comment.identity.handle || comment.identity.name %></span>
+      <span>&middot;</span>
+      <time datetime="<%= comment.created_at.iso8601 %>"><%= time_ago_in_words(comment.created_at) %> <%= t('shared.ago') %></time>
+      <% if comment.edited? %>
+        <span>&middot;</span>
+        <span class="italic"><%= t('comments.edited') %></span>
+      <% end %>
+    </div>
+    <div class="mt-1 text-gray-700 dark:text-gray-300 prose-comment"><%= sanitize_markdown(comment.rendered_body) %></div>
+    <% if identity_signed_in? && current_identity.id == comment.identity_id %>
+      <div class="mt-2 flex items-center space-x-3 text-xs">
+        <% if comment.editable_by?(current_identity) %>
+          <button type="button" data-controller="comment-edit" data-action="click->comment-edit#toggle"
+                  data-comment-edit-comment-id-value="<%= comment.id %>"
+                  class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+            <%= t('shared.edit') %>
+          </button>
+        <% end %>
+        <%= button_to t('shared.delete'),
+              post_comment_path(comment.post, comment, slug: comment.post.slug),
+              method: :delete,
+              data: { turbo_confirm: t('comments.delete_confirm') },
+              class: "text-gray-400 hover:text-red-600 dark:hover:text-red-400" %>
+      </div>
+    <% end %>
+    <div id="edit_comment_<%= comment.id %>" class="hidden mt-2">
+      <%= render "comments/edit_form", post: comment.post, comment: comment %>
+    </div>
+  <% end %>
 </div>

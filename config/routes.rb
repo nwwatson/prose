@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   root "posts#index"
   resources :posts, only: [ :index, :show ], param: :slug do
     resource :love, only: [ :create, :destroy ]
-    resources :comments, only: [ :create ]
+    resources :comments, only: [ :create, :update, :destroy ]
   end
   resources :authors, only: [ :index, :show ], param: :handle
   resources :categories, only: [ :show ], param: :slug
@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   resource :handle, only: [ :update ]
   resource :handle_availability, only: [ :show ]
   resource :unsubscribe, only: [ :show, :create ]
+  resource :comment_notification, only: [ :destroy ]
   get "feed" => "feeds#index", defaults: { format: :xml }
   get "sitemap" => "sitemaps#index", defaults: { format: :xml }
   get "robots" => "robots#index", defaults: { format: :text }, as: :robots

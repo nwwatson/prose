@@ -1,4 +1,7 @@
 class Comment < ApplicationRecord
+  include Editable
+  include Notifiable
+
   belongs_to :post
   belongs_to :identity
   belongs_to :parent_comment, class_name: "Comment", optional: true

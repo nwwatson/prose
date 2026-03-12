@@ -102,12 +102,16 @@ en:
       email_placeholder: "your@email.com"
 
   comments:
+    deleted: "[deleted]"
+    edited: "edited"
+    delete_confirm: "Delete this comment?"
     form:
       write: "Write"
       preview: "Preview"
       placeholder: "Share your thoughts... (markdown supported)"
       comment: "Comment"
       subscribe_to_join: "Subscribe to join the conversation."
+      notify_on_reply: "Notify me of replies"
 
   authors:
     index:
@@ -605,6 +609,15 @@ en:
         content_diff: "Content changes"
 
   # Mailers
+  comment_mailer:
+    reply_notification:
+      subject: "New reply to your comment on %{site_name}"
+      heading: "New reply on %{site_name}"
+      body: "%{name} replied to your comment on \"%{post_title}\":"
+      view_comment: "View reply"
+      unsubscribe_html: "Don't want reply notifications? <a href=\"%{url}\" style=\"color: #71717a;\">Unsubscribe</a>"
+      unsubscribe_text: "Don't want reply notifications? Unsubscribe here"
+
   subscriber_mailer:
     confirmation:
       subject: "Confirm your subscription to %{site_name}"
@@ -656,6 +669,11 @@ en:
       approved: "Comment approved."
       rejected: "Comment rejected."
       deleted: "Comment deleted."
+      cannot_edit: "This comment can no longer be edited."
+      cannot_delete: "You cannot delete this comment."
+    comment_notifications:
+      unsubscribed: "You will no longer receive reply notifications for this comment."
+      invalid_link: "Invalid or expired notification link."
     admin:
       settings:
         saved: "Settings saved."
