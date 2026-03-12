@@ -1,0 +1,20 @@
+/* ==========================================================================
+ * .text-link — Shared link BEM block
+ *
+ * Usage:
+ *   .text-link              Default link (charcoal → ink-blue on hover)
+ *   .text-link--muted       De-emphasized link (gray, used in footers/meta)
+ *   .text-link--category    Category link (ink-blue with underline on hover)
+ * ========================================================================== */
+
+.text-link {
+  @apply text-charcoal hover:text-ink-blue transition-colors no-underline;
+}
+
+.text-link--muted {
+  @apply text-gray-600 dark:text-gray-400 hover:text-charcoal;
+}
+
+.text-link--category {
+  @apply text-ink-blue hover:underline;
+}

@@ -1,0 +1,21 @@
+/* ==========================================================================
+ * .post-meta — Post metadata line BEM block
+ *
+ * The repeating "By Author · Date · X min read · Category" pattern.
+ *
+ * Usage:
+ *   .post-meta              Container (flex row with gaps)
+ *   .post-meta__author      Author name (compose with .text-link)
+ *   .post-meta__date        Publication date
+ *   .post-meta__reading-time  Reading time estimate
+ *   .post-meta__category    Category link (compose with .text-link--category)
+ *   .post-meta__separator   Middot separator between items
+ * ========================================================================== */
+
+.post-meta {
+  @apply flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400;
+}
+
+.post-meta__separator {
+  @apply text-gray-300 dark:text-gray-600;
+}

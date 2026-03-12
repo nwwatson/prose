@@ -1,0 +1,10 @@
+/* ==========================================================================
+ * .page-heading — Shared page heading BEM block
+ *
+ * Usage:
+ *   .page-heading    Section/page titles (tags, categories, authors, pages)
+ * ========================================================================== */
+
+.page-heading {
+  @apply font-display text-3xl font-bold;
+}

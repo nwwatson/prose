@@ -1,0 +1,30 @@
+/* ==========================================================================
+ * Layout utility BEM blocks
+ *
+ * Usage:
+ *   .container        Centered content column (max-w-3xl)
+ *   .section-divider  Horizontal rule between sections
+ *   .empty-state      Empty content placeholder container
+ *   .empty-state__text  Empty state message text
+ *   .muted-text       De-emphasized text
+ * ========================================================================== */
+
+.container {
+  @apply mx-auto max-w-3xl px-4;
+}
+
+.section-divider {
+  @apply border-t border-gray-200 dark:border-gray-700;
+}
+
+.empty-state {
+  @apply py-16 text-center;
+}
+
+.empty-state__text {
+  @apply text-lg text-gray-500 dark:text-gray-400;
+}
+
+.muted-text {
+  @apply text-gray-500 dark:text-gray-400;
+}
