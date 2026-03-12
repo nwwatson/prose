@@ -1,0 +1,29 @@
+/* ==========================================================================
+ * .btn — Shared button BEM block
+ *
+ * Usage:
+ *   .btn.btn--primary   Subscribe, comment submit, search, author "Load more"
+ *   .btn.btn--secondary Comment edit cancel
+ *   .btn.btn--danger    Unsubscribe confirm
+ *   .btn.btn--small     Compact variant (compose with --primary, etc.)
+ * ========================================================================== */
+
+.btn {
+  @apply rounded-md text-sm font-semibold shadow-sm cursor-pointer transition-colors;
+}
+
+.btn--primary {
+  @apply bg-charcoal dark:bg-gray-700 text-white dark:text-gray-100 hover:bg-gray-700 dark:hover:bg-gray-600 px-4 py-2;
+}
+
+.btn--secondary {
+  @apply text-gray-500 hover:text-gray-700 dark:hover:text-gray-300;
+}
+
+.btn--danger {
+  @apply bg-red-600 text-white hover:bg-red-500 px-4 py-2;
+}
+
+.btn--small {
+  @apply px-3 py-1.5;
+}

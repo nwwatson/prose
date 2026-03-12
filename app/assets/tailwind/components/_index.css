@@ -2,8 +2,5 @@
  *
  * Import BEM component stylesheets here. Each component gets its own file
  * following the pattern: _component-name.css
- *
- * Example:
- *   @import "./_post-card.css";
- *   @import "./_site-header.css";
  */
+@import "./_btn.css";
