@@ -49,6 +49,32 @@ class SiteSettingTest < ActiveSupport::TestCase
     assert_equal "#faf7f2", setting.background_hex
   end
 
+  # Theme mode tests
+  test "theme_mode defaults to visitor_choice" do
+    SiteSetting.delete_all
+    setting = SiteSetting.current
+    assert_equal "visitor_choice", setting.theme_mode
+  end
+
+  test "validates theme_mode inclusion" do
+    setting = SiteSetting.current
+    setting.theme_mode = "invalid"
+    assert_not setting.valid?
+    assert_includes setting.errors[:theme_mode], "is not included in the list"
+  end
+
+  test "accepts valid theme_mode values" do
+    setting = SiteSetting.current
+    %w[light dark visitor_choice].each do |mode|
+      setting.theme_mode = mode
+      assert setting.valid?, "Expected #{mode} to be valid"
+    end
+  end
+
+  test "THEME_MODES is frozen" do
+    assert SiteSetting::Appearance::THEME_MODES.frozen?
+  end
+
   # Localization concern tests
   test "locale defaults to en" do
     SiteSetting.delete_all

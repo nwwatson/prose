@@ -104,6 +104,22 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
     SiteSetting.current.update!(locale: "en")
   end
 
+  test "PATCH update persists theme_mode" do
+    sign_in_as(:admin)
+    patch admin_settings_path, params: { site_setting: { theme_mode: "dark" } }
+    assert_redirected_to edit_admin_settings_path
+
+    assert_equal "dark", SiteSetting.current.theme_mode
+  ensure
+    SiteSetting.current.update!(theme_mode: "visitor_choice")
+  end
+
+  test "PATCH update rejects invalid theme_mode" do
+    sign_in_as(:admin)
+    patch admin_settings_path, params: { site_setting: { theme_mode: "invalid" } }
+    assert_response :unprocessable_entity
+  end
+
   test "PATCH update rejects invalid locale" do
     sign_in_as(:admin)
     patch admin_settings_path, params: { site_setting: { locale: "fr" } }

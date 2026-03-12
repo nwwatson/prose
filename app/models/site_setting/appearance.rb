@@ -12,8 +12,11 @@ module SiteSetting::Appearance
     "soft_blue" => { name: "Soft Blue", hex: "#eff3f8" }
   }.freeze
 
+  THEME_MODES = %w[light dark visitor_choice].freeze
+
   included do
     validates :background_color, inclusion: { in: BACKGROUND_COLORS.keys }
+    validates :theme_mode, inclusion: { in: THEME_MODES }
   end
 
   def background_hex

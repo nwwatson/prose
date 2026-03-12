@@ -43,6 +43,10 @@ module SiteHelper
     tag.style(css.html_safe)
   end
 
+  def theme_mode
+    SiteSetting.current.theme_mode
+  end
+
   def typography_style_tag
     setting = SiteSetting.current
 

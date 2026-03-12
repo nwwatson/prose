@@ -83,6 +83,28 @@
       </div>
     </fieldset>
 
+    <%# Theme Mode %>
+    <fieldset class="border-t border-gray-200 pt-6">
+      <legend class="text-lg font-semibold text-gray-900"><%= t('admin.settings.edit.theme_mode') %></legend>
+      <p class="mt-1 text-sm text-gray-600"><%= t('admin.settings.edit.theme_mode_description') %></p>
+
+      <div class="mt-4 space-y-3">
+        <% [
+          ["visitor_choice", t('admin.settings.edit.theme_mode_visitor_choice'), t('admin.settings.edit.theme_mode_visitor_choice_description')],
+          ["light", t('admin.settings.edit.theme_mode_light'), t('admin.settings.edit.theme_mode_light_description')],
+          ["dark", t('admin.settings.edit.theme_mode_dark'), t('admin.settings.edit.theme_mode_dark_description')]
+        ].each do |value, label, description| %>
+          <label class="flex items-start gap-3 cursor-pointer">
+            <%= f.radio_button :theme_mode, value, class: "mt-1 h-4 w-4 text-gray-900 border-gray-300 focus:ring-gray-600" %>
+            <div>
+              <span class="text-sm font-medium text-gray-900"><%= label %></span>
+              <p class="text-sm text-gray-500"><%= description %></p>
+            </div>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
     <%# Dark Theme %>
     <% dark_themes_json = SiteSetting::DarkTheme::DARK_THEMES.reject { |k, _| k == "custom" }.transform_values { |v| { bg: v[:bg], text: v[:text], accent: v[:accent] } }.to_json %>
     <fieldset class="border-t border-gray-200 pt-6" data-controller="dark-theme-preview" data-dark-theme-preview-themes-value="<%= dark_themes_json %>">
