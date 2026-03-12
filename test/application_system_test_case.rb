@@ -8,6 +8,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     fill_in "email", with: user.email
     fill_in "password", with: "P@ssw0rd!Strong1"
     click_button I18n.t("shared.sign_in")
+    assert_current_path admin_root_path
   end
 
   def with_mobile_viewport(width: 375, height: 812)
