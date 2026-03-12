@@ -1,0 +1,36 @@
+/* ==========================================================================
+ * .toc — Table of contents BEM block
+ *
+ * Usage:
+ *   .toc                  Container with border and background
+ *   .toc__heading         "Table of Contents" heading
+ *   .toc__list            Ordered list of headings
+ *   .toc__item            Base list item
+ *   .toc__item--level-3   Indented for h3 (ml-4)
+ *   .toc__item--level-4   Indented for h4 (ml-8)
+ *   .toc__link            Heading anchor link
+ * ========================================================================== */
+
+.toc {
+  @apply mb-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-5;
+}
+
+.toc__heading {
+  @apply font-display text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-3;
+}
+
+.toc__list {
+  @apply space-y-1 text-sm;
+}
+
+.toc__item--level-3 {
+  @apply ml-4;
+}
+
+.toc__item--level-4 {
+  @apply ml-8;
+}
+
+.toc__link {
+  @apply text-ink-blue hover:underline;
+}
