@@ -1,0 +1,40 @@
+/* ==========================================================================
+ * .post-nav — Previous/next post navigation BEM block
+ *
+ * Usage:
+ *   .post-nav              Nav container with top border
+ *   .post-nav__inner       Flex row for prev/next sides
+ *   .post-nav__side        Flex-1 column (left or right)
+ *   .post-nav__side--right Right-aligned text
+ *   .post-nav__link        Block link with group hover (keep `group` inline)
+ *   .post-nav__label       "Previous" / "Next" label text
+ *   .post-nav__title       Post title with group-hover color change
+ * ========================================================================== */
+
+.post-nav {
+  @apply mt-10 border-t border-gray-200 dark:border-gray-700 pt-8;
+}
+
+.post-nav__inner {
+  @apply flex justify-between items-start gap-8;
+}
+
+.post-nav__side {
+  @apply flex-1 min-w-0;
+}
+
+.post-nav__side--right {
+  @apply text-right;
+}
+
+.post-nav__link {
+  @apply block;
+}
+
+.post-nav__label {
+  @apply text-sm text-gray-500 dark:text-gray-400;
+}
+
+.post-nav__title {
+  @apply mt-1 font-display font-bold text-charcoal group-hover:text-ink-blue transition-colors truncate;
+}
