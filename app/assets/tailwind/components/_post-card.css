@@ -1,0 +1,59 @@
+/* ==========================================================================
+ * .post-card — Post card BEM block
+ *
+ * The most reused component: posts index, featured posts, author profiles,
+ * tag pages, and category pages.
+ *
+ * Usage:
+ *   .post-card                   Standard card with bottom border
+ *   .post-card--featured         Featured variant (larger type, more spacing)
+ *   .post-card__title            Post title heading
+ *   .post-card__link             Title link
+ *   .post-card__subtitle         Optional subtitle line
+ *   .post-card__meta             Wrapper for .post-meta shared block
+ *   .post-card__excerpt          Excerpt / body snippet
+ * ========================================================================== */
+
+.post-card {
+  @apply border-b border-gray-200 dark:border-gray-700 pb-8;
+}
+
+.post-card--featured {
+  @apply mb-12 border-b border-gray-300 dark:border-gray-700 pb-8;
+}
+
+.post-card__title {
+  @apply font-display text-2xl font-bold;
+}
+
+.post-card--featured .post-card__title {
+  @apply text-4xl leading-tight;
+}
+
+.post-card__link {
+  @apply text-charcoal hover:text-ink-blue transition-colors no-underline;
+}
+
+.post-card__subtitle {
+  @apply mt-1 text-gray-600 dark:text-gray-400 font-subtitle;
+}
+
+.post-card--featured .post-card__subtitle {
+  @apply mt-2 text-xl;
+}
+
+.post-card__meta {
+  @apply mt-2;
+}
+
+.post-card--featured .post-card__meta {
+  @apply mt-3;
+}
+
+.post-card__excerpt {
+  @apply mt-3 text-sm text-gray-600 dark:text-gray-400 leading-relaxed;
+}
+
+.post-card--featured .post-card__excerpt {
+  @apply mt-4 text-lg text-gray-700 dark:text-gray-300 line-clamp-3;
+}

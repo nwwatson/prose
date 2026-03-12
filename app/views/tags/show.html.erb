@@ -9,18 +9,18 @@
 <% end %>
 
 <div>
-  <h1 class="font-display text-3xl font-bold"><%= t('tags.show.tagged', name: @tag.name) %></h1>
+  <h1 class="page-heading"><%= t('tags.show.tagged', name: @tag.name) %></h1>
 </div>
 
 <div class="mt-8 space-y-8">
   <% @posts.each do |post| %>
-    <article class="border-b border-gray-200 dark:border-gray-700 pb-8">
-      <h3 class="font-display text-2xl font-bold">
-        <%= link_to post.title, post_path(post, slug: post.slug), class: "text-charcoal hover:text-ink-blue transition-colors no-underline" %>
+    <article class="post-card">
+      <h3 class="post-card__title">
+        <%= link_to post.title, post_path(post, slug: post.slug), class: "post-card__link" %>
       </h3>
-      <div class="mt-2 flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400">
+      <div class="post-card__meta post-meta">
         <span><%= t('shared.by') %> <%= author_link(post.user) %></span>
-        <span>&middot;</span>
+        <span class="post-meta__separator">&middot;</span>
         <time datetime="<%= post.published_at.iso8601 %>"><%= post.published_at.strftime("%B %-d, %Y") %></time>
       </div>
     </article>
