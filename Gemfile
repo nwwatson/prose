@@ -66,6 +66,9 @@ gem "diffy"
 # SendGrid Web API v3 for email delivery with tracking [https://github.com/sendgrid/sendgrid-ruby]
 gem "sendgrid-ruby"
 
+# Stripe payment processing for paid memberships [https://github.com/stripe/stripe-ruby]
+gem "stripe"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

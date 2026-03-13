@@ -1,0 +1,39 @@
+/* ==========================================================================
+ * .paywall — Content gate CTA block
+ *
+ * Shown when a post is gated (members-only or paid-only) and the viewer
+ * doesn't have access. Renders a gradient fade over truncated content
+ * with a centered CTA card.
+ *
+ * Usage:
+ *   .paywall              Container with relative positioning
+ *   .paywall__fade         Gradient overlay fading content
+ *   .paywall__card         CTA card with heading, description, button
+ *   .paywall__heading      Gate heading text
+ *   .paywall__description  Explanation of what's required
+ *   .paywall__cta          Action button
+ * ========================================================================== */
+
+.paywall {
+  @apply relative -mt-24 pt-24;
+}
+
+.paywall__fade {
+  @apply pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-transparent to-white dark:to-gray-900;
+}
+
+.paywall__card {
+  @apply relative mx-auto max-w-lg rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 text-center shadow-lg;
+}
+
+.paywall__heading {
+  @apply font-display text-2xl font-bold text-charcoal dark:text-gray-100;
+}
+
+.paywall__description {
+  @apply mt-3 text-gray-600 dark:text-gray-400;
+}
+
+.paywall__cta {
+  @apply mt-6 inline-block rounded-md bg-gray-900 dark:bg-gray-100 px-6 py-3 text-sm font-semibold text-white dark:text-gray-900 shadow-sm hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors;
+}

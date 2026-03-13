@@ -71,6 +71,11 @@ en:
       newsletter_settings: "Newsletter Settings"
       growth: "Growth"
       traffic: "Traffic"
+      memberships: "Memberships"
+      membership_tiers: "Tiers"
+      members: "Members"
+      revenue: "Revenue"
+      payment_settings: "Payment Settings"
       system: "System"
       profile: "Profile"
       pages: "Pages"
@@ -96,6 +101,25 @@ en:
     post_page:
       load_more: "Load more"
       loading_more: "Loading more posts…"
+    paywall:
+      members_heading: "This post is for members only"
+      members_description: "Subscribe to %{site_name} to read this post and get access to all member content."
+      subscribe_cta: "Subscribe to read"
+      paid_heading: "This post is for paid members"
+      paid_description: "Become a paid member of %{site_name} to access this and all premium content."
+      upgrade_cta: "See membership options"
+
+  memberships:
+    index:
+      title: "Membership"
+      subtitle: "Support %{site_name} with a paid membership."
+      subscribe: "Subscribe"
+      manage: "Manage subscription"
+      sign_in_to_subscribe: "Sign in to subscribe"
+    success:
+      title: "Welcome aboard!"
+      description: "Your membership is now active. You have full access to all content."
+      continue_reading: "Continue reading"
 
   subscriptions:
     form:
@@ -220,6 +244,11 @@ en:
         category: "Category"
         tags: "Tags"
         featured: "Featured"
+        visibility: "Visibility"
+        visibility_public: "Public"
+        visibility_members_only: "Members only"
+        visibility_paid_only: "Paid members only"
+        visibility_help: "Control who can read this post."
         generate_with_ai: "Generate with AI"
         meta_description: "Meta description"
         meta_description_placeholder: "Brief description for search engines (max 160 characters)"
@@ -331,6 +360,78 @@ en:
         reject: "Reject"
         delete_confirm: "Delete this comment?"
         no_comments: "No comments yet."
+    payment_settings:
+      edit:
+        title: "Payment Settings"
+        subtitle: "Connect Stripe to accept paid memberships."
+        stripe_keys: "Stripe API Keys"
+        stripe_description: "Enter your Stripe API keys to enable paid memberships. Keys are encrypted at rest."
+        publishable_key: "Publishable Key"
+        secret_key: "Secret Key"
+        webhook_secret: "Webhook Signing Secret"
+        webhook_help: "Required to verify webhook events from Stripe."
+        webhook_url: "Webhook URL:"
+        currency: "Currency"
+        currency_label: "Default currency"
+        save_settings: "Save settings"
+    membership_tiers:
+      index:
+        title: "Membership Tiers"
+        new_tier: "New Tier"
+        name: "Name"
+        price: "Price"
+        interval: "Interval"
+        status: "Status"
+        members: "Members"
+        inactive: "Inactive"
+        no_tiers: "No membership tiers"
+        get_started: "Create your first tier to start accepting paid memberships."
+      new:
+        title: "New Tier"
+      edit:
+        title: "Edit Tier"
+      form:
+        price_cents: "Price (cents)"
+        price_help: "Price in the smallest currency unit (e.g., 1000 = $10.00)."
+    memberships:
+      index:
+        title: "Members"
+        subscriber: "Subscriber"
+        tier: "Tier"
+        status: "Status"
+        since: "Since"
+        view: "View"
+        canceled: "Canceled"
+        no_members: "No members yet"
+        no_members_description: "Members will appear here once subscribers sign up for a paid membership."
+      show:
+        title: "Membership Details"
+        back: "Back to members"
+        subscriber: "Subscriber"
+        tier: "Tier"
+        status: "Status"
+        member_since: "Member since"
+        current_period_end: "Current period ends"
+        stripe_subscription: "Stripe subscription"
+        complimentary: "Complimentary"
+        cancel_membership: "Cancel membership"
+        cancel_confirm: "Are you sure you want to cancel this membership?"
+    revenue:
+      show:
+        title: "Revenue"
+        subtitle: "Track your membership revenue and growth."
+        mrr: "Monthly Recurring Revenue"
+        arr: "Annual Recurring Revenue"
+        paid_members: "Paid Members"
+        churn_rate: "Churn Rate"
+        new_members: "New Members"
+        cancellations: "Cancellations"
+        net_growth: "Net Growth"
+        monthly_growth: "Monthly Growth"
+        month: "Month"
+        new: "New"
+        canceled_col: "Canceled"
+        net: "Net"
     passkeys:
       index:
         title: "Passkeys"
@@ -660,6 +761,9 @@ en:
     subscriptions:
       check_email: "Check your email for a sign-in link."
       invalid_email: "Please enter a valid email address."
+    memberships:
+      sign_in_required: "Please sign in to subscribe to a membership."
+      no_subscription: "No active subscription found."
     subscriber_sessions:
       signed_in: "You're now signed in."
       link_expired: "This link has expired or is invalid. Please request a new one."
@@ -726,6 +830,16 @@ en:
       passkeys:
         registered: "Passkey registered successfully."
         removed: "Passkey removed."
+      payment_settings:
+        saved: "Payment settings saved."
+      membership_tiers:
+        created: "Tier created."
+        updated: "Tier updated."
+        deleted: "Tier deleted."
+        has_members: "Cannot delete a tier with active members."
+      memberships:
+        canceled: "Membership canceled."
+        comp_granted: "Complimentary membership granted."
       api_tokens:
         created: "API token created."
         revoked: "API token revoked."

@@ -1,0 +1,70 @@
+<% content_for(:title, "#{t('admin.membership_tiers.index.title')} — #{site_name}") %>
+
+<div class="space-y-6">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.membership_tiers.index.title') %></h1>
+    <%= link_to t('admin.membership_tiers.index.new_tier'), new_admin_membership_tier_path, class: "self-start rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700" %>
+  </div>
+
+  <% if @tiers.any? %>
+    <%# Mobile card layout %>
+    <div class="space-y-3 lg:hidden">
+      <% @tiers.each do |tier| %>
+        <%= link_to edit_admin_membership_tier_path(tier), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-900"><%= tier.name %></span>
+            <span class="text-sm font-semibold text-gray-900"><%= tier.formatted_price %><%= tier.interval_label %></span>
+          </div>
+          <div class="mt-1 flex items-center gap-2">
+            <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium <%= tier.active? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+              <%= tier.active? ? t('shared.active') : t('admin.membership_tiers.index.inactive') %>
+            </span>
+            <span class="text-xs text-gray-500"><%= tier.memberships.current.count %> <%= t('admin.membership_tiers.index.members') %></span>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%# Desktop table layout %>
+    <div class="hidden overflow-hidden bg-white shadow ring-1 ring-gray-200 sm:rounded-lg lg:block">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.membership_tiers.index.name') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.membership_tiers.index.price') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.membership_tiers.index.interval') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.membership_tiers.index.status') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.membership_tiers.index.members') %></th>
+            <th class="relative px-6 py-3"><span class="sr-only"><%= t('shared.actions') %></span></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 bg-white">
+          <% @tiers.each do |tier| %>
+            <tr>
+              <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= tier.name %></td>
+              <td class="px-6 py-4 text-sm text-gray-500"><%= tier.formatted_price %></td>
+              <td class="px-6 py-4 text-sm text-gray-500"><%= tier.interval.capitalize %></td>
+              <td class="px-6 py-4 text-sm">
+                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium <%= tier.active? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+                  <%= tier.active? ? t('shared.active') : t('admin.membership_tiers.index.inactive') %>
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500"><%= tier.memberships.current.count %></td>
+              <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                <%= link_to t('shared.edit'), edit_admin_membership_tier_path(tier), class: "text-gray-600 hover:text-gray-900" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
+      <h3 class="text-sm font-semibold text-gray-900"><%= t('admin.membership_tiers.index.no_tiers') %></h3>
+      <p class="mt-1 text-sm text-gray-500"><%= t('admin.membership_tiers.index.get_started') %></p>
+      <div class="mt-6">
+        <%= link_to t('admin.membership_tiers.index.new_tier'), new_admin_membership_tier_path, class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700" %>
+      </div>
+    </div>
+  <% end %>
+</div>

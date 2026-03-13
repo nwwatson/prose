@@ -1,5 +1,6 @@
 class Subscriber < ApplicationRecord
   include Authenticatable
+  include Billable
 
   belongs_to :identity
   belongs_to :source_post, class_name: "Post", optional: true

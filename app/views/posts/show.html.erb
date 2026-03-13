@@ -36,55 +36,63 @@
     </div>
   <% end %>
 
-  <% toc = TocExtractor.new(@post.content) %>
-  <% if @post.show_toc && toc.has_toc? %>
-    <div data-controller="toc">
-      <%= render "posts/table_of_contents", headings: toc.headings %>
+  <% if @can_view %>
+    <% toc = TocExtractor.new(@post.content) %>
+    <% if @post.show_toc && toc.has_toc? %>
+      <div data-controller="toc">
+        <%= render "posts/table_of_contents", headings: toc.headings %>
 
+        <div class="post-detail__content prose prose-lg dark:prose-invert prose-headings:font-display prose-a:text-ink-blue prose-a:no-underline hover:prose-a:underline"
+             data-controller="x-post-widget code-highlight">
+          <%= sanitize toc.content_with_anchors, tags: ActionText::ContentHelper.allowed_tags + %w[id], attributes: ActionText::ContentHelper.allowed_attributes + %w[id] %>
+        </div>
+      </div>
+    <% else %>
       <div class="post-detail__content prose prose-lg dark:prose-invert prose-headings:font-display prose-a:text-ink-blue prose-a:no-underline hover:prose-a:underline"
            data-controller="x-post-widget code-highlight">
-        <%= sanitize toc.content_with_anchors, tags: ActionText::ContentHelper.allowed_tags + %w[id], attributes: ActionText::ContentHelper.allowed_attributes + %w[id] %>
+        <%= @post.content %>
+      </div>
+    <% end %>
+
+    <% if @post.tags.any? %>
+      <footer class="post-detail__tags">
+        <% @post.tags.each do |post_tag| %>
+          <%= link_to post_tag.name, tag_path(post_tag, slug: post_tag.slug),
+                class: "post-detail__tag" %>
+        <% end %>
+      </footer>
+    <% end %>
+
+    <%# Engagement %>
+    <div class="post-detail__engagement">
+      <%= render "loves/button", post: @post %>
+    </div>
+
+    <%= render "posts/post_navigation", previous_post: @previous_post, next_post: @next_post %>
+    <%= render "posts/related_posts", related_posts: @related_posts %>
+
+    <%# Comments %>
+    <div class="post-detail__comments-section">
+      <h3 class="post-detail__comments-heading"><%= t('posts.show.comments') %></h3>
+
+      <div id="comments" class="post-detail__comments-list">
+        <% @post.comments.approved.top_level.includes(:identity, replies: :identity).each do |comment| %>
+          <%= render "comments/comment", comment: comment %>
+          <% comment.replies.approved.each do |reply| %>
+            <%= render "comments/comment", comment: reply %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="post-detail__comments-form">
+        <%= render "comments/form", post: @post %>
       </div>
     </div>
   <% else %>
-    <div class="post-detail__content prose prose-lg dark:prose-invert prose-headings:font-display prose-a:text-ink-blue prose-a:no-underline hover:prose-a:underline"
-         data-controller="x-post-widget code-highlight">
-      <%= @post.content %>
+    <%# Teaser content for gated posts %>
+    <div class="post-detail__content prose prose-lg dark:prose-invert">
+      <p><%= @post.content&.to_plain_text&.truncate(300) %></p>
     </div>
+    <%= render "posts/paywall", post: @post %>
   <% end %>
-
-  <% if @post.tags.any? %>
-    <footer class="post-detail__tags">
-      <% @post.tags.each do |post_tag| %>
-        <%= link_to post_tag.name, tag_path(post_tag, slug: post_tag.slug),
-              class: "post-detail__tag" %>
-      <% end %>
-    </footer>
-  <% end %>
-
-  <%# Engagement %>
-  <div class="post-detail__engagement">
-    <%= render "loves/button", post: @post %>
-  </div>
-
-  <%= render "posts/post_navigation", previous_post: @previous_post, next_post: @next_post %>
-  <%= render "posts/related_posts", related_posts: @related_posts %>
-
-  <%# Comments %>
-  <div class="post-detail__comments-section">
-    <h3 class="post-detail__comments-heading"><%= t('posts.show.comments') %></h3>
-
-    <div id="comments" class="post-detail__comments-list">
-      <% @post.comments.approved.top_level.includes(:identity, replies: :identity).each do |comment| %>
-        <%= render "comments/comment", comment: comment %>
-        <% comment.replies.approved.each do |reply| %>
-          <%= render "comments/comment", comment: reply %>
-        <% end %>
-      <% end %>
-    </div>
-
-    <div class="post-detail__comments-form">
-      <%= render "comments/form", post: @post %>
-    </div>
-  </div>
 </article>
