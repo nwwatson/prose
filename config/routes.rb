@@ -93,7 +93,6 @@ Rails.application.routes.draw do
     resource :settings, only: [ :edit, :update ]
     resource :newsletter_settings, only: [ :edit, :update ]
     resources :pages
-    resource :payment_settings, only: [ :edit, :update ]
     resources :membership_tiers, except: [ :show ]
     resources :memberships, only: [ :index, :show, :destroy ] do
       member do
