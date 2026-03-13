@@ -45,6 +45,18 @@
       </div>
     </div>
 
+    <% if PaymentService.configured? %>
+      <div class="pt-4">
+        <p class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-400"><%= t('layouts.admin.memberships') %></p>
+        <div class="mt-2 space-y-1">
+          <%= admin_nav_link t('layouts.admin.membership_tiers'), admin_membership_tiers_path, icon: "collection" %>
+          <%= admin_nav_link t('layouts.admin.members'), admin_memberships_path, icon: "user-group" %>
+          <%= admin_nav_link t('layouts.admin.revenue'), admin_revenue_path, icon: "currency-dollar" %>
+          <%= admin_nav_link t('layouts.admin.payment_settings'), edit_admin_payment_settings_path, icon: "credit-card" %>
+        </div>
+      </div>
+    <% end %>
+
     <div class="pt-4">
       <p class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-400"><%= t('layouts.admin.system') %></p>
       <div class="mt-2 space-y-1">

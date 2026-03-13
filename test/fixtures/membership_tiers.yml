@@ -1,0 +1,30 @@
+monthly:
+  name: Monthly
+  description: Support us with a monthly membership.
+  price_cents: 1000
+  currency: usd
+  interval: 0
+  stripe_price_id: price_monthly_test
+  stripe_product_id: prod_monthly_test
+  active: true
+  position: 0
+
+annual:
+  name: Annual
+  description: Save with an annual membership.
+  price_cents: 9900
+  currency: usd
+  interval: 1
+  stripe_price_id: price_annual_test
+  stripe_product_id: prod_annual_test
+  active: true
+  position: 1
+
+inactive:
+  name: Legacy Plan
+  description: No longer available.
+  price_cents: 500
+  currency: usd
+  interval: 0
+  active: false
+  position: 2

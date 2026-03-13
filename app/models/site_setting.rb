@@ -7,6 +7,7 @@ class SiteSetting < ApplicationRecord
   include EmailBranding
   include Localization
   include Crawlers
+  include PaymentConfiguration
 
   has_one_attached :default_og_image
 

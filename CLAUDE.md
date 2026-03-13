@@ -75,6 +75,12 @@ app/models/subscriber_label.rb       # Labels for subscriber segmentation (name,
 app/models/subscriber_labeling.rb    # Join model: subscribers ↔ subscriber_labels
 app/models/segment.rb                # Saved subscriber filters (JSON filter_criteria)
 app/models/segment/resolvable.rb     # module Segment::Resolvable (resolves criteria to subscribers)
+app/models/membership_tier.rb       # MembershipTier: paid membership plans (name, price, interval)
+app/models/membership_tier/syncable.rb # module MembershipTier::Syncable (syncs to Stripe products/prices)
+app/models/membership.rb            # Membership: subscriber ↔ tier link with Stripe subscription state
+app/models/subscriber/billable.rb   # module Subscriber::Billable (memberships, paid_member?, stripe_customer_id)
+app/models/post/accessible.rb       # module Post::Accessible (visibility enum, content gating)
+app/models/site_setting/payment_configuration.rb # module SiteSetting::PaymentConfiguration (Stripe keys)
 ```
 
 Keep model files under 200 lines — extract behavior into concerns when they grow.
@@ -119,6 +125,9 @@ Profile data (bio, avatar, social links) lives on the `Identity` model via `Iden
 
 ### Subscriber Segmentation
 `SubscriberLabel` provides tagging for subscribers (name + hex color). `SubscriberLabeling` is the many-to-many join. `Segment` stores saved filter criteria as JSON (`filter_criteria` column) with a `Segment::Resolvable` concern that delegates to `SegmentSubscribersQuery`. Filters support: label matching (any_of/all_of/none_of), date ranges on `confirmed_at`, and engagement level (active/inactive derived from `newsletter_deliveries`). Newsletters have an optional `segment_id` — `Newsletter::Sendable#target_subscribers` returns the segment's resolved subscribers or all confirmed subscribers. Admin CRUD at `/admin/subscriber_labels`, `/admin/segments`. Labels are managed per-subscriber at `/admin/subscribers/:id`.
+
+### Paid Memberships (Stripe)
+Prose supports Ghost-style paid memberships with Stripe integration. Feature is gated — UI only appears when Stripe keys are configured in `SiteSetting`. Direct Stripe API keys (not Stripe Connect), stored encrypted like AI keys. 3-level post visibility: `public` (default), `members_only` (free sign-in), `paid_only` (subscription required). `PaymentService` module follows the same provider pattern as `EmailService`. `PaymentService::Stripe` handles checkout sessions, billing portal, subscriptions, and webhook event construction. `StripeWebhookJob` processes checkout completions, subscription updates/deletions, and payment failures (idempotent). `SyncStripeSubscriptionJob` runs daily to keep membership status in sync. Admin controllers at `/admin/payment_settings`, `/admin/membership_tiers`, `/admin/memberships`, `/admin/revenue`. Public pricing page at `/memberships`. Content gating in `posts/show` — `PostsController` sets `@can_view` via `MembershipAccess` concern. Query objects: `RevenueQuery` (MRR, ARR, churn) and `MembershipGrowthQuery` (new/canceled/net by month).
 
 ### Comment Features
 Comments belong to `Identity` (not `Subscriber`), allowing both admins and subscribers to comment. One-level threading only. Features:

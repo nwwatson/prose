@@ -53,6 +53,14 @@
       <%= f.label :featured, class: "ml-2 text-sm font-medium text-gray-900" %>
     </div>
 
+    <div>
+      <%= f.label :visibility, t('admin.posts.settings_fields.visibility'), class: "block text-sm font-medium text-gray-900" %>
+      <%= render "shared/custom_select", form: f, field: :visibility,
+            options: Post.visibilities.keys.map { |v| [t("admin.posts.settings_fields.visibility_#{v}"), v] },
+            form_attr: "post_form" %>
+      <p class="mt-1 text-xs text-gray-500"><%= t('admin.posts.settings_fields.visibility_help') %></p>
+    </div>
+
     <div class="flex items-center">
       <%= f.check_box :show_toc, form: "post_form", class: "rounded border-gray-300 text-gray-600 focus:ring-gray-600" %>
       <%= f.label :show_toc, "Table of Contents", class: "ml-2 text-sm font-medium text-gray-900" %>

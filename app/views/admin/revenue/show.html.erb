@@ -1,0 +1,82 @@
+<% content_for(:title, "#{t('admin.revenue.show.title')} — #{site_name}") %>
+
+<div class="space-y-6">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.revenue.show.title') %></h1>
+      <p class="mt-1 text-sm text-gray-600"><%= t('admin.revenue.show.subtitle') %></p>
+    </div>
+    <div class="flex gap-2">
+      <% %w[7d 30d 90d all].each do |range| %>
+        <%= link_to range, admin_revenue_path(range: range), class: "rounded-md px-3 py-1.5 text-sm font-medium #{@range == range ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 ring-1 ring-gray-300 hover:bg-gray-50'}" %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Stats cards %>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="rounded-lg bg-white p-6 shadow ring-1 ring-gray-200">
+      <p class="text-sm font-medium text-gray-500"><%= t('admin.revenue.show.mrr') %></p>
+      <p class="mt-2 text-3xl font-bold text-gray-900"><%= number_to_currency(@mrr / 100.0) %></p>
+    </div>
+    <div class="rounded-lg bg-white p-6 shadow ring-1 ring-gray-200">
+      <p class="text-sm font-medium text-gray-500"><%= t('admin.revenue.show.arr') %></p>
+      <p class="mt-2 text-3xl font-bold text-gray-900"><%= number_to_currency(@arr / 100.0) %></p>
+    </div>
+    <div class="rounded-lg bg-white p-6 shadow ring-1 ring-gray-200">
+      <p class="text-sm font-medium text-gray-500"><%= t('admin.revenue.show.paid_members') %></p>
+      <p class="mt-2 text-3xl font-bold text-gray-900"><%= @total_paid %></p>
+    </div>
+    <div class="rounded-lg bg-white p-6 shadow ring-1 ring-gray-200">
+      <p class="text-sm font-medium text-gray-500"><%= t('admin.revenue.show.churn_rate') %></p>
+      <p class="mt-2 text-3xl font-bold text-gray-900"><%= @churn_rate %>%</p>
+    </div>
+  </div>
+
+  <%# Growth summary %>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div class="rounded-lg bg-white p-6 shadow ring-1 ring-gray-200">
+      <p class="text-sm font-medium text-gray-500"><%= t('admin.revenue.show.new_members') %></p>
+      <p class="mt-2 text-2xl font-bold text-green-600">+<%= @new_members %></p>
+    </div>
+    <div class="rounded-lg bg-white p-6 shadow ring-1 ring-gray-200">
+      <p class="text-sm font-medium text-gray-500"><%= t('admin.revenue.show.cancellations') %></p>
+      <p class="mt-2 text-2xl font-bold text-red-600">-<%= @cancellations %></p>
+    </div>
+    <div class="rounded-lg bg-white p-6 shadow ring-1 ring-gray-200">
+      <p class="text-sm font-medium text-gray-500"><%= t('admin.revenue.show.net_growth') %></p>
+      <p class="mt-2 text-2xl font-bold <%= @net_growth >= 0 ? 'text-green-600' : 'text-red-600' %>"><%= @net_growth >= 0 ? '+' : '' %><%= @net_growth %></p>
+    </div>
+  </div>
+
+  <%# Monthly growth table %>
+  <% if @growth_by_month.any? %>
+    <div class="overflow-hidden bg-white shadow ring-1 ring-gray-200 sm:rounded-lg">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900"><%= t('admin.revenue.show.monthly_growth') %></h3>
+      </div>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.revenue.show.month') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.revenue.show.new') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.revenue.show.canceled_col') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.revenue.show.net') %></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 bg-white">
+          <% @growth_by_month.each do |row| %>
+            <tr>
+              <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= row[:month] %></td>
+              <td class="px-6 py-4 text-sm text-green-600">+<%= row[:new] %></td>
+              <td class="px-6 py-4 text-sm text-red-600">-<%= row[:canceled] %></td>
+              <td class="px-6 py-4 text-sm font-medium <%= (row[:new] - row[:canceled]) >= 0 ? 'text-green-600' : 'text-red-600' %>">
+                <%= (row[:new] - row[:canceled]) >= 0 ? '+' : '' %><%= row[:new] - row[:canceled] %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

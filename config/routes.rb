@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   # Webhooks (public, no auth)
   post "webhooks/sendgrid", to: "webhooks/sendgrid#create"
+  post "webhooks/stripe", to: "webhooks/stripe#create"
 
   # Public
   root "posts#index"
@@ -20,6 +21,13 @@ Rails.application.routes.draw do
   resource :handle_availability, only: [ :show ]
   resource :unsubscribe, only: [ :show, :create ]
   resource :comment_notification, only: [ :destroy ]
+  resources :memberships, only: [ :index ] do
+    collection do
+      post :checkout
+      get :success
+      get :portal
+    end
+  end
   get "feed" => "feeds#index", defaults: { format: :xml }
   get "sitemap" => "sitemaps#index", defaults: { format: :xml }
   get "robots" => "robots#index", defaults: { format: :text }, as: :robots
@@ -85,6 +93,14 @@ Rails.application.routes.draw do
     resource :settings, only: [ :edit, :update ]
     resource :newsletter_settings, only: [ :edit, :update ]
     resources :pages
+    resource :payment_settings, only: [ :edit, :update ]
+    resources :membership_tiers, except: [ :show ]
+    resources :memberships, only: [ :index, :show, :destroy ] do
+      member do
+        post :comp
+      end
+    end
+    resource :revenue, only: [ :show ], controller: "revenue"
     resources :api_tokens, only: [ :index, :create, :destroy ]
   end
 

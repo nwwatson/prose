@@ -69,6 +69,11 @@ es:
       newsletter_settings: "Configuración de boletín"
       growth: "Crecimiento"
       traffic: "Tráfico"
+      memberships: "Membresías"
+      membership_tiers: "Niveles"
+      members: "Miembros"
+      revenue: "Ingresos"
+      payment_settings: "Configuración de pagos"
       system: "Sistema"
       profile: "Perfil"
       pages: "Páginas"
@@ -93,6 +98,25 @@ es:
     post_page:
       load_more: "Cargar más"
       loading_more: "Cargando más publicaciones…"
+    paywall:
+      members_heading: "Esta publicación es solo para miembros"
+      members_description: "Suscríbete a %{site_name} para leer esta publicación y acceder a todo el contenido para miembros."
+      subscribe_cta: "Suscríbete para leer"
+      paid_heading: "Esta publicación es para miembros de pago"
+      paid_description: "Conviértete en miembro de pago de %{site_name} para acceder a este y todo el contenido premium."
+      upgrade_cta: "Ver opciones de membresía"
+
+  memberships:
+    index:
+      title: "Membresía"
+      subtitle: "Apoya a %{site_name} con una membresía de pago."
+      subscribe: "Suscribirse"
+      manage: "Gestionar suscripción"
+      sign_in_to_subscribe: "Inicia sesión para suscribirte"
+    success:
+      title: "¡Bienvenido a bordo!"
+      description: "Tu membresía está activa. Tienes acceso completo a todo el contenido."
+      continue_reading: "Continuar leyendo"
 
   subscriptions:
     form:
@@ -216,6 +240,11 @@ es:
         category: "Categoría"
         tags: "Etiquetas"
         featured: "Destacado"
+        visibility: "Visibilidad"
+        visibility_public: "Público"
+        visibility_members_only: "Solo miembros"
+        visibility_paid_only: "Solo miembros de pago"
+        visibility_help: "Controla quién puede leer esta publicación."
         generate_with_ai: "Generar con IA"
         meta_description: "Meta descripción"
         meta_description_placeholder: "Breve descripción para motores de búsqueda (máx. 160 caracteres)"
@@ -327,6 +356,78 @@ es:
         reject: "Rechazar"
         delete_confirm: "¿Eliminar este comentario?"
         no_comments: "Aún no hay comentarios."
+    payment_settings:
+      edit:
+        title: "Configuración de pagos"
+        subtitle: "Conecta Stripe para aceptar membresías de pago."
+        stripe_keys: "Claves de API de Stripe"
+        stripe_description: "Ingresa tus claves de API de Stripe para habilitar membresías de pago. Las claves se cifran en reposo."
+        publishable_key: "Clave publicable"
+        secret_key: "Clave secreta"
+        webhook_secret: "Secreto de firma de webhook"
+        webhook_help: "Requerido para verificar eventos de webhook de Stripe."
+        webhook_url: "URL de webhook:"
+        currency: "Moneda"
+        currency_label: "Moneda predeterminada"
+        save_settings: "Guardar configuración"
+    membership_tiers:
+      index:
+        title: "Niveles de membresía"
+        new_tier: "Nuevo nivel"
+        name: "Nombre"
+        price: "Precio"
+        interval: "Intervalo"
+        status: "Estado"
+        members: "Miembros"
+        inactive: "Inactivo"
+        no_tiers: "No hay niveles de membresía"
+        get_started: "Crea tu primer nivel para comenzar a aceptar membresías de pago."
+      new:
+        title: "Nuevo nivel"
+      edit:
+        title: "Editar nivel"
+      form:
+        price_cents: "Precio (centavos)"
+        price_help: "Precio en la unidad más pequeña de la moneda (ej., 1000 = $10.00)."
+    memberships:
+      index:
+        title: "Miembros"
+        subscriber: "Suscriptor"
+        tier: "Nivel"
+        status: "Estado"
+        since: "Desde"
+        view: "Ver"
+        canceled: "Cancelado"
+        no_members: "Aún no hay miembros"
+        no_members_description: "Los miembros aparecerán aquí una vez que los suscriptores se registren para una membresía de pago."
+      show:
+        title: "Detalles de membresía"
+        back: "Volver a miembros"
+        subscriber: "Suscriptor"
+        tier: "Nivel"
+        status: "Estado"
+        member_since: "Miembro desde"
+        current_period_end: "Período actual termina"
+        stripe_subscription: "Suscripción de Stripe"
+        complimentary: "Cortesía"
+        cancel_membership: "Cancelar membresía"
+        cancel_confirm: "¿Estás seguro de que quieres cancelar esta membresía?"
+    revenue:
+      show:
+        title: "Ingresos"
+        subtitle: "Rastrea los ingresos de membresía y el crecimiento."
+        mrr: "Ingresos recurrentes mensuales"
+        arr: "Ingresos recurrentes anuales"
+        paid_members: "Miembros de pago"
+        churn_rate: "Tasa de cancelación"
+        new_members: "Nuevos miembros"
+        cancellations: "Cancelaciones"
+        net_growth: "Crecimiento neto"
+        monthly_growth: "Crecimiento mensual"
+        month: "Mes"
+        new: "Nuevos"
+        canceled_col: "Cancelados"
+        net: "Neto"
     passkeys:
       index:
         title: "Claves de acceso"
@@ -650,6 +751,9 @@ es:
     ai:
       configurable:
         add_api_keys: "Agrega tus claves de API en Configuración para habilitar las funciones de IA."
+    memberships:
+      sign_in_required: "Por favor inicia sesión para suscribirte a una membresía."
+      no_subscription: "No se encontró suscripción activa."
     subscriptions:
       check_email: "Revisa tu correo electrónico para obtener un enlace de inicio de sesión."
       invalid_email: "Por favor ingresa una dirección de correo electrónico válida."
@@ -719,6 +823,16 @@ es:
       passkeys:
         registered: "Clave de acceso registrada exitosamente."
         removed: "Clave de acceso eliminada."
+      payment_settings:
+        saved: "Configuración de pagos guardada."
+      membership_tiers:
+        created: "Nivel creado."
+        updated: "Nivel actualizado."
+        deleted: "Nivel eliminado."
+        has_members: "No se puede eliminar un nivel con miembros activos."
+      memberships:
+        canceled: "Membresía cancelada."
+        comp_granted: "Membresía de cortesía otorgada."
       api_tokens:
         created: "Token de API creado."
         revoked: "Token de API revocado."

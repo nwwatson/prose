@@ -1,0 +1,17 @@
+<%# locals: (post:) %>
+<div class="paywall">
+  <div class="paywall__fade"></div>
+  <div class="paywall__card">
+    <% if post.visibility_members_only? %>
+      <h3 class="paywall__heading"><%= t('posts.paywall.members_heading') %></h3>
+      <p class="paywall__description"><%= t('posts.paywall.members_description', site_name: site_name) %></p>
+      <%= link_to t('posts.paywall.subscribe_cta'), root_path, class: "paywall__cta" %>
+    <% else %>
+      <h3 class="paywall__heading"><%= t('posts.paywall.paid_heading') %></h3>
+      <p class="paywall__description"><%= t('posts.paywall.paid_description', site_name: site_name) %></p>
+      <% if PaymentService.configured? %>
+        <%= link_to t('posts.paywall.upgrade_cta'), memberships_path, class: "paywall__cta" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

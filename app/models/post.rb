@@ -4,6 +4,7 @@ class Post < ApplicationRecord
   include Searchable
   include Discoverable
   include Versionable
+  include Accessible
 
   enum :status, { draft: 0, scheduled: 1, published: 2 }
 

@@ -1,0 +1,64 @@
+<% content_for(:title, "#{t('admin.memberships.show.title')} — #{site_name}") %>
+
+<div class="max-w-4xl space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.memberships.show.title') %></h1>
+    <%= link_to t('admin.memberships.show.back'), admin_memberships_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
+  </div>
+
+  <div class="overflow-hidden bg-white shadow ring-1 ring-gray-200 sm:rounded-lg">
+    <dl class="divide-y divide-gray-200">
+      <div class="px-6 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+        <dt class="text-sm font-medium text-gray-500"><%= t('admin.memberships.show.subscriber') %></dt>
+        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+          <%= link_to @membership.subscriber.email, admin_subscriber_path(@membership.subscriber), class: "text-gray-600 hover:text-gray-900 underline" %>
+        </dd>
+      </div>
+      <div class="px-6 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+        <dt class="text-sm font-medium text-gray-500"><%= t('admin.memberships.show.tier') %></dt>
+        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @membership.membership_tier.name %> (<%= @membership.membership_tier.formatted_price %><%= @membership.membership_tier.interval_label %>)</dd>
+      </div>
+      <div class="px-6 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+        <dt class="text-sm font-medium text-gray-500"><%= t('admin.memberships.show.status') %></dt>
+        <dd class="mt-1 text-sm sm:col-span-2 sm:mt-0">
+          <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium
+            <%= case @membership.status
+                when 'active' then 'bg-green-100 text-green-800'
+                when 'past_due' then 'bg-yellow-100 text-yellow-800'
+                when 'canceled' then 'bg-red-100 text-red-800'
+                else 'bg-gray-100 text-gray-800'
+                end %>">
+            <%= @membership.status.titleize %>
+          </span>
+          <% if @membership.complimentary? %>
+            <span class="ml-2 inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800"><%= t('admin.memberships.show.complimentary') %></span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="px-6 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+        <dt class="text-sm font-medium text-gray-500"><%= t('admin.memberships.show.member_since') %></dt>
+        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @membership.created_at.strftime("%B %-d, %Y") %></dd>
+      </div>
+      <% if @membership.current_period_end.present? %>
+        <div class="px-6 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+          <dt class="text-sm font-medium text-gray-500"><%= t('admin.memberships.show.current_period_end') %></dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @membership.current_period_end.strftime("%B %-d, %Y") %></dd>
+        </div>
+      <% end %>
+      <% if @membership.stripe_subscription_id.present? %>
+        <div class="px-6 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+          <dt class="text-sm font-medium text-gray-500"><%= t('admin.memberships.show.stripe_subscription') %></dt>
+          <dd class="mt-1 text-sm text-gray-500 sm:col-span-2 sm:mt-0"><code><%= @membership.stripe_subscription_id %></code></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+
+  <% unless @membership.canceled? %>
+    <div class="flex justify-end">
+      <%= button_to t('admin.memberships.show.cancel_membership'), admin_membership_path(@membership), method: :delete,
+            class: "rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500",
+            data: { turbo_confirm: t('admin.memberships.show.cancel_confirm') } %>
+    </div>
+  <% end %>
+</div>

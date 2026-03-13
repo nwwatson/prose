@@ -1,0 +1,30 @@
+<% content_for(:title, page_title(t('memberships.index.title'))) %>
+
+<div class="mx-auto max-w-4xl px-4 py-12">
+  <div class="text-center">
+    <h1 class="font-display text-4xl font-bold text-charcoal dark:text-gray-100"><%= t('memberships.index.title') %></h1>
+    <p class="mt-4 text-lg text-gray-600 dark:text-gray-400"><%= t('memberships.index.subtitle', site_name: site_name) %></p>
+  </div>
+
+  <div class="mt-12 grid gap-8 <%= @tiers.size > 1 ? 'sm:grid-cols-2' : 'max-w-md mx-auto' %> <%= @tiers.size > 2 ? 'lg:grid-cols-3' : '' %>">
+    <% @tiers.each do |tier| %>
+      <div class="pricing-card">
+        <h3 class="pricing-card__name"><%= tier.name %></h3>
+        <div class="pricing-card__price">
+          <span class="pricing-card__amount"><%= tier.formatted_price %></span>
+          <span class="pricing-card__interval"><%= tier.interval_label %></span>
+        </div>
+        <% if tier.description.present? %>
+          <p class="pricing-card__description"><%= tier.description %></p>
+        <% end %>
+        <% if current_subscriber&.paid_member? %>
+          <%= link_to t('memberships.index.manage'), portal_memberships_path, class: "pricing-card__cta" %>
+        <% elsif current_subscriber&.confirmed? %>
+          <%= button_to t('memberships.index.subscribe'), checkout_memberships_path(tier_id: tier.id), class: "pricing-card__cta" %>
+        <% else %>
+          <%= link_to t('memberships.index.sign_in_to_subscribe'), root_path, class: "pricing-card__cta" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
