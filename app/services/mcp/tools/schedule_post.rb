@@ -6,15 +6,15 @@ module Mcp
       input_schema(
         properties: {
           identifier: { type: "string", description: "Post slug or numeric ID" },
-          scheduled_at: { type: "string", description: "ISO 8601 datetime for publication (must be in the future)" }
+          published_at: { type: "string", description: "ISO 8601 datetime for publication (must be in the future)" }
         },
-        required: %w[identifier scheduled_at]
+        required: %w[identifier published_at]
       )
 
       class << self
-        def call(server_context:, identifier:, scheduled_at:)
+        def call(server_context:, identifier:, published_at:)
           post = find_post(identifier)
-          time = Time.iso8601(scheduled_at)
+          time = Time.iso8601(published_at)
           post.schedule!(time)
 
           result = Mcp::PostSerializer.call(post.reload)

@@ -25,18 +25,6 @@ CREATE TABLE IF NOT EXISTS "categories" ("id" integer PRIMARY KEY AUTOINCREMENT 
 CREATE UNIQUE INDEX "index_categories_on_slug" ON "categories" ("slug") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "tags" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "slug" varchar NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
 CREATE UNIQUE INDEX "index_tags_on_slug" ON "tags" ("slug") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "subtitle" varchar, "slug" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "published_at" datetime(6), "scheduled_at" datetime(6), "featured" boolean DEFAULT FALSE NOT NULL, "reading_time_minutes" integer DEFAULT 0, "category_id" integer, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "loves_count" integer DEFAULT 0 NOT NULL /*application='Prose'*/, "meta_description" text /*application='Prose'*/, "body_plain" text /*application='Prose'*/, "show_toc" boolean DEFAULT FALSE NOT NULL, "visibility" integer DEFAULT 0 NOT NULL /*application='Prose'*/, CONSTRAINT "fk_rails_9b1b26f040"
-FOREIGN KEY ("category_id")
-  REFERENCES "categories" ("id")
-, CONSTRAINT "fk_rails_5b5ddfd518"
-FOREIGN KEY ("user_id")
-  REFERENCES "users" ("id")
-);
-CREATE INDEX "index_posts_on_category_id" ON "posts" ("category_id") /*application='Prose'*/;
-CREATE INDEX "index_posts_on_user_id" ON "posts" ("user_id") /*application='Prose'*/;
-CREATE UNIQUE INDEX "index_posts_on_slug" ON "posts" ("slug") /*application='Prose'*/;
-CREATE INDEX "index_posts_on_status" ON "posts" ("status") /*application='Prose'*/;
-CREATE INDEX "index_posts_on_published_at" ON "posts" ("published_at") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "post_tags" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "post_id" integer NOT NULL, "tag_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_fdf74b486b"
 FOREIGN KEY ("post_id")
   REFERENCES "posts" ("id")
@@ -154,20 +142,6 @@ CREATE VIRTUAL TABLE posts_fts USING fts5(
   content_rowid='id'
 )
 /* posts_fts(title,subtitle,body_plain) */;
-CREATE TRIGGER posts_fts_insert AFTER INSERT ON posts BEGIN
-  INSERT INTO posts_fts(rowid, title, subtitle, body_plain)
-  VALUES (NEW.id, NEW.title, NEW.subtitle, NEW.body_plain);
-END;
-CREATE TRIGGER posts_fts_update AFTER UPDATE ON posts BEGIN
-  INSERT INTO posts_fts(posts_fts, rowid, title, subtitle, body_plain)
-  VALUES ('delete', OLD.id, OLD.title, OLD.subtitle, OLD.body_plain);
-  INSERT INTO posts_fts(rowid, title, subtitle, body_plain)
-  VALUES (NEW.id, NEW.title, NEW.subtitle, NEW.body_plain);
-END;
-CREATE TRIGGER posts_fts_delete AFTER DELETE ON posts BEGIN
-  INSERT INTO posts_fts(posts_fts, rowid, title, subtitle, body_plain)
-  VALUES ('delete', OLD.id, OLD.title, OLD.subtitle, OLD.body_plain);
-END;
 CREATE TABLE IF NOT EXISTS "newsletter_deliveries" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "newsletter_id" integer NOT NULL, "subscriber_id" integer NOT NULL, "sent_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "opened_at" datetime(6) /*application='Prose'*/, "clicked_at" datetime(6) /*application='Prose'*/, "bounced_at" datetime(6) /*application='Prose'*/, "open_count" integer DEFAULT 0 /*application='Prose'*/, CONSTRAINT "fk_rails_216f0edfce"
 FOREIGN KEY ("newsletter_id")
   REFERENCES "newsletters" ("id")
@@ -244,7 +218,20 @@ CREATE INDEX "index_memberships_on_membership_tier_id" ON "memberships" ("member
 CREATE UNIQUE INDEX "index_memberships_on_stripe_subscription_id" ON "memberships" ("stripe_subscription_id") /*application='Prose'*/;
 CREATE INDEX "index_memberships_on_stripe_customer_id" ON "memberships" ("stripe_customer_id") /*application='Prose'*/;
 CREATE INDEX "index_memberships_on_status" ON "memberships" ("status") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "subtitle" varchar, "slug" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "published_at" datetime(6), "featured" boolean DEFAULT FALSE NOT NULL, "reading_time_minutes" integer DEFAULT 0, "category_id" integer, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "loves_count" integer DEFAULT 0 NOT NULL, "meta_description" text, "body_plain" text, "show_toc" boolean DEFAULT FALSE NOT NULL, "visibility" integer DEFAULT 0 NOT NULL, CONSTRAINT "fk_rails_5b5ddfd518"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_9b1b26f040"
+FOREIGN KEY ("category_id")
+  REFERENCES "categories" ("id")
+);
+CREATE INDEX "index_posts_on_category_id" ON "posts" ("category_id") /*application='Prose'*/;
+CREATE INDEX "index_posts_on_user_id" ON "posts" ("user_id") /*application='Prose'*/;
+CREATE UNIQUE INDEX "index_posts_on_slug" ON "posts" ("slug") /*application='Prose'*/;
+CREATE INDEX "index_posts_on_status" ON "posts" ("status") /*application='Prose'*/;
+CREATE INDEX "index_posts_on_published_at" ON "posts" ("published_at") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260313202523'),
 ('20260313023242'),
 ('20260313023241'),
 ('20260313023240'),

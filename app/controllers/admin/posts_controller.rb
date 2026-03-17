@@ -76,7 +76,7 @@ module Admin
     end
 
     def post_params
-      params.require(:post).permit(:title, :subtitle, :slug, :status, :published_at, :scheduled_at, :featured, :show_toc, :category_id, :content, :meta_description, :featured_image, :visibility, tag_ids: [])
+      params.require(:post).permit(:title, :subtitle, :slug, :status, :published_at, :featured, :show_toc, :category_id, :content, :meta_description, :featured_image, :visibility, tag_ids: [])
     end
 
     def post_json(post)

@@ -238,6 +238,7 @@ en:
         title_placeholder: "Post title"
         subtitle_placeholder: "Add a subtitle..."
       settings_fields:
+        publish_at: "Publish at"
         schedule_help: "Set when this post should be published."
         slug_placeholder: "auto-generated-from-title"
         slug_help: "Leave blank to auto-generate from title."

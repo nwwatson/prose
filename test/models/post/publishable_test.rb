@@ -13,19 +13,25 @@ class Post::PublishableTest < ActiveSupport::TestCase
     post.revert_to_draft!
     assert post.draft?
     assert_nil post.published_at
-    assert_nil post.scheduled_at
   end
 
-  test "live scope returns only published posts" do
+  test "live scope returns published and past-due scheduled posts" do
+    past_due = posts(:scheduled_post)
+    past_due.update_columns(published_at: 1.minute.ago)
+
     live = Post.live
     assert_includes live, posts(:published_post)
+    assert_includes live, past_due
     assert_not_includes live, posts(:draft_post)
-    assert_not_includes live, posts(:scheduled_post)
+  end
+
+  test "live scope excludes future scheduled posts" do
+    assert_not_includes Post.live, posts(:scheduled_post)
   end
 
   test "ready_to_publish scope returns scheduled posts past their time" do
     post = posts(:scheduled_post)
-    post.update_columns(scheduled_at: 1.minute.ago)
+    post.update_columns(published_at: 1.minute.ago)
 
     ready = Post.ready_to_publish
     assert_includes ready, post

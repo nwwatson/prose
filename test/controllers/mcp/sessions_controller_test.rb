@@ -171,7 +171,7 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
     future = 1.week.from_now.iso8601
     result = call_tool("schedule_post", {
       identifier: post_record.slug,
-      scheduled_at: future
+      published_at: future
     }, token: WRITER_TOKEN)
 
     data = parse_tool_result(result)

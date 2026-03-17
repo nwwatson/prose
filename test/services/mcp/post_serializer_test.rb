@@ -38,7 +38,6 @@ class Mcp::PostSerializerTest < ActiveSupport::TestCase
     result = Mcp::PostSerializer.call(post)
 
     assert_nil result[:published_at]
-    assert_nil result[:scheduled_at]
     assert_nil result[:subtitle]
     assert_nil result[:category]
   end
