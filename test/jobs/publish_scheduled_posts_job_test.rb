@@ -3,7 +3,7 @@ require "test_helper"
 class PublishScheduledPostsJobTest < ActiveJob::TestCase
   test "publishes posts past their scheduled time" do
     post = posts(:scheduled_post)
-    post.update_columns(scheduled_at: 1.minute.ago)
+    post.update_columns(published_at: 1.minute.ago)
 
     PublishScheduledPostsJob.perform_now
 

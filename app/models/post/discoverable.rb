@@ -26,7 +26,7 @@ module Post::Discoverable
         .joins(:tags)
         .where(tags: { id: tag_ids })
         .group("posts.id")
-        .order(Arel.sql("COUNT(tags.id) DESC, posts.published_at DESC"))
+        .order(Arel.sql("COUNT(tags.id) DESC"), published_at: :desc)
         .limit(limit)
         .to_a
   end

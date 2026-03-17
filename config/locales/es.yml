@@ -234,6 +234,7 @@ es:
         title_placeholder: "Título de la publicación"
         subtitle_placeholder: "Agregar un subtítulo..."
       settings_fields:
+        publish_at: "Publicar en"
         schedule_help: "Establece cuándo se debe publicar esta publicación."
         slug_placeholder: "generado-automáticamente-del-título"
         slug_help: "Deja en blanco para generar automáticamente desde el título."

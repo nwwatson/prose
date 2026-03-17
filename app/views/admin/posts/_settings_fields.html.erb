@@ -1,21 +1,22 @@
 <%# locals: (post:) %>
 <%= fields_for :post, post do |f| %>
   <div class="space-y-6 p-6">
-    <div>
+    <div data-controller="status-toggle">
       <%= f.label :status, class: "block text-sm font-medium text-gray-900" %>
       <%= render "shared/custom_select", form: f, field: :status,
             options: Post.statuses.keys.map { |s| [s.capitalize, s] },
-            form_attr: "post_form" %>
-    </div>
+            form_attr: "post_form",
+            data: { action: "change->status-toggle#update" } %>
 
-    <div>
-      <%= f.label :scheduled_at, class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <%= f.datetime_local_field :scheduled_at,
-              form: "post_form",
-              class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+      <div data-status-toggle-target="publishedAt" class="<%= 'hidden' unless post.scheduled? %> mt-6">
+        <%= f.label :published_at, t('admin.posts.settings_fields.publish_at'), class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= f.datetime_local_field :published_at,
+                form: "post_form",
+                class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+        </div>
+        <p class="mt-1 text-xs text-gray-500"><%= t('admin.posts.settings_fields.schedule_help') %></p>
       </div>
-      <p class="mt-1 text-xs text-gray-500"><%= t('admin.posts.settings_fields.schedule_help') %></p>
     </div>
 
     <div>
