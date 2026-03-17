@@ -7,6 +7,31 @@ class RemoveScheduledAtFromPosts < ActiveRecord::Migration[8.1]
     SQL
 
     remove_column :posts, :scheduled_at
+
+    # SQLite drops triggers when it recreates a table during remove_column.
+    # Recreate the FTS5 triggers so full-text search stays in sync.
+    execute <<~SQL
+      CREATE TRIGGER IF NOT EXISTS posts_fts_insert AFTER INSERT ON posts BEGIN
+        INSERT INTO posts_fts(rowid, title, subtitle, body_plain)
+        VALUES (NEW.id, NEW.title, NEW.subtitle, NEW.body_plain);
+      END;
+    SQL
+
+    execute <<~SQL
+      CREATE TRIGGER IF NOT EXISTS posts_fts_update AFTER UPDATE ON posts BEGIN
+        INSERT INTO posts_fts(posts_fts, rowid, title, subtitle, body_plain)
+        VALUES ('delete', OLD.id, OLD.title, OLD.subtitle, OLD.body_plain);
+        INSERT INTO posts_fts(rowid, title, subtitle, body_plain)
+        VALUES (NEW.id, NEW.title, NEW.subtitle, NEW.body_plain);
+      END;
+    SQL
+
+    execute <<~SQL
+      CREATE TRIGGER IF NOT EXISTS posts_fts_delete AFTER DELETE ON posts BEGIN
+        INSERT INTO posts_fts(posts_fts, rowid, title, subtitle, body_plain)
+        VALUES ('delete', OLD.id, OLD.title, OLD.subtitle, OLD.body_plain);
+      END;
+    SQL
   end
 
   def down
