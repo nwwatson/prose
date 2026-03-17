@@ -24,6 +24,12 @@ export default class extends Controller {
     this.smQuery = window.matchMedia("(min-width: 640px)")
     this.boundResize = this.handleResize.bind(this)
     this.smQuery.addEventListener("change", this.boundResize)
+
+    const saved = localStorage.getItem("prose:editor-drawer-pinned")
+    if (saved === "true" && this.smQuery.matches) {
+      this.pin()
+      this.open()
+    }
   }
 
   disconnect() {
@@ -33,7 +39,19 @@ export default class extends Controller {
 
   handleResize(event) {
     if (!event.matches && this.pinnedValue) {
-      this.unpin()
+      // Visual unpin only — don't clear localStorage so pinned state restores on wider screens
+      this.pinnedValue = false
+      this.removePinnedMargin()
+      if (this.hasPinIconTarget) {
+        this.pinIconTarget.classList.remove("text-blue-600")
+        this.pinIconTarget.classList.add("text-gray-400")
+      }
+      if (this.isOpen) {
+        this.overlayTarget.classList.remove("hidden")
+        requestAnimationFrame(() => {
+          this.overlayTarget.classList.remove("opacity-0")
+        })
+      }
     }
   }
 
@@ -144,6 +162,7 @@ export default class extends Controller {
   pin() {
     if (!this.smQuery.matches) return
     this.pinnedValue = true
+    localStorage.setItem("prose:editor-drawer-pinned", "true")
     this.overlayTarget.classList.add("hidden")
     this.overlayTarget.classList.add("opacity-0")
     this.applyPinnedMargin()
@@ -155,6 +174,7 @@ export default class extends Controller {
 
   unpin() {
     this.pinnedValue = false
+    localStorage.setItem("prose:editor-drawer-pinned", "false")
     this.removePinnedMargin()
     if (this.hasPinIconTarget) {
       this.pinIconTarget.classList.remove("text-blue-600")
