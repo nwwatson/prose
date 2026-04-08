@@ -122,20 +122,84 @@ Ask the user: "Does this plan look good, or would you like to adjust anything be
 
 ## Step 3: Create a Git Worktree
 
-Once the plan is approved, use the `EnterWorktree` tool to create an isolated worktree:
+> **⚠️ CRITICAL: This step is mandatory. Never skip worktree creation. All implementation work MUST happen inside a worktree — never in the main working tree. Do not proceed to Step 4 until the worktree is created, you have `cd`'d into it, and you have verified your working directory is inside `.claude/worktrees/`.**
 
-- Use `EnterWorktree` with a descriptive name like `issue-<NUMBER>-<slugified-title>`
-- This creates the worktree inside `.claude/worktrees/` and switches the session into it automatically
+Once the plan is approved, create an isolated worktree so the main working tree stays clean.
 
-After the worktree is ready, confirm the environment:
-```bash
-git status
-bundle check || bundle install
+### 3a. Choose a Branch Name
+
+Derive a descriptive branch name from the issue:
+
 ```
+issue-<NUMBER>-<slugified-title>
+```
+
+For example, issue #42 titled "Add user avatar uploads" becomes `issue-42-add-user-avatar-uploads`.
+
+### 3b. Create the Worktree
+
+From the project root, create the worktree inside the `.claude/worktrees/` directory. This keeps all worktrees organized and out of the main project tree.
+
+```bash
+# Ensure the worktrees directory exists
+mkdir -p .claude/worktrees
+
+# Create a new worktree with a new branch based on the default branch
+# Replace <DEFAULT_BRANCH> with main, master, or whatever the repo uses
+BRANCH_NAME="issue-<NUMBER>-<slugified-title>"
+WORKTREE_PATH=".claude/worktrees/$BRANCH_NAME"
+
+git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" origin/<DEFAULT_BRANCH>
+```
+
+If the branch already exists (e.g., from a previous attempt), clean it up first:
+
+```bash
+git worktree remove ".claude/worktrees/$BRANCH_NAME" --force 2>/dev/null
+git branch -D "$BRANCH_NAME" 2>/dev/null
+git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" origin/<DEFAULT_BRANCH>
+```
+
+### 3c. Switch into the Worktree
+
+Change into the worktree directory for all subsequent work:
+
+```bash
+cd "$WORKTREE_PATH"
+```
+
+### 3d. Verify the Environment
+
+Confirm the worktree is set up correctly and dependencies are ready:
+
+```bash
+# REQUIRED: Verify you are inside the worktree — abort if not
+pwd | grep -q ".claude/worktrees/" || { echo "ERROR: Not inside a worktree. Stop and create one."; exit 1; }
+
+# Confirm you're on the correct branch in the worktree
+git status
+
+# Install dependencies
+bundle check || bundle install
+
+# If using JavaScript dependencies
+yarn install --frozen-lockfile 2>/dev/null || true
+
+# Prepare the test database if migrations exist
+bin/rails db:prepare
+```
+
+**STOP HERE if `pwd` does not show a path inside `.claude/worktrees/`.** Go back to 3b and create the worktree before continuing. All implementation work (code, tests, commits, pushes) happens inside the worktree from this point forward.
 
 ---
 
 ## Step 4: Implement
+
+> **Pre-flight check:** Before writing any code, verify you are working inside the worktree:
+> ```bash
+> pwd | grep -q ".claude/worktrees/" || { echo "ERROR: Not in a worktree. Go back to Step 3."; exit 1; }
+> ```
+> **Do not proceed if this check fails.** Return to Step 3 and create the worktree first.
 
 Work through the plan systematically.
 
@@ -298,6 +362,12 @@ bin/dev
 
 This starts Puma + the Tailwind watcher. If port 3000 is already in use, use `PORT=3001 bin/dev`.
 
+If the database is empty, seed the database
+
+```bash
+bin/rails db:seed
+```
+
 ---
 
 ## Error Handling
@@ -310,7 +380,7 @@ This starts Puma + the Tailwind watcher. If port 3000 is already in use, use `PO
 
 **If a migration is needed:** Generate it properly with `rails generate migration`, never hand-edit the schema file.
 
-**If the worktree already exists:** Remove it with `git worktree remove <path> --force` and delete the branch with `git branch -D <BRANCH_NAME>`, then recreate using `EnterWorktree`.
+**If the worktree already exists:** Remove it with `git worktree remove <path> --force` and delete the branch with `git branch -D <BRANCH_NAME>`, then recreate.
 
 ---
 
