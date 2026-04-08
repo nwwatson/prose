@@ -58,7 +58,7 @@ gem "ruby_llm"
 gem "mcp", "~> 0.8"
 
 # Rust-backed CommonMark/GFM markdown to HTML [https://github.com/gjtorikian/commonmarker]
-gem "commonmarker", "~> 2.3"
+gem "commonmarker", "~> 2.7"
 
 # Plain-text diffs for post version history [https://github.com/samg/diffy]
 gem "diffy"
