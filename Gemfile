@@ -55,7 +55,7 @@ gem "lexxy", "~> 0.8.0.beta"
 gem "ruby_llm"
 
 # Model Context Protocol server for Claude Desktop integration [https://github.com/modelcontextprotocol/ruby-sdk]
-gem "mcp", "~> 0.8"
+gem "mcp", "~> 0.9"
 
 # Rust-backed CommonMark/GFM markdown to HTML [https://github.com/gjtorikian/commonmarker]
 gem "commonmarker", "~> 2.3"
