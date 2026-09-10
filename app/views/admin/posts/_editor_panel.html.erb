@@ -78,6 +78,7 @@
 
       <%# Messages area %>
       <div data-editor-drawer-target="messagesContainer"
+           data-action="streaming-markdown:rendered->editor-drawer#scrollToBottom"
            class="flex-1 overflow-y-auto px-4 py-4 space-y-3"
            id="ai-messages-container">
         <% if chat %>
