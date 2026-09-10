@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { requestTurboStream } from "lib/request"
 
 export default class extends Controller {
   static targets = ["backdrop", "dialog", "content", "promptInput"]
@@ -25,38 +26,13 @@ export default class extends Controller {
   }
 
   suggestPrompt() {
-    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
-    fetch(this.suggestUrlValue, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": csrfToken,
-        "Accept": "text/vnd.turbo-stream.html"
-      }
-    })
-    .then(response => response.text())
-    .then(html => {
-      Turbo.renderStreamMessage(html)
-    })
+    requestTurboStream(this.suggestUrlValue, { method: "POST" })
   }
 
   generate(event) {
     event.preventDefault()
-    const form = event.currentTarget
-    const formData = new FormData(form)
-    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
-
-    fetch(this.generateUrlValue, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": csrfToken,
-        "Accept": "text/vnd.turbo-stream.html"
-      },
-      body: formData
-    })
-    .then(response => response.text())
-    .then(html => {
-      Turbo.renderStreamMessage(html)
-    })
+    const formData = new FormData(event.currentTarget)
+    requestTurboStream(this.generateUrlValue, { method: "POST", body: formData })
   }
 
   saveAndClose() {

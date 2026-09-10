@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { csrfToken, requestJSON } from "lib/request"
 
 export default class extends Controller {
   static targets = ["authButton", "registerButton", "nameInput", "error"]
@@ -14,7 +15,7 @@ export default class extends Controller {
     this.clearError()
 
     try {
-      const optionsResponse = await this.fetchJSON("/admin/passkey_authentication/options", { method: "POST" })
+      const optionsResponse = await requestJSON("/admin/passkey_authentication/options", { method: "POST" })
       optionsResponse.challenge = this.base64urlToBuffer(optionsResponse.challenge)
 
       if (optionsResponse.allowCredentials) {
@@ -26,9 +27,9 @@ export default class extends Controller {
 
       const credential = await navigator.credentials.get({ publicKey: optionsResponse })
 
-      const verifyResponse = await this.fetchJSON("/admin/passkey_authentication/verify", {
+      const verifyResponse = await requestJSON("/admin/passkey_authentication/verify", {
         method: "POST",
-        body: JSON.stringify({
+        body: {
           credential: {
             id: credential.id,
             rawId: this.bufferToBase64url(credential.rawId),
@@ -41,7 +42,7 @@ export default class extends Controller {
             },
             clientExtensionResults: credential.getClientExtensionResults()
           }
-        })
+        }
       })
 
       if (verifyResponse.redirect_url) {
@@ -60,7 +61,7 @@ export default class extends Controller {
     this.clearError()
 
     try {
-      const optionsResponse = await this.fetchJSON("/admin/passkeys/registration_options", { method: "POST" })
+      const optionsResponse = await requestJSON("/admin/passkeys/registration_options", { method: "POST" })
       optionsResponse.challenge = this.base64urlToBuffer(optionsResponse.challenge)
       optionsResponse.user.id = this.base64urlToBuffer(optionsResponse.user.id)
 
@@ -82,7 +83,7 @@ export default class extends Controller {
 
       const csrfInput = document.createElement("input")
       csrfInput.name = "authenticity_token"
-      csrfInput.value = this.csrfToken
+      csrfInput.value = csrfToken()
       form.appendChild(csrfInput)
 
       const nameInput = document.createElement("input")
@@ -118,30 +119,6 @@ export default class extends Controller {
       }
       this.showError(error.message || "Passkey registration failed.")
     }
-  }
-
-  async fetchJSON(url, options = {}) {
-    const headers = {
-      "X-CSRF-Token": this.csrfToken,
-      "Accept": "application/json"
-    }
-
-    if (options.body && typeof options.body === "string") {
-      headers["Content-Type"] = "application/json"
-    }
-
-    const response = await fetch(url, { ...options, headers })
-    const data = await response.json()
-
-    if (!response.ok) {
-      throw new Error(data.error || "Request failed")
-    }
-
-    return data
-  }
-
-  get csrfToken() {
-    return document.querySelector("meta[name='csrf-token']")?.content
   }
 
   showError(message) {

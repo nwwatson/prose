@@ -129,6 +129,9 @@ Frontend component styles use BEM (Block Element Modifier) methodology in `app/a
 ### Key Stimulus Controllers
 `autosave`, `editor_drawer`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`, `markdown_preview`, `traffic_chart`, `segment_builder`, `comment_edit`
 
+### Shared JS Modules
+`app/javascript/lib/` holds framework-agnostic helpers shared across Stimulus controllers (pinned via `pin_all_from "app/javascript/lib", under: "lib"` in `config/importmap.rb`, imported as `lib/<name>`). `lib/request.js` centralizes the CSRF-token meta lookup and the three fetch idioms used throughout the app: `request(url, opts)` (sets `X-CSRF-Token`, JSON-encodes a plain object body, form-encodes a `URLSearchParams` body, passes `FormData` through untouched), `requestJSON(url, opts)` (parses the JSON response and throws with `data.error` when the response isn't ok), and `requestTurboStream(url, opts)` (sets the Turbo Stream `Accept` header and renders the response via `Turbo.renderStreamMessage`). Controllers that POST or fetch should use these helpers instead of duplicating the CSRF meta-tag lookup.
+
 ### Author Profiles
 Profile data (bio, avatar, social links) lives on the `Identity` model via `Identity::Profileable` concern. Public author pages at `/authors` (index) and `/authors/:handle` (show) are served by `AuthorsController`. Admin profile editing at `/admin/profile` via `Admin::ProfilesController`. Author names on posts link to their profile pages. Bios support markdown via `MarkdownRenderer`.
 

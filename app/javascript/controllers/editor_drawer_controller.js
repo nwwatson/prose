@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { csrfToken, request } from "lib/request"
 
 export default class extends Controller {
   static targets = [
@@ -230,12 +231,12 @@ export default class extends Controller {
     form.action = `/admin/posts/${this.postSlugValue}/ai/messages`
     form.style.display = "none"
 
-    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
-    if (csrfToken) {
+    const token = csrfToken()
+    if (token) {
       const csrfField = document.createElement("input")
       csrfField.type = "hidden"
       csrfField.name = "authenticity_token"
-      csrfField.value = csrfToken
+      csrfField.value = token
       form.appendChild(csrfField)
     }
 
@@ -296,15 +297,10 @@ export default class extends Controller {
   }
 
   clearConversation() {
-    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
-    fetch(`/admin/posts/${this.postSlugValue}/ai/conversation`, {
+    request(`/admin/posts/${this.postSlugValue}/ai/conversation`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "X-CSRF-Token": csrfToken,
-        "Accept": "text/vnd.turbo-stream.html, text/html"
-      },
-      body: "conversation_type=chat"
+      accept: "text/vnd.turbo-stream.html, text/html",
+      body: new URLSearchParams({ conversation_type: "chat" })
     })
     .then(response => {
       if (response.redirected) {

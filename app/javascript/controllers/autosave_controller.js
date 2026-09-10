@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { request } from "lib/request"
 
 export default class extends Controller {
   static targets = ["status", "discardBackdrop", "discardModal"]
@@ -69,14 +70,9 @@ export default class extends Controller {
       }
     }
 
-    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
-
-    this.savePromise = fetch(this.urlValue, {
+    this.savePromise = request(this.urlValue, {
       method: this.methodValue,
-      headers: {
-        "Accept": "application/json",
-        "X-CSRF-Token": csrfToken
-      },
+      accept: "application/json",
       body: formData
     })
       .then(async (response) => {
