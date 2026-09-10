@@ -95,6 +95,20 @@ class Admin::NewslettersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Updated via JSON", newsletters(:draft_newsletter).reload.title
   end
 
+  test "POST create as JSON with blank title returns errors" do
+    post admin_newsletters_path, params: { newsletter: { title: "" } }, as: :json
+    assert_response :unprocessable_entity
+    json = JSON.parse(response.body)
+    assert json["errors"].any?
+  end
+
+  test "PATCH update as JSON with blank title returns errors" do
+    patch admin_newsletter_path(newsletters(:draft_newsletter)), params: { newsletter: { title: "" } }, as: :json
+    assert_response :unprocessable_entity
+    json = JSON.parse(response.body)
+    assert json["errors"].any?
+  end
+
   test "POST send_newsletter sends a draft newsletter" do
     assert_enqueued_with(job: SendNewsletterJob) do
       post send_newsletter_admin_newsletter_path(newsletters(:draft_newsletter))

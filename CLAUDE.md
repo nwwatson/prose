@@ -95,6 +95,8 @@ Keep model files under 200 lines — extract behavior into concerns when they gr
 ### Controller Pattern
 Skinny controllers that delegate to models/services. Controllers handle only HTTP concerns.
 
+`Admin::EditorResource` (`app/controllers/concerns/admin/editor_resource.rb`) is a shared concern for the three editor-backed admin controllers (`Admin::PostsController`, `Admin::PagesController`, `Admin::NewslettersController`). It sets `layout :choose_layout` (editor layout on `new`/`edit`/`create`/`update`, `"admin"` elsewhere — declared per-controller via `uses_editor_layout "admin_editor"` etc.) and provides `respond_with_saved(record, notice:, status:)` / `respond_with_errors(record, template)` for the shared HTML+JSON `respond_to` branches on `create`/`update`. Including controllers implement `resource_json(record)` and `edit_path_for(record)` to supply their resource-specific JSON payload and redirect target; anything else that differs (e.g. `Post#create_version_if_needed!` after update) stays in the controller.
+
 ### Service Layer
 - **Form Objects** for multi-model input (e.g., `Registration`)
 - **Service Objects** in `app/services/` for business operations (e.g., `Ai::SystemPrompts`, `Ai::PostContextBuilder`, `MarkdownRenderer`, `Mcp::Tools::*`)
