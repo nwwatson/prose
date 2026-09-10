@@ -71,4 +71,31 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     # listing — constant regardless of how many posts or distinct authors are shown.
     assert_query_count(2, table: "identities") { get root_path }
   end
+
+  test "GET show comment query count does not grow with comment or reply count" do
+    post = posts(:published_post)
+    identity = identities(:subscriber_identity)
+    replier = identities(:from_published_post_identity)
+
+    3.times do |i|
+      top_level = Comment.create!(post: post, identity: identity, body: "Top level #{i}", approved: true)
+      2.times do |j|
+        Comment.create!(post: post, identity: replier, parent_comment_id: top_level.id, body: "Reply #{j}", approved: true)
+      end
+      Comment.create!(post: post, identity: replier, parent_comment_id: top_level.id, body: "Unapproved reply", approved: false)
+    end
+
+    comment_queries = 0
+    callback = lambda do |*, payload|
+      comment_queries += 1 if payload[:sql].match?(/FROM "comments"/)
+    end
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      get post_path(post, slug: post.slug)
+    end
+
+    assert_response :success
+    assert_equal 2, comment_queries
+    assert_select ".comment__body", text: /Unapproved reply/, count: 0
+  end
 end

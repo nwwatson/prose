@@ -28,6 +28,7 @@ class PostsController < ApplicationController
     @related_posts = @post.related_posts
     @previous_post = @post.previous_post
     @next_post = @post.next_post
+    @comments = @post.threaded_comments
     track_post_view(@post)
   end
 end
