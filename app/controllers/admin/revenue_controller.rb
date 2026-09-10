@@ -1,8 +1,13 @@
 module Admin
   class RevenueController < BaseController
+    include Admin::AnalyticsRangeable
+
+    ALLOWED_RANGES = %w[7d 30d 90d all].freeze
+
     def show
-      since = range_to_date(params[:range])
-      @range = params[:range] || "30d"
+      range = analytics_range(default: "30d", allowed: ALLOWED_RANGES)
+      @range = range.key
+      since = range.since
 
       revenue_query = RevenueQuery.new
       growth_query = MembershipGrowthQuery.new
@@ -17,17 +22,6 @@ module Admin
       @cancellations = growth_query.cancellations(since: since)
       @net_growth = growth_query.net_growth(since: since)
       @growth_by_month = growth_query.growth_by_month(since: 12.months.ago)
-    end
-
-    private
-
-    def range_to_date(range)
-      case range
-      when "7d" then 7.days.ago
-      when "90d" then 90.days.ago
-      when "all" then Time.at(0)
-      else 30.days.ago
-      end
     end
   end
 end
