@@ -6,6 +6,6 @@ module Segment::Resolvable
   end
 
   def subscriber_count
-    resolve.count
+    @subscriber_count ||= resolve.count
   end
 end

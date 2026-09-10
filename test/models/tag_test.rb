@@ -21,4 +21,17 @@ class TagTest < ActiveSupport::TestCase
     tag = Tag.new(name: "Ruby")
     assert_not tag.valid?
   end
+
+  test "post_counts returns counts keyed by tag id" do
+    counts = Tag.post_counts
+    assert_equal 3, counts[tags(:ruby).id]
+    assert_equal 3, counts[tags(:rails).id]
+    assert_equal 1, counts[tags(:css).id]
+  end
+
+  test "post_counts defaults to zero for a tag id with no posts" do
+    tag = Tag.create!(name: "Unused")
+    counts = Tag.post_counts
+    assert_equal 0, counts.fetch(tag.id, 0)
+  end
 end

@@ -11,6 +11,12 @@ class Admin::SubscribersControllerTest < ActionDispatch::IntegrationTest
     assert_select "table"
   end
 
+  test "GET index shows confirmed and total subscriber counts" do
+    get admin_subscribers_path
+    assert_response :success
+    assert_select "p", text: /#{Subscriber.confirmed.count} confirmed of #{Subscriber.count} total/
+  end
+
   test "GET show renders subscriber" do
     get admin_subscriber_path(subscribers(:confirmed))
     assert_response :success

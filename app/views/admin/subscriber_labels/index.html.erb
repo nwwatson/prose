@@ -16,7 +16,7 @@
               <span class="inline-block h-3 w-3 rounded-full" style="background-color: <%= label.color %>"></span>
               <span class="text-sm font-medium text-gray-900"><%= label.name %></span>
             </span>
-            <p class="text-sm text-gray-500"><%= label.subscribers.count %> subscribers</p>
+            <p class="text-sm text-gray-500"><%= @subscriber_counts.fetch(label.id, 0) %> subscribers</p>
           </div>
           <p class="mt-1 text-xs text-gray-500"><%= label.color %></p>
         <% end %>
@@ -44,7 +44,7 @@
                 </span>
               </td>
               <td class="px-6 py-4 text-sm text-gray-500"><%= label.color %></td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= label.subscribers.count %></td>
+              <td class="px-6 py-4 text-sm text-gray-500"><%= @subscriber_counts.fetch(label.id, 0) %></td>
               <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                 <%= link_to t('shared.edit'), edit_admin_subscriber_label_path(label), class: "text-gray-600 hover:text-gray-900" %>
               </td>

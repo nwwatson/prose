@@ -12,6 +12,23 @@ class Admin::MembershipTiersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET index runs a single grouped count query regardless of tier count" do
+    sign_in_as(:admin)
+    5.times { |i| MembershipTier.create!(name: "Extra #{i}", price_cents: 500, currency: "usd", interval: :month) }
+
+    membership_queries = 0
+    callback = lambda do |*, payload|
+      membership_queries += 1 if payload[:sql].match?(/FROM "memberships"/)
+    end
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      get admin_membership_tiers_path
+    end
+
+    assert_response :success
+    assert_equal 1, membership_queries
+  end
+
   test "GET new renders form" do
     sign_in_as(:admin)
     get new_admin_membership_tier_path

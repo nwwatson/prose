@@ -10,6 +10,22 @@ class Admin::SubscriberLabelsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET index runs a single grouped count query regardless of label count" do
+    5.times { |i| SubscriberLabel.create!(name: "Extra #{i}", color: "#123456") }
+
+    labeling_queries = 0
+    callback = lambda do |*, payload|
+      labeling_queries += 1 if payload[:sql].match?(/FROM "subscriber_labelings"/)
+    end
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      get admin_subscriber_labels_path
+    end
+
+    assert_response :success
+    assert_equal 1, labeling_queries
+  end
+
   test "GET new renders form" do
     get new_admin_subscriber_label_path
     assert_response :success

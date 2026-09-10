@@ -34,6 +34,13 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_select "div", text: /Newsletters Sent/
   end
 
+  test "GET show displays published posts count" do
+    sign_in_as(:admin)
+    get admin_root_path
+    assert_response :success
+    assert_select "div", text: Post.published.count.to_s
+  end
+
   test "GET show displays traffic sources panel" do
     sign_in_as(:admin)
     get admin_root_path

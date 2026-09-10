@@ -40,4 +40,16 @@ class SubscriberLabelTest < ActiveSupport::TestCase
       label.destroy
     end
   end
+
+  test "subscriber_counts returns counts keyed by label id" do
+    counts = SubscriberLabel.subscriber_counts
+    assert_equal 2, counts[subscriber_labels(:vip).id]
+    assert_equal 1, counts[subscriber_labels(:beta_tester).id]
+  end
+
+  test "subscriber_counts defaults to zero for a label with no subscribers" do
+    label = SubscriberLabel.create!(name: "Unused", color: "#000000")
+    counts = SubscriberLabel.subscriber_counts
+    assert_equal 0, counts.fetch(label.id, 0)
+  end
 end

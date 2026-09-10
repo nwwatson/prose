@@ -45,6 +45,38 @@ class Admin::NewslettersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET edit resolves each segment's subscriber count exactly once" do
+    segment_count = Segment.count
+
+    subscriber_queries = 0
+    callback = lambda do |*, payload|
+      subscriber_queries += 1 if payload[:sql].match?(/FROM "subscribers"/)
+    end
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      get edit_admin_newsletter_path(newsletters(:draft_newsletter))
+    end
+
+    assert_response :success
+    assert_equal segment_count + 1, subscriber_queries
+  end
+
+  test "GET new resolves each segment's subscriber count exactly once" do
+    segment_count = Segment.count
+
+    subscriber_queries = 0
+    callback = lambda do |*, payload|
+      subscriber_queries += 1 if payload[:sql].match?(/FROM "subscribers"/)
+    end
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      get new_admin_newsletter_path
+    end
+
+    assert_response :success
+    assert_equal segment_count + 1, subscriber_queries
+  end
+
   test "PATCH update updates newsletter" do
     patch admin_newsletter_path(newsletters(:draft_newsletter)), params: { newsletter: { title: "Updated Title" } }
     assert_redirected_to edit_admin_newsletter_path(newsletters(:draft_newsletter))

@@ -30,6 +30,7 @@ module Admin
 
     def new
       @newsletter = current_user.newsletters.build(status: :draft)
+      load_segments
     end
 
     def create
@@ -41,6 +42,7 @@ module Admin
           format.json { render json: newsletter_json(@newsletter), status: :created }
         end
       else
+        load_segments
         respond_to do |format|
           format.html { render :new, status: :unprocessable_entity }
           format.json { render json: { errors: @newsletter.errors.full_messages }, status: :unprocessable_entity }
@@ -49,6 +51,7 @@ module Admin
     end
 
     def edit
+      load_segments
     end
 
     def update
@@ -58,6 +61,7 @@ module Admin
           format.json { render json: newsletter_json(@newsletter), status: :ok }
         end
       else
+        load_segments
         respond_to do |format|
           format.html { render :edit, status: :unprocessable_entity }
           format.json { render json: { errors: @newsletter.errors.full_messages }, status: :unprocessable_entity }
@@ -100,6 +104,11 @@ module Admin
 
     def set_newsletter
       @newsletter = Newsletter.find(params[:id])
+    end
+
+    def load_segments
+      @segments = Segment.order(:name).to_a
+      @segment_counts = @segments.index_by(&:id).transform_values(&:subscriber_count)
     end
 
     def newsletter_params

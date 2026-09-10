@@ -3,7 +3,8 @@ module Admin
     before_action :set_segment, only: [ :show, :edit, :update, :destroy, :count ]
 
     def index
-      @segments = Segment.order(:name)
+      @segments = Segment.order(:name).to_a
+      @segment_counts = @segments.index_by(&:id).transform_values(&:subscriber_count)
     end
 
     def show

@@ -27,4 +27,16 @@ class CategoryTest < ActiveSupport::TestCase
     categories = Category.ordered
     assert_equal categories(:technology), categories.first
   end
+
+  test "post_counts returns counts keyed by category id" do
+    counts = Category.post_counts
+    assert_equal 4, counts[categories(:technology).id]
+    assert_equal 1, counts[categories(:design).id]
+  end
+
+  test "post_counts defaults to zero for a category with no posts" do
+    category = Category.create!(name: "Unused")
+    counts = Category.post_counts
+    assert_equal 0, counts.fetch(category.id, 0)
+  end
 end

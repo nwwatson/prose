@@ -23,6 +23,19 @@ class SegmentTest < ActiveSupport::TestCase
     assert_kind_of Integer, segment.subscriber_count
   end
 
+  test "subscriber_count memoizes the resolved count" do
+    segment = segments(:vip_segment)
+
+    resolve_calls = 0
+    segment.define_singleton_method(:resolve) do
+      resolve_calls += 1
+      SegmentSubscribersQuery.new(filter_criteria).resolve
+    end
+
+    3.times { segment.subscriber_count }
+    assert_equal 1, resolve_calls
+  end
+
   test "nullifies newsletters on destroy" do
     segment = segments(:vip_segment)
     newsletter = newsletters(:draft_newsletter)

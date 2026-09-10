@@ -10,6 +10,22 @@ class Admin::SegmentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET index resolves each segment's subscriber count exactly once" do
+    segment_count = Segment.count
+
+    subscriber_queries = 0
+    callback = lambda do |*, payload|
+      subscriber_queries += 1 if payload[:sql].match?(/FROM "subscribers"/)
+    end
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      get admin_segments_path
+    end
+
+    assert_response :success
+    assert_equal segment_count, subscriber_queries
+  end
+
   test "GET show renders segment" do
     get admin_segment_path(segments(:vip_segment))
     assert_response :success
