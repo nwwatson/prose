@@ -47,10 +47,4 @@ class MembershipsController < ApplicationController
 
     redirect_to session.url, allow_other_host: true
   end
-
-  private
-
-  def require_payments_configured
-    redirect_to root_path unless payments_configured?
-  end
 end

@@ -1,4 +1,7 @@
 module Admin
+  # Not gated by require_payments_configured: tiers can be viewed/managed
+  # before Stripe keys are added, since saving a tier is what triggers the
+  # initial sync (see MembershipTier::Syncable).
   class MembershipTiersController < BaseController
     before_action :set_tier, only: [ :edit, :update, :destroy ]
 

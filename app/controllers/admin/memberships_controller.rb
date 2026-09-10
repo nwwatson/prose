@@ -1,4 +1,6 @@
 module Admin
+  # Not gated by require_payments_configured: comp memberships
+  # (Membership.grant_complimentary!) don't require Stripe.
   class MembershipsController < BaseController
     before_action :set_membership, only: [ :show, :destroy ]
     before_action :set_subscriber, only: [ :comp ]

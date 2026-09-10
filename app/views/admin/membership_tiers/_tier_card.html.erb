@@ -7,7 +7,7 @@
     <div class="mt-1 flex items-center gap-2">
       <%= status_badge(tier.active? ? t('shared.active') : t('admin.membership_tiers.index.inactive'),
             color_class: tier.active? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800', size: :sm) %>
-      <% if PaymentService.configured? && !tier.synced_to_stripe? %>
+      <% if payments_configured? && !tier.synced_to_stripe? %>
         <span class="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
           <%= t('admin.membership_tiers.index.syncing') %>
         </span>

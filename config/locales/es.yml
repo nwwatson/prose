@@ -763,6 +763,8 @@ es:
     memberships:
       sign_in_required: "Por favor inicia sesión para suscribirte a una membresía."
       no_subscription: "No se encontró suscripción activa."
+    payments:
+      not_configured: "Los pagos aún no están configurados."
     subscriptions:
       check_email: "Revisa tu correo electrónico para obtener un enlace de inicio de sesión."
       invalid_email: "Por favor ingresa una dirección de correo electrónico válida."

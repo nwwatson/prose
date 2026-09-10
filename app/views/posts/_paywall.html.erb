@@ -9,7 +9,7 @@
     <% else %>
       <h3 class="paywall__heading"><%= t('posts.paywall.paid_heading') %></h3>
       <p class="paywall__description"><%= t('posts.paywall.paid_description', site_name: site_name) %></p>
-      <% if PaymentService.configured? %>
+      <% if payments_configured? %>
         <%= link_to t('posts.paywall.upgrade_cta'), memberships_path, class: "paywall__cta" %>
       <% end %>
     <% end %>

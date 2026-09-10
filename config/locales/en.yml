@@ -772,6 +772,8 @@ en:
     memberships:
       sign_in_required: "Please sign in to subscribe to a membership."
       no_subscription: "No active subscription found."
+    payments:
+      not_configured: "Payments are not configured yet."
     subscriber_sessions:
       signed_in: "You're now signed in."
       link_expired: "This link has expired or is invalid. Please request a new one."

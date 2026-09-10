@@ -2,6 +2,8 @@ module Admin
   class RevenueController < BaseController
     include Admin::AnalyticsRangeable
 
+    before_action :require_payments_configured
+
     ALLOWED_RANGES = %w[7d 30d 90d all].freeze
 
     def show
@@ -22,6 +24,12 @@ module Admin
       @cancellations = growth_query.cancellations(since: since)
       @net_growth = growth_query.net_growth(since: since)
       @growth_by_month = growth_query.growth_by_month(since: 12.months.ago)
+    end
+
+    private
+
+    def require_payments_configured
+      super(redirect_to: admin_root_path, alert: t("flash.payments.not_configured"))
     end
   end
 end

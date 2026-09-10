@@ -10,8 +10,4 @@ module MembershipAccess
 
     post.accessible_by?(current_subscriber)
   end
-
-  def payments_configured?
-    PaymentService.configured?
-  end
 end
