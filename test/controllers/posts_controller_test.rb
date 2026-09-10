@@ -73,6 +73,18 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET index shows search snippet even when the plain listing was cached first" do
+    with_fragment_caching do
+      get root_path
+      assert_response :success
+      assert_select "mark", count: 0
+
+      get root_path(q: "innovation")
+      assert_response :success
+      assert_select "mark"
+    end
+  end
+
   test "GET index includes dark theme style tag" do
     get root_path
     assert_response :success

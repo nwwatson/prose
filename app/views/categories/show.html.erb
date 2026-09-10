@@ -18,15 +18,6 @@
 
 <div class="post-listing">
   <% @posts.each do |post| %>
-    <article class="post-card">
-      <h3 class="post-card__title">
-        <%= link_to post.title, post_path(post, slug: post.slug), class: "post-card__link" %>
-      </h3>
-      <div class="post-card__meta post-meta">
-        <span><%= t('shared.by') %> <%= author_link(post.user) %></span>
-        <span class="post-meta__separator">&middot;</span>
-        <time datetime="<%= post.published_at.iso8601 %>"><%= post.published_at.strftime("%B %-d, %Y") %></time>
-      </div>
-    </article>
+    <%= render "posts/post", post: post, show_subtitle: false, show_reading_time: false, show_category: false %>
   <% end %>
 </div>
