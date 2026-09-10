@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { capitalize } from "lib/dom"
 
 export default class extends Controller {
   static targets = [
@@ -82,8 +83,8 @@ export default class extends Controller {
 
     let anyVisible = false
     fields.forEach(({ target, source }) => {
-      const hasPreview = `has${target.charAt(0).toUpperCase() + target.slice(1)}Target`
-      const hasSource = `has${source.charAt(0).toUpperCase() + source.slice(1)}Target`
+      const hasPreview = `has${capitalize(target)}Target`
+      const hasSource = `has${capitalize(source)}Target`
       if (this[hasPreview] && this[hasSource]) {
         const visible = this[`${source}Target`].value.trim() !== ""
         this[`${target}Target`].style.display = visible ? "inline-block" : "none"
@@ -99,8 +100,8 @@ export default class extends Controller {
   #syncPair(name) {
     const colorTarget = `${name}Target`
     const textTarget = `${name}TextTarget`
-    const hasColor = `has${name.charAt(0).toUpperCase() + name.slice(1)}Target`
-    const hasText = `has${name.charAt(0).toUpperCase() + name.slice(1)}TextTarget`
+    const hasColor = `has${capitalize(name)}Target`
+    const hasText = `has${capitalize(name)}TextTarget`
 
     if (this[hasColor] && this[hasText]) {
       const colorEl = this[colorTarget]

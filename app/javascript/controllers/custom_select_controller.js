@@ -1,4 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
+import { escapeHtml } from "lib/dom"
+import { useClickOutside } from "lib/click_outside"
+import { ListboxNavigator } from "lib/listbox"
+
+const HIGHLIGHT_CLASSES = [ "ring-2", "ring-inset", "ring-blue-400" ]
 
 export default class extends Controller {
   static targets = ["select", "trigger", "triggerText", "dropdown"]
@@ -6,15 +11,32 @@ export default class extends Controller {
   connect() {
     this.buildOptions()
     this.syncTriggerText()
-    this.handleOutsideClick = this.handleOutsideClick.bind(this)
+
+    this.clickOutside = useClickOutside(this, { onClickOutside: () => this.close() })
+
+    this.navigator = new ListboxNavigator({
+      getItems: () => Array.from(this.dropdownTarget.querySelectorAll("li")),
+      highlight: (li, on) => {
+        if (on) {
+          li.classList.add(...HIGHLIGHT_CLASSES)
+        } else {
+          li.classList.remove(...HIGHLIGHT_CLASSES)
+        }
+      },
+      onSelect: (li) => this.selectFromKeyboard(li),
+      onEscape: (event) => this.escape(event),
+      getItemText: (li) => li.querySelector("span").textContent,
+      typeAhead: true,
+      homeEnd: true,
+      selectOnSpace: true
+    })
+
     this.handleKeydown = this.handleKeydown.bind(this)
-    this.searchString = ""
-    this.searchTimeout = null
   }
 
   disconnect() {
-    document.removeEventListener("click", this.handleOutsideClick)
-    document.removeEventListener("keydown", this.handleKeydown)
+    this.clickOutside.unobserve()
+    this.element.removeEventListener("keydown", this.handleKeydown)
   }
 
   buildOptions() {
@@ -31,12 +53,12 @@ export default class extends Controller {
       li.className = this.optionClasses(option.value === this.selectTarget.value)
       const color = option.dataset.color
       const swatchHtml = color
-        ? `<span class="inline-block h-5 w-5 rounded border border-gray-300 shrink-0" style="background-color: ${this.escapeHtml(color)}"></span>`
+        ? `<span class="inline-block h-5 w-5 rounded border border-gray-300 shrink-0" style="background-color: ${escapeHtml(color)}"></span>`
         : ""
       const flexClass = color ? "flex items-center gap-2" : ""
 
       li.innerHTML = `
-        <span class="${flexClass} block truncate">${swatchHtml}${this.escapeHtml(option.textContent)}</span>
+        <span class="${flexClass} block truncate">${swatchHtml}${escapeHtml(option.textContent)}</span>
         <span class="absolute inset-y-0 right-0 flex items-center pr-3 ${option.value === this.selectTarget.value ? "text-white" : "hidden"}">
           <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
@@ -60,7 +82,7 @@ export default class extends Controller {
     if (selected) {
       const color = selected.dataset.color
       if (color) {
-        this.triggerTextTarget.innerHTML = `<span class="flex items-center gap-2"><span class="inline-block h-5 w-5 rounded border border-gray-300 shrink-0" style="background-color: ${this.escapeHtml(color)}"></span>${this.escapeHtml(selected.textContent)}</span>`
+        this.triggerTextTarget.innerHTML = `<span class="flex items-center gap-2"><span class="inline-block h-5 w-5 rounded border border-gray-300 shrink-0" style="background-color: ${escapeHtml(color)}"></span>${escapeHtml(selected.textContent)}</span>`
       } else {
         this.triggerTextTarget.textContent = selected.textContent
       }
@@ -83,8 +105,13 @@ export default class extends Controller {
     dropdown.classList.remove("opacity-0", "scale-95")
     dropdown.classList.add("opacity-100", "scale-100")
 
-    document.addEventListener("click", this.handleOutsideClick)
-    document.addEventListener("keydown", this.handleKeydown)
+    this.clickOutside.observe()
+    // Scoped to the component rather than `document` so an open dropdown's
+    // Escape can be stopped before it reaches the editor drawer. The trigger
+    // is focused explicitly because clicking a <button> does not focus it in
+    // every browser, and without focus the listener would never fire.
+    this.element.addEventListener("keydown", this.handleKeydown)
+    this.triggerTarget.focus()
 
     // Scroll selected option into view
     const selected = dropdown.querySelector('[class*="bg-blue-600"]')
@@ -92,7 +119,7 @@ export default class extends Controller {
       selected.scrollIntoView({ block: "nearest" })
     }
 
-    this.focusedIndex = this.selectedOptionIndex()
+    this.navigator.index = this.selectedOptionIndex()
   }
 
   close() {
@@ -106,8 +133,8 @@ export default class extends Controller {
     }
     dropdown.addEventListener("transitionend", onTransitionEnd)
 
-    document.removeEventListener("click", this.handleOutsideClick)
-    document.removeEventListener("keydown", this.handleKeydown)
+    this.clickOutside.unobserve()
+    this.element.removeEventListener("keydown", this.handleKeydown)
   }
 
   isOpen() {
@@ -149,85 +176,25 @@ export default class extends Controller {
     })
   }
 
-  handleOutsideClick(event) {
-    if (!this.element.contains(event.target)) {
-      this.close()
-    }
-  }
+  // --- Keyboard ---
 
   handleKeydown(event) {
-    const items = this.dropdownTarget.querySelectorAll("li")
-    if (items.length === 0) return
-
-    switch (event.key) {
-      case "Escape":
-        event.preventDefault()
-        this.close()
-        this.triggerTarget.focus()
-        break
-      case "ArrowDown":
-        event.preventDefault()
-        this.focusedIndex = Math.min((this.focusedIndex ?? -1) + 1, items.length - 1)
-        this.highlightItem(items)
-        break
-      case "ArrowUp":
-        event.preventDefault()
-        this.focusedIndex = Math.max((this.focusedIndex ?? 1) - 1, 0)
-        this.highlightItem(items)
-        break
-      case "Home":
-        event.preventDefault()
-        this.focusedIndex = 0
-        this.highlightItem(items)
-        break
-      case "End":
-        event.preventDefault()
-        this.focusedIndex = items.length - 1
-        this.highlightItem(items)
-        break
-      case "Enter":
-      case " ":
-        event.preventDefault()
-        if (this.focusedIndex != null && items[this.focusedIndex]) {
-          const value = items[this.focusedIndex].getAttribute("data-value")
-          this.selectValue(value)
-          this.close()
-          this.triggerTarget.focus()
-        }
-        break
-      default:
-        // Type-ahead search
-        if (event.key.length === 1) {
-          this.typeAhead(event.key, items)
-        }
-        break
-    }
+    this.navigator.handleKeydown(event)
   }
 
-  typeAhead(char, items) {
-    clearTimeout(this.searchTimeout)
-    this.searchString += char.toLowerCase()
-    this.searchTimeout = setTimeout(() => { this.searchString = "" }, 500)
-
-    for (let i = 0; i < items.length; i++) {
-      const text = items[i].querySelector("span").textContent.toLowerCase()
-      if (text.startsWith(this.searchString)) {
-        this.focusedIndex = i
-        this.highlightItem(items)
-        break
-      }
-    }
+  selectFromKeyboard(li) {
+    if (!li) return
+    this.selectValue(li.getAttribute("data-value"))
+    this.close()
+    this.triggerTarget.focus()
   }
 
-  highlightItem(items) {
-    items.forEach((li, i) => {
-      if (i === this.focusedIndex) {
-        li.classList.add("ring-2", "ring-inset", "ring-blue-400")
-        li.scrollIntoView({ block: "nearest" })
-      } else {
-        li.classList.remove("ring-2", "ring-inset", "ring-blue-400")
-      }
-    })
+  escape(event) {
+    event.preventDefault()
+    // Keep the editor drawer's document-level Escape handler from also firing.
+    event.stopPropagation()
+    this.close()
+    this.triggerTarget.focus()
   }
 
   selectedOptionIndex() {
@@ -237,11 +204,5 @@ export default class extends Controller {
       if (items[i].getAttribute("data-value") === currentValue) return i
     }
     return 0
-  }
-
-  escapeHtml(text) {
-    const div = document.createElement("div")
-    div.textContent = text
-    return div.innerHTML
   }
 }

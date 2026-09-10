@@ -4,6 +4,8 @@
 // rules below introduce raw "<"/">" from the source text, only from their
 // own literal replacement markup.
 
+import { escapeHtml } from "lib/dom"
+
 const THEMES = {
   chat: {
     codeBlock: '<pre class="bg-gray-800 text-gray-100 rounded-md p-3 my-2 overflow-x-auto text-xs"><code>$2</code></pre>',
@@ -21,15 +23,6 @@ const THEMES = {
     links: true,
     blockquotes: true,
   },
-}
-
-export function escapeHtml(str) {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
 }
 
 export function renderMarkdown(text, { streaming = false, theme = "chat" } = {}) {

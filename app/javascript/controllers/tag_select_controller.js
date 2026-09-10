@@ -1,10 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 import { requestJSON } from "lib/request"
+import { useClickOutside } from "lib/click_outside"
+import { ListboxNavigator } from "lib/listbox"
 
 export default class extends Controller {
   static targets = [
     "emptyInput", "hiddenInputs", "comboBox", "pills",
-    "searchInput", "dropdown", "option", "createOption", "createLabel"
+    "searchInput", "dropdown", "option", "createOption", "createLabel",
+    "pillTemplate", "optionTemplate", "checkmarkTemplate"
   ]
 
   static values = {
@@ -14,35 +17,37 @@ export default class extends Controller {
   }
 
   connect() {
-    this.boundClickOutside = this.clickOutside.bind(this)
-    document.addEventListener("click", this.boundClickOutside)
-    this.highlightedIndex = -1
+    this.clickOutside = useClickOutside(this, { onClickOutside: () => this.close() })
+
+    this.navigator = new ListboxNavigator({
+      getItems: () => this.visibleOptions(),
+      highlight: (item, on) => this.highlightOption(item, on),
+      clearHighlight: () => this.clearHighlight(),
+      onSelect: (item) => this.selectHighlighted(item),
+      onEscape: (event) => this.escape(event),
+      isOpen: () => this.isOpen,
+      onOpenRequest: () => this.open()
+    })
   }
 
   disconnect() {
-    document.removeEventListener("click", this.boundClickOutside)
+    this.clickOutside.unobserve()
   }
 
   // --- Open / Close ---
 
   open() {
     this.dropdownTarget.classList.remove("hidden")
-    this.highlightedIndex = -1
-    this.clearHighlight()
+    this.navigator.reset()
+    this.clickOutside.observe()
   }
 
   close() {
     this.dropdownTarget.classList.add("hidden")
     this.searchInputTarget.value = ""
     this.filter()
-    this.highlightedIndex = -1
-    this.clearHighlight()
-  }
-
-  clickOutside(event) {
-    if (!this.element.contains(event.target)) {
-      this.close()
-    }
+    this.navigator.reset()
+    this.clickOutside.unobserve()
   }
 
   focusInput() {
@@ -54,13 +59,11 @@ export default class extends Controller {
   filter() {
     const query = this.searchInputTarget.value.trim().toLowerCase()
     let hasExactMatch = false
-    let visibleCount = 0
 
     this.optionTargets.forEach(option => {
       const name = option.dataset.tagName
       if (!query || name.includes(query)) {
         option.classList.remove("hidden")
-        visibleCount++
       } else {
         option.classList.add("hidden")
       }
@@ -76,8 +79,7 @@ export default class extends Controller {
       }
     }
 
-    this.highlightedIndex = -1
-    this.clearHighlight()
+    this.navigator.reset()
   }
 
   // --- Selection ---
@@ -107,10 +109,10 @@ export default class extends Controller {
     this.hiddenInputsTarget.appendChild(input)
 
     // Add pill
-    const pill = document.createElement("span")
-    pill.className = "inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700"
+    const pill = this.cloneTemplate(this.pillTemplateTarget)
     pill.dataset.tagId = id
-    pill.innerHTML = `${this.escapeHtml(name)}<button type="button" data-action="click->tag-select#removeTag" data-tag-id="${id}" class="ml-0.5 inline-flex items-center rounded-full hover:bg-blue-200 focus:outline-none" tabindex="-1"><svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>`
+    pill.querySelector("[data-pill-name]").textContent = name
+    pill.querySelector("button").dataset.tagId = id
     this.pillsTarget.appendChild(pill)
 
     // Update option style
@@ -156,14 +158,10 @@ export default class extends Controller {
 
       // Insert new option alphabetically if it doesn't already exist
       if (!this.optionTargets.find(o => o.dataset.tagId === String(data.id))) {
-        const li = document.createElement("li")
-        li.dataset.tagSelectTarget = "option"
+        const li = this.cloneTemplate(this.optionTemplateTarget)
         li.dataset.tagId = data.id
         li.dataset.tagName = data.name.toLowerCase()
-        li.dataset.action = "click->tag-select#toggleTag"
-        li.setAttribute("role", "option")
-        li.className = "relative cursor-pointer select-none py-2 pl-3 pr-9 text-gray-900 hover:bg-gray-100"
-        li.innerHTML = `<span class="block truncate">${this.escapeHtml(data.name)}</span>`
+        li.querySelector("span").textContent = data.name
 
         // Find insertion point (alphabetical by name)
         const insertBefore = this.optionTargets.find(o =>
@@ -186,47 +184,31 @@ export default class extends Controller {
   // --- Keyboard Navigation ---
 
   handleKeydown(event) {
-    const visibleOptions = this.visibleOptions()
+    if (this.navigator.handleKeydown(event)) return
 
-    switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault()
-        if (!this.isOpen) { this.open(); return }
-        this.highlightedIndex = Math.min(this.highlightedIndex + 1, visibleOptions.length - 1)
-        this.updateHighlight(visibleOptions)
-        break
-
-      case "ArrowUp":
-        event.preventDefault()
-        this.highlightedIndex = Math.max(this.highlightedIndex - 1, 0)
-        this.updateHighlight(visibleOptions)
-        break
-
-      case "Enter":
-        event.preventDefault()
-        if (this.highlightedIndex >= 0 && visibleOptions[this.highlightedIndex]) {
-          visibleOptions[this.highlightedIndex].click()
-        } else if (!this.createOptionTarget.classList.contains("hidden")) {
-          this.createTag()
-        }
-        break
-
-      case "Escape":
-        event.stopPropagation()
-        this.close()
-        this.searchInputTarget.blur()
-        break
-
-      case "Backspace":
-        if (this.searchInputTarget.value === "") {
-          const pills = this.pillsTarget.querySelectorAll("[data-tag-id]")
-          if (pills.length > 0) {
-            const lastPill = pills[pills.length - 1]
-            this.removeTagById(lastPill.dataset.tagId)
-          }
-        }
-        break
+    if (event.key === "Backspace" && this.searchInputTarget.value === "") {
+      const pills = this.pillsTarget.querySelectorAll("[data-tag-id]")
+      if (pills.length > 0) {
+        const lastPill = pills[pills.length - 1]
+        this.removeTagById(lastPill.dataset.tagId)
+      }
     }
+  }
+
+  // Enter on a highlighted option toggles it; Enter with nothing highlighted
+  // creates the tag currently typed into the search input.
+  selectHighlighted(item) {
+    if (item) {
+      item.click()
+    } else if (!this.createOptionTarget.classList.contains("hidden")) {
+      this.createTag()
+    }
+  }
+
+  escape(event) {
+    event.stopPropagation()
+    this.close()
+    this.searchInputTarget.blur()
   }
 
   // --- Helpers ---
@@ -239,6 +221,10 @@ export default class extends Controller {
     return !!this.hiddenInputsTarget.querySelector(`input[data-tag-id="${id}"]`)
   }
 
+  cloneTemplate(template) {
+    return template.content.firstElementChild.cloneNode(true)
+  }
+
   markOptionSelected(id, selected) {
     const option = this.optionTargets.find(o => o.dataset.tagId === String(id))
     if (!option) return
@@ -247,12 +233,8 @@ export default class extends Controller {
       option.classList.add("bg-blue-600", "text-white", "hover:bg-blue-700")
       option.classList.remove("text-gray-900", "hover:bg-gray-100")
       // Add checkmark
-      let check = option.querySelector(".checkmark")
-      if (!check) {
-        const span = document.createElement("span")
-        span.className = "checkmark absolute inset-y-0 right-0 flex items-center pr-3 text-white"
-        span.innerHTML = '<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>'
-        option.appendChild(span)
+      if (!option.querySelector(".checkmark")) {
+        option.appendChild(this.cloneTemplate(this.checkmarkTemplateTarget))
       }
     } else {
       option.classList.remove("bg-blue-600", "text-white", "hover:bg-blue-700")
@@ -263,10 +245,7 @@ export default class extends Controller {
   }
 
   visibleOptions() {
-    const options = []
-    this.optionTargets.forEach(o => {
-      if (!o.classList.contains("hidden")) options.push(o)
-    })
+    const options = this.optionTargets.filter(o => !o.classList.contains("hidden"))
     if (!this.createOptionTarget.classList.contains("hidden")) {
       options.push(this.createOptionTarget)
     }
@@ -278,26 +257,20 @@ export default class extends Controller {
     if (this.hasCreateOptionTarget) this.createOptionTarget.classList.remove("bg-blue-50")
   }
 
-  updateHighlight(visibleOptions) {
-    this.clearHighlight()
-    const target = visibleOptions[this.highlightedIndex]
-    if (!target) return
-
-    if (target === this.createOptionTarget) {
-      target.classList.add("bg-blue-50")
-    } else if (!target.classList.contains("bg-blue-600")) {
-      target.classList.add("bg-gray-100")
+  highlightOption(option, on) {
+    if (!on) {
+      option.classList.remove("bg-gray-100", "bg-blue-50")
+      return
     }
-    target.scrollIntoView({ block: "nearest" })
+
+    if (option === this.createOptionTarget) {
+      option.classList.add("bg-blue-50")
+    } else if (!option.classList.contains("bg-blue-600")) {
+      option.classList.add("bg-gray-100")
+    }
   }
 
   dispatchChange() {
     this.hiddenInputsTarget.dispatchEvent(new Event("change", { bubbles: true }))
-  }
-
-  escapeHtml(str) {
-    const div = document.createElement("div")
-    div.textContent = str
-    return div.innerHTML
   }
 }
