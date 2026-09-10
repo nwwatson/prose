@@ -7,6 +7,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **Writing & Editing** — Rich text with [Lexxy](https://github.com/basecamp/lexxy), autosave, post scheduling, featured posts
 - **AI Assistant** — Chat (proofread, critique, brainstorm), SEO/social metadata generation, featured image generation (Gemini/OpenAI), streaming responses
 - **MCP Server** — [Model Context Protocol](https://modelcontextprotocol.io) endpoint for managing posts, categories, tags, and assets from Claude Desktop, Claude Code, or any MCP client
+- **REST API** — Versioned JSON API at `/api/v1/` for posts, categories, tags, site info, and assets, sharing the same bearer token as MCP
 - **Content Organization** — Categories, tags with searchable combo box and inline creation
 - **Reader Engagement** — Comments with threading and moderation, loves, subscriber magic-link auth, email notifications
 - **Social Embeds** — X/Twitter and YouTube via oEmbed
@@ -99,6 +100,15 @@ Prose exposes a [Model Context Protocol](https://modelcontextprotocol.io) server
 ### Available Tools
 
 Post management (`list_posts`, `get_post`, `create_post`, `update_post`, `delete_post`, `publish_post`, `schedule_post`, `unpublish_post`), site info (`get_site_info`, `list_categories`, `list_tags`, `create_tag`), and assets (`upload_asset`, `set_featured_image`).
+
+## REST API
+
+Prose also exposes a versioned JSON REST API at `/api/v1/`, using the same `prose_`-prefixed bearer tokens as MCP, for integrations that don't speak MCP (mobile apps, custom frontends, data pipelines). See [docs/api_setup.md](docs/api_setup.md) for the full endpoint reference.
+
+```bash
+curl https://your-domain.com/api/v1/posts \
+  -H "Authorization: Bearer prose_YOUR_TOKEN"
+```
 
 ## Contributing
 

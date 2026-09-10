@@ -248,6 +248,13 @@ app/services/mcp/
 
 **Admin UI**: `Admin::ApiTokensController` with token CRUD at `/admin/api_tokens`. Admins see all tokens; writers see only their own. Raw token shown once via flash on creation.
 
+### REST API
+A versioned JSON REST API lives alongside MCP at `/api/v1/` for non-MCP integrations (mobile apps, custom frontends, data pipelines). See `docs/api_setup.md` for the full endpoint reference.
+
+`Api::TokenAuthenticatable` (`app/controllers/concerns/api/token_authenticatable.rb`) is the single bearer-token auth implementation, shared by `Mcp::SessionsController` and `Api::V1::BaseController` — it extracts the token, looks it up via `ApiToken.find_by_raw_token`, sets `Current.user`, and calls `render_unauthorized(message)` on failure; each including controller overrides `render_unauthorized` for its own error envelope shape (JSON-RPC for MCP, `{ error: }` for REST). `Api::V1::BaseController < ActionController::API` also rate limits at 60 req/min (matching MCP), maps `ActiveRecord::RecordNotFound`/`RecordInvalid` to `404`/`422` JSON errors, and provides a `paginate(scope)` helper (`page`/`per_page`, max 50) that sets `X-Total-Count` and a GitHub-style `Link` header.
+
+Resource controllers (`Api::V1::PostsController`, `CategoriesController`, `TagsController`, `SiteController`, `AssetsController`) reuse existing model logic directly (`Post.for_listing`/`.search`, `Publishable#publish!`/`schedule!`/`revert_to_draft!`, `Sluggable`) and `Mcp::PostSerializer`/`Mcp::MarkdownConverter` for consistent JSON output between MCP and REST — there is no separate REST-specific post serializer.
+
 ### Authentication
 - **Admin**: session-based (signed cookie, 14-day expiry). The `Authentication` concern owns cookie → `Session` resumption (`resume_session`, memoized via a `Current.session` short-circuit) and is included once on `ApplicationController`, so both admin (`current_user`) and identity (`IdentityAuthentication#current_identity`) lookups share a single `sessions` query per request.
 - **Admin Passkeys**: optional WebAuthn/passkey sign-in alongside password. Configured via `WEBAUTHN_ORIGIN` and `WEBAUTHN_RP_ID` env vars. Managed at `/admin/passkeys`.
