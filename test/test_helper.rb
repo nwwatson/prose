@@ -33,6 +33,17 @@ module ActiveSupport
       I18n.locale = I18n.default_locale
     end
 
+    def with_fragment_caching
+      original_cache_store = Rails.cache
+      original_perform_caching = ActionController::Base.perform_caching
+      Rails.cache = ActiveSupport::Cache::MemoryStore.new
+      ActionController::Base.perform_caching = true
+      yield
+    ensure
+      Rails.cache = original_cache_store
+      ActionController::Base.perform_caching = original_perform_caching
+    end
+
     def assert_query_count(expected, table:)
       count = 0
       counter = ->(*, payload) do

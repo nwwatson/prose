@@ -1,8 +1,6 @@
 <%= turbo_frame_tag "posts_page_#{page}", target: "_top" do %>
   <% posts.each do |post| %>
-    <% cache(post) do %>
-      <%= render "posts/post", post: post %>
-    <% end %>
+    <%= render "posts/post", post: post, snippet: defined?(@snippets) ? @snippets[post.id] : nil %>
   <% end %>
 
   <% if next_page %>

@@ -385,6 +385,7 @@ en:
         status: "Status"
         members: "Members"
         inactive: "Inactive"
+        syncing: "Syncing…"
         no_tiers: "No membership tiers"
         get_started: "Create your first tier to start accepting paid memberships."
       new:

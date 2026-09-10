@@ -33,6 +33,19 @@ class Post::VersionableTest < ActiveSupport::TestCase
     end
   end
 
+  test "create_version_if_needed! issues exactly one query within cooldown" do
+    @post.post_versions.update_all(created_at: 1.minute.ago)
+
+    query_count = 0
+    counter = ->(*, payload) { query_count += 1 unless payload[:sql].match?(/\A(begin|commit)/i) }
+
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record") do
+      @post.create_version_if_needed!(user: @user)
+    end
+
+    assert_equal 1, query_count
+  end
+
   test "create_version_if_needed! creates version when no versions exist" do
     post = posts(:draft_post)
     assert_difference "PostVersion.count", 1 do

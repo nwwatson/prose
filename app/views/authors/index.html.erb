@@ -1,11 +1,11 @@
 <% content_for(:title, page_title(t('authors.index.title'))) %>
 
 <% content_for(:head) do %>
-  <% description = t('authors.index.meet_the_authors', site_name: site_name) %>
-  <%= meta_description_tag(description) %>
-  <%= open_graph_tags(title: "Authors — #{site_name}", description: description, url: authors_url) %>
-  <%= twitter_card_tags(title: "Authors — #{site_name}", description: description) %>
-  <%= canonical_tag(authors_url) %>
+  <%= seo_head_tags(
+        title: "Authors — #{site_name}",
+        description: t('authors.index.meet_the_authors', site_name: site_name),
+        url: authors_url
+      ) %>
 <% end %>
 
 <div>

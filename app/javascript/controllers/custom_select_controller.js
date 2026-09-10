@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { useTimeouts } from "lib/timers"
 
 export default class extends Controller {
   static targets = ["select", "trigger", "triggerText", "dropdown"]
@@ -8,6 +9,7 @@ export default class extends Controller {
     this.syncTriggerText()
     this.handleOutsideClick = this.handleOutsideClick.bind(this)
     this.handleKeydown = this.handleKeydown.bind(this)
+    this.timeouts = useTimeouts()
     this.searchString = ""
     this.searchTimeout = null
   }
@@ -15,6 +17,7 @@ export default class extends Controller {
   disconnect() {
     document.removeEventListener("click", this.handleOutsideClick)
     document.removeEventListener("keydown", this.handleKeydown)
+    this.timeouts.clearAll()
   }
 
   buildOptions() {
@@ -205,9 +208,9 @@ export default class extends Controller {
   }
 
   typeAhead(char, items) {
-    clearTimeout(this.searchTimeout)
+    this.timeouts.clear(this.searchTimeout)
     this.searchString += char.toLowerCase()
-    this.searchTimeout = setTimeout(() => { this.searchString = "" }, 500)
+    this.searchTimeout = this.timeouts.set(() => { this.searchString = "" }, 500)
 
     for (let i = 0; i < items.length; i++) {
       const text = items[i].querySelector("span").textContent.toLowerCase()

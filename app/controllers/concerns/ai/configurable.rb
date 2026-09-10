@@ -5,12 +5,7 @@ module Ai
     private
 
     def configure_ruby_llm!
-      settings = SiteSetting.current
-      RubyLLM.configure do |config|
-        config.anthropic_api_key = settings.claude_api_key
-        config.gemini_api_key = settings.gemini_api_key
-        config.openai_api_key = settings.openai_api_key
-      end
+      ::Ai::Client.configure!
     end
 
     def require_ai_configured

@@ -3,7 +3,8 @@ module PaymentService
     settings = SiteSetting.current
     PaymentService::Stripe.new(
       secret_key: settings.stripe_secret_key,
-      publishable_key: settings.stripe_publishable_key
+      publishable_key: settings.stripe_publishable_key,
+      webhook_secret: settings.stripe_webhook_secret
     )
   end
 
