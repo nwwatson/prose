@@ -381,6 +381,7 @@ es:
         status: "Estado"
         members: "Miembros"
         inactive: "Inactivo"
+        syncing: "Sincronizando…"
         no_tiers: "No hay niveles de membresía"
         get_started: "Crea tu primer nivel para comenzar a aceptar membresías de pago."
       new:

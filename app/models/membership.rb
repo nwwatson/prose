@@ -1,4 +1,6 @@
 class Membership < ApplicationRecord
+  include StripeSyncable
+
   belongs_to :subscriber
   belongs_to :membership_tier
 

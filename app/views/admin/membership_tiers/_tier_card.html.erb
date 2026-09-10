@@ -1,0 +1,19 @@
+<div id="membership_tier_<%= tier.id %>_card">
+  <%= link_to edit_admin_membership_tier_path(tier), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
+    <div class="flex items-center justify-between">
+      <span class="text-sm font-medium text-gray-900"><%= tier.name %></span>
+      <span class="text-sm font-semibold text-gray-900"><%= tier.formatted_price %><%= tier.interval_label %></span>
+    </div>
+    <div class="mt-1 flex items-center gap-2">
+      <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium <%= tier.active? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+        <%= tier.active? ? t('shared.active') : t('admin.membership_tiers.index.inactive') %>
+      </span>
+      <% if PaymentService.configured? && !tier.synced_to_stripe? %>
+        <span class="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
+          <%= t('admin.membership_tiers.index.syncing') %>
+        </span>
+      <% end %>
+      <span class="text-xs text-gray-500"><%= member_count %> <%= t('admin.membership_tiers.index.members') %></span>
+    </div>
+  <% end %>
+</div>

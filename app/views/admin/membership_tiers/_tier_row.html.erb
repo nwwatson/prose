@@ -1,0 +1,21 @@
+<tr id="membership_tier_<%= tier.id %>_row">
+  <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= tier.name %></td>
+  <td class="px-6 py-4 text-sm text-gray-500"><%= tier.formatted_price %></td>
+  <td class="px-6 py-4 text-sm text-gray-500"><%= tier.interval.capitalize %></td>
+  <td class="px-6 py-4 text-sm">
+    <div class="flex items-center gap-2">
+      <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium <%= tier.active? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+        <%= tier.active? ? t('shared.active') : t('admin.membership_tiers.index.inactive') %>
+      </span>
+      <% if PaymentService.configured? && !tier.synced_to_stripe? %>
+        <span class="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
+          <%= t('admin.membership_tiers.index.syncing') %>
+        </span>
+      <% end %>
+    </div>
+  </td>
+  <td class="px-6 py-4 text-sm text-gray-500"><%= member_count %></td>
+  <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+    <%= link_to t('shared.edit'), edit_admin_membership_tier_path(tier), class: "text-gray-600 hover:text-gray-900" %>
+  </td>
+</tr>
