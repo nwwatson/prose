@@ -122,4 +122,16 @@ class SiteSettingTest < ActiveSupport::TestCase
     locales = SiteSetting::Localization::SUPPORTED_LOCALES
     assert_equal({ "en" => "English", "es" => "Español" }, locales)
   end
+
+  test "current memoizes the record on Current within a request context" do
+    first = SiteSetting.current
+    second = SiteSetting.current
+    assert_same first, second
+  end
+
+  test "current reflects updates made after the memoized value was cached" do
+    setting = SiteSetting.current
+    setting.update!(site_name: "Updated Name")
+    assert_equal "Updated Name", SiteSetting.current.site_name
+  end
 end

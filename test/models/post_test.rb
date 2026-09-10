@@ -27,4 +27,15 @@ class PostTest < ActiveSupport::TestCase
     posts = Post.published.by_publication_date
     assert_equal posts(:featured_post), posts.first
   end
+
+  test "with_author preloads user and identity" do
+    post = Post.with_author.find(posts(:published_post).id)
+    assert_query_count(0, table: "identities") { post.user.identity }
+  end
+
+  test "for_listing preloads user, identity, and category" do
+    post = Post.for_listing.find(posts(:published_post).id)
+    assert_query_count(0, table: "identities") { post.user.identity }
+    assert_query_count(0, table: "categories") { post.category }
+  end
 end

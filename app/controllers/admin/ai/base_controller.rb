@@ -3,6 +3,7 @@ module Admin
     class BaseController < Admin::BaseController
       include ::Ai::Configurable
 
+      before_action :configure_ruby_llm!
       before_action :require_ai_configured
       before_action :set_post
 

@@ -7,6 +7,19 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: posts(:featured_post).title
   end
 
+  test "GET index performs at most one site_settings query" do
+    query_count = 0
+    subscriber = ActiveSupport::Notifications.subscribe("sql.active_record") do |_name, _start, _finish, _id, payload|
+      query_count += 1 if payload[:name] == "SiteSetting Load"
+    end
+
+    get root_path
+
+    assert_equal 1, query_count
+  ensure
+    ActiveSupport::Notifications.unsubscribe(subscriber)
+  end
+
   test "GET index shows non-featured posts" do
     get root_path
     assert_response :success
@@ -64,6 +77,12 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     get root_path
     assert_response :success
     assert_select "style", /root\.dark/
+  end
+
+  test "GET index preloads author identities without an N+1 query" do
+    # One preload query for the featured post collection, one for the rest of the
+    # listing — constant regardless of how many posts or distinct authors are shown.
+    assert_query_count(2, table: "identities") { get root_path }
   end
 
   test "GET show comment query count does not grow with comment or reply count" do

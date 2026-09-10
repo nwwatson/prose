@@ -18,7 +18,7 @@
   </head>
 
   <body class="h-full">
-    <% ai_available = SiteSetting.current.ai_configured? && @post&.persisted? %>
+    <% ai_available = site_setting.ai_configured? && @post&.persisted? %>
     <div data-controller="autosave editor-drawer post-preview"
          data-autosave-back-url-value="<%= admin_posts_path %>"
          <% if @post&.persisted? %>

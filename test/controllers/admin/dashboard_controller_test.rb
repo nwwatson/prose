@@ -6,6 +6,14 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_admin_session_path
   end
 
+  test "does not run configure_ruby_llm! before non-AI admin actions" do
+    before_action_names = Admin::DashboardController._process_action_callbacks
+      .select { |callback| callback.kind == :before }
+      .map(&:filter)
+
+    assert_not_includes before_action_names, :configure_ruby_llm!
+  end
+
   test "GET show renders for signed in user" do
     sign_in_as(:admin)
     get admin_root_path

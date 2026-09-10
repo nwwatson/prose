@@ -76,4 +76,15 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match(/\d+ posts? published/, response.body)
   end
+
+  test "GET index displays grouped post counts per author" do
+    get authors_path
+    assert_response :success
+    admin_post_count = Post.live.where(user: users(:admin)).count
+    assert_includes response.body, "#{admin_post_count} posts"
+  end
+
+  test "GET index computes post counts with a single grouped query" do
+    assert_query_count(1, table: "posts") { get authors_path }
+  end
 end
