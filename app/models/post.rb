@@ -27,6 +27,10 @@ class Post < ApplicationRecord
     slug
   end
 
+  def threaded_comments
+    comments.approved.top_level.includes(:identity, approved_replies: :identity)
+  end
+
   def seo_description
     meta_description.presence || subtitle.presence || content&.to_plain_text&.truncate(155)
   end

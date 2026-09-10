@@ -6,6 +6,7 @@ class Comment < ApplicationRecord
   belongs_to :identity
   belongs_to :parent_comment, class_name: "Comment", optional: true
   has_many :replies, class_name: "Comment", foreign_key: :parent_comment_id, dependent: :destroy
+  has_many :approved_replies, -> { approved.order(:created_at) }, class_name: "Comment", foreign_key: :parent_comment_id
 
   validates :body, presence: true, length: { maximum: 5000 }
   validate :max_one_level_nesting

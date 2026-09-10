@@ -1,3 +1,4 @@
+<% post = local_assigns[:post] || comment.post %>
 <div id="comment_<%= comment.id %>" class="comment<%= ' comment--reply' if comment.parent_comment_id? %>">
   <% if comment.deleted? %>
     <p class="comment__deleted-text"><%= t('comments.deleted') %></p>
@@ -22,14 +23,14 @@
           </button>
         <% end %>
         <%= button_to t('shared.delete'),
-              post_comment_path(comment.post, comment, slug: comment.post.slug),
+              post_comment_path(post, comment, slug: post.slug),
               method: :delete,
               data: { turbo_confirm: t('comments.delete_confirm') },
               class: "comment__action-btn--delete" %>
       </div>
     <% end %>
     <div id="edit_comment_<%= comment.id %>" class="comment__edit-area">
-      <%= render "comments/edit_form", post: comment.post, comment: comment %>
+      <%= render "comments/edit_form", post: post, comment: comment %>
     </div>
   <% end %>
 </div>

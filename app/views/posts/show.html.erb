@@ -76,10 +76,10 @@
       <h3 class="post-detail__comments-heading"><%= t('posts.show.comments') %></h3>
 
       <div id="comments" class="post-detail__comments-list">
-        <% @post.comments.approved.top_level.includes(:identity, replies: :identity).each do |comment| %>
-          <%= render "comments/comment", comment: comment %>
-          <% comment.replies.approved.each do |reply| %>
-            <%= render "comments/comment", comment: reply %>
+        <% @comments.each do |comment| %>
+          <%= render "comments/comment", comment: comment, post: @post %>
+          <% comment.approved_replies.each do |reply| %>
+            <%= render "comments/comment", comment: reply, post: @post %>
           <% end %>
         <% end %>
       </div>

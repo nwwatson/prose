@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
 
     if @comment.save
       respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.append("comments", partial: "comments/comment", locals: { comment: @comment }) }
+        format.turbo_stream { render turbo_stream: turbo_stream.append("comments", partial: "comments/comment", locals: { comment: @comment, post: @post }) }
         format.html { redirect_to post_path(@post, slug: @post.slug, anchor: "comment_#{@comment.id}") }
       end
     else
@@ -25,7 +25,7 @@ class CommentsController < ApplicationController
   def update
     if @comment.update(body: comment_params[:body], edited_at: Time.current)
       respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_#{@comment.id}", partial: "comments/comment", locals: { comment: @comment }) }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_#{@comment.id}", partial: "comments/comment", locals: { comment: @comment, post: @post }) }
         format.html { redirect_to post_path(@post, slug: @post.slug, anchor: "comment_#{@comment.id}") }
       end
     else
@@ -40,7 +40,7 @@ class CommentsController < ApplicationController
     @comment.soft_delete!
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_#{@comment.id}", partial: "comments/comment", locals: { comment: @comment }) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_#{@comment.id}", partial: "comments/comment", locals: { comment: @comment, post: @post }) }
       format.html { redirect_to post_path(@post, slug: @post.slug), notice: t("flash.comments.deleted") }
     end
   end
