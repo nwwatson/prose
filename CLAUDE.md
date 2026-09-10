@@ -66,10 +66,10 @@ app/models/user/passkey_authenticatable.rb # module User::PasskeyAuthenticatable
 app/models/post/discoverable.rb      # module Post::Discoverable (related posts, prev/next)
 app/models/post/versionable.rb      # module Post::Versionable (revision history, version cooldown)
 app/models/post_version.rb          # PostVersion: full snapshot of post content per version
+app/models/concerns/sluggable.rb     # module Sluggable (slugged_from macro: slug generation/uniquifying, used by Post, Page, Category, Tag)
 app/models/comment/editable.rb        # module Comment::Editable (15-min edit window, soft delete)
 app/models/comment/notifiable.rb      # module Comment::Notifiable (reply notification callbacks)
 app/models/page.rb                    # class Page (custom static pages)
-app/models/page/sluggable.rb         # module Page::Sluggable (auto-generated URL slugs)
 app/models/page/publishable.rb       # module Page::Publishable (live scope, publish/draft)
 app/models/page/navigable.rb         # module Page::Navigable (navigation menu scope)
 app/models/site_setting/localization.rb  # module SiteSetting::Localization (i18n)
