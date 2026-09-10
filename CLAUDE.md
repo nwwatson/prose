@@ -66,10 +66,10 @@ app/models/user/passkey_authenticatable.rb # module User::PasskeyAuthenticatable
 app/models/post/discoverable.rb      # module Post::Discoverable (related posts, prev/next)
 app/models/post/versionable.rb      # module Post::Versionable (revision history, version cooldown)
 app/models/post_version.rb          # PostVersion: full snapshot of post content per version
+app/models/concerns/sluggable.rb     # module Sluggable (slugged_from macro: slug generation/uniquifying, used by Post, Page, Category, Tag)
 app/models/comment/editable.rb        # module Comment::Editable (15-min edit window, soft delete)
 app/models/comment/notifiable.rb      # module Comment::Notifiable (reply notification callbacks)
 app/models/page.rb                    # class Page (custom static pages)
-app/models/page/sluggable.rb         # module Page::Sluggable (auto-generated URL slugs)
 app/models/page/navigable.rb         # module Page::Navigable (navigation menu scope)
 app/models/concerns/publishable.rb   # module Publishable — shared `publishes_at` macro (live scope, publish!/schedule!/revert_to_draft!), included by Post, Page, Newsletter
 app/validators/future_validator.rb   # FutureValidator: shared "must be in the future" validation used by Publishable
@@ -185,7 +185,7 @@ app/services/mcp/
 **Admin UI**: `Admin::ApiTokensController` with token CRUD at `/admin/api_tokens`. Admins see all tokens; writers see only their own. Raw token shown once via flash on creation.
 
 ### Authentication
-- **Admin**: session-based (signed cookie, 14-day expiry)
+- **Admin**: session-based (signed cookie, 14-day expiry). The `Authentication` concern owns cookie → `Session` resumption (`resume_session`, memoized via a `Current.session` short-circuit) and is included once on `ApplicationController`, so both admin (`current_user`) and identity (`IdentityAuthentication#current_identity`) lookups share a single `sessions` query per request.
 - **Admin Passkeys**: optional WebAuthn/passkey sign-in alongside password. Configured via `WEBAUTHN_ORIGIN` and `WEBAUTHN_RP_ID` env vars. Managed at `/admin/passkeys`.
 - **Subscribers**: passwordless magic-link (15-minute token expiry)
 - **MCP/API**: Bearer token (`prose_`-prefixed, SHA256 digest stored)

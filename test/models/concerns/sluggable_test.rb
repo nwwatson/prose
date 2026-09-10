@@ -1,7 +1,7 @@
 require "test_helper"
 
-class Post::SluggableTest < ActiveSupport::TestCase
-  test "generates slug from title" do
+class SluggableTest < ActiveSupport::TestCase
+  test "generates slug from source attribute" do
     post = Post.new(title: "My Great Post", user: users(:admin))
     post.valid?
     assert_equal "my-great-post", post.slug
@@ -13,11 +13,20 @@ class Post::SluggableTest < ActiveSupport::TestCase
     assert_equal "custom-slug", post.slug
   end
 
-  test "generates unique slug when duplicate exists" do
+  test "uniquify appends a numeric suffix when the slug is taken" do
     Post.create!(title: "Duplicate Title", user: users(:admin))
     post = Post.new(title: "Duplicate Title", user: users(:admin))
     post.valid?
     assert_equal "duplicate-title-1", post.slug
+  end
+
+  test "uniquify: false does not disambiguate duplicate slugs" do
+    Category.create!(name: "Existing Category", slug: "shared-slug")
+    category = Category.new(name: "Shared Slug")
+    category.valid?
+    assert_equal "shared-slug", category.slug
+    assert_not category.valid?
+    assert_includes category.errors[:slug], "has already been taken"
   end
 
   test "validates slug format" do

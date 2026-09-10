@@ -3,6 +3,7 @@ module Authentication
 
   included do
     helper_method :current_user, :signed_in?
+    before_action :resume_session
   end
 
   private
@@ -20,6 +21,8 @@ module Authentication
   end
 
   def resume_session
+    return Current.user if Current.session
+
     session_record = find_session_from_cookie
     return false unless session_record
 

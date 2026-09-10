@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include Authentication
   include SubscriberAuthentication
   include IdentityAuthentication
   include MembershipAccess

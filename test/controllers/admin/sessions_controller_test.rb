@@ -37,4 +37,24 @@ class Admin::SessionsControllerTest < ActionDispatch::IntegrationTest
     get new_admin_session_path
     assert_redirected_to admin_root_path
   end
+
+  test "admin request resumes the session with a single sessions query" do
+    sign_in_as(:admin)
+
+    assert_query_count(1, table: "sessions") do
+      get admin_root_path
+    end
+    assert_response :success
+  end
+
+  test "expired session cookie is cleared and admin routes redirect to sign-in" do
+    sign_in_as(:admin)
+    Session.last.update!(expires_at: 1.day.ago)
+
+    get admin_root_path
+    assert_redirected_to new_admin_session_path
+
+    get admin_root_path
+    assert_redirected_to new_admin_session_path
+  end
 end

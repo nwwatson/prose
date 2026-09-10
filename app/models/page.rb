@@ -12,6 +12,8 @@ class Page < ApplicationRecord
   validates :title, presence: true
   validates :meta_description, length: { maximum: 160 }, allow_blank: true
 
+  slugged_from :title, message: "must be URL-safe (lowercase letters, numbers, hyphens)"
+
   RESERVED_SLUGS = %w[
     admin posts authors categories tags subscriptions feed sitemap robots up mcp
     subscriber_session handle handle_availability unsubscribe webhooks
