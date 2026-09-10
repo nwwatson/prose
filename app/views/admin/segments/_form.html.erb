@@ -1,28 +1,20 @@
 <%# locals: (segment:, labels:) %>
 
 <%= form_with model: [ :admin, segment ], class: "space-y-6", data: { controller: "segment-builder", segment_builder_count_url_value: segment.persisted? ? count_admin_segment_path(segment) : "" } do |f| %>
-  <% if segment.errors.any? %>
-    <div class="rounded-md bg-red-50 p-4">
-      <ul class="list-disc pl-5 text-sm text-red-700">
-        <% segment.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render "admin/shared/form_errors", record: segment, wrapper_class: "" %>
 
   <div class="max-w-2xl space-y-6">
     <div>
       <%= f.label :name, class: "block text-sm font-medium text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :name, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+        <%= f.text_field :name, class: admin_input_classes %>
       </div>
     </div>
 
     <div>
       <%= f.label :description, class: "block text-sm font-medium text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_area :description, rows: 2, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+        <%= f.text_area :description, rows: 2, class: admin_input_classes %>
       </div>
     </div>
 
@@ -67,7 +59,7 @@
         <div class="mt-2">
           <input type="date" name="segment[subscribed_after]" value="<%= criteria[:subscribed_after] %>"
                  data-action="change->segment-builder#refresh"
-                 class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm">
+                 class="<%= admin_input_classes %>">
         </div>
       </div>
       <div>
@@ -75,7 +67,7 @@
         <div class="mt-2">
           <input type="date" name="segment[subscribed_before]" value="<%= criteria[:subscribed_before] %>"
                  data-action="change->segment-builder#refresh"
-                 class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm">
+                 class="<%= admin_input_classes %>">
         </div>
       </div>
     </div>
@@ -85,7 +77,7 @@
       <label class="block text-sm font-medium text-gray-900"><%= t('admin.segments.form.engagement') %></label>
       <div class="mt-2">
         <select name="segment[engagement]" data-action="change->segment-builder#refresh"
-                class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm">
+                class="<%= admin_input_classes %>">
           <option value=""><%= t('admin.segments.form.any_engagement') %></option>
           <option value="active" <%= "selected" if criteria[:engagement] == "active" %>><%= t('admin.segments.form.active') %></option>
           <option value="inactive" <%= "selected" if criteria[:engagement] == "inactive" %>><%= t('admin.segments.form.inactive') %></option>
@@ -104,8 +96,8 @@
     <% end %>
 
     <div class="flex justify-end space-x-3">
-      <%= link_to t('shared.cancel'), admin_segments_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
-      <%= f.submit class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
+      <%= link_to t('shared.cancel'), admin_segments_path, class: admin_button_classes(variant: :outline) %>
+      <%= f.submit class: "#{admin_button_classes(variant: :primary)} cursor-pointer" %>
     </div>
   </div>
 <% end %>

@@ -5,16 +5,7 @@
   <p class="mt-1 text-sm text-gray-600">Configure email branding and delivery for your newsletters.</p>
 
   <%= form_with model: @site_setting, url: admin_newsletter_settings_path, class: "mt-8 space-y-6" do |f| %>
-    <% if @site_setting.errors.any? %>
-      <div class="rounded-md bg-red-50 p-4">
-        <h3 class="text-sm font-medium text-red-800"><%= pluralize(@site_setting.errors.count, "error") %> prevented settings from being saved:</h3>
-        <ul class="mt-2 list-disc pl-5 text-sm text-red-700">
-          <% @site_setting.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+    <%= render "admin/shared/form_errors", record: @site_setting, heading: "#{pluralize(@site_setting.errors.count, "error")} prevented settings from being saved:", wrapper_class: "" %>
 
     <%# Email Branding %>
     <% fonts_json = SiteSetting::EmailBranding::EMAIL_FONT_FAMILIES.transform_values { |v| v[:stack] }.to_json %>
@@ -102,7 +93,7 @@
             <div class="mt-2">
               <%= f.text_field :email_preheader_text, placeholder: "Preview text shown in inbox...", maxlength: 150,
                     data: { email_branding_preview_target: "preheader", action: "input->email-branding-preview#update" },
-                    class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                    class: admin_input_classes %>
             </div>
             <p class="mt-1 text-xs text-gray-500">Short text shown in email clients before opening the message.</p>
           </div>
@@ -113,7 +104,7 @@
             <div class="mt-2">
               <%= f.text_area :email_footer_text, rows: 2, placeholder: "e.g. 123 Main St, City, State 12345",
                     data: { email_branding_preview_target: "footer", action: "input->email-branding-preview#update" },
-                    class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                    class: admin_input_classes %>
             </div>
             <p class="mt-1 text-xs text-gray-500">Appears in the footer of all newsletter emails.</p>
           </div>
@@ -129,7 +120,7 @@
                 <div class="mt-1">
                   <%= f.url_field :email_social_twitter, placeholder: "https://x.com/yourhandle",
                         data: { email_branding_preview_target: "socialTwitter", action: "input->email-branding-preview#update" },
-                        class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                        class: admin_input_classes %>
                 </div>
               </div>
 
@@ -138,7 +129,7 @@
                 <div class="mt-1">
                   <%= f.url_field :email_social_github, placeholder: "https://github.com/yourhandle",
                         data: { email_branding_preview_target: "socialGithub", action: "input->email-branding-preview#update" },
-                        class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                        class: admin_input_classes %>
                 </div>
               </div>
 
@@ -147,7 +138,7 @@
                 <div class="mt-1">
                   <%= f.url_field :email_social_linkedin, placeholder: "https://linkedin.com/in/yourprofile",
                         data: { email_branding_preview_target: "socialLinkedin", action: "input->email-branding-preview#update" },
-                        class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                        class: admin_input_classes %>
                 </div>
               </div>
 
@@ -156,7 +147,7 @@
                 <div class="mt-1">
                   <%= f.url_field :email_social_website, placeholder: "https://yoursite.com",
                         data: { email_branding_preview_target: "socialWebsite", action: "input->email-branding-preview#update" },
-                        class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                        class: admin_input_classes %>
                 </div>
               </div>
             </div>
@@ -238,7 +229,7 @@
                   value: @site_setting.masked_value_for(:sendgrid_api_key),
                   placeholder: "SG...",
                   autocomplete: "off",
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                  class: admin_input_classes %>
           </div>
           <p class="mt-1 text-xs text-gray-500">Required when using SendGrid. Get your API key from <strong>Settings &rarr; API Keys</strong> in your SendGrid dashboard.</p>
         </div>
@@ -253,7 +244,7 @@
     </fieldset>
 
     <div class="flex justify-end border-t border-gray-200 pt-6">
-      <%= f.submit "Save settings", class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
+      <%= f.submit "Save settings", class: "#{admin_button_classes(variant: :primary)} cursor-pointer" %>
     </div>
   <% end %>
 </div>

@@ -25,36 +25,13 @@
 
   <%# Stats cards %>
   <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-      <div class="p-5">
-        <div class="text-sm font-medium text-gray-500 truncate">Recipients</div>
-        <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @analytics.deliveries_count %></div>
-      </div>
-    </div>
+    <%= render "admin/shared/stat_card", label: "Recipients", value: @analytics.deliveries_count %>
 
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-      <div class="p-5">
-        <div class="text-sm font-medium text-gray-500 truncate">Opens</div>
-        <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @analytics.opens_count %></div>
-        <div class="text-sm text-gray-500"><%= @analytics.open_rate %>%</div>
-      </div>
-    </div>
+    <%= render "admin/shared/stat_card", label: "Opens", value: @analytics.opens_count, note: "#{@analytics.open_rate}%" %>
 
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-      <div class="p-5">
-        <div class="text-sm font-medium text-gray-500 truncate">Clicks</div>
-        <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @analytics.clicks_count %></div>
-        <div class="text-sm text-gray-500"><%= @analytics.click_rate %>%</div>
-      </div>
-    </div>
+    <%= render "admin/shared/stat_card", label: "Clicks", value: @analytics.clicks_count, note: "#{@analytics.click_rate}%" %>
 
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-      <div class="p-5">
-        <div class="text-sm font-medium text-gray-500 truncate">Bounces</div>
-        <div class="mt-1 text-3xl font-semibold text-gray-900"><%= @analytics.bounces_count %></div>
-        <div class="text-sm text-gray-500"><%= @analytics.bounce_rate %>%</div>
-      </div>
-    </div>
+    <%= render "admin/shared/stat_card", label: "Bounces", value: @analytics.bounces_count, note: "#{@analytics.bounce_rate}%" %>
   </div>
 
   <%# Body preview %>

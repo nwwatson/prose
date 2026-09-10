@@ -1,15 +1,6 @@
 <%= form_with model: [:admin, newsletter], id: "newsletter_form",
     data: { action: "input->autosave#scheduleAutosave change->autosave#handleChange lexxy:change->autosave#scheduleAutosave submit->autosave#preventSubmit" } do |f| %>
-  <% if newsletter.errors.any? %>
-    <div class="mb-6 rounded-md bg-red-50 p-4">
-      <h3 class="text-sm font-medium text-red-800"><%= t('admin.newsletters.form.errors_prevented_html', count: pluralize(newsletter.errors.count, "error")) %></h3>
-      <ul class="mt-2 list-disc pl-5 text-sm text-red-700">
-        <% newsletter.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render "admin/shared/form_errors", record: newsletter, heading: t('admin.newsletters.form.errors_prevented_html', count: pluralize(newsletter.errors.count, "error")) %>
 
   <div class="space-y-4">
     <%= f.text_area :title, rows: 1,

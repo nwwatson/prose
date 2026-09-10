@@ -1,10 +1,8 @@
 <% content_for(:title, "Categories — #{site_name}") %>
 
 <div class="space-y-6">
-  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-    <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.categories.index.title') %></h1>
-    <%= link_to t('admin.categories.index.new_category'), new_admin_category_path, class: "self-start rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700" %>
-  </div>
+  <%= render "admin/shared/page_header", title: t('admin.categories.index.title'),
+        action: link_to(t('admin.categories.index.new_category'), new_admin_category_path, class: admin_button_classes(variant: :primary, extra: "self-start")) %>
 
   <% if @categories.any? %>
     <%# Mobile card layout %>
@@ -50,7 +48,7 @@
       <h3 class="text-sm font-semibold text-gray-900"><%= t('admin.categories.index.no_categories') %></h3>
       <p class="mt-1 text-sm text-gray-500"><%= t('admin.categories.index.get_started') %></p>
       <div class="mt-6">
-        <%= link_to t('admin.categories.index.new_category'), new_admin_category_path, class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700" %>
+        <%= link_to t('admin.categories.index.new_category'), new_admin_category_path, class: admin_button_classes(variant: :primary) %>
       </div>
     </div>
   <% end %>
