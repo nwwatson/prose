@@ -38,7 +38,9 @@
 <div class="mt-8 bg-white shadow rounded-lg p-4 sm:p-6"
      data-controller="growth-chart"
      data-growth-chart-monthly-value="<%= @monthly_data.to_json %>"
-     data-growth-chart-cumulative-value="<%= @cumulative_data.to_json %>">
+     data-growth-chart-cumulative-value="<%= @cumulative_data.to_json %>"
+     data-growth-chart-active-class="bg-blue-600 text-white hover:bg-blue-700"
+     data-growth-chart-inactive-class="bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
 
   <div class="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">
     <h2 class="text-lg font-medium text-gray-900"><%= t('admin.growth.show.subscriber_growth') %></h2>

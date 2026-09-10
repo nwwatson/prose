@@ -129,6 +129,9 @@ Frontend component styles use BEM (Block Element Modifier) methodology in `app/a
 ### Key Stimulus Controllers
 `autosave`, `editor_drawer`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`, `markdown_preview`, `traffic_chart`, `segment_builder`, `comment_edit`
 
+### SVG Chart Rendering
+`app/javascript/lib/svg_chart.js` is the shared renderer for all hand-rolled SVG charts (no external charting library) — `svgEl(name, attrs, text)` builds namespaced SVG elements, `renderBarChart(container, entries, opts)` draws gridlines/bars/x-labels for `growth_chart` and `traffic_chart` (which differ only in `minBarWidth`, `labelInterval`, and label formatter — `formatMonthLabel`/`formatDayLabel`), and `renderSparkline(container, values, opts)` draws the dashboard's line+area sparkline (`chart_controller`). All three controllers render into a persistent container element via `container.replaceChildren(...)`, so redrawing (e.g. on data change) doesn't destroy the target. The growth chart's Monthly/Cumulative toggle uses Stimulus `static classes` (`data-growth-chart-active-class` / `-inactive-class`) with `classList.add/remove` rather than string replacement on `className`.
+
 ### Author Profiles
 Profile data (bio, avatar, social links) lives on the `Identity` model via `Identity::Profileable` concern. Public author pages at `/authors` (index) and `/authors/:handle` (show) are served by `AuthorsController`. Admin profile editing at `/admin/profile` via `Admin::ProfilesController`. Author names on posts link to their profile pages. Bios support markdown via `MarkdownRenderer`.
 
