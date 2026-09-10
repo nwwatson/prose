@@ -197,7 +197,7 @@ Comments belong to `Identity` (not `Subscriber`), allowing both admins and subsc
 - **Reply Notifications**: Opt-in via `notify_on_reply` checkbox. `Comment::Notifiable` fires `CommentReplyNotificationJob` on reply creation. `CommentMailer#reply_notification` sends email with token-based unsubscribe (`CommentNotificationsController`).
 
 ### Social Embeds
-`XPost` and `YouTubeVideo` models with oEmbed fetching, embedded in rich text via ActionText.
+`XPost` and `YouTubeVideo` models with oEmbed fetching, embedded in rich text via ActionText. `paste_embed_controller.js` is the single Stimulus controller mounted on the post editor's writing area — it holds a module-level `PROVIDERS` table (regex pattern per provider) and a `data-paste-embed-urls-value` JSON object (`{ xPost:, youtube: }`, built from the admin routes in `_form.html.erb`) mapping each provider to its create endpoint; on paste it tests the clipboard text against each pattern, posts to the matching URL via `requestJSON`, and inserts the returned attachment via `lib/action_text.js#insertAttachment(editor, { sgid, html })`. `lib/twitter_widgets.js#loadTwitterWidgets()` memoizes the `widgets.js` script tag/load so `x_post_widget_controller.js` — mounted once per tweet by `x_posts/_x_post.html.erb` — never appends a duplicate script tag for a post with multiple embedded tweets; the redundant wrapper-level mount on `posts/show`/`admin/posts/_preview` was removed since the per-tweet mount is sufficient.
 
 ### MCP Server (Model Context Protocol)
 Prose exposes an MCP endpoint at `POST /mcp` for AI assistants to manage blog content. See `docs/mcp_setup.md` for the full client setup guide.

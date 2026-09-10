@@ -43,13 +43,13 @@
         <%= render "posts/table_of_contents", headings: toc.headings %>
 
         <div class="post-detail__content prose prose-lg dark:prose-invert prose-headings:font-display prose-a:text-ink-blue prose-a:no-underline hover:prose-a:underline"
-             data-controller="x-post-widget code-highlight">
+             data-controller="code-highlight">
           <%= sanitize toc.content_with_anchors, tags: ActionText::ContentHelper.allowed_tags + %w[id], attributes: ActionText::ContentHelper.allowed_attributes + %w[id] %>
         </div>
       </div>
     <% else %>
       <div class="post-detail__content prose prose-lg dark:prose-invert prose-headings:font-display prose-a:text-ink-blue prose-a:no-underline hover:prose-a:underline"
-           data-controller="x-post-widget code-highlight">
+           data-controller="code-highlight">
         <%= @post.content %>
       </div>
     <% end %>
