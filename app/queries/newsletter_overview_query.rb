@@ -1,4 +1,6 @@
 class NewsletterOverviewQuery
+  include TimeBucketing
+
   def total_sent(since: nil)
     scope = Newsletter.sent
     scope = scope.where("sent_at >= ?", since) if since
@@ -18,8 +20,7 @@ class NewsletterOverviewQuery
     total = scope.count("newsletter_deliveries.id")
     opened = scope.where.not(newsletter_deliveries: { opened_at: nil }).count("newsletter_deliveries.id")
 
-    return 0.0 if total.zero?
-    (opened.to_f / total * 100).round(1)
+    percentage(opened, total)
   end
 
   def recent_newsletters(limit: 5)

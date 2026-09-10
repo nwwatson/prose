@@ -1,4 +1,6 @@
 class MembershipGrowthQuery
+  include TimeBucketing
+
   def initialize(relation = Membership.all)
     @relation = relation
   end
@@ -16,16 +18,8 @@ class MembershipGrowthQuery
   end
 
   def growth_by_month(since: 12.months.ago)
-    new_by_month = @relation
-      .where("created_at >= ?", since)
-      .group("strftime('%Y-%m', created_at)")
-      .count
-
-    canceled_by_month = @relation
-      .where(status: :canceled)
-      .where("canceled_at >= ?", since)
-      .group("strftime('%Y-%m', canceled_at)")
-      .count
+    new_by_month = by_month(@relation.where("created_at >= ?", since), :created_at)
+    canceled_by_month = by_month(@relation.where(status: :canceled).where("canceled_at >= ?", since), :canceled_at)
 
     months = new_by_month.keys | canceled_by_month.keys
     months.sort.map do |month|

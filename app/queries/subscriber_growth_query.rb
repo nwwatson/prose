@@ -1,4 +1,6 @@
 class SubscriberGrowthQuery
+  include TimeBucketing
+
   def initialize(relation = Subscriber.confirmed)
     @relation = relation
   end
@@ -8,11 +10,7 @@ class SubscriberGrowthQuery
   end
 
   def growth_by_day(since: 30.days.ago)
-    @relation
-      .where("confirmed_at >= ?", since)
-      .group("DATE(confirmed_at)")
-      .order("DATE(confirmed_at)")
-      .count
+    by_day(@relation.where("confirmed_at >= ?", since), :confirmed_at)
   end
 
   def new_subscribers(since: 30.days.ago)
@@ -20,11 +18,7 @@ class SubscriberGrowthQuery
   end
 
   def growth_by_month(since:)
-    @relation
-      .where("confirmed_at >= ?", since)
-      .group(Arel.sql("strftime('%Y-%m', confirmed_at)"))
-      .order(Arel.sql("strftime('%Y-%m', confirmed_at)"))
-      .count
+    by_month(@relation.where("confirmed_at >= ?", since), :confirmed_at)
   end
 
   def cumulative_by_month(since:)
@@ -54,33 +48,7 @@ class SubscriberGrowthQuery
   end
 
   def trend_comparison(period:)
-    case period
-    when :week
-      current_start = 7.days.ago
-      previous_start = 14.days.ago
-      previous_end = 7.days.ago
-    when :month
-      current_start = 30.days.ago
-      previous_start = 60.days.ago
-      previous_end = 30.days.ago
-    else
-      raise ArgumentError, "period must be :week or :month"
-    end
-
-    current_count = @relation.where(confirmed_at: current_start..).count
-    previous_count = @relation.where(confirmed_at: previous_start..previous_end).count
-
-    percentage_change = if previous_count.zero?
-      current_count.zero? ? 0.0 : 100.0
-    else
-      ((current_count - previous_count).to_f / previous_count * 100).round(1)
-    end
-
-    {
-      current: current_count,
-      previous: previous_count,
-      change: percentage_change
-    }
+    super(@relation, :confirmed_at, period: period)
   end
 
   def acquisition_channels
