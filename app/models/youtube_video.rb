@@ -1,41 +1,8 @@
 class YouTubeVideo < ApplicationRecord
-  include ActionText::Attachable
+  include OembedAttachable
 
   validates :url, presence: true, uniqueness: true
   validates :video_id, presence: true
-
-  def to_attachable_partial_path
-    "youtube_videos/youtube_video"
-  end
-
-  def to_trix_content_attachment_partial_path
-    "youtube_videos/youtube_video"
-  end
-
-  def self.find_or_create_from_url(url)
-    normalized = normalize_url(url)
-    vid = extract_video_id(normalized)
-    return nil unless vid
-
-    find_or_create_by(url: normalized) do |video|
-      video.video_id = vid
-      video.fetch_oembed!
-    end
-  end
-
-  def fetch_oembed!
-    uri = URI("https://www.youtube.com/oembed?url=#{CGI.escape(url)}&format=json")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.cert_store = OpenSSL::X509::Store.new.tap { |s| s.set_default_paths; s.flags = 0 }
-    response = http.get(uri.request_uri)
-    data = JSON.parse(response.body)
-    self.title = data["title"]
-    self.author_name = data["author_name"]
-    self.thumbnail_url = data["thumbnail_url"]
-  rescue StandardError => e
-    Rails.logger.warn("YouTubeVideo oEmbed fetch failed for #{url}: #{e.message}")
-  end
 
   def self.normalize_url(url)
     url = url.strip
@@ -44,6 +11,10 @@ class YouTubeVideo < ApplicationRecord
     vid ? "https://www.youtube.com/watch?v=#{vid}" : url
   rescue URI::InvalidURIError
     url
+  end
+
+  def self.valid_oembed_url?(url)
+    extract_video_id(url).present?
   end
 
   def self.extract_video_id(url)
@@ -70,4 +41,20 @@ class YouTubeVideo < ApplicationRecord
   end
 
   private_class_method :extract_video_id_from_uri
+
+  def oembed_endpoint
+    "https://www.youtube.com/oembed?url=#{CGI.escape(url)}&format=json"
+  end
+
+  def apply_oembed(data)
+    self.title = data["title"]
+    self.author_name = data["author_name"]
+    self.thumbnail_url = data["thumbnail_url"]
+  end
+
+  private
+
+  def assign_oembed_url_attributes
+    self.video_id = self.class.extract_video_id(url)
+  end
 end
