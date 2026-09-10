@@ -25,6 +25,13 @@ module ActiveSupport
         config.openai_api_key = "test-key"
       end
     end
+
+    # I18n.locale is a global set per-request by ApplicationController; reset it so a
+    # test that renders in a non-default locale can't leak into unrelated tests sharing
+    # the same parallel worker (e.g. mailer tests, which don't go through a controller).
+    teardown do
+      I18n.locale = I18n.default_locale
+    end
   end
 end
 
