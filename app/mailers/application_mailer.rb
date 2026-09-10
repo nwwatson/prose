@@ -1,19 +1,24 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: ENV.fetch("SMTP_FROM", "noreply@example.com")
+  default from: EmailService.from_address
   layout "mailer"
 
   private
 
   def load_email_branding
-    site = SiteSetting.current
-    @site_name = site.site_name
-    @email_accent_color = site.email_accent_color.presence || "#18181b"
-    @email_background_color = site.email_background_color.presence || "#f4f4f5"
-    @email_body_text_color = site.email_body_text_color.presence || "#3f3f46"
-    @email_heading_color = site.email_heading_color.presence || "#18181b"
-    @email_font_family = site.email_font_stack
-    @email_footer_text = site.email_footer_text.presence
-    @email_logo_url = site.email_header_logo_url
+    @email_settings = SiteSetting.current.email_branding
+    @site_name = @email_settings[:site_name]
+    @email_accent_color = @email_settings[:accent_color]
+    @email_background_color = @email_settings[:background_color]
+    @email_body_text_color = @email_settings[:body_text_color]
+    @email_heading_color = @email_settings[:heading_color]
+    @email_font_family = @email_settings[:font_family]
+    @email_footer_text = @email_settings[:footer_text]
+    @email_logo_url = @email_settings[:logo_url]
+  end
+
+  def set_list_unsubscribe_headers(url)
+    headers["List-Unsubscribe"] = "<#{url}>"
+    headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click"
   end
 
   def generate_unsubscribe_url(subscriber)

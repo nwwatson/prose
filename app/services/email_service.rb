@@ -13,4 +13,8 @@ module EmailService
   def self.configured?
     SiteSetting.current.email_configured?
   end
+
+  def self.from_address
+    ENV.fetch("SMTP_FROM", "noreply@example.com")
+  end
 end

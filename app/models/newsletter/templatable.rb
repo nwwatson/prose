@@ -21,21 +21,14 @@ module Newsletter::Templatable
 
   def email_settings
     site = SiteSetting.current
-    {
+    site.email_branding.merge(
       template: resolved_template(site),
       accent_color: resolved_accent_color(site),
       preheader_text: resolved_preheader_text(site),
-      background_color: site.email_background_color.presence || "#f4f4f5",
-      body_text_color: site.email_body_text_color.presence || "#3f3f46",
-      heading_color: site.email_heading_color.presence || "#18181b",
-      font_family: site.email_font_stack,
-      footer_text: site.email_footer_text.presence || "",
-      site_name: site.site_name,
-      logo_url: site.email_header_logo_url,
       social_twitter: site.email_social_twitter.presence,
       social_github: site.email_social_github.presence,
       social_linkedin: site.email_social_linkedin.presence,
       social_website: site.email_social_website.presence
-    }
+    )
   end
 end

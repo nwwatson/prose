@@ -30,6 +30,15 @@ class PostNotificationMailerTest < ActionMailer::TestCase
     assert_includes mail.body.encoded, "unsubscribe"
     assert mail["List-Unsubscribe"].present?, "List-Unsubscribe header should be set"
     assert_includes mail["List-Unsubscribe"].value, "unsubscribe"
+    assert_equal "List-Unsubscribe=One-Click", mail["List-Unsubscribe-Post"].value
+  end
+
+  test "new_post email text part includes unsubscribe link" do
+    subscriber = subscribers(:confirmed)
+    post = posts(:published_post)
+    mail = PostNotificationMailer.new_post(subscriber, post)
+
+    assert_match %r{/unsubscribe\?token=}, mail.text_part.body.to_s
   end
 
   test "new_post email uses custom background and font" do

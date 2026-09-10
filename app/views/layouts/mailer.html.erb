@@ -14,19 +14,19 @@
     <![endif]-->
   </head>
 
-  <body style="margin: 0; padding: 0; background-color: <%= @email_background_color || '#f4f4f5' %>; font-family: <%= @email_font_family || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" %>;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: <%= @email_background_color || '#f4f4f5' %>;">
+  <body style="margin: 0; padding: 0; background-color: <%= @email_settings[:background_color] %>; font-family: <%= @email_settings[:font_family] %>;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: <%= @email_settings[:background_color] %>;">
       <tr>
         <td align="center" style="padding: 24px 16px;">
           <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%;">
             <%# Header %>
             <tr>
               <td align="center" style="padding: 24px 0 16px;">
-                <% if @email_logo_url.present? %>
-                  <img src="<%= @email_logo_url %>" alt="<%= @site_name %>" style="max-height: 48px; max-width: 200px; display: block;">
+                <% if @email_settings[:logo_url].present? %>
+                  <img src="<%= @email_settings[:logo_url] %>" alt="<%= @email_settings[:site_name] %>" style="max-height: 48px; max-width: 200px; display: block;">
                 <% else %>
-                  <span style="font-size: 20px; font-weight: 700; color: <%= @email_heading_color || '#18181b' %>; text-decoration: none;">
-                    <%= @site_name || site_setting.site_name %>
+                  <span style="font-size: 20px; font-weight: 700; color: <%= @email_settings[:heading_color] %>; text-decoration: none;">
+                    <%= @email_settings[:site_name] %>
                   </span>
                 <% end %>
               </td>
@@ -41,18 +41,8 @@
 
             <%# Footer %>
             <tr>
-              <td align="center" style="padding: 24px 0; color: #71717a; font-size: 13px; line-height: 20px;">
-                <% if @email_footer_text.present? %>
-                  <p style="margin: 0 0 8px; color: #71717a;"><%= @email_footer_text %></p>
-                <% end %>
-                <p style="margin: 0 0 8px; color: #71717a;">
-                  &copy; <%= Date.current.year %> <%= @site_name || site_setting.site_name %>
-                </p>
-                <% if @unsubscribe_url.present? %>
-                  <p style="margin: 0;">
-                    <a href="<%= @unsubscribe_url %>" style="color: #71717a; text-decoration: underline;"><%= t('layouts.mailer.unsubscribe') %></a>
-                  </p>
-                <% end %>
+              <td style="padding: 24px 0;">
+                <%= render "mailer/footer", settings: @email_settings %>
               </td>
             </tr>
           </table>

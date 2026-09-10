@@ -1,7 +1,7 @@
-Welcome to <%= @site_name %>
+<%= t('subscriber_mailer.confirmation.welcome', site_name: @site_name) %>
 
-Thanks for subscribing! Visit the link below to confirm your subscription and sign in:
+<%= t('subscriber_mailer.confirmation.thanks') %>
 
 <%= @magic_link %>
 
-This link will expire in 15 minutes.
+<%= t('subscriber_mailer.confirmation.link_expiry') %>

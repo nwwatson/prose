@@ -79,4 +79,31 @@ class SiteSetting::EmailBrandingTest < ActiveSupport::TestCase
     assert_equal "system", @setting.email_font_family
     assert_equal "minimal", @setting.email_default_template
   end
+
+  test "email_branding returns complete hash" do
+    branding = @setting.email_branding
+    assert_kind_of Hash, branding
+    %i[accent_color background_color body_text_color heading_color
+       font_family footer_text site_name logo_url].each do |key|
+      assert branding.key?(key), "email_branding should include :#{key}"
+    end
+  end
+
+  test "email_branding falls back to defaults when colors are blank" do
+    @setting.update_columns(
+      email_accent_color: nil, email_background_color: nil,
+      email_body_text_color: nil, email_heading_color: nil
+    )
+
+    branding = @setting.email_branding
+    assert_equal SiteSetting::EmailBranding::DEFAULT_ACCENT_COLOR, branding[:accent_color]
+    assert_equal SiteSetting::EmailBranding::DEFAULT_BACKGROUND_COLOR, branding[:background_color]
+    assert_equal SiteSetting::EmailBranding::DEFAULT_BODY_TEXT_COLOR, branding[:body_text_color]
+    assert_equal SiteSetting::EmailBranding::DEFAULT_HEADING_COLOR, branding[:heading_color]
+  end
+
+  test "email_branding uses configured colors when present" do
+    @setting.update!(email_accent_color: "#ff5500")
+    assert_equal "#ff5500", @setting.email_branding[:accent_color]
+  end
 end

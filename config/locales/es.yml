@@ -38,8 +38,6 @@ es:
     application:
       toggle_dark_mode: "Alternar modo oscuro"
       copyright_html: "&copy; %{year} %{site_name}. Todos los derechos reservados."
-    mailer:
-      unsubscribe: "Cancelar suscripción"
     editor:
       keep_editing: "Seguir editando"
       discard: "Descartar"
@@ -720,6 +718,10 @@ es:
         title_change: "Título cambiado"
         content_diff: "Cambios en el contenido"
 
+  mailer:
+    footer:
+      unsubscribe: "Cancelar suscripción"
+
   comment_mailer:
     reply_notification:
       subject: "Nueva respuesta a tu comentario en %{site_name}"
@@ -746,8 +748,6 @@ es:
       read_full_post: "Leer la publicación completa"
       subject: "Nueva publicación: %{title}"
   newsletter_mailer:
-    footer:
-      unsubscribe: "Cancelar suscripción"
     social_links:
       twitter: "Twitter/X"
       github: "GitHub"

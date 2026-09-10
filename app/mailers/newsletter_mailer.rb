@@ -1,6 +1,4 @@
 class NewsletterMailer < ApplicationMailer
-  helper MailerHelper
-
   layout "newsletter_mailer"
 
   def campaign(subscriber, newsletter)
@@ -10,8 +8,7 @@ class NewsletterMailer < ApplicationMailer
     @site_name = @email_settings[:site_name]
     @unsubscribe_url = generate_unsubscribe_url(subscriber)
 
-    headers["List-Unsubscribe"] = "<#{@unsubscribe_url}>"
-    headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click"
+    set_list_unsubscribe_headers(@unsubscribe_url)
 
     mail(to: subscriber.email, subject: newsletter.title)
   end

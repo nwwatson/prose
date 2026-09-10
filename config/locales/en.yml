@@ -40,8 +40,6 @@ en:
     application:
       toggle_dark_mode: "Toggle dark mode"
       copyright_html: "&copy; %{year} %{site_name}. All rights reserved."
-    mailer:
-      unsubscribe: "Unsubscribe"
     editor:
       keep_editing: "Keep editing"
       discard: "Discard"
@@ -725,6 +723,9 @@ en:
         content_diff: "Content changes"
 
   # Mailers
+  mailer:
+    footer:
+      unsubscribe: "Unsubscribe"
   comment_mailer:
     reply_notification:
       subject: "New reply to your comment on %{site_name}"
@@ -752,8 +753,6 @@ en:
       read_full_post: "Read the full post"
       subject: "New post: %{title}"
   newsletter_mailer:
-    footer:
-      unsubscribe: "Unsubscribe"
     social_links:
       twitter: "Twitter/X"
       github: "GitHub"

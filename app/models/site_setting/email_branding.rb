@@ -16,6 +16,11 @@ module SiteSetting::EmailBranding
 
   HEX_COLOR_FORMAT = /\A#[0-9a-fA-F]{6}\z/
 
+  DEFAULT_ACCENT_COLOR = "#18181b"
+  DEFAULT_BACKGROUND_COLOR = "#f4f4f5"
+  DEFAULT_BODY_TEXT_COLOR = "#3f3f46"
+  DEFAULT_HEADING_COLOR = "#18181b"
+
   included do
     has_one_attached :email_header_logo
 
@@ -34,6 +39,19 @@ module SiteSetting::EmailBranding
   def email_header_logo_url
     return nil unless email_header_logo.attached?
     Rails.application.routes.url_helpers.rails_blob_url(email_header_logo, only_path: false, host: default_url_host)
+  end
+
+  def email_branding
+    {
+      accent_color: email_accent_color.presence || DEFAULT_ACCENT_COLOR,
+      background_color: email_background_color.presence || DEFAULT_BACKGROUND_COLOR,
+      body_text_color: email_body_text_color.presence || DEFAULT_BODY_TEXT_COLOR,
+      heading_color: email_heading_color.presence || DEFAULT_HEADING_COLOR,
+      font_family: email_font_stack,
+      footer_text: email_footer_text.presence,
+      site_name: site_name,
+      logo_url: email_header_logo_url
+    }
   end
 
   private

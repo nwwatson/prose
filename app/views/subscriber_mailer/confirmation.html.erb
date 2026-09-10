@@ -6,15 +6,10 @@
   <%= t('subscriber_mailer.confirmation.thanks') %>
 </p>
 
-<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 24px 0;">
-  <tr>
-    <td style="background-color: <%= @email_accent_color %>; border-radius: 6px; padding: 12px 24px;">
-      <a href="<%= @magic_link %>" style="color: #ffffff; font-size: 15px; font-weight: 600; text-decoration: none; display: inline-block;">
-        <%= t('subscriber_mailer.confirmation.confirm_link') %>
-      </a>
-    </td>
-  </tr>
-</table>
+<%= render "mailer/cta_button",
+           url: @magic_link,
+           label: t('subscriber_mailer.confirmation.confirm_link'),
+           color: @email_accent_color %>
 
 <p style="margin: 0; font-size: 13px; line-height: 20px; color: #71717a;">
   <%= t('subscriber_mailer.confirmation.link_expiry') %>

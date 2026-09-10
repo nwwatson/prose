@@ -19,7 +19,7 @@ class EmailService::Sendgrid < EmailService::Base
 
   def send_email(to:, subject:, html:, text:, headers: {}, metadata: {})
     mail = SendGrid::Mail.new
-    mail.from = SendGrid::Email.new(email: from_address)
+    mail.from = SendGrid::Email.new(email: EmailService.from_address)
     mail.subject = subject
 
     personalization = SendGrid::Personalization.new
@@ -51,10 +51,6 @@ class EmailService::Sendgrid < EmailService::Base
   end
 
   private
-
-  def from_address
-    ENV.fetch("SMTP_FROM", "noreply@example.com")
-  end
 
   def extract_headers(message)
     headers = {}
