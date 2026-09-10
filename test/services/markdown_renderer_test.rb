@@ -20,6 +20,16 @@ class MarkdownRendererTest < ActiveSupport::TestCase
     assert_not_includes html, "<script>"
   end
 
+  test "untrusted preset (default) strips raw HTML" do
+    html = MarkdownRenderer.to_html("<div>raw</div>", trusted: false)
+    assert_not_includes html, "<div>"
+  end
+
+  test "trusted preset allows raw HTML passthrough" do
+    html = MarkdownRenderer.to_html("<div>raw</div>", trusted: true)
+    assert_includes html, "<div>raw</div>"
+  end
+
   test "autolinks URLs" do
     html = MarkdownRenderer.to_html("Visit https://example.com")
     assert_includes html, '<a href="https://example.com">'

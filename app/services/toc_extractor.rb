@@ -19,7 +19,6 @@ class TocExtractor
   def content_with_anchors
     return @html unless has_toc?
 
-    doc = parse_document
     doc.css(HEADING_SELECTOR).each_with_index do |node, index|
       node["id"] = headings[index].id
     end
@@ -29,7 +28,6 @@ class TocExtractor
   private
 
   def extract_headings
-    doc = parse_document
     seen_ids = Hash.new(0)
 
     doc.css(HEADING_SELECTOR).map do |node|
@@ -53,7 +51,7 @@ class TocExtractor
     seen_ids[base] > 1 ? "#{base}-#{seen_ids[base]}" : base
   end
 
-  def parse_document
-    Nokogiri::HTML.fragment(@html)
+  def doc
+    @doc ||= Nokogiri::HTML.fragment(@html)
   end
 end
