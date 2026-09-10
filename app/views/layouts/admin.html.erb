@@ -39,17 +39,7 @@
           <span class="text-xl font-bold text-gray-900"><%= site_name %></span>
         </header>
 
-        <%# Flash messages %>
-        <% if notice %>
-          <div class="bg-green-50 border-b border-green-200 px-4 py-3">
-            <p class="text-sm text-green-800"><%= notice %></p>
-          </div>
-        <% end %>
-        <% if alert %>
-          <div class="bg-red-50 border-b border-red-200 px-4 py-3">
-            <p class="text-sm text-red-800"><%= alert %></p>
-          </div>
-        <% end %>
+        <%= render "layouts/shared/flash", variant: :admin %>
 
         <%# Page content %>
         <main class="flex-1 overflow-y-auto p-4 sm:p-6">

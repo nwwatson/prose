@@ -5,6 +5,7 @@
  *   .flash                Container with max-width and spacing
  *   .flash__inner         Rounded card background
  *   .flash--notice        Green notice variant
+ *   .flash--alert         Red alert variant
  *   .flash__text          Message text
  * ========================================================================== */
 
@@ -20,10 +21,18 @@
   @apply bg-green-50 dark:bg-green-900/30;
 }
 
+.flash--alert .flash__inner {
+  @apply bg-red-50 dark:bg-red-900/30;
+}
+
 .flash__text {
   @apply text-sm;
 }
 
 .flash--notice .flash__text {
   @apply text-green-800 dark:text-green-300;
+}
+
+.flash--alert .flash__text {
+  @apply text-red-800 dark:text-red-300;
 }

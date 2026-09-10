@@ -73,14 +73,7 @@
       </div>
     </header>
 
-    <%# Flash messages %>
-    <% if notice %>
-      <div class="flash flash--notice">
-        <div class="flash__inner">
-          <p class="flash__text"><%= notice %></p>
-        </div>
-      </div>
-    <% end %>
+    <%= render "layouts/shared/flash", variant: :public %>
 
     <%# Main content %>
     <main class="layout__main">

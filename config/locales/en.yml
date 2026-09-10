@@ -42,24 +42,21 @@ en:
       copyright_html: "&copy; %{year} %{site_name}. All rights reserved."
     mailer:
       unsubscribe: "Unsubscribe"
+    editor:
+      keep_editing: "Keep editing"
+      discard: "Discard"
     admin_editor:
       posts: "Posts"
       discard_post: "Discard post?"
       discard_post_message: "This post hasn't been saved yet. Are you sure you want to discard it?"
-      keep_editing: "Keep editing"
-      discard: "Discard"
     admin_page_editor:
       pages: "Pages"
       discard_page: "Discard page?"
       discard_page_message: "This page hasn't been saved yet. Are you sure you want to discard it?"
-      keep_editing: "Keep editing"
-      discard: "Discard"
     newsletter_editor:
       newsletters: "Newsletters"
       discard_newsletter: "Discard newsletter?"
       discard_newsletter_message: "This newsletter hasn't been saved yet. Are you sure you want to discard it?"
-      keep_editing: "Keep editing"
-      discard: "Discard"
     admin:
       content: "Content"
       all_posts: "All Posts"

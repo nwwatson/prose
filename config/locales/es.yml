@@ -40,24 +40,21 @@ es:
       copyright_html: "&copy; %{year} %{site_name}. Todos los derechos reservados."
     mailer:
       unsubscribe: "Cancelar suscripción"
+    editor:
+      keep_editing: "Seguir editando"
+      discard: "Descartar"
     admin_editor:
       posts: "Publicaciones"
       discard_post: "¿Descartar publicación?"
       discard_post_message: "Esta publicación aún no se ha guardado. ¿Estás seguro de que quieres descartarla?"
-      keep_editing: "Seguir editando"
-      discard: "Descartar"
     admin_page_editor:
       pages: "Páginas"
       discard_page: "¿Descartar página?"
       discard_page_message: "Esta página aún no se ha guardado. ¿Estás seguro de que quieres descartarla?"
-      keep_editing: "Seguir editando"
-      discard: "Descartar"
     newsletter_editor:
       newsletters: "Boletines"
       discard_newsletter: "¿Descartar boletín?"
       discard_newsletter_message: "Este boletín aún no se ha guardado. ¿Estás seguro de que quieres descartarlo?"
-      keep_editing: "Seguir editando"
-      discard: "Descartar"
     admin:
       content: "Contenido"
       all_posts: "Todas las publicaciones"

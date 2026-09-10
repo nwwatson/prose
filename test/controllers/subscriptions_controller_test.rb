@@ -46,4 +46,12 @@ class SubscriptionsControllerTest < ActionDispatch::IntegrationTest
     post subscriptions_path, params: { email: subscriber.email, source_post_id: posts(:featured_post).id }
     assert_equal original_source, subscriber.reload.source_post_id
   end
+
+  test "POST create with invalid email redirects with alert flash rendered on the public layout" do
+    post subscriptions_path, params: { email: "not-an-email" }
+    assert_redirected_to root_path
+
+    follow_redirect!
+    assert_select ".flash--alert .flash__text", text: I18n.t("flash.subscriptions.invalid_email")
+  end
 end

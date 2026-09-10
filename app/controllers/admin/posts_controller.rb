@@ -4,6 +4,7 @@ module Admin
     uses_editor_layout "admin_editor"
 
     before_action :set_post, only: [ :edit, :update, :destroy, :preview ]
+    before_action :set_chat, only: [ :edit, :update ]
 
     def index
       @posts = Post.for_listing
@@ -61,6 +62,10 @@ module Admin
 
     def set_post
       @post = Post.includes(:user, :category, :tags).find_by!(slug: params[:id])
+    end
+
+    def set_chat
+      @chat = Chat.find_or_create_for(post: @post, user: current_user, conversation_type: "chat") if SiteSetting.current.ai_configured?
     end
 
     def post_params
