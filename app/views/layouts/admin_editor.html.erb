@@ -30,11 +30,7 @@
            data-autosave-method-value="POST"
            data-autosave-persisted-value="false"
          <% end %>
-         data-editor-drawer-ai-available-value="<%= ai_available %>"
          data-editor-drawer-active-tab-value="<%= ai_available ? 'ai' : 'settings' %>"
-         <% if ai_available %>
-           data-editor-drawer-post-slug-value="<%= @post.to_param %>"
-         <% end %>
          class="relative min-h-full">
       <%# Top bar %>
       <header class="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4">

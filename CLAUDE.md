@@ -123,6 +123,8 @@ Pages (`Page` model) provide custom static content at top-level URLs (`/:slug`).
 ### Post Editor
 Uses the `admin_editor` layout. Autosave triggers on a 3-second debounce, serializing `#post_form` FormData. The editor drawer is a tabbed panel (AI + Settings + Versions). Settings fields use `form="post_form"` attribute with event listeners on the settings tab container to trigger autosave.
 
+`editor_drawer_controller.js` owns only drawer chrome — open/close, pin (persisted through `lib/storage.js`), tab switching, Escape, and Cmd/Ctrl+Shift+A. It carries no AI-specific targets or values: it derives whether an AI tab exists from the presence of a `data-tab="ai"` tab button, and `showTab` dispatches `editor-drawer:tab-shown` (with `{ tab }`) **on the panel target**, so controllers mounted inside the panel can react. `ai_chat_controller.js` owns AI chat transport (send, quick actions, clear conversation, Enter-to-send, scroll-to-bottom) and is mounted on the panel root in `admin/posts/_editor_panel.html.erb` only when `ai_available` — the page and newsletter editors render their own panels and never load it. It POSTs to `/admin/posts/:slug/ai/messages` via `requestTurboStream` (from `lib/request.js`) rather than building a hidden `<form>`, and reads title/subtitle from the autosave controller's form (`formSelectorValue`) instead of a document-wide `querySelector`.
+
 ### Post Content & Search Indexing
 `Post#body_plain` is the canonical plain-text source for a post's content — `Post#excerpt(length)` truncates it and is used by `seo_description`, the featured-post teaser, and the gated-content teaser. Never re-derive plain text from `content.to_plain_text` outside of `Post::Searchable#update_body_plain`; that callback only recomputes `body_plain` when `content` actually changed (`before_save :update_body_plain, if: -> { new_record? || content.changed? }`), so a settings-only save (autosave, love counter, status toggle) skips the Nokogiri parse. `calculate_reading_time` is similarly guarded with `will_save_change_to_body_plain?`. The `posts_fts_update` SQLite trigger has a `WHEN` clause so the FTS5 row is only deleted/reinserted when `title`, `subtitle`, or `body_plain` actually changed. Run `rake posts:backfill_body_plain` to populate `body_plain` for posts created before the column existed.
 
@@ -140,7 +142,7 @@ Image URLs are memoized for the request: `SiteHelper#default_og_image_url` uses 
 Frontend component styles use BEM (Block Element Modifier) methodology in `app/assets/tailwind/components/`. Each component gets its own file (e.g., `_post-card.css`) imported via the `_index.css` manifest. Theme variables (fonts, colors) are defined in the `@theme` block of `application.css` — Tailwind v4's `@theme` directive cannot be extracted to a separate file. `SiteHelper` methods inject runtime overrides for admin-configurable fonts and colors.
 
 ### Key Stimulus Controllers
-`autosave`, `editor_drawer`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`, `markdown_preview`, `traffic_chart`, `segment_builder`, `comment_edit`
+`autosave`, `editor_drawer`, `ai_chat`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`, `markdown_preview`, `traffic_chart`, `segment_builder`, `comment_edit`
 
 ### Shared JS Modules
 `app/javascript/lib/` holds framework-agnostic helpers shared across Stimulus controllers (pinned via `pin_all_from "app/javascript/lib", under: "lib"` in `config/importmap.rb`, imported as `lib/<name>`).
