@@ -1,6 +1,6 @@
 module Mcp
   module Tools
-    class SchedulePost < MCP::Tool
+    class SchedulePost < Base
       description "Schedule a blog post for future publication. Accepts an ISO 8601 datetime string."
 
       input_schema(
@@ -13,28 +13,16 @@ module Mcp
 
       class << self
         def call(server_context:, identifier:, published_at:)
-          post = find_post(identifier)
-          time = Time.iso8601(published_at)
-          post.schedule!(time)
+          with_post(identifier) do |post|
+            time = Time.iso8601(published_at)
+            post.schedule!(time)
 
-          result = Mcp::PostSerializer.call(post.reload)
-          MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
-        rescue ActiveRecord::RecordNotFound
-          MCP::Tool::Response.new([ { type: "text", text: { error: "Post not found: #{identifier}" }.to_json } ], error: true)
-        rescue ArgumentError => e
-          MCP::Tool::Response.new([ { type: "text", text: { error: "Invalid datetime: #{e.message}" }.to_json } ], error: true)
-        rescue ActiveRecord::RecordInvalid => e
-          MCP::Tool::Response.new([ { type: "text", text: { error: e.message }.to_json } ], error: true)
-        end
-
-        private
-
-        def find_post(identifier)
-          if identifier.match?(/\A\d+\z/)
-            Post.find(identifier)
-          else
-            Post.find_by!(slug: identifier)
+            success(Mcp::PostSerializer.call(post.reload))
           end
+        rescue ArgumentError => e
+          failure("Invalid datetime: #{e.message}")
+        rescue ActiveRecord::RecordInvalid => e
+          failure(e.message)
         end
       end
     end

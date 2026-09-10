@@ -1,6 +1,6 @@
 module Mcp
   module Tools
-    class ListPosts < MCP::Tool
+    class ListPosts < Base
       description "List blog posts with optional filters for status, category, tag, and search query. Returns paginated results."
 
       input_schema(
@@ -23,7 +23,7 @@ module Mcp
           posts = posts.where(status: params[:status]) if params[:status].present?
 
           if params[:category].present?
-            category = Category.find_by(name: params[:category]) || Category.find_by(slug: params[:category])
+            category = find_category(params[:category])
             posts = posts.where(category: category) if category
           end
 
@@ -48,7 +48,7 @@ module Mcp
             per_page: per_page
           }
 
-          MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
+          success(result)
         end
       end
     end

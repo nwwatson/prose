@@ -1,6 +1,6 @@
 module Mcp
   module Tools
-    class GetPost < MCP::Tool
+    class GetPost < Base
       description "Get a single blog post by its slug or numeric ID. Returns full content."
 
       input_schema(
@@ -14,21 +14,8 @@ module Mcp
 
       class << self
         def call(server_context:, identifier:)
-          post = find_post(identifier)
-          result = Mcp::PostSerializer.call(post, include_content: true)
-
-          MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
-        rescue ActiveRecord::RecordNotFound
-          MCP::Tool::Response.new([ { type: "text", text: { error: "Post not found: #{identifier}" }.to_json } ], error: true)
-        end
-
-        private
-
-        def find_post(identifier)
-          if identifier.match?(/\A\d+\z/)
-            Post.find(identifier)
-          else
-            Post.find_by!(slug: identifier)
+          with_post(identifier) do |post|
+            success(Mcp::PostSerializer.call(post, include_content: true))
           end
         end
       end

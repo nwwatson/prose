@@ -1,6 +1,6 @@
 module Mcp
   module Tools
-    class ListCategories < MCP::Tool
+    class ListCategories < Base
       description "List all categories with their post counts."
 
       input_schema(properties: {})
@@ -13,7 +13,7 @@ module Mcp
             { id: c.id, name: c.name, slug: c.slug, description: c.description, position: c.position, post_count: c.posts.count }
           end
 
-          MCP::Tool::Response.new([ { type: "text", text: { categories: categories }.to_json } ])
+          success({ categories: categories })
         end
       end
     end

@@ -1,6 +1,6 @@
 module Mcp
   module Tools
-    class CreatePost < MCP::Tool
+    class CreatePost < Base
       description "Create a new blog post as a draft. Content should be provided as markdown, which will be converted to HTML."
 
       input_schema(
@@ -32,28 +32,17 @@ module Mcp
           )
 
           if params[:content].present?
-            html = Mcp::MarkdownConverter.to_html(params[:content])
-            post.content = html
+            post.content = Mcp::MarkdownConverter.to_html(params[:content])
           end
 
-          if params[:category].present?
-            post.category = Category.find_by(name: params[:category]) || Category.find_by(slug: params[:category])
-          end
+          post.category = find_category(params[:category]) if params[:category].present?
 
           post.save!
-          assign_tags(post, params[:tags]) if params[:tags].present?
+          post.tags = find_or_create_tags(params[:tags]) if params[:tags].present?
 
-          result = Mcp::PostSerializer.call(post.reload, include_content: true)
-          MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
+          success(Mcp::PostSerializer.call(post.reload, include_content: true))
         rescue ActiveRecord::RecordInvalid => e
-          MCP::Tool::Response.new([ { type: "text", text: { error: e.message }.to_json } ], error: true)
-        end
-
-        private
-
-        def assign_tags(post, tag_names)
-          tags = tag_names.map { |name| Tag.find_or_create_by!(name: name.strip) }
-          post.tags = tags
+          failure(e.message)
         end
       end
     end

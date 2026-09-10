@@ -153,7 +153,7 @@ Prose exposes an MCP endpoint at `POST /mcp` for AI assistants to manage blog co
 
 **Controller**: `Mcp::SessionsController` (inherits `ActionController::API`) — a single endpoint that authenticates the token, sets `Current.user`, and delegates to the `MCP::Server` gem for JSON-RPC dispatch. Rate limited at 60 req/min per IP.
 
-**Tool architecture**: 14 tools in `app/services/mcp/tools/`, all inheriting from `MCP::Tool`. Each declares a `description`, `input_schema`, and `call(server_context:, **params)` class method. Tools are registered via `Mcp::ToolRegistry.all`.
+**Tool architecture**: 14 tools in `app/services/mcp/tools/`, all inheriting from `Mcp::Tools::Base` (itself an `MCP::Tool` subclass). Each declares a `description`, `input_schema`, and `call(server_context:, **params)` class method. Tools are registered via `Mcp::ToolRegistry.all`, which excludes `Base`. `Base` provides private class-level helpers shared across tools: `find_post`/`with_post` (slug-or-numeric-ID lookup with a `"Post not found: ..."` error envelope on `ActiveRecord::RecordNotFound`), `find_category`, `find_or_create_tags`, `decode_upload` (base64 → `[StringIO, content_type]`), and `success`/`failure` response envelope builders. `MCP::Tool.inherited` resets description/schema per subclass and `tool_name` derives from the leaf class name, so the intermediate `Base` class doesn't affect tool names or schemas.
 
 ```
 app/services/mcp/
@@ -161,6 +161,7 @@ app/services/mcp/
 ├── post_serializer.rb        # Consistent post JSON serialization
 ├── markdown_converter.rb     # Markdown → HTML (Commonmarker, GFM)
 └── tools/
+    ├── base.rb                # Mcp::Tools::Base — shared post/category/tag/upload helpers, response envelopes
     ├── list_posts.rb          # Filter by status/category/tag/search, paginated
     ├── get_post.rb            # Full post by slug or ID
     ├── create_post.rb         # New draft from markdown

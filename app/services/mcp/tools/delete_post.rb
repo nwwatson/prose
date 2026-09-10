@@ -1,6 +1,6 @@
 module Mcp
   module Tools
-    class DeletePost < MCP::Tool
+    class DeletePost < Base
       description "Permanently delete a blog post by its slug or numeric ID."
 
       input_schema(
@@ -14,22 +14,11 @@ module Mcp
 
       class << self
         def call(server_context:, identifier:)
-          post = find_post(identifier)
-          title = post.title
-          post.destroy!
+          with_post(identifier) do |post|
+            title = post.title
+            post.destroy!
 
-          MCP::Tool::Response.new([ { type: "text", text: { deleted: true, title: title }.to_json } ])
-        rescue ActiveRecord::RecordNotFound
-          MCP::Tool::Response.new([ { type: "text", text: { error: "Post not found: #{identifier}" }.to_json } ], error: true)
-        end
-
-        private
-
-        def find_post(identifier)
-          if identifier.match?(/\A\d+\z/)
-            Post.find(identifier)
-          else
-            Post.find_by!(slug: identifier)
+            success({ deleted: true, title: title })
           end
         end
       end

@@ -1,6 +1,6 @@
 module Mcp
   module Tools
-    class GetSiteInfo < MCP::Tool
+    class GetSiteInfo < Base
       description "Get information about the Prose site including name, description, categories, tags, and post counts."
 
       input_schema(properties: {})
@@ -24,7 +24,7 @@ module Mcp
             }
           }
 
-          MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
+          success(result)
         end
       end
     end

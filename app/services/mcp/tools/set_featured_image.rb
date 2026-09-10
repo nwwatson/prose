@@ -1,6 +1,6 @@
 module Mcp
   module Tools
-    class SetFeaturedImage < MCP::Tool
+    class SetFeaturedImage < Base
       description "Set or replace the featured image for a blog post. Accepts a base64-encoded image."
 
       input_schema(
@@ -15,30 +15,18 @@ module Mcp
 
       class << self
         def call(server_context:, identifier:, filename:, data:, **params)
-          post = find_post(identifier)
-          decoded = Base64.decode64(data)
-          content_type = params[:content_type] || Marcel::MimeType.for(name: filename)
+          with_post(identifier) do |post|
+            io, content_type = decode_upload(data: data, filename: filename, content_type: params[:content_type])
 
-          post.featured_image.attach(
-            io: StringIO.new(decoded),
-            filename: filename,
-            content_type: content_type
-          )
+            post.featured_image.attach(
+              io: io,
+              filename: filename,
+              content_type: content_type
+            )
 
-          result = Mcp::PostSerializer.call(post.reload)
-          result[:featured_image_attached] = true
-          MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
-        rescue ActiveRecord::RecordNotFound
-          MCP::Tool::Response.new([ { type: "text", text: { error: "Post not found: #{identifier}" }.to_json } ], error: true)
-        end
-
-        private
-
-        def find_post(identifier)
-          if identifier.match?(/\A\d+\z/)
-            Post.find(identifier)
-          else
-            Post.find_by!(slug: identifier)
+            result = Mcp::PostSerializer.call(post.reload)
+            result[:featured_image_attached] = true
+            success(result)
           end
         end
       end
