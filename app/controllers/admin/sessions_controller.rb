@@ -1,7 +1,5 @@
 module Admin
   class SessionsController < ApplicationController
-    include Authentication
-
     layout "admin_auth"
 
     before_action :redirect_to_setup, only: [ :new, :create ]

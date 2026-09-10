@@ -184,7 +184,7 @@ app/services/mcp/
 **Admin UI**: `Admin::ApiTokensController` with token CRUD at `/admin/api_tokens`. Admins see all tokens; writers see only their own. Raw token shown once via flash on creation.
 
 ### Authentication
-- **Admin**: session-based (signed cookie, 14-day expiry)
+- **Admin**: session-based (signed cookie, 14-day expiry). The `Authentication` concern owns cookie → `Session` resumption (`resume_session`, memoized via a `Current.session` short-circuit) and is included once on `ApplicationController`, so both admin (`current_user`) and identity (`IdentityAuthentication#current_identity`) lookups share a single `sessions` query per request.
 - **Admin Passkeys**: optional WebAuthn/passkey sign-in alongside password. Configured via `WEBAUTHN_ORIGIN` and `WEBAUTHN_RP_ID` env vars. Managed at `/admin/passkeys`.
 - **Subscribers**: passwordless magic-link (15-minute token expiry)
 - **MCP/API**: Bearer token (`prose_`-prefixed, SHA256 digest stored)
