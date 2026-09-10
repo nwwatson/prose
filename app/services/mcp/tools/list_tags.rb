@@ -9,8 +9,9 @@ module Mcp
 
       class << self
         def call(server_context:, **_params)
+          post_counts = Tag.post_counts
           tags = Tag.all.order(:name).map do |t|
-            { id: t.id, name: t.name, slug: t.slug, post_count: t.posts.count }
+            { id: t.id, name: t.name, slug: t.slug, post_count: post_counts.fetch(t.id, 0) }
           end
 
           MCP::Tool::Response.new([ { type: "text", text: { tags: tags }.to_json } ])

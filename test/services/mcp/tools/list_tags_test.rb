@@ -10,6 +10,6 @@ class Mcp::Tools::ListTagsTest < ActiveSupport::TestCase
 
     ruby = parsed["tags"].find { |t| t["name"] == "Ruby" }
     assert_not_nil ruby
-    assert ruby["post_count"] >= 0
+    assert_equal tags(:ruby).posts.count, ruby["post_count"]
   end
 end

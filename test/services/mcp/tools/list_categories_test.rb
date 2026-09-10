@@ -10,7 +10,7 @@ class Mcp::Tools::ListCategoriesTest < ActiveSupport::TestCase
 
     tech = parsed["categories"].find { |c| c["name"] == "Technology" }
     assert_not_nil tech
-    assert tech["post_count"] >= 0
+    assert_equal categories(:technology).posts.count, tech["post_count"]
     assert_equal "technology", tech["slug"]
   end
 end

@@ -4,6 +4,7 @@ module Admin
 
     def index
       @categories = Category.ordered
+      @post_counts = Category.post_counts
     end
 
     def new

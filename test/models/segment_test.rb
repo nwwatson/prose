@@ -23,6 +23,22 @@ class SegmentTest < ActiveSupport::TestCase
     assert_kind_of Integer, segment.subscriber_count
   end
 
+  test "subscriber_count memoizes the resolved count" do
+    segment = segments(:vip_segment)
+
+    query_count = 0
+    callback = lambda do |*, payload|
+      query_count += 1 if payload[:sql].match?(/FROM "subscribers"/)
+    end
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      segment.subscriber_count
+      segment.subscriber_count
+    end
+
+    assert_equal 1, query_count
+  end
+
   test "nullifies newsletters on destroy" do
     segment = segments(:vip_segment)
     newsletter = newsletters(:draft_newsletter)

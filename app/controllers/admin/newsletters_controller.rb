@@ -3,6 +3,7 @@ module Admin
     layout :choose_layout
 
     before_action :set_newsletter, only: [ :show, :edit, :update, :destroy, :send_newsletter, :schedule, :preview ]
+    before_action :set_segments, only: [ :new, :create, :edit, :update ]
 
     def index
       @newsletters = Newsletter.includes(:user)
@@ -100,6 +101,10 @@ module Admin
 
     def set_newsletter
       @newsletter = Newsletter.find(params[:id])
+    end
+
+    def set_segments
+      @segments = Segment.order(:name)
     end
 
     def newsletter_params

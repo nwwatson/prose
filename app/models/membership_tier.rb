@@ -13,6 +13,10 @@ class MembershipTier < ApplicationRecord
   scope :active, -> { where(active: true) }
   scope :ordered, -> { order(:position, :price_cents) }
 
+  def self.current_member_counts
+    Membership.current.group(:membership_tier_id).count
+  end
+
   def price_in_dollars
     price_cents / 100.0
   end

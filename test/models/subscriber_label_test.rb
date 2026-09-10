@@ -40,4 +40,16 @@ class SubscriberLabelTest < ActiveSupport::TestCase
       label.destroy
     end
   end
+
+  test "subscriber_counts returns a hash of subscriber counts keyed by label id" do
+    counts = SubscriberLabel.subscriber_counts
+    assert_equal subscriber_labels(:vip).subscribers.count, counts[subscriber_labels(:vip).id]
+    assert_equal subscriber_labels(:beta_tester).subscribers.count, counts[subscriber_labels(:beta_tester).id]
+  end
+
+  test "subscriber_counts is zero for a label with no subscribers" do
+    empty_label = SubscriberLabel.create!(name: "Empty", color: "#123456")
+    counts = SubscriberLabel.subscriber_counts
+    assert_equal 0, counts.fetch(empty_label.id, 0)
+  end
 end

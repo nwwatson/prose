@@ -48,4 +48,14 @@ class MembershipTierTest < ActiveSupport::TestCase
     assert_equal "/mo", membership_tiers(:monthly).interval_label
     assert_equal "/yr", membership_tiers(:annual).interval_label
   end
+
+  test "current_member_counts returns a hash of current member counts keyed by tier id" do
+    counts = MembershipTier.current_member_counts
+    assert_equal 1, counts[membership_tiers(:monthly).id]
+  end
+
+  test "current_member_counts excludes canceled memberships" do
+    counts = MembershipTier.current_member_counts
+    assert_equal 0, counts.fetch(membership_tiers(:annual).id, 0)
+  end
 end

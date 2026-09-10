@@ -4,6 +4,7 @@ module Admin
 
     def index
       @tiers = MembershipTier.ordered
+      @member_counts = MembershipTier.current_member_counts
     end
 
     def new

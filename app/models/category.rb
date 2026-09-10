@@ -8,6 +8,10 @@ class Category < ApplicationRecord
 
   scope :ordered, -> { order(:position) }
 
+  def self.post_counts
+    Post.where.not(category_id: nil).group(:category_id).count
+  end
+
   def to_param
     slug
   end

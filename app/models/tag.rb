@@ -7,6 +7,10 @@ class Tag < ApplicationRecord
 
   before_validation :generate_slug, if: -> { slug.blank? && name.present? }
 
+  def self.post_counts
+    PostTag.group(:tag_id).count
+  end
+
   def to_param
     slug
   end
