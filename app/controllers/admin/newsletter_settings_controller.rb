@@ -1,17 +1,6 @@
 module Admin
   class NewsletterSettingsController < BaseController
-    def edit
-      @site_setting = SiteSetting.current
-    end
-
-    def update
-      @site_setting = SiteSetting.current
-      if @site_setting.update(filtered_site_setting_params)
-        redirect_to edit_admin_newsletter_settings_path, notice: t("flash.admin.newsletter_settings.saved")
-      else
-        render :edit, status: :unprocessable_entity
-      end
-    end
+    include SiteSettingsResource
 
     private
 
@@ -26,12 +15,12 @@ module Admin
       )
     end
 
-    def filtered_site_setting_params
-      filtered = site_setting_params.to_h
-      %w[sendgrid_api_key].each do |key|
-        filtered.delete(key) if filtered[key] == "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
-      end
-      filtered
+    def redirect_path
+      edit_admin_newsletter_settings_path
+    end
+
+    def notice_key
+      "flash.admin.newsletter_settings.saved"
     end
   end
 end

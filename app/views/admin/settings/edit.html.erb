@@ -261,7 +261,7 @@
           <%= f.label :stripe_publishable_key, t('admin.settings.edit.stripe_publishable_key'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.password_field :stripe_publishable_key,
-                  value: @site_setting.stripe_publishable_key.present? ? "••••••••" : "",
+                  value: @site_setting.masked_value_for(:stripe_publishable_key),
                   placeholder: "pk_live_...",
                   autocomplete: "off",
                   class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
@@ -272,7 +272,7 @@
           <%= f.label :stripe_secret_key, t('admin.settings.edit.stripe_secret_key'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.password_field :stripe_secret_key,
-                  value: @site_setting.stripe_secret_key.present? ? "••••••••" : "",
+                  value: @site_setting.masked_value_for(:stripe_secret_key),
                   placeholder: "sk_live_...",
                   autocomplete: "off",
                   class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
@@ -283,7 +283,7 @@
           <%= f.label :stripe_webhook_secret, t('admin.settings.edit.stripe_webhook_secret'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.password_field :stripe_webhook_secret,
-                  value: @site_setting.stripe_webhook_secret.present? ? "••••••••" : "",
+                  value: @site_setting.masked_value_for(:stripe_webhook_secret),
                   placeholder: "whsec_...",
                   autocomplete: "off",
                   class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
@@ -310,7 +310,7 @@
           <%= f.label :claude_api_key, t('admin.settings.edit.anthropic_api_key'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.password_field :claude_api_key,
-                  value: @site_setting.claude_api_key.present? ? "••••••••" : "",
+                  value: @site_setting.masked_value_for(:claude_api_key),
                   placeholder: "sk-ant-...",
                   autocomplete: "off",
                   class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
@@ -322,7 +322,7 @@
           <%= f.label :gemini_api_key, t('admin.settings.edit.gemini_api_key'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.password_field :gemini_api_key,
-                  value: @site_setting.gemini_api_key.present? ? "••••••••" : "",
+                  value: @site_setting.masked_value_for(:gemini_api_key),
                   placeholder: "AIza...",
                   autocomplete: "off",
                   class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
@@ -334,7 +334,7 @@
           <%= f.label :openai_api_key, t('admin.settings.edit.openai_api_key'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.password_field :openai_api_key,
-                  value: @site_setting.openai_api_key.present? ? "••••••••" : "",
+                  value: @site_setting.masked_value_for(:openai_api_key),
                   placeholder: "sk-...",
                   autocomplete: "off",
                   class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>

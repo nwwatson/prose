@@ -1,17 +1,6 @@
 module Admin
   class SettingsController < BaseController
-    def edit
-      @site_setting = SiteSetting.current
-    end
-
-    def update
-      @site_setting = SiteSetting.current
-      if @site_setting.update(filtered_site_setting_params)
-        redirect_to edit_admin_settings_path, notice: t("flash.admin.settings.saved")
-      else
-        render :edit, status: :unprocessable_entity
-      end
-    end
+    include SiteSettingsResource
 
     private
 
@@ -29,14 +18,12 @@ module Admin
       )
     end
 
-    def filtered_site_setting_params
-      filtered = site_setting_params.to_h
-      # Don't overwrite encrypted keys with the placeholder mask
-      %w[claude_api_key gemini_api_key openai_api_key stripe_secret_key stripe_publishable_key stripe_webhook_secret].each do |key|
-        filtered.delete(key) if filtered[key] == "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
-        # Allow blank to clear the key
-      end
-      filtered
+    def redirect_path
+      edit_admin_settings_path
+    end
+
+    def notice_key
+      "flash.admin.settings.saved"
     end
   end
 end
