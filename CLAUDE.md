@@ -67,6 +67,7 @@ app/models/post/discoverable.rb      # module Post::Discoverable (related posts,
 app/models/post/versionable.rb      # module Post::Versionable (revision history, version cooldown)
 app/models/post_version.rb          # PostVersion: full snapshot of post content per version
 app/models/concerns/sluggable.rb     # module Sluggable (slugged_from macro: slug generation/uniquifying, used by Post, Page, Category, Tag)
+app/models/concerns/identity_backed.rb # module IdentityBacked (belongs_to :identity, email validation/normalization, build_identity_if_needed; overridable default_identity_name), included by User and Subscriber
 app/models/comment/editable.rb        # module Comment::Editable (15-min edit window, soft delete)
 app/models/comment/notifiable.rb      # module Comment::Notifiable (reply notification callbacks)
 app/models/page.rb                    # class Page (custom static pages)
