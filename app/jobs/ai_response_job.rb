@@ -3,11 +3,10 @@ class AiResponseJob < ApplicationJob
 
   def perform(chat_id, user_content, quick_action: nil, title_override: nil, subtitle_override: nil, content_override: nil)
     chat_record = Chat.find(chat_id)
-    configure_ruby_llm!
+    settings = SiteSetting.current
 
     context = build_context(chat_record, title_override, subtitle_override, content_override)
     system_prompt = resolve_system_prompt(quick_action, context)
-    settings = SiteSetting.current
 
     # Broadcast streaming placeholder
     Turbo::StreamsChannel.broadcast_append_to(
@@ -19,16 +18,12 @@ class AiResponseJob < ApplicationJob
 
     # Use a standalone RubyLLM chat for the LLM call so the system prompt
     # and a duplicate user message are never persisted to the database.
-    standalone = RubyLLM.chat(model: settings.ai_model_name)
+    standalone = ::Ai::Client.chat(settings)
     standalone.with_instructions(system_prompt)
 
     # Replay conversation history so the LLM has context for follow-up messages
-    chat_record.messages.where(role: %w[user assistant]).order(:created_at).find_each do |msg|
-      # Skip the latest user message — we'll pass it to `ask` below
-      next if msg.role == "user" && msg.content == user_content && msg == chat_record.messages.where(role: "user").order(:created_at).last
-
-      standalone.add_message(role: msg.role.to_sym, content: msg.content)
-    end
+    latest_user_message_id = chat_record.messages.where(role: "user").order(:created_at).last&.id
+    replay_history(standalone, chat_record, latest_user_message_id)
 
     full_content = +""
     standalone.ask(user_content) do |chunk|
@@ -61,11 +56,12 @@ class AiResponseJob < ApplicationJob
 
   private
 
-  def configure_ruby_llm!
-    settings = SiteSetting.current
-    RubyLLM.configure do |config|
-      config.anthropic_api_key = settings.claude_api_key
-      config.gemini_api_key = settings.gemini_api_key
+  def replay_history(standalone, chat_record, latest_user_message_id)
+    chat_record.messages.where(role: %w[user assistant]).order(:created_at).find_each do |msg|
+      # Skip the latest user message — we'll pass it to `ask` below
+      next if msg.role == "user" && msg.id == latest_user_message_id
+
+      standalone.add_message(role: msg.role.to_sym, content: msg.content)
     end
   end
 
