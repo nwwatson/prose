@@ -87,4 +87,28 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
   test "GET index computes post counts with a single grouped query" do
     assert_query_count(1, table: "posts") { get authors_path }
   end
+
+  test "GET show paginates posts and links to the next page" do
+    identity = identities(:admin_identity)
+    12.times do |i|
+      Post.create!(title: "Paginated Post #{i}", slug: "paginated-post-#{i}", status: :published,
+        published_at: i.hours.ago, user: identity.user, body_plain: "Body #{i}")
+    end
+
+    get author_path(identity, handle: identity.handle)
+    assert_response :success
+    assert_select "a[href=?]", author_path(identity, handle: identity.handle, page: 2)
+  end
+
+  test "GET show has no next page link on the last page" do
+    identity = identities(:admin_identity)
+    12.times do |i|
+      Post.create!(title: "Paginated Post #{i}", slug: "paginated-post-#{i}", status: :published,
+        published_at: i.hours.ago, user: identity.user, body_plain: "Body #{i}")
+    end
+
+    get author_path(identity, handle: identity.handle, page: 2)
+    assert_response :success
+    assert_select "a[href=?]", author_path(identity, handle: identity.handle, page: 3), count: 0
+  end
 end
