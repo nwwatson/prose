@@ -103,6 +103,15 @@ es:
       get_notified: "Recibe notificaciones cuando se publiquen nuevas publicaciones."
     show:
       comments: "Comentarios"
+      share:
+        heading: "Comparte esta publicación"
+        twitter: "Compartir en X"
+        linkedin: "Compartir en LinkedIn"
+        facebook: "Compartir en Facebook"
+        email: "Compartir por correo electrónico"
+        copy_link: "Copiar enlace"
+        copied: "¡Copiado!"
+        native_share: "Compartir"
     post_navigation:
       previous_post: "Publicación anterior"
       next_post: "Siguiente publicación"

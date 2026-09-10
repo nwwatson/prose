@@ -1,0 +1,45 @@
+/* ==========================================================================
+ * .share-buttons — Social share buttons BEM block
+ *
+ * Usage:
+ *   .share-buttons               Container, top border, stacked layout
+ *   .share-buttons__heading      "Share this post" label
+ *   .share-buttons__list         Flex row of buttons, wraps on mobile
+ *   .share-buttons__button       Individual icon button (link or <button>)
+ *   .share-buttons__icon         SVG icon inside a button
+ *   .share-buttons__button-label Visually-hidden text label (sr-only, shown on hover/focus title)
+ *   .share-buttons__copy-wrap    Positioning context for the copy-link feedback bubble
+ *   .share-buttons__copy-feedback "Copied!" bubble shown briefly above the copy-link button
+ * ========================================================================== */
+
+.share-buttons {
+  @apply mt-8 border-t border-gray-200 dark:border-gray-700 pt-6;
+}
+
+.share-buttons__heading {
+  @apply block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3;
+}
+
+.share-buttons__list {
+  @apply flex flex-wrap items-center gap-2;
+}
+
+.share-buttons__button {
+  @apply flex items-center justify-center h-10 w-10 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:text-ink-blue hover:border-ink-blue transition-colors;
+}
+
+.share-buttons__icon {
+  @apply h-5 w-5;
+}
+
+.share-buttons__button-label {
+  @apply sr-only;
+}
+
+.share-buttons__copy-wrap {
+  @apply relative inline-flex;
+}
+
+.share-buttons__copy-feedback {
+  @apply absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-charcoal text-white text-xs px-2 py-1 dark:bg-gray-100 dark:text-charcoal;
+}
