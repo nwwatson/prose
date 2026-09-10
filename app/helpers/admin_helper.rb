@@ -41,6 +41,54 @@ module AdminHelper
     content_tag(:p, "#{arrow} #{sign}#{change}% #{I18n.t('admin.dashboard.show.vs_last_month')}".html_safe, class: "mt-1 text-xs #{color}")
   end
 
+  def status_badge(label, color_class:, size: :md)
+    padding = size == :sm ? "px-2 py-0.5" : "px-2.5 py-0.5"
+    content_tag(:span, label, class: "inline-flex items-center rounded-full #{padding} text-xs font-medium #{color_class}")
+  end
+
+  def admin_button_classes(variant: :primary, extra: nil)
+    base = case variant
+    when :primary then "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700"
+    when :outline then "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+    end
+    [ extra, base ].compact.join(" ")
+  end
+
+  def admin_input_classes(extra: nil)
+    base = "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm"
+    [ extra, base ].compact.join(" ")
+  end
+
+  def admin_th_classes
+    "px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+  end
+
+  def post_status_color(status)
+    case status
+    when "published" then "bg-green-100 text-green-800"
+    when "scheduled" then "bg-yellow-100 text-yellow-800"
+    when "draft" then "bg-gray-100 text-gray-800"
+    end
+  end
+
+  def newsletter_status_color(status)
+    case status
+    when "sent" then "bg-green-100 text-green-800"
+    when "sending" then "bg-blue-100 text-blue-800"
+    when "scheduled" then "bg-yellow-100 text-yellow-800"
+    when "draft" then "bg-gray-100 text-gray-800"
+    end
+  end
+
+  def membership_status_color(status)
+    case status
+    when "active" then "bg-green-100 text-green-800"
+    when "past_due" then "bg-yellow-100 text-yellow-800"
+    when "canceled" then "bg-red-100 text-red-800"
+    else "bg-gray-100 text-gray-800"
+    end
+  end
+
   def admin_nav_link(label, path, icon: nil, small: false)
     active = current_page?(path)
     size_classes = small ? "text-xs py-2 sm:py-1.5" : "text-sm py-2"

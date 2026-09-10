@@ -70,7 +70,7 @@
                    value="<%= newsletter.accent_color %>"
                    placeholder="<%= site_setting.email_accent_color %>"
                    data-action="change->autosave#handleChange"
-                   class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm">
+                   class="<%= admin_input_classes %>">
           </div>
           <p class="mt-1 text-xs text-gray-500"><%= t('admin.newsletters.editor_panel.accent_color_help') %></p>
         </div>
@@ -82,7 +82,7 @@
                  maxlength="150"
                  placeholder="<%= site_setting.email_preheader_text.presence || 'Preview text shown in inbox...' %>"
                  data-action="change->autosave#handleChange"
-                 class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm">
+                 class="<%= admin_input_classes %>">
           <p class="mt-1 text-xs text-gray-500"><%= t('admin.newsletters.editor_panel.preheader_help') %></p>
         </div>
       </div>
@@ -94,7 +94,7 @@
         <label class="block text-sm font-medium text-gray-900 mb-1"><%= t('admin.newsletters.editor_panel.audience') %></label>
         <select name="newsletter[segment_id]" form="newsletter_form"
                 data-action="change->autosave#handleChange"
-                class="block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm">
+                class="<%= admin_input_classes %>">
           <option value=""><%= t('admin.newsletters.editor_panel.all_subscribers') %></option>
           <% @segments.each do |segment| %>
             <option value="<%= segment.id %>" <%= "selected" if newsletter.segment_id == segment.id %>><%= segment.name %> (<%= segment.subscriber_count %>)</option>
@@ -142,12 +142,12 @@
           <div class="space-y-3">
             <%= button_to t('admin.newsletters.editor_panel.send_now'), send_newsletter_admin_newsletter_path(newsletter),
                   data: { turbo_confirm: t('admin.newsletters.editor_panel.send_confirm') },
-                  class: "w-full rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700" %>
+                  class: admin_button_classes(variant: :primary, extra: "w-full") %>
 
             <%= form_with url: schedule_admin_newsletter_path(newsletter), method: :post, class: "space-y-2" do |f| %>
               <label class="block text-sm font-medium text-gray-900"><%= t('admin.newsletters.editor_panel.schedule_for_later') %></label>
               <%= f.datetime_local_field :scheduled_for,
-                    class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                    class: admin_input_classes %>
               <%= f.submit t('admin.newsletters.editor_panel.schedule'), class: "w-full rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200 cursor-pointer" %>
             <% end %>
           </div>

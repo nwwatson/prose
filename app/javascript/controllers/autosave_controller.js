@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { request } from "lib/request"
+import { useTimeouts } from "lib/timers"
 
 export default class extends Controller {
   static targets = ["status", "discardBackdrop", "discardModal"]
@@ -13,25 +14,29 @@ export default class extends Controller {
   }
 
   connect() {
+    this.timeouts = useTimeouts()
+    this.connected = true
     this.dirty = false
     this.saving = false
     this.pendingSave = false
     this.saveTimer = null
+    this.retryTimer = null
     this.savePromise = null
     this.boundBeforeUnload = this.beforeUnload.bind(this)
     window.addEventListener("beforeunload", this.boundBeforeUnload)
   }
 
   disconnect() {
-    clearTimeout(this.saveTimer)
+    this.connected = false
+    this.timeouts.clearAll()
     window.removeEventListener("beforeunload", this.boundBeforeUnload)
   }
 
   scheduleAutosave() {
     this.dirty = true
     this.updateStatus("unsaved")
-    clearTimeout(this.saveTimer)
-    this.saveTimer = setTimeout(() => this.save(), 3000)
+    this.timeouts.clear(this.saveTimer)
+    this.saveTimer = this.timeouts.set(() => this.save(), 3000)
   }
 
   handleChange(event) {
@@ -49,6 +54,12 @@ export default class extends Controller {
   }
 
   async save() {
+    if (!this.connected) return
+
+    // Drop any retry still queued from a previous failure — this run supersedes it.
+    this.timeouts.clear(this.retryTimer)
+    this.retryTimer = null
+
     const titleInput = this.element.querySelector(this.titleSelectorValue)
     if (titleInput && !titleInput.value.trim()) return
 
@@ -97,12 +108,12 @@ export default class extends Controller {
           this.updateStatus("saved")
         } else {
           this.updateStatus("error")
-          setTimeout(() => this.save(), 5000)
+          this.scheduleRetry()
         }
       })
       .catch(() => {
         this.updateStatus("error")
-        setTimeout(() => this.save(), 5000)
+        this.scheduleRetry()
       })
       .finally(() => {
         this.saving = false
@@ -113,6 +124,15 @@ export default class extends Controller {
       })
 
     return this.savePromise
+  }
+
+  scheduleRetry() {
+    // A response can land after the controller is gone (Turbo navigation
+    // mid-request); don't queue a retry that would outlive the editor.
+    if (!this.connected) return
+
+    this.timeouts.clear(this.retryTimer)
+    this.retryTimer = this.timeouts.set(() => this.save(), 5000)
   }
 
   async handleBack(event) {
@@ -128,13 +148,16 @@ export default class extends Controller {
 
     if (this.dirty) {
       this.updateStatus("saving")
-      const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("timeout")), 10000)
-      )
+      let timeoutId = null
+      const timeout = new Promise((_, reject) => {
+        timeoutId = this.timeouts.set(() => reject(new Error("timeout")), 10000)
+      })
       try {
         await Promise.race([this.save(), timeout])
       } catch {
         // Navigate anyway after timeout
+      } finally {
+        this.timeouts.clear(timeoutId)
       }
     }
 

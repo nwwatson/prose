@@ -1,11 +1,11 @@
 <% content_for(:title, page_title(@tag.name)) %>
 
 <% content_for(:head) do %>
-  <% tag_description = "Posts tagged with #{@tag.name}" %>
-  <%= meta_description_tag(tag_description) %>
-  <%= open_graph_tags(title: "Tagged: #{@tag.name} — #{site_name}", description: tag_description, url: tag_url(@tag, slug: @tag.slug)) %>
-  <%= twitter_card_tags(title: "Tagged: #{@tag.name} — #{site_name}", description: tag_description) %>
-  <%= canonical_tag(tag_url(@tag, slug: @tag.slug)) %>
+  <%= seo_head_tags(
+        title: "Tagged: #{@tag.name} — #{site_name}",
+        description: "Posts tagged with #{@tag.name}",
+        url: tag_url(@tag, slug: @tag.slug)
+      ) %>
 <% end %>
 
 <div>
@@ -14,15 +14,6 @@
 
 <div class="post-listing">
   <% @posts.each do |post| %>
-    <article class="post-card">
-      <h3 class="post-card__title">
-        <%= link_to post.title, post_path(post, slug: post.slug), class: "post-card__link" %>
-      </h3>
-      <div class="post-card__meta post-meta">
-        <span><%= t('shared.by') %> <%= author_link(post.user) %></span>
-        <span class="post-meta__separator">&middot;</span>
-        <time datetime="<%= post.published_at.iso8601 %>"><%= post.published_at.strftime("%B %-d, %Y") %></time>
-      </div>
-    </article>
+    <%= render "posts/post", post: post, show_subtitle: false, show_reading_time: false, show_category: false %>
   <% end %>
 </div>

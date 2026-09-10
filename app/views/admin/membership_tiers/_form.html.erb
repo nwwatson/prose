@@ -1,26 +1,18 @@
 <%= form_with model: [ :admin, tier ], class: "space-y-6" do |f| %>
-  <% if tier.errors.any? %>
-    <div class="rounded-md bg-red-50 p-4">
-      <ul class="list-disc pl-5 text-sm text-red-700">
-        <% tier.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render "admin/shared/form_errors", record: tier, wrapper_class: "" %>
 
   <div class="max-w-lg space-y-6">
     <div>
       <%= f.label :name, class: "block text-sm font-medium text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :name, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+        <%= f.text_field :name, class: admin_input_classes %>
       </div>
     </div>
 
     <div>
       <%= f.label :description, class: "block text-sm font-medium text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_area :description, rows: 3, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+        <%= f.text_area :description, rows: 3, class: admin_input_classes %>
       </div>
     </div>
 
@@ -28,7 +20,7 @@
       <div>
         <%= f.label :price_cents, t('admin.membership_tiers.form.price_cents'), class: "block text-sm font-medium text-gray-900" %>
         <div class="mt-2">
-          <%= f.number_field :price_cents, min: 1, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm", placeholder: "1000" %>
+          <%= f.number_field :price_cents, min: 1, class: admin_input_classes, placeholder: "1000" %>
         </div>
         <p class="mt-1 text-xs text-gray-500"><%= t('admin.membership_tiers.form.price_help') %></p>
       </div>
@@ -36,7 +28,7 @@
       <div>
         <%= f.label :interval, class: "block text-sm font-medium text-gray-900" %>
         <div class="mt-2">
-          <%= f.select :interval, MembershipTier.intervals.keys.map { |i| [i.capitalize, i] }, {}, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+          <%= f.select :interval, MembershipTier.intervals.keys.map { |i| [i.capitalize, i] }, {}, class: admin_input_classes %>
         </div>
       </div>
     </div>
@@ -45,14 +37,14 @@
       <div>
         <%= f.label :currency, class: "block text-sm font-medium text-gray-900" %>
         <div class="mt-2">
-          <%= f.select :currency, SiteSetting::PaymentConfiguration::SUPPORTED_CURRENCIES.map { |k, v| [v, k] }, {}, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+          <%= f.select :currency, SiteSetting::PaymentConfiguration::SUPPORTED_CURRENCIES.map { |k, v| [v, k] }, {}, class: admin_input_classes %>
         </div>
       </div>
 
       <div>
         <%= f.label :position, class: "block text-sm font-medium text-gray-900" %>
         <div class="mt-2">
-          <%= f.number_field :position, min: 0, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+          <%= f.number_field :position, min: 0, class: admin_input_classes %>
         </div>
       </div>
     </div>
@@ -63,8 +55,8 @@
     </div>
 
     <div class="flex justify-end space-x-3">
-      <%= link_to t('shared.cancel'), admin_membership_tiers_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
-      <%= f.submit class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
+      <%= link_to t('shared.cancel'), admin_membership_tiers_path, class: admin_button_classes(variant: :outline) %>
+      <%= f.submit class: "#{admin_button_classes(variant: :primary)} cursor-pointer" %>
     </div>
   </div>
 <% end %>

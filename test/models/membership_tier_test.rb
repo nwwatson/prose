@@ -1,6 +1,40 @@
 require "test_helper"
 
 class MembershipTierTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
+  test "enqueues a sync job after commit when payments are configured and ids are missing" do
+    SiteSetting.current.update!(stripe_secret_key: "sk_test", stripe_publishable_key: "pk_test")
+
+    assert_enqueued_with(job: SyncMembershipTierJob) do
+      MembershipTier.create!(name: "New Tier", price_cents: 500, currency: "usd", interval: :month)
+    end
+  ensure
+    SiteSetting.current.update!(stripe_secret_key: nil, stripe_publishable_key: nil)
+  end
+
+  test "does not enqueue a sync job when payments are not configured" do
+    assert_no_enqueued_jobs only: SyncMembershipTierJob do
+      MembershipTier.create!(name: "New Tier", price_cents: 500, currency: "usd", interval: :month)
+    end
+  end
+
+  test "does not enqueue a sync job when already synced to Stripe" do
+    SiteSetting.current.update!(stripe_secret_key: "sk_test", stripe_publishable_key: "pk_test")
+
+    tier = membership_tiers(:monthly)
+    assert_no_enqueued_jobs only: SyncMembershipTierJob do
+      tier.update!(name: "Renamed Monthly")
+    end
+  ensure
+    SiteSetting.current.update!(stripe_secret_key: nil, stripe_publishable_key: nil)
+  end
+
+  test "synced_to_stripe? reflects presence of both stripe ids" do
+    assert membership_tiers(:monthly).synced_to_stripe?
+    assert_not membership_tiers(:inactive).synced_to_stripe?
+  end
+
   test "valid tier" do
     tier = MembershipTier.new(name: "Basic", price_cents: 500, currency: "usd", interval: :month)
     assert tier.valid?

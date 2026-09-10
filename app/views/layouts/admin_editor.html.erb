@@ -17,11 +17,7 @@
            data-autosave-method-value="POST"
            data-autosave-persisted-value="false"
          <% end %>
-         data-editor-drawer-ai-available-value="<%= ai_available %>"
          data-editor-drawer-active-tab-value="<%= ai_available ? 'ai' : 'settings' %>"
-         <% if ai_available %>
-           data-editor-drawer-post-slug-value="<%= @post.to_param %>"
-         <% end %>
          class="relative min-h-full">
       <%= render "layouts/editor/top_bar", back_label: t("layouts.admin_editor.posts") %>
 

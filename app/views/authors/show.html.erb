@@ -2,10 +2,11 @@
 
 <% content_for(:head) do %>
   <% description = @identity.bio.present? ? strip_tags(@identity.bio_html).truncate(160) : t('authors.show.posts_by', name: @identity.name, site_name: site_name) %>
-  <%= meta_description_tag(description) %>
-  <%= open_graph_tags(title: "#{@identity.name} — #{site_name}", description: description, url: author_url(@identity, handle: @identity.handle)) %>
-  <%= twitter_card_tags(title: "#{@identity.name} — #{site_name}", description: description) %>
-  <%= canonical_tag(author_url(@identity, handle: @identity.handle)) %>
+  <%= seo_head_tags(
+        title: "#{@identity.name} — #{site_name}",
+        description: description,
+        url: author_url(@identity, handle: @identity.handle)
+      ) %>
   <%= json_ld_for_author(@identity) %>
 <% end %>
 
@@ -62,25 +63,7 @@
 
   <div class="post-listing">
     <% @posts.each do |post| %>
-      <article class="post-card">
-        <h3 class="post-card__title">
-          <%= link_to post.title, post_path(post, slug: post.slug),
-                class: "post-card__link" %>
-        </h3>
-        <% if post.subtitle.present? %>
-          <p class="post-card__subtitle"><%= post.subtitle %></p>
-        <% end %>
-        <div class="post-card__meta post-meta">
-          <time datetime="<%= post.published_at.iso8601 %>"><%= post.published_at.strftime("%B %-d, %Y") %></time>
-          <span class="post-meta__separator">&middot;</span>
-          <span><%= post.reading_time_minutes %> <%= t('shared.min_read') %></span>
-          <% if post.category %>
-            <span class="post-meta__separator">&middot;</span>
-            <%= link_to post.category.name, category_path(post.category, slug: post.category.slug),
-                  class: "text-link--category" %>
-          <% end %>
-        </div>
-      </article>
+      <%= render "posts/post", post: post, show_author: false %>
     <% end %>
   </div>
 

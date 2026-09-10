@@ -2,11 +2,12 @@
 
 <% content_for(:head) do %>
   <% cat_description = @category.description.presence || "Browse posts in #{@category.name}" %>
-  <%= meta_description_tag(cat_description) %>
-  <%= open_graph_tags(title: "#{@category.name} — #{site_name}", description: cat_description, url: category_url(@category, slug: @category.slug)) %>
-  <%= twitter_card_tags(title: "#{@category.name} — #{site_name}", description: cat_description) %>
-  <%= canonical_tag(category_url(@category, slug: @category.slug)) %>
-  <%= json_ld_tag({ "@context": "https://schema.org", "@type": "CollectionPage", name: @category.name, description: cat_description, url: category_url(@category, slug: @category.slug) }) %>
+  <%= seo_head_tags(
+        title: "#{@category.name} — #{site_name}",
+        description: cat_description,
+        url: category_url(@category, slug: @category.slug),
+        json_ld: { "@context": "https://schema.org", "@type": "CollectionPage", name: @category.name, description: cat_description, url: category_url(@category, slug: @category.slug) }
+      ) %>
 <% end %>
 
 <div>
@@ -18,15 +19,6 @@
 
 <div class="post-listing">
   <% @posts.each do |post| %>
-    <article class="post-card">
-      <h3 class="post-card__title">
-        <%= link_to post.title, post_path(post, slug: post.slug), class: "post-card__link" %>
-      </h3>
-      <div class="post-card__meta post-meta">
-        <span><%= t('shared.by') %> <%= author_link(post.user) %></span>
-        <span class="post-meta__separator">&middot;</span>
-        <time datetime="<%= post.published_at.iso8601 %>"><%= post.published_at.strftime("%B %-d, %Y") %></time>
-      </div>
-    </article>
+    <%= render "posts/post", post: post, show_subtitle: false, show_reading_time: false, show_category: false %>
   <% end %>
 </div>

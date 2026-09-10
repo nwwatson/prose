@@ -58,6 +58,22 @@ class PageTest < ActiveSupport::TestCase
     assert_equal "Learn more about us", page.seo_description
   end
 
+  test "seo_description falls back to the plain-text content" do
+    page = pages(:contact_page)
+    page.meta_description = nil
+
+    assert_equal page.content.to_plain_text.truncate(155), page.seo_description
+  end
+
+  test "seo_description is memoized so repeated head tags do not re-parse the content" do
+    page = pages(:contact_page)
+    page.meta_description = nil
+    first = page.seo_description
+
+    # Same object identity: the fallback truncation ran once, not per call.
+    assert_same first, page.seo_description
+  end
+
   test "live scope returns only published pages with past published_at" do
     live = Page.live
     assert_includes live, pages(:published_page)

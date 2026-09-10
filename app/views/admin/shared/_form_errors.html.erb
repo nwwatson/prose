@@ -1,0 +1,15 @@
+<%# locals: (record:, heading: nil, wrapper_class: "mb-6") %>
+<% if record.errors.any? %>
+  <div class="<%= wrapper_class %> rounded-md bg-red-50 p-4">
+    <% if heading.present? %>
+      <h3 class="text-sm font-medium text-red-800"><%= heading %></h3>
+      <ul class="mt-2 list-disc pl-5 text-sm text-red-700">
+    <% else %>
+      <ul class="list-disc pl-5 text-sm text-red-700">
+    <% end %>
+      <% record.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

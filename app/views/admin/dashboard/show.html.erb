@@ -6,35 +6,13 @@
 </div>
 
 <div class="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-5">
-  <div class="bg-white overflow-hidden shadow rounded-lg">
-    <div class="p-4 sm:p-5">
-      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.dashboard.show.total_subscribers') %></div>
-      <div class="mt-1 text-2xl font-semibold text-gray-900 sm:text-3xl"><%= @total_subscribers %></div>
-      <%= render_trend(@subscriber_trend) %>
-    </div>
-  </div>
+  <%= render "admin/shared/stat_card", label: t('admin.dashboard.show.total_subscribers'), value: @total_subscribers, trend: @subscriber_trend %>
 
-  <div class="bg-white overflow-hidden shadow rounded-lg">
-    <div class="p-4 sm:p-5">
-      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.dashboard.show.new_subscribers_30d') %></div>
-      <div class="mt-1 text-2xl font-semibold text-gray-900 sm:text-3xl"><%= @new_subscribers_30d %></div>
-    </div>
-  </div>
+  <%= render "admin/shared/stat_card", label: t('admin.dashboard.show.new_subscribers_30d'), value: @new_subscribers_30d %>
 
-  <div class="bg-white overflow-hidden shadow rounded-lg">
-    <div class="p-4 sm:p-5">
-      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.dashboard.show.total_views_30d') %></div>
-      <div class="mt-1 text-2xl font-semibold text-gray-900 sm:text-3xl"><%= @total_views_30d %></div>
-      <%= render_trend(@views_trend) %>
-    </div>
-  </div>
+  <%= render "admin/shared/stat_card", label: t('admin.dashboard.show.total_views_30d'), value: @total_views_30d, trend: @views_trend %>
 
-  <div class="bg-white overflow-hidden shadow rounded-lg">
-    <div class="p-4 sm:p-5">
-      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.dashboard.show.published_posts') %></div>
-      <div class="mt-1 text-2xl font-semibold text-gray-900 sm:text-3xl"><%= @published_posts_count %></div>
-    </div>
-  </div>
+  <%= render "admin/shared/stat_card", label: t('admin.dashboard.show.published_posts'), value: @published_posts_count %>
 
   <div class="col-span-2 bg-white overflow-hidden shadow rounded-lg sm:col-span-1 lg:col-span-1">
     <div class="p-4 sm:p-5">
