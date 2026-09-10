@@ -7,6 +7,25 @@ module MetaTagsHelper
     end
   end
 
+  # Emits the full SEO <head> sequence for a page: description, Open Graph,
+  # Twitter card, canonical link and (optionally) a JSON-LD block. The image is
+  # resolved once and shared by the OG and Twitter groups.
+  #
+  # extra_tags are rendered between the OG and Twitter groups, which is where
+  # article:* metadata belongs on a post page.
+  def seo_head_tags(title:, description:, url:, type: "website", image: nil, extra_tags: nil, json_ld: nil)
+    image_url = image || default_og_image_url
+
+    tags = [ meta_description_tag(description) ]
+    tags << open_graph_tags(title: title, description: description, url: url, type: type, image: image_url)
+    tags.concat(Array(extra_tags))
+    tags << twitter_card_tags(title: title, description: description, image: image_url)
+    tags << canonical_tag(url)
+    tags << json_ld_tag(json_ld) if json_ld.present?
+
+    safe_join(tags.compact, "\n")
+  end
+
   def meta_description_tag(text)
     return if text.blank?
 
@@ -40,141 +59,28 @@ module MetaTagsHelper
     tag.link(rel: "canonical", href: url)
   end
 
-  def json_ld_tag(data)
-    tag.script(data.to_json.html_safe, type: "application/ld+json")
-  end
-
   def meta_tags_for_post(post)
-    description = post.seo_description
-    url = post_url(post, slug: post.slug)
-    image = post.featured_image.attached? ? optimized_og_image_url(post) : nil
-
-    tags = []
-    tags << meta_description_tag(description)
-    tags << open_graph_tags(
+    seo_head_tags(
       title: post.title,
-      description: description,
-      url: url,
+      description: post.seo_description,
+      url: post_url(post, slug: post.slug),
       type: "article",
-      image: image
+      image: post_og_image_url(post),
+      extra_tags: article_meta_tags(post)
     )
-    tags << tag.meta(property: "article:published_time", content: post.published_at&.iso8601)
-    if post.user.identity.handle.present?
-      tags << tag.meta(property: "article:author", content: author_url(post.user.identity, handle: post.user.identity.handle))
-    else
-      tags << tag.meta(property: "article:author", content: post.user.display_name)
-    end
-    post.tags.each do |t|
-      tags << tag.meta(property: "article:tag", content: t.name)
-    end
-    tags << twitter_card_tags(title: post.title, description: description, image: image)
-    tags << canonical_tag(url)
-
-    safe_join(tags.compact, "\n")
-  end
-
-  def json_ld_for_post(post)
-    data = {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      headline: post.title,
-      datePublished: post.published_at&.iso8601,
-      dateModified: post.updated_at.iso8601,
-      author: author_json_ld(post.user.identity)
-    }
-    description = post.seo_description
-    data[:description] = description if description.present?
-
-    if post.featured_image.attached?
-      data[:image] = optimized_og_image_url(post)
-    end
-
-    data[:wordCount] = post.reading_time_minutes * 238
-
-    if post.tags.any?
-      data[:keywords] = post.tags.map(&:name).join(", ")
-    end
-
-    json_ld_tag(data)
-  end
-
-  def json_ld_for_author(identity)
-    data = {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      name: identity.name,
-      url: author_url(identity, handle: identity.handle)
-    }
-    data[:description] = strip_tags(identity.bio_html).truncate(160) if identity.bio.present?
-    data[:sameAs] = [ identity.website_url, identity.twitter_url, identity.github_url ].compact if identity.has_social_links?
-
-    json_ld_tag(data)
-  end
-
-  def json_ld_breadcrumb_list(post)
-    items = []
-
-    # Home item
-    items << {
-      "@type": "ListItem",
-      position: 1,
-      name: "Home",
-      item: root_url
-    }
-
-    # Category item (if post has a category)
-    if post.category.present?
-      items << {
-        "@type": "ListItem",
-        position: 2,
-        name: post.category.name,
-        item: category_url(post.category, slug: post.category.slug)
-      }
-    end
-
-    # Post item (always last, no URL)
-    position = items.size + 1
-    items << {
-      "@type": "ListItem",
-      position: position,
-      name: post.title
-    }
-
-    data = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: items
-    }
-
-    json_ld_tag(data)
-  end
-
-  def breadcrumb_navigation(post)
-    items = []
-
-    # Home
-    items << link_to("Home", root_path, class: "text-ink-blue hover:underline")
-
-    # Category
-    if post.category.present?
-      items << link_to(
-        post.category.name,
-        category_path(post.category, slug: post.category.slug),
-        class: "text-ink-blue hover:underline"
-      )
-    end
-
-    # Current page (not a link)
-    items << tag.span(post.title, class: "text-gray-600 dark:text-gray-400")
-
-    safe_join(items, " > ")
   end
 
   private
 
-  def author_json_ld(identity)
-    data = { "@type": "Person", name: identity.name }
-    data[:url] = author_url(identity, handle: identity.handle) if identity.handle.present?
-    data
+  def article_meta_tags(post)
+    identity = post.user.identity
+    author = identity.handle.present? ? author_url(identity, handle: identity.handle) : post.user.display_name
+
+    tags = [
+      tag.meta(property: "article:published_time", content: post.published_at&.iso8601),
+      tag.meta(property: "article:author", content: author)
+    ]
+    post.tags.each { |t| tags << tag.meta(property: "article:tag", content: t.name) }
+    tags
   end
 end

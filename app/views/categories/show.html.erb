@@ -2,11 +2,12 @@
 
 <% content_for(:head) do %>
   <% cat_description = @category.description.presence || "Browse posts in #{@category.name}" %>
-  <%= meta_description_tag(cat_description) %>
-  <%= open_graph_tags(title: "#{@category.name} — #{site_name}", description: cat_description, url: category_url(@category, slug: @category.slug)) %>
-  <%= twitter_card_tags(title: "#{@category.name} — #{site_name}", description: cat_description) %>
-  <%= canonical_tag(category_url(@category, slug: @category.slug)) %>
-  <%= json_ld_tag({ "@context": "https://schema.org", "@type": "CollectionPage", name: @category.name, description: cat_description, url: category_url(@category, slug: @category.slug) }) %>
+  <%= seo_head_tags(
+        title: "#{@category.name} — #{site_name}",
+        description: cat_description,
+        url: category_url(@category, slug: @category.slug),
+        json_ld: { "@context": "https://schema.org", "@type": "CollectionPage", name: @category.name, description: cat_description, url: category_url(@category, slug: @category.slug) }
+      ) %>
 <% end %>
 
 <div>

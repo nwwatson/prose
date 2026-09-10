@@ -1,11 +1,11 @@
 <% content_for(:title, page_title(@tag.name)) %>
 
 <% content_for(:head) do %>
-  <% tag_description = "Posts tagged with #{@tag.name}" %>
-  <%= meta_description_tag(tag_description) %>
-  <%= open_graph_tags(title: "Tagged: #{@tag.name} — #{site_name}", description: tag_description, url: tag_url(@tag, slug: @tag.slug)) %>
-  <%= twitter_card_tags(title: "Tagged: #{@tag.name} — #{site_name}", description: tag_description) %>
-  <%= canonical_tag(tag_url(@tag, slug: @tag.slug)) %>
+  <%= seo_head_tags(
+        title: "Tagged: #{@tag.name} — #{site_name}",
+        description: "Posts tagged with #{@tag.name}",
+        url: tag_url(@tag, slug: @tag.slug)
+      ) %>
 <% end %>
 
 <div>

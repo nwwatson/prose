@@ -7,11 +7,13 @@ module SiteHelper
     site_setting.site_description
   end
 
+  # Memoized for the lifetime of the request: several head tags ask for it, and
+  # a nil result (no image configured) must not re-check the attachment.
   def default_og_image_url
-    setting = site_setting
-    if setting.default_og_image.attached?
-      rails_storage_proxy_url(setting.default_og_image)
-    end
+    return @default_og_image_url if defined?(@default_og_image_url)
+
+    image = site_setting.default_og_image
+    @default_og_image_url = image.attached? ? rails_storage_proxy_url(image) : nil
   end
 
   def font_stylesheet_tags
