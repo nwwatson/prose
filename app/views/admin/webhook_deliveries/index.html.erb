@@ -1,0 +1,43 @@
+<% content_for(:title, "#{t('admin.webhook_deliveries.index.title')} — #{site_name}") %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.webhook_deliveries.index.title') %></h1>
+    <%= link_to t('admin.webhook_deliveries.index.back_to_webhooks'), admin_webhooks_path, class: admin_button_classes(variant: :outline) %>
+  </div>
+
+  <p class="text-sm text-gray-500"><%= @webhook.url %></p>
+
+  <% if @webhook_deliveries.any? %>
+    <div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="<%= admin_th_classes %>"><%= t('admin.webhook_deliveries.index.event') %></th>
+            <th class="<%= admin_th_classes %>"><%= t('admin.webhook_deliveries.index.response') %></th>
+            <th class="<%= admin_th_classes %>"><%= t('admin.webhook_deliveries.index.attempted_at') %></th>
+            <th class="<%= admin_th_classes %>"><%= t('admin.webhook_deliveries.index.status') %></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @webhook_deliveries.each do |delivery| %>
+            <tr>
+              <td class="px-4 py-3 text-sm font-medium text-gray-900"><%= delivery.event %></td>
+              <td class="px-4 py-3 text-sm text-gray-500"><%= delivery.response_code || t('admin.webhook_deliveries.index.no_response') %></td>
+              <td class="px-4 py-3 text-sm text-gray-500"><%= time_ago_in_words(delivery.attempted_at) %> <%= t('shared.ago') %></td>
+              <td class="px-4 py-3 text-sm">
+                <% if delivery.success? %>
+                  <%= status_badge(t('admin.webhook_deliveries.index.success'), color_class: "bg-green-100 text-green-800", size: :sm) %>
+                <% else %>
+                  <%= status_badge(t('admin.webhook_deliveries.index.failed'), color_class: "bg-red-100 text-red-800", size: :sm) %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <%= render "admin/shared/empty_state", description: t('admin.webhook_deliveries.index.no_deliveries') %>
+  <% end %>
+</div>

@@ -98,6 +98,13 @@ Rails.application.routes.draw do
     resources :memberships, only: [ :index, :show, :destroy ]
     resource :revenue, only: [ :show ], controller: "revenue"
     resources :api_tokens, only: [ :index, :create, :destroy ]
+    resources :webhooks do
+      member do
+        post :test
+        post :regenerate_secret
+      end
+      resources :webhook_deliveries, only: [ :index ]
+    end
   end
 
   # Health check

@@ -1,0 +1,6 @@
+<% content_for(:title, "#{t('admin.webhooks.new.title')} — #{site_name}") %>
+
+<div class="space-y-6">
+  <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.webhooks.new.title') %></h1>
+  <%= render "form", webhook: @webhook %>
+</div>

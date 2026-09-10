@@ -1,0 +1,39 @@
+post_events_webhook:
+  url: https://example.com/webhooks/prose
+  events: <%= %w[post.published post.updated post.scheduled post.unpublished post.deleted].to_json %>
+  signing_secret: test_signing_secret_1234567890abcdef
+  active: true
+  consecutive_failures: 0
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>
+
+subscriber_events_webhook:
+  url: https://example.com/webhooks/subscribers
+  events: <%= %w[subscriber.created subscriber.deleted].to_json %>
+  signing_secret: test_signing_secret_abcdef1234567890
+  active: true
+  consecutive_failures: 2
+  last_triggered_at: <%= 2.days.ago %>
+  last_response_code: 500
+  created_at: <%= 2.weeks.ago %>
+  updated_at: <%= 2.days.ago %>
+
+comment_events_webhook:
+  url: https://example.com/webhooks/comments
+  events: <%= %w[comment.created comment.approved].to_json %>
+  signing_secret: test_signing_secret_comments00000000
+  active: true
+  consecutive_failures: 0
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>
+
+disabled_webhook:
+  url: https://example.com/webhooks/disabled
+  events: <%= %w[comment.created].to_json %>
+  signing_secret: test_signing_secret_disabled0000000
+  active: false
+  consecutive_failures: 5
+  last_triggered_at: <%= 1.day.ago %>
+  last_response_code: 500
+  created_at: <%= 3.weeks.ago %>
+  updated_at: <%= 1.day.ago %>

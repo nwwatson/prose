@@ -65,6 +65,9 @@ app/models/user/api_tokenable.rb     # module User::ApiTokenable (concern)
 app/models/user/passkey_authenticatable.rb # module User::PasskeyAuthenticatable (WebAuthn passkeys)
 app/models/post/discoverable.rb      # module Post::Discoverable (related posts, prev/next)
 app/models/post/versionable.rb      # module Post::Versionable (revision history, version cooldown)
+app/models/post/webhookable.rb      # module Post::Webhookable (fires post.published/updated/deleted/scheduled/unpublished webhook events)
+app/models/webhook.rb               # Webhook: outbound webhook subscription (url, events, encrypted signing_secret, auto-disable)
+app/models/webhook_delivery.rb      # WebhookDelivery: per-attempt delivery log for a Webhook
 app/models/post_version.rb          # PostVersion: full snapshot of post content per version
 app/models/concerns/sluggable.rb     # module Sluggable (slugged_from macro: slug generation/uniquifying, used by Post, Page, Category, Tag)
 app/models/concerns/identity_backed.rb # module IdentityBacked (belongs_to :identity, email validation/normalization, build_identity_if_needed; overridable default_identity_name), included by User and Subscriber
@@ -247,6 +250,13 @@ app/services/mcp/
 ```
 
 **Admin UI**: `Admin::ApiTokensController` with token CRUD at `/admin/api_tokens`. Admins see all tokens; writers see only their own. Raw token shown once via flash on creation.
+
+### Webhooks (Outbound)
+`Webhook` (url, `events` json array, `signing_secret` encrypted, `active`, `consecutive_failures`, `last_triggered_at`, `last_response_code`) lets third-party services subscribe to site events. `Webhook::EVENTS` is the fixed list: `post.published`/`updated`/`deleted`/`scheduled`/`unpublished`, `subscriber.created`/`deleted`, `comment.created`/`approved`. `WebhookDispatcher.deliver(event, data)` finds active webhooks subscribed to `event` and enqueues `DeliverWebhookJob` per webhook; `Webhooks::Sender.post` does the raw `Net::HTTP` POST (HMAC-SHA256 signature in `X-Prose-Signature`, computed over the `{event:, timestamp:, data:}` envelope), raising `Webhooks::Sender::DeliveryError` on a non-2xx response or network failure. The job's `retry_on` (polynomial backoff, 3 attempts) retries failed deliveries; every attempt — success or failure — is logged as a `WebhookDelivery` row and rolls into `Webhook#record_delivery_result!`, which resets `consecutive_failures` on success or increments it on failure and auto-disables the webhook (`active: false`) once `consecutive_failures` reaches `Webhook::MAX_CONSECUTIVE_FAILURES` (5).
+
+Event triggers live at the **model** layer (not controllers), so both the Admin UI and MCP tools fire the same events: `Post::Webhookable` (`after_update_commit`/`after_destroy_commit`) maps a `status` transition to `post.published`/`post.scheduled`/`post.unpublished` and fires `post.updated` for any other saved change, `post.deleted` on destroy. `Subscriber.subscribe_or_sign_in!` fires `subscriber.created` only for a genuinely new subscriber (not a returning magic-link sign-in); `Subscriber#unsubscribe!` fires `subscriber.deleted` (there is no hard subscriber delete in the app, so "deleted" is modeled as unsubscribing). `Comment` fires `comment.created` on `after_create_commit` and exposes `#approve!` (used by `Admin::CommentsController#update` instead of a bare `update!(approved: true)`) which fires `comment.approved`. Per-resource payload serializers live in `app/services/webhooks/` (`PostSerializer`, `SubscriberSerializer`, `CommentSerializer`) — plain hashes with iso8601 timestamps, separate from the MCP serializers since webhook payload shape needs differ.
+
+**Admin UI**: `Admin::WebhooksController` (full CRUD at `/admin/webhooks`) shows the signing secret once via flash on creation or regeneration (`POST .../regenerate_secret`), and a "Send Test Event" button (`POST .../test`) enqueues a `ping` event bypassing subscription filtering. `Admin::WebhookDeliveriesController` (`/admin/webhooks/:webhook_id/webhook_deliveries`) shows the delivery log (event, response code, timestamp, success/fail) for one webhook.
 
 ### Authentication
 - **Admin**: session-based (signed cookie, 14-day expiry). The `Authentication` concern owns cookie → `Session` resumption (`resume_session`, memoized via a `Current.session` short-circuit) and is included once on `ApplicationController`, so both admin (`current_user`) and identity (`IdentityAuthentication#current_identity`) lookups share a single `sessions` query per request.

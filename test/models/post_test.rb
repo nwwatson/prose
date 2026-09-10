@@ -1,6 +1,8 @@
 require "test_helper"
 
 class PostTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   test "valid post" do
     post = Post.new(title: "Test Post", user: users(:admin))
     assert post.valid?
@@ -66,5 +68,43 @@ class PostTest < ActiveSupport::TestCase
     post = Post.for_listing.find(posts(:published_post).id)
     assert_query_count(0, table: "identities") { post.user.identity }
     assert_query_count(0, table: "categories") { post.category }
+  end
+
+  test "publish! enqueues a post.published webhook delivery" do
+    post = posts(:draft_post)
+
+    assert_enqueued_with(job: DeliverWebhookJob, args: ->(args) { args[0] == webhooks(:post_events_webhook).id && args[1] == "post.published" }) do
+      post.publish!
+    end
+  end
+
+  test "schedule! enqueues a post.scheduled webhook delivery" do
+    post = posts(:draft_post)
+
+    assert_enqueued_jobs 1, only: DeliverWebhookJob do
+      post.schedule!(1.day.from_now)
+    end
+  end
+
+  test "revert_to_draft! enqueues a post.unpublished webhook delivery" do
+    post = posts(:published_post)
+
+    assert_enqueued_with(job: DeliverWebhookJob, args: ->(args) { args[0] == webhooks(:post_events_webhook).id && args[1] == "post.unpublished" }) do
+      post.revert_to_draft!
+    end
+  end
+
+  test "updating post content enqueues a post.updated webhook delivery" do
+    post = posts(:published_post)
+
+    assert_enqueued_with(job: DeliverWebhookJob, args: ->(args) { args[0] == webhooks(:post_events_webhook).id && args[1] == "post.updated" }) do
+      post.update!(title: "Updated Title")
+    end
+  end
+
+  test "destroying a post enqueues a post.deleted webhook delivery" do
+    assert_enqueued_jobs 1, only: DeliverWebhookJob do
+      posts(:draft_post).destroy
+    end
   end
 end

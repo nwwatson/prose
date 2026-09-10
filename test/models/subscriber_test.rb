@@ -2,6 +2,7 @@ require "test_helper"
 
 class SubscriberTest < ActiveSupport::TestCase
   include ActionMailer::TestHelper
+  include ActiveJob::TestHelper
 
   test "valid subscriber" do
     subscriber = Subscriber.new(email: "new@example.com")
@@ -133,5 +134,36 @@ class SubscriberTest < ActiveSupport::TestCase
     Subscriber.subscribe_or_sign_in!(email: existing.email, source_post_id: posts(:featured_post).id)
 
     assert_equal original_source, existing.reload.source_post_id
+  end
+
+  test "subscribe_or_sign_in! enqueues a subscriber.created webhook delivery for a new subscriber" do
+    assert_enqueued_jobs 1, only: DeliverWebhookJob do
+      Subscriber.subscribe_or_sign_in!(email: "brand-new@example.com")
+    end
+  end
+
+  test "subscribe_or_sign_in! does not enqueue a webhook delivery for an existing subscriber" do
+    existing = subscribers(:confirmed)
+
+    assert_no_enqueued_jobs only: DeliverWebhookJob do
+      Subscriber.subscribe_or_sign_in!(email: existing.email)
+    end
+  end
+
+  test "unsubscribe! enqueues a subscriber.deleted webhook delivery" do
+    subscriber = subscribers(:confirmed)
+
+    assert_enqueued_jobs 1, only: DeliverWebhookJob do
+      subscriber.unsubscribe!
+    end
+  end
+
+  test "unsubscribe! does not enqueue a webhook delivery when already unsubscribed" do
+    subscriber = subscribers(:confirmed)
+    subscriber.unsubscribe!
+
+    assert_no_enqueued_jobs only: DeliverWebhookJob do
+      subscriber.unsubscribe!
+    end
   end
 end

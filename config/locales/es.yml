@@ -93,6 +93,7 @@ es:
       settings: "Configuración"
       passkeys: "Claves de acceso"
       api_tokens: "Tokens de API"
+      webhooks: "Webhooks"
 
   posts:
     index:
@@ -476,6 +477,44 @@ es:
         revoke: "Revocar"
         revoke_confirm: "¿Revocar este token? Las aplicaciones que lo usen perderán acceso."
         no_tokens: "Aún no hay tokens de API. Crea uno para conectar Claude Desktop u otros clientes MCP."
+    webhooks:
+      index:
+        title: "Webhooks"
+        new_webhook: "Nuevo webhook"
+        url: "URL"
+        events: "Eventos"
+        last_triggered: "Última activación"
+        last_response: "Última respuesta"
+        status: "Estado"
+        disabled: "Deshabilitado"
+        deliveries: "Entregas"
+        no_webhooks: "Aún no hay webhooks. Agrega uno para notificar eventos del sitio a servicios de terceros."
+      new:
+        title: "Nuevo webhook"
+      edit:
+        title: "Editar webhook"
+        secret_shown: "Tu secreto de firma del webhook (cópialo ahora — no se mostrará de nuevo):"
+        copy: "Copiar"
+        send_test: "Enviar evento de prueba"
+        regenerate_secret: "Regenerar secreto"
+        regenerate_confirm: "¿Regenerar el secreto de firma? Las entregas firmadas con el secreto anterior fallarán la verificación."
+        view_deliveries: "Ver entregas"
+      form:
+        events: "Eventos"
+        active: "Activo"
+        active_help: "Se deshabilita automáticamente tras %{count} fallos de entrega consecutivos."
+    webhook_deliveries:
+      index:
+        title: "Entregas de webhooks"
+        back_to_webhooks: "Volver a webhooks"
+        event: "Evento"
+        response: "Respuesta"
+        attempted_at: "Intentado"
+        status: "Estado"
+        success: "Éxito"
+        failed: "Fallido"
+        no_response: "Sin respuesta"
+        no_deliveries: "Aún no hay entregas."
     newsletters:
       index:
         title: "Boletines"
@@ -865,6 +904,12 @@ es:
       api_tokens:
         created: "Token de API creado."
         revoked: "Token de API revocado."
+      webhooks:
+        created: "Webhook creado."
+        updated: "Webhook actualizado."
+        deleted: "Webhook eliminado."
+        test_sent: "Evento de prueba enviado."
+        secret_regenerated: "Secreto de firma regenerado."
       setup:
         welcome: "¡Bienvenido a %{site_name}! Tu cuenta de administrador ha sido creada."
       ai:
