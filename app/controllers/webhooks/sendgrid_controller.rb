@@ -4,7 +4,7 @@ module Webhooks
 
     def create
       events = JSON.parse(request.body.read)
-      EmailService::Sendgrid.new(api_key: nil).process_webhook(events)
+      EmailService::Sendgrid::WebhookProcessor.new.process(events)
       head :ok
     rescue JSON::ParserError
       head :bad_request

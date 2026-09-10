@@ -1,7 +1,8 @@
-class PaymentService::Stripe
-  def initialize(secret_key:, publishable_key: nil)
+class PaymentService::Stripe < PaymentService::Base
+  def initialize(secret_key:, publishable_key: nil, webhook_secret: nil)
     @secret_key = secret_key
     @publishable_key = publishable_key
+    @webhook_secret = webhook_secret
   end
 
   def create_customer(email:, name: nil)
@@ -52,8 +53,7 @@ class PaymentService::Stripe
   end
 
   def construct_webhook_event(payload:, signature:)
-    webhook_secret = SiteSetting.current.stripe_webhook_secret
-    ::Stripe::Webhook.construct_event(payload, signature, webhook_secret)
+    ::Stripe::Webhook.construct_event(payload, signature, @webhook_secret)
   end
 
   private
