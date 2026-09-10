@@ -29,7 +29,7 @@
               <span><%= newsletter.recipients_count %> <%= t('admin.newsletters.index.recipients').downcase %></span>
               <span>&middot;</span>
             <% end %>
-            <span><%= newsletter.sent_at&.strftime("%b %-d, %Y") || newsletter.updated_at.strftime("%b %-d, %Y") %></span>
+            <span><%= newsletter.sent_at ? l(newsletter.sent_at.to_date, format: :short) : l(newsletter.updated_at.to_date, format: :short) %></span>
           </div>
         <% end %>
       <% end %>
@@ -60,7 +60,7 @@
                 <%= newsletter.sent? ? newsletter.recipients_count : "—" %>
               </td>
               <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                <%= newsletter.sent_at&.strftime("%b %-d, %Y") || newsletter.updated_at.strftime("%b %-d, %Y") %>
+                <%= newsletter.sent_at ? l(newsletter.sent_at.to_date, format: :short) : l(newsletter.updated_at.to_date, format: :short) %>
               </td>
               <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                 <%= link_to t('shared.edit'), edit_admin_newsletter_path(newsletter), class: "text-gray-600 hover:text-gray-900" %>

@@ -115,7 +115,7 @@
           <p class="text-sm font-medium text-green-800"><%= t('admin.newsletters.editor_panel.sent') %></p>
           <p class="mt-1 text-sm text-green-700">
             <%= t('admin.newsletters.editor_panel.delivered_to') %> <strong><%= newsletter.recipients_count %></strong> <%= t('admin.newsletters.editor_panel.subscribers_on') %>
-            <%= newsletter.sent_at&.strftime("%b %-d, %Y at %-I:%M %p") %>
+            <%= newsletter.sent_at ? l(newsletter.sent_at, format: :with_time) : nil %>
           </p>
         </div>
       <% elsif newsletter.sending? %>
@@ -129,7 +129,7 @@
         <div class="rounded-md bg-yellow-50 p-4">
           <p class="text-sm font-medium text-yellow-800"><%= t('admin.newsletters.editor_panel.scheduled') %></p>
           <p class="mt-1 text-sm text-yellow-700">
-            <%= t('admin.newsletters.editor_panel.will_be_sent_on') %> <%= newsletter.scheduled_for&.strftime("%b %-d, %Y at %-I:%M %p") %>
+            <%= t('admin.newsletters.editor_panel.will_be_sent_on') %> <%= newsletter.scheduled_for ? l(newsletter.scheduled_for, format: :with_time) : nil %>
           </p>
         </div>
         <%= button_to t('admin.newsletters.editor_panel.cancel_schedule'), admin_newsletter_path(newsletter),

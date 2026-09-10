@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold text-gray-900"><%= @post.title %></h1>
     <p class="mt-1 text-sm text-gray-500">
       <% if @post.published? %>
-        <%= t('shared.published') %> <%= @post.published_at&.strftime("%b %d, %Y") %>
+        <%= t('shared.published') %> <%= @post.published_at ? l(@post.published_at.to_date, format: :short) : nil %>
       <% else %>
         <%= @post.status.capitalize %>
       <% end %>
@@ -71,7 +71,7 @@
           <div class="flex flex-wrap items-center justify-between gap-2">
             <p class="text-sm font-medium text-gray-900"><%= comment.identity.handle || comment.identity.name %></p>
             <div class="flex items-center space-x-2">
-              <span class="text-xs text-gray-500"><%= comment.created_at.strftime("%b %d, %Y") %></span>
+              <span class="text-xs text-gray-500"><%= l(comment.created_at.to_date, format: :short) %></span>
               <% unless comment.approved? %>
                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800"><%= t('shared.pending') %></span>
               <% end %>

@@ -53,7 +53,7 @@
               <span><%= token.user.display_name %></span>
             <% end %>
             <span><%= t('admin.api_tokens.index.last_used') %>: <%= token.last_used_at ? time_ago_in_words(token.last_used_at) + " " + t('shared.ago') : t('shared.never') %></span>
-            <span><%= token.created_at.strftime("%b %d, %Y") %></span>
+            <span><%= l(token.created_at.to_date, format: :short) %></span>
           </div>
           <% unless token.revoked? %>
             <div class="mt-3">
@@ -93,7 +93,7 @@
               <td class="px-4 py-3 text-sm text-gray-500">
                 <%= token.last_used_at ? time_ago_in_words(token.last_used_at) + " " + t('shared.ago') : t('shared.never') %>
               </td>
-              <td class="px-4 py-3 text-sm text-gray-500"><%= token.created_at.strftime("%b %d, %Y") %></td>
+              <td class="px-4 py-3 text-sm text-gray-500"><%= l(token.created_at.to_date, format: :short) %></td>
               <td class="px-4 py-3 text-sm">
                 <% if token.revoked? %>
                   <%= status_badge(t('shared.revoked'), color_class: "bg-red-100 text-red-800", size: :sm) %>

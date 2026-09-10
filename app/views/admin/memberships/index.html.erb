@@ -30,7 +30,7 @@
               <td class="px-6 py-4 text-sm">
                 <%= status_badge(membership.status.titleize, color_class: membership_status_color(membership.status), size: :sm) %>
               </td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= membership.created_at.strftime("%b %-d, %Y") %></td>
+              <td class="px-6 py-4 text-sm text-gray-500"><%= l(membership.created_at.to_date, format: :short) %></td>
               <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                 <%= link_to t('admin.memberships.index.view'), admin_membership_path(membership), class: "text-gray-600 hover:text-gray-900" %>
               </td>

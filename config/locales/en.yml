@@ -2,6 +2,21 @@ en:
   errors:
     messages:
       hex_color: "must be a valid hex color (e.g. #1a1a2e)"
+  date:
+    formats:
+      short: "%b %-d, %Y"
+      long: "%B %-d, %Y"
+    day_names: [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
+    abbr_day_names: [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+    month_names: [~, January, February, March, April, May, June, July, August, September, October, November, December]
+    abbr_month_names: [~, Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]
+  time:
+    formats:
+      short: "%b %d, %H:%M"
+      long: "%B %-d, %Y at %-I:%M %p"
+      with_time: "%b %-d, %Y at %-I:%M %p"
+    am: "am"
+    pm: "pm"
   # Shared / common strings
   shared:
     home: "Home"

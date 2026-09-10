@@ -41,7 +41,7 @@
                   <% end %>
                 </div>
               </td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= subscriber.confirmed_at&.strftime("%b %-d, %Y") %></td>
+              <td class="px-6 py-4 text-sm text-gray-500"><%= subscriber.confirmed_at ? l(subscriber.confirmed_at.to_date, format: :short) : nil %></td>
             </tr>
           <% end %>
         </tbody>

@@ -16,10 +16,7 @@
             <%= link_to post.title, post_path(post, slug: post.slug),
                   class: "related-posts__link" %>
           </h4>
-          <time class="related-posts__date"
-                datetime="<%= post.published_at.iso8601 %>">
-            <%= post.published_at.strftime("%B %-d, %Y") %>
-          </time>
+          <%= published_on(post, class: "related-posts__date") %>
         </article>
       <% end %>
     </div>

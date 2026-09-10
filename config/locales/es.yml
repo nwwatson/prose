@@ -2,6 +2,21 @@ es:
   errors:
     messages:
       hex_color: "debe ser un color hexadecimal válido (p. ej. #1a1a2e)"
+  date:
+    formats:
+      short: "%-d %b %Y"
+      long: "%-d de %B de %Y"
+    day_names: [domingo, lunes, martes, miércoles, jueves, viernes, sábado]
+    abbr_day_names: [dom, lun, mar, mié, jue, vie, sáb]
+    month_names: [~, enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre]
+    abbr_month_names: [~, ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
+  time:
+    formats:
+      short: "%-d %b, %H:%M"
+      long: "%-d de %B de %Y a las %-I:%M %p"
+      with_time: "%-d %b %Y a las %-I:%M %p"
+    am: "a. m."
+    pm: "p. m."
   shared:
     home: "Inicio"
     about: "Acerca de"

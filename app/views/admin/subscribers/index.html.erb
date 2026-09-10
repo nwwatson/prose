@@ -35,7 +35,7 @@
               <% end %>
             </div>
           <% end %>
-          <p class="mt-2 text-xs text-gray-500"><%= subscriber.created_at.strftime("%b %-d, %Y") %></p>
+          <p class="mt-2 text-xs text-gray-500"><%= l(subscriber.created_at.to_date, format: :short) %></p>
         <% end %>
       <% end %>
     </div>
@@ -70,7 +70,7 @@
                 <%= status_badge(subscriber.confirmed? ? t('shared.confirmed') : t('shared.pending'),
                       color_class: subscriber.confirmed? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800') %>
               </td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= subscriber.created_at.strftime("%b %-d, %Y") %></td>
+              <td class="px-6 py-4 text-sm text-gray-500"><%= l(subscriber.created_at.to_date, format: :short) %></td>
             </tr>
           <% end %>
         </tbody>

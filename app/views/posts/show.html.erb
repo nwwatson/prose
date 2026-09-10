@@ -20,7 +20,7 @@
     <div class="post-detail__meta post-meta">
       <span><%= t('shared.by') %> <strong><%= author_link(@post.user, class: "text-link font-bold") %></strong></span>
       <span class="post-meta__separator">&middot;</span>
-      <time datetime="<%= @post.published_at.iso8601 %>"><%= @post.published_at.strftime("%B %-d, %Y") %></time>
+      <%= published_on(@post) %>
       <span class="post-meta__separator">&middot;</span>
       <span><%= @post.reading_time_minutes %> <%= t('shared.min_read') %></span>
       <% if @post.category %>

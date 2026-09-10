@@ -43,7 +43,7 @@
           <div class="mt-2 flex items-center gap-3 text-xs text-gray-500">
             <span><%= post.user.display_name %></span>
             <span>&middot;</span>
-            <span><%= post.published_at&.strftime("%b %-d, %Y") || post.updated_at.strftime("%b %-d, %Y") %></span>
+            <span><%= post.published_at ? l(post.published_at.to_date, format: :short) : l(post.updated_at.to_date, format: :short) %></span>
           </div>
         <% end %>
       <% end %>
@@ -77,7 +77,7 @@
               </td>
               <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500"><%= post.user.display_name %></td>
               <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                <%= post.published_at&.strftime("%b %-d, %Y") || post.updated_at.strftime("%b %-d, %Y") %>
+                <%= post.published_at ? l(post.published_at.to_date, format: :short) : l(post.updated_at.to_date, format: :short) %>
               </td>
               <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                 <%= link_to t('shared.edit'), edit_admin_post_path(post), class: "text-gray-600 hover:text-gray-900" %>

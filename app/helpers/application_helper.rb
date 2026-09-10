@@ -9,4 +9,9 @@ module ApplicationHelper
       content_tag(:span, identity.name, **options)
     end
   end
+
+  def published_on(record, **html_options)
+    content_tag(:time, l(record.published_at.to_date, format: :long),
+      datetime: record.published_at.iso8601, **html_options)
+  end
 end

@@ -37,12 +37,12 @@
       </div>
       <div class="px-6 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
         <dt class="text-sm font-medium text-gray-500"><%= t('admin.memberships.show.member_since') %></dt>
-        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @membership.created_at.strftime("%B %-d, %Y") %></dd>
+        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= l(@membership.created_at.to_date, format: :long) %></dd>
       </div>
       <% if @membership.current_period_end.present? %>
         <div class="px-6 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
           <dt class="text-sm font-medium text-gray-500"><%= t('admin.memberships.show.current_period_end') %></dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @membership.current_period_end.strftime("%B %-d, %Y") %></dd>
+          <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= l(@membership.current_period_end.to_date, format: :long) %></dd>
         </div>
       <% end %>
       <% if @membership.stripe_subscription_id.present? %>

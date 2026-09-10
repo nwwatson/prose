@@ -14,7 +14,7 @@
           <span><%= t('shared.by') %> <strong class="text-charcoal"><%= post.user.display_name %></strong></span>
           <span>&middot;</span>
           <% if post.published_at.present? %>
-            <time datetime="<%= post.published_at.iso8601 %>"><%= post.published_at.strftime("%B %-d, %Y") %></time>
+            <%= published_on(post) %>
           <% else %>
             <span class="italic"><%= t('shared.draft') %></span>
           <% end %>

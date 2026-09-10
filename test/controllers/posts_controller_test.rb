@@ -43,6 +43,18 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "GET show renders the published date in Spanish when site locale is es" do
+    SiteSetting.current.update!(locale: "es")
+    post = posts(:published_post)
+
+    get post_path(post, slug: post.slug)
+
+    assert_response :success
+    assert_select "time", text: I18n.l(post.published_at.to_date, format: :long, locale: :es)
+  ensure
+    SiteSetting.current.update!(locale: "en")
+  end
+
   test "GET show includes meta tags" do
     get post_path(posts(:published_post), slug: posts(:published_post).slug)
     assert_response :success

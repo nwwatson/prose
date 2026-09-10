@@ -14,7 +14,7 @@
           <span><%= t('shared.by') %> <%= author_link(post.user) %></span>
           <span class="post-meta__separator">&middot;</span>
         <% end %>
-        <time datetime="<%= post.published_at.iso8601 %>"><%= post.published_at.strftime("%B %-d, %Y") %></time>
+        <%= published_on(post) %>
         <% if show_reading_time %>
           <span class="post-meta__separator">&middot;</span>
           <span><%= post.reading_time_minutes %> <%= t('shared.min_read') %></span>

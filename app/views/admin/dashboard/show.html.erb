@@ -136,7 +136,7 @@
           <div class="flex items-center justify-between">
             <div class="min-w-0 flex-1">
               <p class="text-sm font-medium text-gray-900 truncate"><%= link_to post.title, edit_admin_post_path(post), class: "hover:text-indigo-600" %></p>
-              <p class="text-xs text-gray-500"><%= post.published_at&.strftime("%b %d, %Y") %> · <%= post.user.display_name %></p>
+              <p class="text-xs text-gray-500"><%= post.published_at ? l(post.published_at.to_date, format: :short) : nil %> · <%= post.user.display_name %></p>
             </div>
             <div class="ml-3 flex-shrink-0 text-sm text-gray-500"><%= post.loves_count %> <%= t('admin.dashboard.show.loves') %></div>
           </div>
@@ -185,7 +185,7 @@
                   <%= link_to newsletter.title, admin_newsletter_path(newsletter), class: "hover:text-indigo-600" %>
                 </td>
                 <td class="py-2 text-sm text-gray-500 text-right"><%= newsletter.recipients_count %></td>
-                <td class="py-2 text-sm text-gray-500 text-right"><%= newsletter.sent_at&.strftime("%b %d, %Y") %></td>
+                <td class="py-2 text-sm text-gray-500 text-right"><%= newsletter.sent_at ? l(newsletter.sent_at.to_date, format: :short) : nil %></td>
               </tr>
             <% end %>
           </tbody>

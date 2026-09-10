@@ -37,7 +37,7 @@
           <% @passkeys.each do |passkey| %>
             <tr>
               <td class="px-4 py-3 text-sm font-medium text-gray-900"><%= passkey.name %></td>
-              <td class="px-4 py-3 text-sm text-gray-500"><%= passkey.created_at.strftime("%b %d, %Y") %></td>
+              <td class="px-4 py-3 text-sm text-gray-500"><%= l(passkey.created_at.to_date, format: :short) %></td>
               <td class="px-4 py-3 text-sm text-gray-500">
                 <%= passkey.last_used_at ? time_ago_in_words(passkey.last_used_at) + " " + t('shared.ago') : t('shared.never') %>
               </td>
