@@ -13,7 +13,9 @@ class SiteSetting < ApplicationRecord
 
   validates :site_name, presence: true
 
+  after_commit { Current.site_setting = nil }
+
   def self.current
-    first_or_create!(site_name: "Prose", site_description: "A thoughtfully crafted publication")
+    Current.site_setting ||= first_or_create!(site_name: "Prose", site_description: "A thoughtfully crafted publication")
   end
 end

@@ -7,6 +7,19 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: posts(:featured_post).title
   end
 
+  test "GET index performs at most one site_settings query" do
+    query_count = 0
+    subscriber = ActiveSupport::Notifications.subscribe("sql.active_record") do |_name, _start, _finish, _id, payload|
+      query_count += 1 if payload[:name] == "SiteSetting Load"
+    end
+
+    get root_path
+
+    assert_equal 1, query_count
+  ensure
+    ActiveSupport::Notifications.unsubscribe(subscriber)
+  end
+
   test "GET index shows non-featured posts" do
     get root_path
     assert_response :success

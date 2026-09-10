@@ -1,22 +1,21 @@
 module SiteHelper
   def site_name
-    SiteSetting.current.site_name
+    site_setting.site_name
   end
 
   def site_description
-    SiteSetting.current.site_description
+    site_setting.site_description
   end
 
   def default_og_image_url
-    setting = SiteSetting.current
+    setting = site_setting
     if setting.default_og_image.attached?
       rails_storage_proxy_url(setting.default_og_image)
     end
   end
 
   def font_stylesheet_tags
-    setting = SiteSetting.current
-    url = setting.google_fonts_url
+    url = site_setting.google_fonts_url
     return "".html_safe unless url
 
     safe_join([
@@ -27,12 +26,12 @@ module SiteHelper
   end
 
   def background_style_tag
-    hex = SiteSetting.current.background_hex
+    hex = site_setting.background_hex
     tag.style(":root { --color-cream: #{hex}; }".html_safe)
   end
 
   def dark_theme_style_tag
-    setting = SiteSetting.current
+    setting = site_setting
     css = ":root.dark { " \
       "--color-cream: #{setting.dark_bg_hex}; " \
       "--color-charcoal: #{setting.dark_text_hex}; " \
@@ -44,11 +43,11 @@ module SiteHelper
   end
 
   def theme_mode
-    SiteSetting.current.theme_mode
+    site_setting.theme_mode
   end
 
   def typography_style_tag
-    setting = SiteSetting.current
+    setting = site_setting
 
     css = <<~CSS
       :root {
@@ -65,5 +64,9 @@ module SiteHelper
     CSS
 
     tag.style(css.html_safe)
+  end
+
+  def site_setting
+    SiteSetting.current
   end
 end

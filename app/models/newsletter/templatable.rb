@@ -7,24 +7,24 @@ module Newsletter::Templatable
     validates :preheader_text, length: { maximum: 150 }, allow_nil: true
   end
 
-  def resolved_template
-    template.presence || SiteSetting.current.email_default_template.presence || "minimal"
+  def resolved_template(site = SiteSetting.current)
+    template.presence || site.email_default_template.presence || "minimal"
   end
 
-  def resolved_accent_color
-    accent_color.presence || SiteSetting.current.email_accent_color.presence || "#18181b"
+  def resolved_accent_color(site = SiteSetting.current)
+    accent_color.presence || site.email_accent_color.presence || "#18181b"
   end
 
-  def resolved_preheader_text
-    preheader_text.presence || SiteSetting.current.email_preheader_text.presence || ""
+  def resolved_preheader_text(site = SiteSetting.current)
+    preheader_text.presence || site.email_preheader_text.presence || ""
   end
 
   def email_settings
     site = SiteSetting.current
     {
-      template: resolved_template,
-      accent_color: resolved_accent_color,
-      preheader_text: resolved_preheader_text,
+      template: resolved_template(site),
+      accent_color: resolved_accent_color(site),
+      preheader_text: resolved_preheader_text(site),
       background_color: site.email_background_color.presence || "#f4f4f5",
       body_text_color: site.email_body_text_color.presence || "#3f3f46",
       heading_color: site.email_heading_color.presence || "#18181b",

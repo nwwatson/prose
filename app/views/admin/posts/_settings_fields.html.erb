@@ -67,7 +67,7 @@
       <%= f.label :show_toc, "Table of Contents", class: "ml-2 text-sm font-medium text-gray-900" %>
     </div>
 
-    <div <% if SiteSetting.current.image_ai_configured? && post.persisted? %>
+    <div <% if site_setting.image_ai_configured? && post.persisted? %>
            data-controller="ai-image-modal"
            data-ai-image-modal-suggest-url-value="<%= suggest_prompt_admin_post_ai_featured_image_path(post) %>"
            data-ai-image-modal-generate-url-value="<%= admin_post_ai_featured_image_path(post) %>"
@@ -81,7 +81,7 @@
         <% end %>
         <%= f.file_field :featured_image, accept: "image/*", form: "post_form",
               class: "block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-gray-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-gray-700 hover:file:bg-gray-200" %>
-        <% if SiteSetting.current.image_ai_configured? && post.persisted? %>
+        <% if site_setting.image_ai_configured? && post.persisted? %>
           <p class="my-2 text-center text-xs text-gray-400">or</p>
           <button type="button"
                   data-action="click->ai-image-modal#open"
@@ -93,7 +93,7 @@
           </button>
         <% end %>
       </div>
-      <% if SiteSetting.current.image_ai_configured? && post.persisted? %>
+      <% if site_setting.image_ai_configured? && post.persisted? %>
         <%= render "admin/posts/featured_image_modal", post: post %>
       <% end %>
     </div>

@@ -105,8 +105,11 @@ Site-wide locale configured via `SiteSetting.locale` (default: `"en"`). The `Sit
 ### Background Jobs
 Solid Queue (database-backed). Jobs organized by domain in `app/jobs/`. Recurring tasks configured in `config/recurring.yml`.
 
+### SiteSetting Caching
+`SiteSetting.current` is memoized on `Current.site_setting` (`app/models/current.rb`) for the lifetime of a request or job — `first_or_create!` only runs once per request instead of on every call. An `after_commit` callback on `SiteSetting` clears the memoized value so an update within the same request is not stale. `SiteHelper` exposes a `site_setting` helper method that views should call instead of `SiteSetting.current` directly. `Newsletter::Templatable#resolved_*` methods accept an optional `site` argument so `email_settings` can pass down a single fetched record rather than re-querying per field.
+
 ### AI Integration
-Uses the **RubyLLM** gem for a unified LLM interface across providers (Claude for text, Gemini/OpenAI for images). API keys are stored with Active Record Encryption on `SiteSetting` — key presence enables a feature, `nil` disables it (no separate toggle). The `Ai::Configurable` concern handles provider configuration. AI controllers are nested under `admin/posts/:id/ai/` and streaming responses use Turbo Streams + Solid Cable (`AiResponseJob` broadcasts chunks).
+Uses the **RubyLLM** gem for a unified LLM interface across providers (Claude for text, Gemini/OpenAI for images). API keys are stored with Active Record Encryption on `SiteSetting` — key presence enables a feature, `nil` disables it (no separate toggle). The `Ai::Configurable` concern handles provider configuration. `configure_ruby_llm!` runs as a `before_action` only on `Admin::Ai::BaseController` (and subclasses) — not on `Admin::BaseController` — so non-AI admin pages don't decrypt AI API keys on every request. AI controllers are nested under `admin/posts/:id/ai/` and streaming responses use Turbo Streams + Solid Cable (`AiResponseJob` broadcasts chunks).
 
 ### Custom Static Pages
 Pages (`Page` model) provide custom static content at top-level URLs (`/:slug`). The catch-all route **must remain last** in `config/routes.rb` (after admin namespace and health check) to avoid intercepting other routes. Pages use `admin_page_editor` layout (simplified editor without AI/preview). Reserved slugs (admin, posts, feed, etc.) are validated at the model level. Published pages with `show_in_navigation: true` appear in the site header automatically via `Page.navigation` scope.

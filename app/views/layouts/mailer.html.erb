@@ -26,7 +26,7 @@
                   <img src="<%= @email_logo_url %>" alt="<%= @site_name %>" style="max-height: 48px; max-width: 200px; display: block;">
                 <% else %>
                   <span style="font-size: 20px; font-weight: 700; color: <%= @email_heading_color || '#18181b' %>; text-decoration: none;">
-                    <%= @site_name || SiteSetting.current.site_name %>
+                    <%= @site_name || site_setting.site_name %>
                   </span>
                 <% end %>
               </td>
@@ -46,7 +46,7 @@
                   <p style="margin: 0 0 8px; color: #71717a;"><%= @email_footer_text %></p>
                 <% end %>
                 <p style="margin: 0 0 8px; color: #71717a;">
-                  &copy; <%= Date.current.year %> <%= @site_name || SiteSetting.current.site_name %>
+                  &copy; <%= Date.current.year %> <%= @site_name || site_setting.site_name %>
                 </p>
                 <% if @unsubscribe_url.present? %>
                   <p style="margin: 0;">

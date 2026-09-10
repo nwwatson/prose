@@ -4,8 +4,6 @@ module Admin
       before_action :require_image_ai_configured
 
       def suggest_prompt
-        configure_ruby_llm!
-
         context = ::Ai::PostContextBuilder.new(@post).build
         prompt = ::Ai::SystemPrompts.image_prompt(context)
         settings = SiteSetting.current
