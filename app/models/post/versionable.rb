@@ -27,8 +27,8 @@ module Post::Versionable
   end
 
   def version_cooldown_elapsed?
-    last_version = post_versions.ordered.first
-    last_version.nil? || last_version.created_at < VERSION_COOLDOWN.ago
+    last_created_at = post_versions.maximum(:created_at)
+    last_created_at.nil? || last_created_at < VERSION_COOLDOWN.ago
   end
 
   def restore_version!(version)
@@ -42,6 +42,8 @@ module Post::Versionable
   private
 
   def prune_old_versions!
+    return unless post_versions.count > PostVersion::MAX_VERSIONS_PER_POST
+
     excess_ids = post_versions.ordered
       .offset(PostVersion::MAX_VERSIONS_PER_POST)
       .pluck(:id)
