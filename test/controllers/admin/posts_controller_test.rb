@@ -11,6 +11,12 @@ class Admin::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "table"
   end
 
+  test "GET index preloads author identities without an N+1 query" do
+    # One preload query for the post listing's authors, one for the signed-in
+    # admin's own identity rendered in the sidebar — constant regardless of post count.
+    assert_query_count(2, table: "identities") { get admin_posts_path }
+  end
+
   test "GET index filters by status" do
     get admin_posts_path(status: "published")
     assert_response :success

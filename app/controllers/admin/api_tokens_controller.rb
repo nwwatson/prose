@@ -2,7 +2,7 @@ module Admin
   class ApiTokensController < BaseController
     def index
       @api_tokens = if current_user.admin?
-        ApiToken.includes(:user).order(created_at: :desc)
+        ApiToken.includes(user: :identity).order(created_at: :desc)
       else
         current_user.api_tokens.order(created_at: :desc)
       end

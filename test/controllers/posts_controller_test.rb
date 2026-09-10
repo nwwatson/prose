@@ -79,6 +79,12 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "style", /root\.dark/
   end
 
+  test "GET index preloads author identities without an N+1 query" do
+    # One preload query for the featured post collection, one for the rest of the
+    # listing — constant regardless of how many posts or distinct authors are shown.
+    assert_query_count(2, table: "identities") { get root_path }
+  end
+
   test "GET show comment query count does not grow with comment or reply count" do
     post = posts(:published_post)
     identity = identities(:subscriber_identity)

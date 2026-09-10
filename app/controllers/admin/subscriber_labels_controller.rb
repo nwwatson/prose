@@ -4,6 +4,7 @@ module Admin
 
     def index
       @labels = SubscriberLabel.ordered
+      @subscriber_counts = SubscriberLabel.subscriber_counts
     end
 
     def new

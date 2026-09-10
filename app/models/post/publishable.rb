@@ -2,10 +2,7 @@ module Post::Publishable
   extend ActiveSupport::Concern
 
   included do
-    scope :live, -> {
-      published.where(published_at: ..Time.current)
-        .or(scheduled.where(published_at: ..Time.current))
-    }
+    scope :live, -> { where(status: [ :published, :scheduled ], published_at: ..Time.current) }
     scope :ready_to_publish, -> { scheduled.where(published_at: ..Time.current) }
 
     validate :published_at_must_be_future, if: -> { scheduled? && published_at_changed? }

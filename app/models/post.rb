@@ -41,6 +41,8 @@ class Post < ApplicationRecord
 
   scope :featured, -> { where(featured: true) }
   scope :by_publication_date, -> { order(published_at: :desc) }
+  scope :with_author, -> { includes(user: :identity) }
+  scope :for_listing, -> { with_author.includes(:category) }
 
   before_save :calculate_reading_time, if: :will_save_change_to_body_plain?
 

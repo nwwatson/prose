@@ -246,8 +246,10 @@ BEGIN
   INSERT INTO posts_fts(rowid, title, subtitle, body_plain)
   VALUES (NEW.id, NEW.title, NEW.subtitle, NEW.body_plain);
 END;
+CREATE INDEX "index_posts_on_status_and_published_at" ON "posts" ("status", "published_at") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260910010710'),
+('20260910005605'),
 ('20260313202523'),
 ('20260313023242'),
 ('20260313023241'),

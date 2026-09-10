@@ -10,6 +10,22 @@ class Admin::CategoriesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET index runs a single grouped query for post counts" do
+    3.times { |i| Category.create!(name: "Category #{i}") }
+
+    post_count_queries = 0
+    callback = lambda do |*, payload|
+      post_count_queries += 1 if payload[:sql].match?(/SELECT.*COUNT.*FROM "posts"/)
+    end
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      get admin_categories_path
+    end
+
+    assert_response :success
+    assert_equal 1, post_count_queries
+  end
+
   test "GET new renders form" do
     get new_admin_category_path
     assert_response :success

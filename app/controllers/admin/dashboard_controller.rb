@@ -17,7 +17,8 @@ module Admin
 
       @traffic_sources = views_query.traffic_sources(since: 30.days.ago)
 
-      @recent_posts = Post.published.by_publication_date.limit(5).includes(:user)
+      @recent_posts = Post.published.by_publication_date.limit(5).with_author
+      @published_posts_count = Post.published.count
 
       @newsletters_sent_30d = Newsletter.sent.where("sent_at >= ?", 30.days.ago).count
       @recent_newsletters = Newsletter.sent.order(sent_at: :desc).limit(5)

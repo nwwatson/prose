@@ -18,7 +18,7 @@ module Mcp
 
       class << self
         def call(server_context:, **params)
-          posts = Post.includes(:user, :category, :tags)
+          posts = Post.for_listing.includes(:tags)
 
           posts = posts.where(status: params[:status]) if params[:status].present?
 

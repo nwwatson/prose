@@ -10,6 +10,24 @@ class Admin::SegmentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET index resolves each segment's subscriber count at most once" do
+    resolve_count = 0
+    original_resolve = Segment.instance_method(:resolve)
+    Segment.define_method(:resolve) do
+      resolve_count += 1
+      original_resolve.bind(self).call
+    end
+
+    begin
+      get admin_segments_path
+    ensure
+      Segment.define_method(:resolve, original_resolve)
+    end
+
+    assert_response :success
+    assert_equal Segment.count, resolve_count
+  end
+
   test "GET show renders segment" do
     get admin_segment_path(segments(:vip_segment))
     assert_response :success

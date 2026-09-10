@@ -32,6 +32,17 @@ module ActiveSupport
     teardown do
       I18n.locale = I18n.default_locale
     end
+
+    def assert_query_count(expected, table:)
+      count = 0
+      counter = ->(*, payload) do
+        count += 1 if payload[:sql].match?(/\bFROM\s+"?#{table}"?/i) && payload[:name] != "SCHEMA"
+      end
+
+      ActiveSupport::Notifications.subscribed(counter, "sql.active_record") { yield }
+
+      assert_equal expected, count, "expected #{expected} queries against #{table}, got #{count}"
+    end
   end
 end
 

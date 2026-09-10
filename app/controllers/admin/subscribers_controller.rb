@@ -14,6 +14,8 @@ module Admin
       end
 
       @labels = SubscriberLabel.ordered
+      @confirmed_subscribers_count = Subscriber.confirmed.count
+      @total_subscribers_count = Subscriber.count
     end
 
     def show

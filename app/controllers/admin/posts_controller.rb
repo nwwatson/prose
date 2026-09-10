@@ -5,7 +5,7 @@ module Admin
     before_action :set_post, only: [ :edit, :update, :destroy, :preview ]
 
     def index
-      @posts = Post.includes(:user, :category)
+      @posts = Post.for_listing
 
       case params[:status]
       when "published"

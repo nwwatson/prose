@@ -6,4 +6,8 @@ class SubscriberLabel < ApplicationRecord
   validates :color, presence: true, format: { with: /\A#[0-9a-fA-F]{6}\z/, message: "must be a valid hex color (e.g. #6B7280)" }
 
   scope :ordered, -> { order(:name) }
+
+  def self.subscriber_counts
+    SubscriberLabeling.group(:subscriber_label_id).count
+  end
 end
