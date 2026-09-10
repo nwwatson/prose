@@ -1,19 +1,19 @@
 import { Controller } from "@hotwired/stimulus"
-import { csrfToken, request } from "lib/request"
+import { storage } from "lib/storage"
+
+const ACTIVE_TAB_CLASSES = [ "border-blue-500", "text-blue-600" ]
+const INACTIVE_TAB_CLASSES = [ "border-transparent", "text-gray-500", "hover:border-gray-300", "hover:text-gray-700" ]
 
 export default class extends Controller {
   static targets = [
     "panel", "overlay", "mainContent",
     "hamburgerIcon", "closeIcon",
     "pinIcon",
-    "tabButton", "tabContent",
-    "messageInput", "messagesContainer"
+    "tabButton", "tabContent"
   ]
 
   static values = {
     pinned: { type: Boolean, default: false },
-    postSlug: String,
-    aiAvailable: { type: Boolean, default: false },
     activeTab: { type: String, default: "settings" }
   }
 
@@ -26,8 +26,7 @@ export default class extends Controller {
     this.boundResize = this.handleResize.bind(this)
     this.smQuery.addEventListener("change", this.boundResize)
 
-    const saved = localStorage.getItem("prose:editor-drawer-pinned")
-    if (saved === "true" && this.smQuery.matches) {
+    if (storage.getBoolean("prose:editor-drawer-pinned") && this.smQuery.matches) {
       this.pin()
       this.open()
     }
@@ -39,33 +38,23 @@ export default class extends Controller {
   }
 
   handleResize(event) {
-    if (!event.matches && this.pinnedValue) {
-      // Visual unpin only — don't clear localStorage so pinned state restores on wider screens
-      this.pinnedValue = false
-      this.removePinnedMargin()
-      if (this.hasPinIconTarget) {
-        this.pinIconTarget.classList.remove("text-blue-600")
-        this.pinIconTarget.classList.add("text-gray-400")
-      }
-      if (this.isOpen) {
-        this.overlayTarget.classList.remove("hidden")
-        requestAnimationFrame(() => {
-          this.overlayTarget.classList.remove("opacity-0")
-        })
-      }
-    }
+    // Visual unpin only — don't clear stored state so pinning restores on wider screens
+    if (!event.matches && this.pinnedValue) this.applyUnpin()
   }
 
   get isOpen() {
     return this.hasPanelTarget && !this.panelTarget.classList.contains("translate-x-full")
   }
 
+  // Whether this editor renders an AI tab — derived from the DOM so the drawer
+  // carries no AI-specific values on editors without an AI panel.
+  get hasAiTab() {
+    return this.tabButtonTargets.some(btn => btn.dataset.tab === "ai")
+  }
+
   toggle() {
-    if (this.isOpen) {
-      this.close()
-    } else {
-      this.open()
-    }
+    if (this.isOpen) this.close()
+    else this.open()
   }
 
   open(tabName = null) {
@@ -74,43 +63,27 @@ export default class extends Controller {
       this.element.querySelector(".animate-pulse-subtle")?.classList.remove("animate-pulse-subtle")
     }
 
-    if (tabName) {
-      this.activeTabValue = tabName
-    }
+    if (tabName) this.activeTabValue = tabName
 
     this.showTab(this.activeTabValue)
-
-    if (this.hasHamburgerIconTarget) this.hamburgerIconTarget.classList.add("hidden")
-    if (this.hasCloseIconTarget) this.closeIconTarget.classList.remove("hidden")
+    this.setToggleIcon(true)
 
     if (this.pinnedValue) {
-      this.panelTarget.classList.remove("translate-x-full")
-      this.panelTarget.classList.add("translate-x-0")
-      this.applyPinnedMargin()
+      this.slidePanel(true)
+      this.setPinnedMargin(true)
     } else {
       this.overlayTarget.classList.remove("hidden")
       requestAnimationFrame(() => {
         this.overlayTarget.classList.remove("opacity-0")
-        this.panelTarget.classList.remove("translate-x-full")
-        this.panelTarget.classList.add("translate-x-0")
+        this.slidePanel(true)
       })
-    }
-
-    if (this.activeTabValue === "ai") {
-      this.scrollToBottom()
     }
   }
 
   close() {
-    if (this.hasHamburgerIconTarget) this.hamburgerIconTarget.classList.remove("hidden")
-    if (this.hasCloseIconTarget) this.closeIconTarget.classList.add("hidden")
-
-    if (this.pinnedValue) {
-      this.removePinnedMargin()
-    }
-
-    this.panelTarget.classList.remove("translate-x-0")
-    this.panelTarget.classList.add("translate-x-full")
+    this.setToggleIcon(false)
+    if (this.pinnedValue) this.setPinnedMargin(false)
+    this.slidePanel(false)
 
     if (!this.pinnedValue) {
       this.overlayTarget.classList.add("opacity-0")
@@ -125,29 +98,24 @@ export default class extends Controller {
     const tabName = event.currentTarget.dataset.tab
     this.activeTabValue = tabName
     this.showTab(tabName)
-
-    if (tabName === "ai") {
-      this.scrollToBottom()
-    }
   }
 
   showTab(tabName) {
     this.tabButtonTargets.forEach(btn => {
-      if (btn.dataset.tab === tabName) {
-        btn.classList.add("border-blue-500", "text-blue-600")
-        btn.classList.remove("border-transparent", "text-gray-500", "hover:border-gray-300", "hover:text-gray-700")
-      } else {
-        btn.classList.remove("border-blue-500", "text-blue-600")
-        btn.classList.add("border-transparent", "text-gray-500", "hover:border-gray-300", "hover:text-gray-700")
-      }
+      const active = btn.dataset.tab === tabName
+      ACTIVE_TAB_CLASSES.forEach(c => btn.classList.toggle(c, active))
+      INACTIVE_TAB_CLASSES.forEach(c => btn.classList.toggle(c, !active))
     })
 
     this.tabContentTargets.forEach(content => {
-      if (content.dataset.tab === tabName) {
-        content.classList.remove("hidden")
-      } else {
-        content.classList.add("hidden")
-      }
+      content.classList.toggle("hidden", content.dataset.tab !== tabName)
+    })
+
+    // Dispatched on the panel so per-tab controllers mounted inside it can react
+    // (e.g. ai-chat scrolling its message list into view).
+    this.dispatch("tab-shown", {
+      target: this.hasPanelTarget ? this.panelTarget : this.element,
+      detail: { tab: tabName }
     })
   }
 
@@ -163,156 +131,54 @@ export default class extends Controller {
   pin() {
     if (!this.smQuery.matches) return
     this.pinnedValue = true
-    localStorage.setItem("prose:editor-drawer-pinned", "true")
-    this.overlayTarget.classList.add("hidden")
-    this.overlayTarget.classList.add("opacity-0")
-    this.applyPinnedMargin()
-    if (this.hasPinIconTarget) {
-      this.pinIconTarget.classList.add("text-blue-600")
-      this.pinIconTarget.classList.remove("text-gray-400")
-    }
+    storage.set("prose:editor-drawer-pinned", "true")
+    this.overlayTarget.classList.add("hidden", "opacity-0")
+    this.setPinnedMargin(true)
+    this.setPinIcon(true)
   }
 
   unpin() {
+    storage.set("prose:editor-drawer-pinned", "false")
+    this.applyUnpin()
+  }
+
+  applyUnpin() {
     this.pinnedValue = false
-    localStorage.setItem("prose:editor-drawer-pinned", "false")
-    this.removePinnedMargin()
-    if (this.hasPinIconTarget) {
-      this.pinIconTarget.classList.remove("text-blue-600")
-      this.pinIconTarget.classList.add("text-gray-400")
-    }
+    this.setPinnedMargin(false)
+    this.setPinIcon(false)
     // Show overlay since panel is open and now unpinned
-    if (this.isOpen) {
-      this.overlayTarget.classList.remove("hidden")
-      requestAnimationFrame(() => {
-        this.overlayTarget.classList.remove("opacity-0")
-      })
-    }
+    if (this.isOpen) this.showOverlay()
   }
 
-  applyPinnedMargin() {
-    if (this.hasMainContentTarget) {
-      this.mainContentTarget.style.marginRight = "28rem"
-    }
+  setPinIcon(active) {
+    if (!this.hasPinIconTarget) return
+    this.pinIconTarget.classList.toggle("text-blue-600", active)
+    this.pinIconTarget.classList.toggle("text-gray-400", !active)
   }
 
-  removePinnedMargin() {
-    if (this.hasMainContentTarget) {
-      this.mainContentTarget.style.marginRight = ""
-    }
+  showOverlay() {
+    this.overlayTarget.classList.remove("hidden")
+    requestAnimationFrame(() => this.overlayTarget.classList.remove("opacity-0"))
   }
 
-  // AI messaging
-  submitMessage(event) {
-    event.preventDefault()
-    if (!this.hasMessageInputTarget) return
-    const content = this.messageInputTarget.value.trim()
-    if (!content) return
-
-    this.sendMessage(content)
-    this.messageInputTarget.value = ""
-    this.messageInputTarget.focus()
+  setPinnedMargin(pinned) {
+    if (this.hasMainContentTarget) this.mainContentTarget.style.marginRight = pinned ? "28rem" : ""
   }
 
-  quickAction(event) {
-    const action = event.currentTarget.dataset.quickAction
-    const labels = {
-      proofread: "Proofread my post",
-      critique: "Critique my post",
-      brainstorm: "Help me brainstorm ideas",
-      social: "Write social media posts for my article"
-    }
-    this.sendMessage(labels[action] || action, action)
+  setToggleIcon(open) {
+    if (this.hasHamburgerIconTarget) this.hamburgerIconTarget.classList.toggle("hidden", open)
+    if (this.hasCloseIconTarget) this.closeIconTarget.classList.toggle("hidden", !open)
   }
 
-  sendMessage(content, quickAction = null) {
-    const form = document.createElement("form")
-    form.method = "POST"
-    form.action = `/admin/posts/${this.postSlugValue}/ai/messages`
-    form.style.display = "none"
-
-    const token = csrfToken()
-    if (token) {
-      const csrfField = document.createElement("input")
-      csrfField.type = "hidden"
-      csrfField.name = "authenticity_token"
-      csrfField.value = token
-      form.appendChild(csrfField)
-    }
-
-    const contentField = document.createElement("input")
-    contentField.type = "hidden"
-    contentField.name = "content"
-    contentField.value = content
-    form.appendChild(contentField)
-
-    if (quickAction) {
-      const actionField = document.createElement("input")
-      actionField.type = "hidden"
-      actionField.name = "quick_action"
-      actionField.value = quickAction
-      form.appendChild(actionField)
-    }
-
-    const titleEl = document.querySelector("[name='post[title]']")
-    const subtitleEl = document.querySelector("[name='post[subtitle]']")
-    if (titleEl) {
-      const f = document.createElement("input")
-      f.type = "hidden"
-      f.name = "title"
-      f.value = titleEl.value
-      form.appendChild(f)
-    }
-    if (subtitleEl) {
-      const f = document.createElement("input")
-      f.type = "hidden"
-      f.name = "subtitle"
-      f.value = subtitleEl.value
-      form.appendChild(f)
-    }
-
-    form.setAttribute("data-turbo", "true")
-    form.setAttribute("accept", "text/vnd.turbo-stream.html")
-
-    document.body.appendChild(form)
-    form.requestSubmit()
-    document.body.removeChild(form)
-
-    this.scrollToBottom()
-  }
-
-  scrollToBottom() {
-    if (this.hasMessagesContainerTarget) {
-      requestAnimationFrame(() => {
-        this.messagesContainerTarget.scrollTop = this.messagesContainerTarget.scrollHeight
-      })
-    }
-  }
-
-  handleKeydown(event) {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault()
-      this.submitMessage(event)
-    }
-  }
-
-  clearConversation() {
-    request(`/admin/posts/${this.postSlugValue}/ai/conversation`, {
-      method: "POST",
-      accept: "text/vnd.turbo-stream.html, text/html",
-      body: new URLSearchParams({ conversation_type: "chat" })
-    })
-    .then(response => {
-      if (response.redirected) {
-        window.Turbo.visit(response.url)
-      }
-    })
+  slidePanel(open) {
+    this.panelTarget.classList.toggle("translate-x-0", open)
+    this.panelTarget.classList.toggle("translate-x-full", !open)
   }
 
   keydown(event) {
     // Cmd/Ctrl + Shift + A to toggle AI tab
     if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key === "A") {
-      if (!this.aiAvailableValue) return
+      if (!this.hasAiTab) return
       event.preventDefault()
       if (this.isOpen && this.activeTabValue === "ai") {
         this.close()

@@ -13,7 +13,7 @@
       <div class="mt-2">
         <%= f.text_field :slug,
               form: "page_form",
-              class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+              class: admin_input_classes,
               placeholder: t("admin.pages.settings_fields.slug_placeholder") %>
       </div>
       <p class="mt-1 text-xs text-gray-500"><%= t("admin.pages.settings_fields.slug_help") %></p>
@@ -30,7 +30,7 @@
       <div class="mt-2">
         <%= f.number_field :position, min: 0, step: 1,
               form: "page_form",
-              class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+              class: admin_input_classes %>
       </div>
       <p class="mt-1 text-xs text-gray-500"><%= t("admin.pages.settings_fields.position_help") %></p>
     </div>
@@ -39,7 +39,7 @@
       <%= f.label :meta_description, t("admin.pages.settings_fields.meta_description"), class: "block text-sm font-medium text-gray-900" %>
       <div class="mt-2">
         <%= f.text_area :meta_description, rows: 3, maxlength: 160, form: "page_form",
-              class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm",
+              class: admin_input_classes,
               placeholder: t("admin.pages.settings_fields.meta_description_placeholder") %>
       </div>
       <p class="mt-1 text-xs text-gray-500"><%= t("admin.pages.settings_fields.meta_description_help") %></p>

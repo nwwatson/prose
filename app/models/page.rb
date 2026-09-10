@@ -26,6 +26,6 @@ class Page < ApplicationRecord
   end
 
   def seo_description
-    meta_description.presence || content&.to_plain_text&.truncate(155)
+    @seo_description ||= meta_description.presence || content&.to_plain_text&.truncate(155)
   end
 end

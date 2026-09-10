@@ -5,28 +5,19 @@
   <p class="mt-1 text-sm text-gray-600"><%= t('admin.settings.edit.subtitle') %></p>
 
   <%= form_with model: @site_setting, url: admin_settings_path, class: "mt-8 space-y-6" do |f| %>
-    <% if @site_setting.errors.any? %>
-      <div class="rounded-md bg-red-50 p-4">
-        <h3 class="text-sm font-medium text-red-800"><%= t('admin.settings.edit.errors_prevented_html', count: pluralize(@site_setting.errors.count, "error")) %></h3>
-        <ul class="mt-2 list-disc pl-5 text-sm text-red-700">
-          <% @site_setting.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+    <%= render "admin/shared/form_errors", record: @site_setting, heading: t('admin.settings.edit.errors_prevented_html', count: pluralize(@site_setting.errors.count, "error")), wrapper_class: "" %>
 
     <div>
       <%= f.label :site_name, class: "block text-sm font-medium text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_field :site_name, required: true, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+        <%= f.text_field :site_name, required: true, class: admin_input_classes %>
       </div>
     </div>
 
     <div>
       <%= f.label :site_description, class: "block text-sm font-medium text-gray-900" %>
       <div class="mt-2">
-        <%= f.text_area :site_description, rows: 3, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm", placeholder: t('admin.settings.edit.description_placeholder') %>
+        <%= f.text_area :site_description, rows: 3, class: admin_input_classes, placeholder: t('admin.settings.edit.description_placeholder') %>
       </div>
     </div>
 
@@ -264,7 +255,7 @@
                   value: @site_setting.masked_value_for(:stripe_publishable_key),
                   placeholder: "pk_live_...",
                   autocomplete: "off",
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                  class: admin_input_classes %>
           </div>
         </div>
 
@@ -275,7 +266,7 @@
                   value: @site_setting.masked_value_for(:stripe_secret_key),
                   placeholder: "sk_live_...",
                   autocomplete: "off",
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                  class: admin_input_classes %>
           </div>
         </div>
 
@@ -286,7 +277,7 @@
                   value: @site_setting.masked_value_for(:stripe_webhook_secret),
                   placeholder: "whsec_...",
                   autocomplete: "off",
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                  class: admin_input_classes %>
           </div>
           <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.webhook_help') %></p>
           <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.webhook_url') %> <code class="rounded bg-gray-100 px-1 py-0.5"><%= webhooks_stripe_url %></code></p>
@@ -313,7 +304,7 @@
                   value: @site_setting.masked_value_for(:claude_api_key),
                   placeholder: "sk-ant-...",
                   autocomplete: "off",
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                  class: admin_input_classes %>
           </div>
           <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.anthropic_help') %></p>
         </div>
@@ -325,7 +316,7 @@
                   value: @site_setting.masked_value_for(:gemini_api_key),
                   placeholder: "AIza...",
                   autocomplete: "off",
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                  class: admin_input_classes %>
           </div>
           <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.gemini_help') %></p>
         </div>
@@ -337,7 +328,7 @@
                   value: @site_setting.masked_value_for(:openai_api_key),
                   placeholder: "sk-...",
                   autocomplete: "off",
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                  class: admin_input_classes %>
           </div>
           <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.openai_help') %></p>
         </div>
@@ -359,7 +350,7 @@
           <%= f.label :ai_max_tokens, t('admin.settings.edit.max_tokens'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.number_field :ai_max_tokens, min: 256, max: 16384, step: 256,
-                  class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm" %>
+                  class: admin_input_classes %>
           </div>
           <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.max_tokens_help') %></p>
         </div>
@@ -367,7 +358,7 @@
     </fieldset>
 
     <div class="flex justify-end border-t border-gray-200 pt-6">
-      <%= f.submit t('admin.settings.edit.save_settings'), class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
+      <%= f.submit t('admin.settings.edit.save_settings'), class: "#{admin_button_classes(variant: :primary)} cursor-pointer" %>
     </div>
   <% end %>
 </div>

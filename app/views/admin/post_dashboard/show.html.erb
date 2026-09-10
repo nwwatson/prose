@@ -19,33 +19,13 @@
 </div>
 
 <div class="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
-  <div class="bg-white overflow-hidden shadow rounded-lg">
-    <div class="p-4 sm:p-5">
-      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.post_dashboard.show.total_views') %></div>
-      <div class="mt-1 text-2xl font-semibold text-gray-900 sm:text-3xl"><%= @views_count %></div>
-    </div>
-  </div>
+  <%= render "admin/shared/stat_card", label: t('admin.post_dashboard.show.total_views'), value: @views_count %>
 
-  <div class="bg-white overflow-hidden shadow rounded-lg">
-    <div class="p-4 sm:p-5">
-      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.post_dashboard.show.unique_viewers') %></div>
-      <div class="mt-1 text-2xl font-semibold text-gray-900 sm:text-3xl"><%= @unique_viewers %></div>
-    </div>
-  </div>
+  <%= render "admin/shared/stat_card", label: t('admin.post_dashboard.show.unique_viewers'), value: @unique_viewers %>
 
-  <div class="bg-white overflow-hidden shadow rounded-lg">
-    <div class="p-4 sm:p-5">
-      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.post_dashboard.show.loves') %></div>
-      <div class="mt-1 text-2xl font-semibold text-gray-900 sm:text-3xl"><%= @post.loves_count %></div>
-    </div>
-  </div>
+  <%= render "admin/shared/stat_card", label: t('admin.post_dashboard.show.loves'), value: @post.loves_count %>
 
-  <div class="bg-white overflow-hidden shadow rounded-lg">
-    <div class="p-4 sm:p-5">
-      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.post_dashboard.show.engagement_rate') %></div>
-      <div class="mt-1 text-2xl font-semibold text-gray-900 sm:text-3xl"><%= @engagement_rate %>%</div>
-    </div>
-  </div>
+  <%= render "admin/shared/stat_card", label: t('admin.post_dashboard.show.engagement_rate'), value: "#{@engagement_rate}%" %>
 </div>
 
 <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">

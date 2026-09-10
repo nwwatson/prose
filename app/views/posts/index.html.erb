@@ -1,11 +1,12 @@
 <% content_for(:title, page_title) %>
 
 <% content_for(:head) do %>
-  <%= meta_description_tag(site_description) %>
-  <%= open_graph_tags(title: site_name, description: site_description, url: root_url) %>
-  <%= twitter_card_tags(title: site_name, description: site_description) %>
-  <%= canonical_tag(root_url) %>
-  <%= json_ld_tag({ "@context": "https://schema.org", "@type": "WebSite", name: site_name, url: root_url, description: site_description }) %>
+  <%= seo_head_tags(
+        title: site_name,
+        description: site_description,
+        url: root_url,
+        json_ld: { "@context": "https://schema.org", "@type": "WebSite", name: site_name, url: root_url, description: site_description }
+      ) %>
 <% end %>
 
 <%# Featured post hero %>

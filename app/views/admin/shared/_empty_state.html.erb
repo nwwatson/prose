@@ -1,0 +1,14 @@
+<%# locals: (description:, title: nil, action_label: nil, action_path: nil) %>
+<div class="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
+  <% if title.present? %>
+    <h3 class="text-sm font-semibold text-gray-900"><%= title %></h3>
+    <p class="mt-1 text-sm text-gray-500"><%= description %></p>
+  <% else %>
+    <p class="text-sm text-gray-500"><%= description %></p>
+  <% end %>
+  <% if action_label.present? %>
+    <div class="mt-6">
+      <%= link_to action_label, action_path, class: admin_button_classes(variant: :primary) %>
+    </div>
+  <% end %>
+</div>

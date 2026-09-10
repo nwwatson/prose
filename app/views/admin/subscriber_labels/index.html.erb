@@ -1,10 +1,8 @@
 <% content_for(:title, "#{t('admin.subscriber_labels.index.title')} — #{site_name}") %>
 
 <div class="space-y-6">
-  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-    <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.subscriber_labels.index.title') %></h1>
-    <%= link_to t('admin.subscriber_labels.index.new_label'), new_admin_subscriber_label_path, class: "self-start rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700" %>
-  </div>
+  <%= render "admin/shared/page_header", title: t('admin.subscriber_labels.index.title'),
+        action: link_to(t('admin.subscriber_labels.index.new_label'), new_admin_subscriber_label_path, class: admin_button_classes(variant: :primary, extra: "self-start")) %>
 
   <% if @labels.any? %>
     <%# Mobile card layout %>
@@ -58,7 +56,7 @@
       <h3 class="text-sm font-semibold text-gray-900"><%= t('admin.subscriber_labels.index.no_labels') %></h3>
       <p class="mt-1 text-sm text-gray-500"><%= t('admin.subscriber_labels.index.get_started') %></p>
       <div class="mt-6">
-        <%= link_to t('admin.subscriber_labels.index.new_label'), new_admin_subscriber_label_path, class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700" %>
+        <%= link_to t('admin.subscriber_labels.index.new_label'), new_admin_subscriber_label_path, class: admin_button_classes(variant: :primary) %>
       </div>
     </div>
   <% end %>

@@ -4,9 +4,8 @@
   <td class="px-6 py-4 text-sm text-gray-500"><%= tier.interval.capitalize %></td>
   <td class="px-6 py-4 text-sm">
     <div class="flex items-center gap-2">
-      <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium <%= tier.active? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
-        <%= tier.active? ? t('shared.active') : t('admin.membership_tiers.index.inactive') %>
-      </span>
+      <%= status_badge(tier.active? ? t('shared.active') : t('admin.membership_tiers.index.inactive'),
+            color_class: tier.active? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800', size: :sm) %>
       <% if PaymentService.configured? && !tier.synced_to_stripe? %>
         <span class="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
           <%= t('admin.membership_tiers.index.syncing') %>

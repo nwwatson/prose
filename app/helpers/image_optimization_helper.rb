@@ -26,6 +26,15 @@ module ImageOptimizationHelper
     )
   end
 
+  # Memoized per post: the head tags and the Article JSON-LD both need it, and
+  # building the variant URL is not free.
+  def post_og_image_url(post)
+    @post_og_image_urls ||= {}
+    return @post_og_image_urls[post.id] if @post_og_image_urls.key?(post.id)
+
+    @post_og_image_urls[post.id] = optimized_og_image_url(post)
+  end
+
   def optimized_og_image_url(post)
     return unless post.featured_image.attached?
 
