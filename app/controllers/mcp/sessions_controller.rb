@@ -1,8 +1,8 @@
 module Mcp
   class SessionsController < ActionController::API
-    rate_limit to: 60, within: 1.minute
+    include Api::TokenAuthenticatable
 
-    before_action :authenticate_token!
+    rate_limit to: 60, within: 1.minute
 
     def create
       server = MCP::Server.new(
@@ -38,28 +38,8 @@ module Mcp
 
     private
 
-    def authenticate_token!
-      token_string = extract_bearer_token
-      unless token_string
-        render json: { jsonrpc: "2.0", error: { code: -32001, message: "Missing or invalid Authorization header" }, id: nil }, status: :unauthorized
-        return
-      end
-
-      api_token = ApiToken.find_by_raw_token(token_string)
-      unless api_token
-        render json: { jsonrpc: "2.0", error: { code: -32001, message: "Invalid API token" }, id: nil }, status: :unauthorized
-        return
-      end
-
-      api_token.touch_usage!(ip_address: request.remote_ip)
-      Current.user = api_token.user
-    end
-
-    def extract_bearer_token
-      header = request.headers["Authorization"]
-      return nil unless header&.start_with?("Bearer ")
-
-      header.delete_prefix("Bearer ")
+    def render_unauthorized(message)
+      render json: { jsonrpc: "2.0", error: { code: -32001, message: message }, id: nil }, status: :unauthorized
     end
   end
 end
