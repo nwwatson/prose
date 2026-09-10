@@ -70,8 +70,9 @@ app/models/comment/editable.rb        # module Comment::Editable (15-min edit wi
 app/models/comment/notifiable.rb      # module Comment::Notifiable (reply notification callbacks)
 app/models/page.rb                    # class Page (custom static pages)
 app/models/page/sluggable.rb         # module Page::Sluggable (auto-generated URL slugs)
-app/models/page/publishable.rb       # module Page::Publishable (live scope, publish/draft)
 app/models/page/navigable.rb         # module Page::Navigable (navigation menu scope)
+app/models/concerns/publishable.rb   # module Publishable — shared `publishes_at` macro (live scope, publish!/schedule!/revert_to_draft!), included by Post, Page, Newsletter
+app/validators/future_validator.rb   # FutureValidator: shared "must be in the future" validation used by Publishable
 app/models/site_setting/localization.rb  # module SiteSetting::Localization (i18n)
 app/models/identity/handleable.rb    # module Identity::Handleable (handle validation/normalization)
 app/models/identity/profileable.rb   # module Identity::Profileable (avatar, bio, social links)
