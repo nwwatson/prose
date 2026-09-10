@@ -38,7 +38,7 @@
           <% end %>
 
           <div class="author-card__meta">
-            <span><%= pluralize(identity.user.posts.live.count, "post") %></span>
+            <span><%= pluralize(@post_counts.fetch(identity.user.id, 0), "post") %></span>
             <% if identity.has_social_links? %>
               <span>&middot;</span>
               <div class="author-card__social-links">

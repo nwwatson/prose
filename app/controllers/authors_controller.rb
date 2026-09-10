@@ -3,6 +3,7 @@ class AuthorsController < ApplicationController
 
   def index
     @authors = Identity.authors.with_handle.includes(:user, avatar_attachment: :blob).order(:name)
+    @post_counts = Post.live.group(:user_id).count
   end
 
   def show

@@ -5,8 +5,8 @@ class PostsController < ApplicationController
 
   def index
     @query = params[:q]&.strip.presence
-    @featured_posts = Post.live.featured.by_publication_date.limit(1)
-    all_posts = Post.live.where.not(id: @featured_posts.select(:id)).by_publication_date.includes(:user, :category)
+    @featured_posts = Post.live.featured.by_publication_date.for_listing.limit(1)
+    all_posts = Post.live.where.not(id: @featured_posts.select(:id)).by_publication_date.for_listing
     all_posts = all_posts.search(@query) if @query
 
     @page = [ params.fetch(:page, 1).to_i, 1 ].max

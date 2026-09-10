@@ -12,4 +12,8 @@ class FeedsControllerTest < ActionDispatch::IntegrationTest
     get feed_path(format: :xml)
     assert_not_includes response.body, posts(:draft_post).title
   end
+
+  test "GET index preloads author identities in a single query" do
+    assert_query_count(1, table: "identities") { get feed_path(format: :xml) }
+  end
 end
