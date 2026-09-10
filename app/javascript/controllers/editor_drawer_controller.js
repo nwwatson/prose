@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { csrfToken, request } from "lib/request"
+import { storage } from "lib/storage"
 
 export default class extends Controller {
   static targets = [
@@ -26,8 +27,7 @@ export default class extends Controller {
     this.boundResize = this.handleResize.bind(this)
     this.smQuery.addEventListener("change", this.boundResize)
 
-    const saved = localStorage.getItem("prose:editor-drawer-pinned")
-    if (saved === "true" && this.smQuery.matches) {
+    if (storage.getBoolean("prose:editor-drawer-pinned") && this.smQuery.matches) {
       this.pin()
       this.open()
     }
@@ -40,7 +40,7 @@ export default class extends Controller {
 
   handleResize(event) {
     if (!event.matches && this.pinnedValue) {
-      // Visual unpin only — don't clear localStorage so pinned state restores on wider screens
+      // Visual unpin only — don't clear stored state so pinning restores on wider screens
       this.pinnedValue = false
       this.removePinnedMargin()
       if (this.hasPinIconTarget) {
@@ -163,7 +163,7 @@ export default class extends Controller {
   pin() {
     if (!this.smQuery.matches) return
     this.pinnedValue = true
-    localStorage.setItem("prose:editor-drawer-pinned", "true")
+    storage.set("prose:editor-drawer-pinned", "true")
     this.overlayTarget.classList.add("hidden")
     this.overlayTarget.classList.add("opacity-0")
     this.applyPinnedMargin()
@@ -175,7 +175,7 @@ export default class extends Controller {
 
   unpin() {
     this.pinnedValue = false
-    localStorage.setItem("prose:editor-drawer-pinned", "false")
+    storage.set("prose:editor-drawer-pinned", "false")
     this.removePinnedMargin()
     if (this.hasPinIconTarget) {
       this.pinIconTarget.classList.remove("text-blue-600")

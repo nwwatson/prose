@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { storage } from "lib/storage"
 
 export default class extends Controller {
   static targets = ["icon"]
@@ -15,12 +16,12 @@ export default class extends Controller {
 
   toggle() {
     const isDark = document.documentElement.classList.toggle("dark")
-    localStorage.setItem("theme", isDark ? "dark" : "light")
+    storage.set("theme", isDark ? "dark" : "light")
   }
 
   handleSystemChange(event) {
     // Only follow system preference when user hasn't set a manual override
-    if (localStorage.getItem("theme")) return
+    if (storage.get("theme")) return
 
     if (event.matches) {
       document.documentElement.classList.add("dark")
