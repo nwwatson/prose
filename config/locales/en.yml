@@ -106,6 +106,15 @@ en:
       get_notified: "Get notified when new posts are published."
     show:
       comments: "Comments"
+      share:
+        heading: "Share this post"
+        twitter: "Share on X"
+        linkedin: "Share on LinkedIn"
+        facebook: "Share on Facebook"
+        email: "Share via email"
+        copy_link: "Copy link"
+        copied: "Copied!"
+        native_share: "Share"
     post_navigation:
       previous_post: "Previous Post"
       next_post: "Next Post"
