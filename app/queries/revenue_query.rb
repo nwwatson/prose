@@ -1,14 +1,19 @@
 class RevenueQuery
+  include TimeBucketing
+
   def initialize(relation = Membership.all)
     @relation = relation
   end
 
   def monthly_recurring_revenue
-    active_memberships = @relation.current.includes(:membership_tier)
-    active_memberships.sum do |m|
-      tier = m.membership_tier
-      tier.month? ? tier.price_cents : (tier.price_cents / 12.0).round
-    end
+    @relation.current.joins(:membership_tier).sum(
+      Arel.sql(<<~SQL.squish)
+        CASE WHEN membership_tiers.interval = #{MembershipTier.intervals[:month].to_i}
+          THEN price_cents
+          ELSE CAST(ROUND(price_cents / 12.0) AS INTEGER)
+        END
+      SQL
+    )
   end
 
   def annual_recurring_revenue
@@ -22,17 +27,13 @@ class RevenueQuery
   def churn_rate(since: 30.days.ago)
     canceled = @relation.where(status: :canceled).where("canceled_at >= ?", since).count
     total_at_start = @relation.where("created_at < ?", since).count
-    return 0.0 if total_at_start.zero?
-
-    (canceled.to_f / total_at_start * 100).round(1)
+    percentage(canceled, total_at_start)
   end
 
+  # NOTE: sums raw price_cents without normalizing yearly tiers to a monthly
+  # equivalent, unlike monthly_recurring_revenue above.
   def revenue_by_month(since: 12.months.ago)
-    @relation
-      .current
-      .joins(:membership_tier)
-      .where("memberships.created_at >= ?", since)
-      .group("strftime('%Y-%m', memberships.created_at)")
-      .sum("membership_tiers.price_cents")
+    scope = @relation.current.joins(:membership_tier).where("memberships.created_at >= ?", since)
+    scope.group(month_bucket(scope, :created_at)).sum("membership_tiers.price_cents")
   end
 end

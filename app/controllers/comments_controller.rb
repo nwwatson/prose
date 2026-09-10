@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   before_action :require_identity
-  before_action :set_post
+  include LivePostScoped
   before_action :set_comment, only: [ :update, :destroy ]
   before_action :authorize_edit, only: :update
   before_action :authorize_delete, only: :destroy
@@ -46,10 +46,6 @@ class CommentsController < ApplicationController
   end
 
   private
-
-  def set_post
-    @post = Post.live.find_by!(slug: params[:post_slug])
-  end
 
   def set_comment
     @comment = @post.comments.find(params[:id])

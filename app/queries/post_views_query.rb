@@ -1,4 +1,6 @@
 class PostViewsQuery
+  include TimeBucketing
+
   def initialize(relation = PostView.all)
     @relation = relation
   end
@@ -10,11 +12,7 @@ class PostViewsQuery
   end
 
   def views_by_day(since: 30.days.ago)
-    @relation
-      .since(since)
-      .group("DATE(created_at)")
-      .order("DATE(created_at)")
-      .count
+    by_day(@relation.since(since), :created_at)
   end
 
   def traffic_sources(since: 30.days.ago)
@@ -41,33 +39,7 @@ class PostViewsQuery
   end
 
   def trend_comparison(period:)
-    case period
-    when :week
-      current_start = 7.days.ago
-      previous_start = 14.days.ago
-      previous_end = 7.days.ago
-    when :month
-      current_start = 30.days.ago
-      previous_start = 60.days.ago
-      previous_end = 30.days.ago
-    else
-      raise ArgumentError, "period must be :week or :month"
-    end
-
-    current_views = @relation.where(created_at: current_start..).count
-    previous_views = @relation.where(created_at: previous_start..previous_end).count
-
-    percentage_change = if previous_views.zero?
-      current_views.zero? ? 0.0 : 100.0
-    else
-      ((current_views - previous_views).to_f / previous_views * 100).round(1)
-    end
-
-    {
-      current: current_views,
-      previous: previous_views,
-      change: percentage_change
-    }
+    super(@relation, :created_at, period: period)
   end
 
   def top_posts_by_engagement(limit: 10, since: 30.days.ago)

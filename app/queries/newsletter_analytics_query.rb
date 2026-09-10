@@ -1,4 +1,6 @@
 class NewsletterAnalyticsQuery
+  include TimeBucketing
+
   def initialize(newsletter)
     @newsletter = newsletter
     @deliveries = newsletter.newsletter_deliveries
@@ -21,17 +23,14 @@ class NewsletterAnalyticsQuery
   end
 
   def open_rate
-    return 0.0 if deliveries_count.zero?
-    (opens_count.to_f / deliveries_count * 100).round(1)
+    percentage(opens_count, deliveries_count)
   end
 
   def click_rate
-    return 0.0 if deliveries_count.zero?
-    (clicks_count.to_f / deliveries_count * 100).round(1)
+    percentage(clicks_count, deliveries_count)
   end
 
   def bounce_rate
-    return 0.0 if deliveries_count.zero?
-    (bounces_count.to_f / deliveries_count * 100).round(1)
+    percentage(bounces_count, deliveries_count)
   end
 end

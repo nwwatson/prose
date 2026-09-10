@@ -1,6 +1,6 @@
 module Admin
   class PostDashboardController < BaseController
-    before_action :set_post
+    include Admin::PostScoped
 
     def show
       @engagement = PostEngagementQuery.new(@post)
@@ -9,12 +9,6 @@ module Admin
       @engagement_rate = @engagement.engagement_rate
       @traffic_sources = @engagement.traffic_sources
       @views_by_day = @engagement.views_by_day
-    end
-
-    private
-
-    def set_post
-      @post = Post.find_by!(slug: params[:post_id])
     end
   end
 end

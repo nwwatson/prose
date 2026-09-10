@@ -1,7 +1,6 @@
 class PostsController < ApplicationController
   include Trackable
-
-  PER_PAGE = 10
+  include Paginatable
 
   def index
     @query = params[:q]&.strip.presence
@@ -9,11 +8,7 @@ class PostsController < ApplicationController
     all_posts = Post.live.where.not(id: @featured_posts.select(:id)).by_publication_date.for_listing
     all_posts = all_posts.search(@query) if @query
 
-    @page = [ params.fetch(:page, 1).to_i, 1 ].max
-    offset = (@page - 1) * PER_PAGE
-
-    @posts = all_posts.offset(offset).limit(PER_PAGE)
-    @next_page = @page + 1 if all_posts.offset(offset + PER_PAGE).exists?
+    @posts = paginate(all_posts)
 
     @snippets = @query ? Post.search_with_snippets(@query) : {}
 

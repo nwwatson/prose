@@ -1,0 +1,21 @@
+<%# locals: ranges (Array<String>), current (String), path (Proc: range -> url) %>
+<div class="inline-flex flex-wrap rounded-md shadow-sm">
+  <% ranges.each_with_index do |range, i| %>
+    <%
+      active = current == range
+      rounded = case i
+                when 0 then "rounded-l-md"
+                when ranges.size - 1 then "-ml-px rounded-r-md"
+                else "-ml-px"
+                end
+      classes = if active
+                  "#{rounded} bg-blue-600 px-3 py-2 text-xs font-medium text-white sm:py-1.5"
+                else
+                  "#{rounded} bg-white px-3 py-2 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:py-1.5"
+                end
+    %>
+    <%= link_to range.upcase, path.call(range),
+          class: classes,
+          data: { turbo_action: "replace" } %>
+  <% end %>
+</div>

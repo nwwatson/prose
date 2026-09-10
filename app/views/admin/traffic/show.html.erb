@@ -37,26 +37,10 @@
   <div class="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">
     <h2 class="text-lg font-medium text-gray-900"><%= t('admin.traffic.show.views_over_time') %></h2>
 
-    <div class="inline-flex flex-wrap rounded-md shadow-sm">
-      <% %w[7d 30d 90d all].each_with_index do |range, i| %>
-        <%
-          active = @range == range
-          rounded = case i
-                    when 0 then "rounded-l-md"
-                    when 3 then "-ml-px rounded-r-md"
-                    else "-ml-px"
-                    end
-          classes = if active
-                      "#{rounded} bg-blue-600 px-3 py-2 text-xs font-medium text-white sm:py-1.5"
-                    else
-                      "#{rounded} bg-white px-3 py-2 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:py-1.5"
-                    end
-        %>
-        <%= link_to range.upcase, admin_traffic_path(range: range),
-              class: classes,
-              data: { turbo_action: "replace" } %>
-      <% end %>
-    </div>
+    <%= render "admin/shared/range_selector",
+          ranges: Admin::TrafficController::ALLOWED_RANGES,
+          current: @range,
+          path: ->(range) { admin_traffic_path(range: range) } %>
   </div>
 
   <div data-traffic-chart-target="canvas" class="w-full min-h-[200px]" style="height: 300px;"></div>

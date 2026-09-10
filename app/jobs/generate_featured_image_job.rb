@@ -4,9 +4,8 @@ class GenerateFeaturedImageJob < ApplicationJob
   def perform(post_id, prompt, user_id)
     post = Post.find(post_id)
     settings = SiteSetting.current
-    configure_ruby_llm!(settings)
 
-    image = RubyLLM.paint(prompt, model: settings.image_model_name_for_image)
+    image = ::Ai::Client.paint(prompt, settings)
 
     post.featured_image.attach(
       io: StringIO.new(image.to_blob),
@@ -27,14 +26,5 @@ class GenerateFeaturedImageJob < ApplicationJob
       partial: "admin/ai/featured_image_error",
       locals: { error: e.message, post: Post.find_by(id: post_id) }
     )
-  end
-
-  private
-
-  def configure_ruby_llm!(settings)
-    RubyLLM.configure do |config|
-      config.gemini_api_key = settings.gemini_api_key
-      config.openai_api_key = settings.openai_api_key
-    end
   end
 end

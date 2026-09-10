@@ -1,18 +1,17 @@
 class PostEngagementQuery
+  include TimeBucketing
+
   def initialize(post)
     @post = post
+    @views_query = PostViewsQuery.new(post.post_views)
   end
 
   def views_count(since: nil)
-    scope = @post.post_views
-    scope = scope.since(since) if since
-    scope.count
+    @views_query.total_views(since: since)
   end
 
   def unique_viewers(since: nil)
-    scope = @post.post_views
-    scope = scope.since(since) if since
-    scope.distinct.count(:ip_hash)
+    @views_query.unique_viewers(since: since)
   end
 
   def loves_count
@@ -24,26 +23,14 @@ class PostEngagementQuery
   end
 
   def engagement_rate
-    views = views_count
-    return 0.0 if views.zero?
-
-    engagements = loves_count + comments_count
-    (engagements.to_f / views * 100).round(1)
+    percentage(loves_count + comments_count, views_count)
   end
 
   def traffic_sources(since: 30.days.ago)
-    @post.post_views
-      .since(since)
-      .group(:source)
-      .order("count_all DESC")
-      .count
+    @views_query.traffic_sources(since: since)
   end
 
   def views_by_day(since: 30.days.ago)
-    @post.post_views
-      .since(since)
-      .group("DATE(created_at)")
-      .order("DATE(created_at)")
-      .count
+    @views_query.views_by_day(since: since)
   end
 end

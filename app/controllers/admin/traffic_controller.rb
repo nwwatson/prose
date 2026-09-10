@@ -1,8 +1,13 @@
 module Admin
   class TrafficController < BaseController
+    include Admin::AnalyticsRangeable
+
+    ALLOWED_RANGES = %w[7d 30d 90d all].freeze
+
     def show
-      since = range_to_date(params[:range])
-      @range = params[:range] || "30d"
+      range = analytics_range(default: "30d", allowed: ALLOWED_RANGES)
+      @range = range.key
+      since = range.since
 
       views_query = PostViewsQuery.new
       referrer_query = ReferrerAnalyticsQuery.new
@@ -17,17 +22,6 @@ module Admin
       @utm_sources = referrer_query.utm_sources(since: since)
       @utm_mediums = referrer_query.utm_mediums(since: since)
       @utm_campaigns = referrer_query.utm_campaigns(since: since)
-    end
-
-    private
-
-    def range_to_date(range)
-      case range
-      when "7d" then 7.days.ago
-      when "90d" then 90.days.ago
-      when "all" then Time.at(0)
-      else 30.days.ago
-      end
     end
   end
 end

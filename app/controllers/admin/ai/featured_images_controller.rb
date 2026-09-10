@@ -6,9 +6,8 @@ module Admin
       def suggest_prompt
         context = ::Ai::PostContextBuilder.new(@post).build
         prompt = ::Ai::SystemPrompts.image_prompt(context)
-        settings = SiteSetting.current
 
-        chat = RubyLLM.chat(model: settings.ai_model_name)
+        chat = ::Ai::Client.chat
         response = chat.ask(prompt)
 
         @suggested_prompt = response.content.to_s.strip

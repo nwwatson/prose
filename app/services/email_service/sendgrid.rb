@@ -3,6 +3,20 @@ class EmailService::Sendgrid < EmailService::Base
     @api_key = api_key
   end
 
+  def deliver_newsletter(newsletter, subscriber)
+    mailer = NewsletterMailer.campaign(subscriber, newsletter)
+    message = mailer.message
+
+    send_email(
+      to: subscriber.email,
+      subject: newsletter.title,
+      html: message.html_part&.body&.to_s || message.body.to_s,
+      text: message.text_part&.body&.to_s || "",
+      headers: extract_headers(message),
+      metadata: { newsletter_id: newsletter.id, subscriber_id: subscriber.id }
+    )
+  end
+
   def send_email(to:, subject:, html:, text:, headers: {}, metadata: {})
     mail = SendGrid::Mail.new
     mail.from = SendGrid::Email.new(email: from_address)
@@ -36,47 +50,20 @@ class EmailService::Sendgrid < EmailService::Base
     response
   end
 
-  def process_webhook(payload)
-    events = payload.is_a?(Array) ? payload : [ payload ]
-
-    events.each do |event|
-      process_event(event)
-    end
-  end
-
   private
 
   def from_address
     ENV.fetch("SMTP_FROM", "noreply@example.com")
   end
 
-  def process_event(event)
-    newsletter_id = event.dig("unique_args", "newsletter_id") || event["newsletter_id"]
-    subscriber_id = event.dig("unique_args", "subscriber_id") || event["subscriber_id"]
-
-    return unless newsletter_id.present? && subscriber_id.present?
-
-    delivery = NewsletterDelivery.find_by(
-      newsletter_id: newsletter_id,
-      subscriber_id: subscriber_id
-    )
-    return unless delivery
-
-    case event["event"]
-    when "open"
-      delivery.update(
-        opened_at: delivery.opened_at || Time.current,
-        open_count: delivery.open_count + 1
-      )
-    when "click"
-      delivery.update(
-        clicked_at: delivery.clicked_at || Time.current
-      )
-    when "bounce", "dropped"
-      delivery.update(bounced_at: Time.current)
-    when "spamreport", "unsubscribe"
-      subscriber = delivery.subscriber
-      subscriber.unsubscribe! if subscriber.respond_to?(:unsubscribe!)
+  def extract_headers(message)
+    headers = {}
+    if message.header["List-Unsubscribe"]
+      headers["List-Unsubscribe"] = message.header["List-Unsubscribe"].value
     end
+    if message.header["List-Unsubscribe-Post"]
+      headers["List-Unsubscribe-Post"] = message.header["List-Unsubscribe-Post"].value
+    end
+    headers
   end
 end

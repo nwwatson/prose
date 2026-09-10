@@ -1,6 +1,7 @@
 module Admin
   class PostVersionsController < BaseController
-    before_action :set_post
+    include Admin::PostScoped
+
     before_action :set_version, only: [ :show, :restore ]
 
     def index
@@ -24,10 +25,6 @@ module Admin
     end
 
     private
-
-    def set_post
-      @post = Post.find_by!(slug: params[:post_id])
-    end
 
     def set_version
       @version = @post.post_versions.find(params[:id])

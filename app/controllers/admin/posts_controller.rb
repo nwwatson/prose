@@ -49,7 +49,6 @@ module Admin
     end
 
     def preview
-      @post = Post.includes(:user, :category, :tags).find_by!(slug: params[:id])
       render partial: "preview", locals: { post: @post }, layout: false
     end
 
@@ -61,7 +60,7 @@ module Admin
     private
 
     def set_post
-      @post = Post.find_by!(slug: params[:id])
+      @post = Post.includes(:user, :category, :tags).find_by!(slug: params[:id])
     end
 
     def post_params

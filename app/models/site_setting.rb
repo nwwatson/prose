@@ -8,6 +8,7 @@ class SiteSetting < ApplicationRecord
   include Localization
   include Crawlers
   include PaymentConfiguration
+  include MaskedSecrets
 
   has_one_attached :default_og_image
 
