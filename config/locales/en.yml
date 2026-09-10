@@ -95,6 +95,7 @@ en:
       settings: "Settings"
       passkeys: "Passkeys"
       api_tokens: "API Tokens"
+      webhooks: "Webhooks"
 
   # Public views
   posts:
@@ -480,6 +481,44 @@ en:
         revoke: "Revoke"
         revoke_confirm: "Revoke this token? Any applications using it will lose access."
         no_tokens: "No API tokens yet. Create one to connect Claude Desktop or other MCP clients."
+    webhooks:
+      index:
+        title: "Webhooks"
+        new_webhook: "New Webhook"
+        url: "URL"
+        events: "Events"
+        last_triggered: "Last Triggered"
+        last_response: "Last Response"
+        status: "Status"
+        disabled: "Disabled"
+        deliveries: "Deliveries"
+        no_webhooks: "No webhooks yet. Add one to notify third-party services of site events."
+      new:
+        title: "New Webhook"
+      edit:
+        title: "Edit Webhook"
+        secret_shown: "Your webhook signing secret (copy it now — it won't be shown again):"
+        copy: "Copy"
+        send_test: "Send Test Event"
+        regenerate_secret: "Regenerate Secret"
+        regenerate_confirm: "Regenerate the signing secret? Deliveries signed with the old secret will fail verification."
+        view_deliveries: "View Deliveries"
+      form:
+        events: "Events"
+        active: "Active"
+        active_help: "Automatically disabled after %{count} consecutive delivery failures."
+    webhook_deliveries:
+      index:
+        title: "Webhook Deliveries"
+        back_to_webhooks: "Back to Webhooks"
+        event: "Event"
+        response: "Response"
+        attempted_at: "Attempted"
+        status: "Status"
+        success: "Success"
+        failed: "Failed"
+        no_response: "No response"
+        no_deliveries: "No deliveries yet."
     newsletters:
       index:
         title: "Newsletters"
@@ -871,6 +910,12 @@ en:
       api_tokens:
         created: "API token created."
         revoked: "API token revoked."
+      webhooks:
+        created: "Webhook created."
+        updated: "Webhook updated."
+        deleted: "Webhook deleted."
+        test_sent: "Test event sent."
+        secret_regenerated: "Signing secret regenerated."
       setup:
         welcome: "Welcome to %{site_name}! Your admin account has been created."
       ai:

@@ -1,0 +1,43 @@
+<%# locals: (webhook:) %>
+
+<%= form_with model: [ :admin, webhook ], class: "space-y-6" do |f| %>
+  <%= render "admin/shared/form_errors", record: webhook, wrapper_class: "" %>
+
+  <div class="max-w-2xl space-y-6">
+    <div>
+      <%= f.label :url, class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= f.url_field :url, placeholder: "https://example.com/webhooks/prose", class: admin_input_classes %>
+      </div>
+    </div>
+
+    <div>
+      <p class="text-sm font-medium text-gray-900 mb-2"><%= t('admin.webhooks.form.events') %></p>
+      <div class="space-y-2">
+        <% Webhook::EVENTS.each do |event| %>
+          <label class="flex items-center gap-2">
+            <input type="checkbox" name="webhook[events][]" value="<%= event %>"
+                   <%= "checked" if webhook.events.include?(event) %>
+                   class="rounded border-gray-300 text-gray-900 focus:ring-gray-600">
+            <span class="text-sm text-gray-700"><%= event %></span>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <% if webhook.persisted? %>
+      <div>
+        <label class="flex items-center gap-2">
+          <%= f.check_box :active, class: "rounded border-gray-300 text-gray-900 focus:ring-gray-600" %>
+          <span class="text-sm text-gray-700"><%= t('admin.webhooks.form.active') %></span>
+        </label>
+        <p class="mt-1 text-xs text-gray-500"><%= t('admin.webhooks.form.active_help', count: Webhook::MAX_CONSECUTIVE_FAILURES) %></p>
+      </div>
+    <% end %>
+
+    <div class="flex justify-end space-x-3">
+      <%= link_to t('shared.cancel'), admin_webhooks_path, class: admin_button_classes(variant: :outline) %>
+      <%= f.submit class: "#{admin_button_classes(variant: :primary)} cursor-pointer" %>
+    </div>
+  </div>
+<% end %>
