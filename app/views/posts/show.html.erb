@@ -91,7 +91,7 @@
   <% else %>
     <%# Teaser content for gated posts %>
     <div class="post-detail__content prose prose-lg dark:prose-invert">
-      <p><%= @post.content&.to_plain_text&.truncate(300) %></p>
+      <p><%= @post.excerpt %></p>
     </div>
     <%= render "posts/paywall", post: @post %>
   <% end %>

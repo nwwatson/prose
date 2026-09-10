@@ -32,13 +32,17 @@ class Post < ApplicationRecord
   end
 
   def seo_description
-    meta_description.presence || subtitle.presence || content&.to_plain_text&.truncate(155)
+    @seo_description ||= meta_description.presence || subtitle.presence || excerpt(155)
+  end
+
+  def excerpt(length = 300)
+    body_plain.to_s.truncate(length)
   end
 
   scope :featured, -> { where(featured: true) }
   scope :by_publication_date, -> { order(published_at: :desc) }
 
-  before_save :calculate_reading_time
+  before_save :calculate_reading_time, if: :will_save_change_to_body_plain?
 
   private
 

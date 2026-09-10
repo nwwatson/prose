@@ -2,7 +2,7 @@ module Post::Searchable
   extend ActiveSupport::Concern
 
   included do
-    before_save :update_body_plain
+    before_save :update_body_plain, if: -> { new_record? || content.changed? }
 
     scope :search, ->(query) {
       return none if query.blank?

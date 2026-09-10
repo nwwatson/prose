@@ -234,17 +234,20 @@ CREATE TRIGGER posts_fts_insert AFTER INSERT ON posts BEGIN
   INSERT INTO posts_fts(rowid, title, subtitle, body_plain)
   VALUES (NEW.id, NEW.title, NEW.subtitle, NEW.body_plain);
 END;
-CREATE TRIGGER posts_fts_update AFTER UPDATE ON posts BEGIN
+CREATE TRIGGER posts_fts_delete AFTER DELETE ON posts BEGIN
+  INSERT INTO posts_fts(posts_fts, rowid, title, subtitle, body_plain)
+  VALUES ('delete', OLD.id, OLD.title, OLD.subtitle, OLD.body_plain);
+END;
+CREATE TRIGGER posts_fts_update AFTER UPDATE ON posts
+WHEN OLD.title IS NOT NEW.title OR OLD.subtitle IS NOT NEW.subtitle OR OLD.body_plain IS NOT NEW.body_plain
+BEGIN
   INSERT INTO posts_fts(posts_fts, rowid, title, subtitle, body_plain)
   VALUES ('delete', OLD.id, OLD.title, OLD.subtitle, OLD.body_plain);
   INSERT INTO posts_fts(rowid, title, subtitle, body_plain)
   VALUES (NEW.id, NEW.title, NEW.subtitle, NEW.body_plain);
 END;
-CREATE TRIGGER posts_fts_delete AFTER DELETE ON posts BEGIN
-  INSERT INTO posts_fts(posts_fts, rowid, title, subtitle, body_plain)
-  VALUES ('delete', OLD.id, OLD.title, OLD.subtitle, OLD.body_plain);
-END;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260910010710'),
 ('20260313202523'),
 ('20260313023242'),
 ('20260313023241'),

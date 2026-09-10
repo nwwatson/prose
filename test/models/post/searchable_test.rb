@@ -61,4 +61,46 @@ class Post::SearchableTest < ActiveSupport::TestCase
     post.update!(content: "<p>New body content here</p>")
     assert_equal "New body content here", post.reload.body_plain
   end
+
+  test "body_plain is not recomputed when content is unchanged" do
+    post = posts(:published_post)
+    post.update!(content: "<p>Stable content</p>")
+    post.reload
+    called = false
+
+    post.content.define_singleton_method(:to_plain_text) { called = true; "stubbed" }
+
+    post.update!(featured: !post.featured)
+
+    assert_not called
+  end
+
+  test "FTS index is not touched when only non-content attributes change" do
+    post = posts(:published_post)
+    post.update!(content: "<p>Stable content</p>")
+    post.reload
+
+    post.update!(featured: !post.featured)
+
+    fts_row_count = ActiveRecord::Base.connection.select_value(
+      "SELECT COUNT(*) FROM posts_fts WHERE rowid = #{post.id} AND body_plain = #{ActiveRecord::Base.connection.quote(post.body_plain)}"
+    )
+    assert_equal 1, fts_row_count
+  end
+
+  test "search stays correct after a non-content update" do
+    post = posts(:featured_post)
+    post.update!(featured: !post.featured)
+
+    results = Post.search(post.title)
+    assert_includes results, post
+  end
+
+  test "search reflects a content edit" do
+    post = posts(:published_post)
+    post.update!(content: "<p>zzzunique_search_marker content</p>")
+
+    results = Post.search("zzzunique_search_marker")
+    assert_includes results, post
+  end
 end

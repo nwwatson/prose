@@ -27,9 +27,9 @@
           <span><%= post.reading_time_minutes %> <%= t('shared.min_read') %></span>
         </div>
       </header>
-      <% if post.content.present? %>
+      <% if post.body_plain.present? %>
         <div class="post-card__excerpt">
-          <%= truncate(post.content.to_plain_text, length: 300) %>
+          <%= post.excerpt %>
         </div>
       <% end %>
     </article>

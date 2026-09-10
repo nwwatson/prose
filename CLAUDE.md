@@ -117,6 +117,9 @@ Pages (`Page` model) provide custom static content at top-level URLs (`/:slug`).
 ### Post Editor
 Uses the `admin_editor` layout. Autosave triggers on a 3-second debounce, serializing `#post_form` FormData. The editor drawer is a tabbed panel (AI + Settings + Versions). Settings fields use `form="post_form"` attribute with event listeners on the settings tab container to trigger autosave.
 
+### Post Content & Search Indexing
+`Post#body_plain` is the canonical plain-text source for a post's content — `Post#excerpt(length)` truncates it and is used by `seo_description`, the featured-post teaser, and the gated-content teaser. Never re-derive plain text from `content.to_plain_text` outside of `Post::Searchable#update_body_plain`; that callback only recomputes `body_plain` when `content` actually changed (`before_save :update_body_plain, if: -> { new_record? || content.changed? }`), so a settings-only save (autosave, love counter, status toggle) skips the Nokogiri parse. `calculate_reading_time` is similarly guarded with `will_save_change_to_body_plain?`. The `posts_fts_update` SQLite trigger has a `WHEN` clause so the FTS5 row is only deleted/reinserted when `title`, `subtitle`, or `body_plain` actually changed. Run `rake posts:backfill_body_plain` to populate `body_plain` for posts created before the column existed.
+
 ### Post Versioning
 `PostVersion` stores full snapshots (title, subtitle, content HTML, body plain text) on each save. Auto-versioning triggers on update with a 5-minute cooldown (`Post::Versionable`). Manual "Save version" button in the editor drawer's Versions tab. Diff view uses the `diffy` gem for plain-text comparison. "Restore" replaces the post's current content. Max 50 versions per post, pruned inline on version creation. Admin CRUD at `/admin/posts/:id/post_versions`.
 
