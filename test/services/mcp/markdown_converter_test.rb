@@ -3,7 +3,7 @@ require "test_helper"
 class Mcp::MarkdownConverterTest < ActiveSupport::TestCase
   test "converts headings" do
     html = Mcp::MarkdownConverter.to_html("# Hello World")
-    assert_includes html, "<h1>"
+    assert_includes html, "<h1 id=\"hello-world\">"
     assert_includes html, "Hello World"
   end
 
