@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { request } from "lib/request"
 
 export default class extends Controller {
   static targets = ["editor", "preview", "toggleButton", "toggleIcon", "toggleLabel"]
@@ -56,13 +57,7 @@ export default class extends Controller {
     if (!previewUrl) return
 
     try {
-      const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
-      const response = await fetch(previewUrl, {
-        headers: {
-          "Accept": "text/html",
-          "X-CSRF-Token": csrfToken
-        }
-      })
+      const response = await request(previewUrl, { accept: "text/html" })
 
       if (!response.ok) return
 

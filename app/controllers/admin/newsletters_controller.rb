@@ -1,6 +1,7 @@
 module Admin
   class NewslettersController < BaseController
-    layout :choose_layout
+    include Admin::EditorResource
+    uses_editor_layout "newsletter_editor"
 
     before_action :set_newsletter, only: [ :show, :edit, :update, :destroy, :send_newsletter, :schedule, :preview ]
     before_action :set_segments, only: [ :new, :create, :edit, :update ]
@@ -37,15 +38,9 @@ module Admin
       @newsletter = current_user.newsletters.build(newsletter_params)
 
       if @newsletter.save
-        respond_to do |format|
-          format.html { redirect_to edit_admin_newsletter_path(@newsletter), notice: t("flash.admin.newsletters.created") }
-          format.json { render json: newsletter_json(@newsletter), status: :created }
-        end
+        respond_with_saved(@newsletter, notice: t("flash.admin.newsletters.created"), status: :created)
       else
-        respond_to do |format|
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: { errors: @newsletter.errors.full_messages }, status: :unprocessable_entity }
-        end
+        respond_with_errors(@newsletter, :new)
       end
     end
 
@@ -54,15 +49,9 @@ module Admin
 
     def update
       if @newsletter.update(newsletter_params)
-        respond_to do |format|
-          format.html { redirect_to edit_admin_newsletter_path(@newsletter), notice: t("flash.admin.newsletters.updated") }
-          format.json { render json: newsletter_json(@newsletter), status: :ok }
-        end
+        respond_with_saved(@newsletter, notice: t("flash.admin.newsletters.updated"), status: :ok)
       else
-        respond_to do |format|
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: { errors: @newsletter.errors.full_messages }, status: :unprocessable_entity }
-        end
+        respond_with_errors(@newsletter, :edit)
       end
     end
 
@@ -111,7 +100,7 @@ module Admin
       params.require(:newsletter).permit(:title, :body, :template, :accent_color, :preheader_text, :segment_id)
     end
 
-    def newsletter_json(newsletter)
+    def resource_json(newsletter)
       {
         id: newsletter.id,
         url: admin_newsletter_path(newsletter),
@@ -119,8 +108,8 @@ module Admin
       }
     end
 
-    def choose_layout
-      action_name.in?(%w[new edit create update]) ? "newsletter_editor" : "admin"
+    def edit_path_for(newsletter)
+      edit_admin_newsletter_path(newsletter)
     end
   end
 end

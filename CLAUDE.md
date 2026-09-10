@@ -70,8 +70,9 @@ app/models/concerns/sluggable.rb     # module Sluggable (slugged_from macro: slu
 app/models/comment/editable.rb        # module Comment::Editable (15-min edit window, soft delete)
 app/models/comment/notifiable.rb      # module Comment::Notifiable (reply notification callbacks)
 app/models/page.rb                    # class Page (custom static pages)
-app/models/page/publishable.rb       # module Page::Publishable (live scope, publish/draft)
 app/models/page/navigable.rb         # module Page::Navigable (navigation menu scope)
+app/models/concerns/publishable.rb   # module Publishable — shared `publishes_at` macro (live scope, publish!/schedule!/revert_to_draft!), included by Post, Page, Newsletter
+app/validators/future_validator.rb   # FutureValidator: shared "must be in the future" validation used by Publishable
 app/models/site_setting/localization.rb  # module SiteSetting::Localization (i18n)
 app/models/identity/handleable.rb    # module Identity::Handleable (handle validation/normalization)
 app/models/identity/profileable.rb   # module Identity::Profileable (avatar, bio, social links)
@@ -93,6 +94,8 @@ Keep model files under 200 lines — extract behavior into concerns when they gr
 
 ### Controller Pattern
 Skinny controllers that delegate to models/services. Controllers handle only HTTP concerns.
+
+`Admin::EditorResource` (`app/controllers/concerns/admin/editor_resource.rb`) is a shared concern for the three editor-backed admin controllers (`Admin::PostsController`, `Admin::PagesController`, `Admin::NewslettersController`). It sets `layout :choose_layout` (editor layout on `new`/`edit`/`create`/`update`, `"admin"` elsewhere — declared per-controller via `uses_editor_layout "admin_editor"` etc.) and provides `respond_with_saved(record, notice:, status:)` / `respond_with_errors(record, template)` for the shared HTML+JSON `respond_to` branches on `create`/`update`. Including controllers implement `resource_json(record)` and `edit_path_for(record)` to supply their resource-specific JSON payload and redirect target; anything else that differs (e.g. `Post#create_version_if_needed!` after update) stays in the controller.
 
 ### Service Layer
 - **Form Objects** for multi-model input (e.g., `Registration`)
@@ -129,8 +132,12 @@ Frontend component styles use BEM (Block Element Modifier) methodology in `app/a
 ### Key Stimulus Controllers
 `autosave`, `editor_drawer`, `tag_select`, `custom_select`, `streaming_markdown`, `ai_image_modal`, `typography_preview`, `markdown_preview`, `traffic_chart`, `segment_builder`, `comment_edit`
 
-### SVG Chart Rendering
-`app/javascript/lib/svg_chart.js` is the shared renderer for all hand-rolled SVG charts (no external charting library) — `svgEl(name, attrs, text)` builds namespaced SVG elements, `renderBarChart(container, entries, opts)` draws gridlines/bars/x-labels for `growth_chart` and `traffic_chart` (which differ only in `minBarWidth`, `labelInterval`, and label formatter — `formatMonthLabel`/`formatDayLabel`), and `renderSparkline(container, values, opts)` draws the dashboard's line+area sparkline (`chart_controller`). All three controllers render into a persistent container element via `container.replaceChildren(...)`, so redrawing (e.g. on data change) doesn't destroy the target. The growth chart's Monthly/Cumulative toggle uses Stimulus `static classes` (`data-growth-chart-active-class` / `-inactive-class`) with `classList.add/remove` rather than string replacement on `className`.
+### Shared JS Modules
+`app/javascript/lib/` holds framework-agnostic helpers shared across Stimulus controllers (pinned via `pin_all_from "app/javascript/lib", under: "lib"` in `config/importmap.rb`, imported as `lib/<name>`).
+
+`lib/request.js` centralizes the CSRF-token meta lookup and the three fetch idioms used throughout the app: `request(url, opts)` (sets `X-CSRF-Token`, JSON-encodes a plain object body, form-encodes a `URLSearchParams` body, passes `FormData` through untouched), `requestJSON(url, opts)` (parses the JSON response and throws with `data.error` when the response isn't ok), and `requestTurboStream(url, opts)` (sets the Turbo Stream `Accept` header and renders the response via `Turbo.renderStreamMessage`). Controllers that POST or fetch should use these helpers instead of duplicating the CSRF meta-tag lookup.
+
+`lib/svg_chart.js` is the shared renderer for all hand-rolled SVG charts (no external charting library) — `svgEl(name, attrs, text)` builds namespaced SVG elements, `renderBarChart(container, entries, opts)` draws gridlines/bars/x-labels for `growth_chart` and `traffic_chart` (which differ only in `minBarWidth`, `labelInterval`, and label formatter — `formatMonthLabel`/`formatDayLabel`), and `renderSparkline(container, values, opts)` draws the dashboard's line+area sparkline (`chart_controller`). All three controllers render into a persistent container element via `container.replaceChildren(...)`, so redrawing (e.g. on data change) doesn't destroy the target. The growth chart's Monthly/Cumulative toggle uses Stimulus `static classes` (`data-growth-chart-active-class` / `-inactive-class`) with `classList.add/remove` rather than string replacement on `className`.
 
 ### Author Profiles
 Profile data (bio, avatar, social links) lives on the `Identity` model via `Identity::Profileable` concern. Public author pages at `/authors` (index) and `/authors/:handle` (show) are served by `AuthorsController`. Admin profile editing at `/admin/profile` via `Admin::ProfilesController`. Author names on posts link to their profile pages. Bios support markdown via `MarkdownRenderer`.

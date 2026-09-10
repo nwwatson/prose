@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { requestJSON } from "lib/request"
 
 const X_POST_PATTERN = /^https?:\/\/(x\.com|twitter\.com)\/\w+\/status\/\d+/
 
@@ -24,15 +25,7 @@ export default class extends Controller {
     const editor = this.element.querySelector("lexxy-editor")
     if (!editor) return
 
-    fetch(this.urlValue, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
-      },
-      body: JSON.stringify({ url: text })
-    })
-      .then(r => r.json())
+    requestJSON(this.urlValue, { method: "POST", body: { url: text } })
       .then(({ sgid, html }) => {
         const attachment = document.createElement("action-text-attachment")
         attachment.setAttribute("sgid", sgid)

@@ -4,6 +4,7 @@ class Page < ApplicationRecord
   include Navigable
 
   enum :status, { draft: 0, published: 1 }
+  publishes_at :published_at
 
   belongs_to :user
   has_rich_text :content

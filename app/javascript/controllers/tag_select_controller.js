@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { requestJSON } from "lib/request"
 
 export default class extends Controller {
   static targets = [
@@ -147,22 +148,11 @@ export default class extends Controller {
     const name = this.searchInputTarget.value.trim()
     if (!name || !this.hasCreateUrlValue) return
 
-    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
-
     try {
-      const response = await fetch(this.createUrlValue, {
+      const data = await requestJSON(this.createUrlValue, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": csrfToken,
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({ tag: { name } })
+        body: { tag: { name } }
       })
-
-      if (!response.ok) return
-
-      const data = await response.json()
 
       // Insert new option alphabetically if it doesn't already exist
       if (!this.optionTargets.find(o => o.dataset.tagId === String(data.id))) {

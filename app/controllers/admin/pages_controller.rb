@@ -1,6 +1,7 @@
 module Admin
   class PagesController < BaseController
-    layout :choose_layout
+    include Admin::EditorResource
+    uses_editor_layout "admin_page_editor"
 
     before_action :set_page, only: [ :edit, :update, :destroy ]
 
@@ -16,15 +17,9 @@ module Admin
       @page = current_user.pages.build(page_params)
 
       if @page.save
-        respond_to do |format|
-          format.html { redirect_to edit_admin_page_path(@page), notice: t("flash.admin.pages.created") }
-          format.json { render json: page_json(@page), status: :created }
-        end
+        respond_with_saved(@page, notice: t("flash.admin.pages.created"), status: :created)
       else
-        respond_to do |format|
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: { errors: @page.errors.full_messages }, status: :unprocessable_entity }
-        end
+        respond_with_errors(@page, :new)
       end
     end
 
@@ -33,15 +28,9 @@ module Admin
 
     def update
       if @page.update(page_params)
-        respond_to do |format|
-          format.html { redirect_to edit_admin_page_path(@page), notice: t("flash.admin.pages.updated") }
-          format.json { render json: page_json(@page), status: :ok }
-        end
+        respond_with_saved(@page, notice: t("flash.admin.pages.updated"), status: :ok)
       else
-        respond_to do |format|
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: { errors: @page.errors.full_messages }, status: :unprocessable_entity }
-        end
+        respond_with_errors(@page, :edit)
       end
     end
 
@@ -60,7 +49,7 @@ module Admin
       params.require(:page).permit(:title, :slug, :status, :content, :meta_description, :show_in_navigation, :position, :published_at)
     end
 
-    def page_json(page)
+    def resource_json(page)
       {
         slug: page.to_param,
         url: admin_page_path(page),
@@ -68,8 +57,8 @@ module Admin
       }
     end
 
-    def choose_layout
-      action_name.in?(%w[new edit create update]) ? "admin_page_editor" : "admin"
+    def edit_path_for(page)
+      edit_admin_page_path(page)
     end
   end
 end

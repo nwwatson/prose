@@ -1,6 +1,7 @@
 module Admin
   class PostsController < BaseController
-    layout :choose_layout
+    include Admin::EditorResource
+    uses_editor_layout "admin_editor"
 
     before_action :set_post, only: [ :edit, :update, :destroy, :preview ]
 
@@ -29,15 +30,9 @@ module Admin
       @post = current_user.posts.build(post_params)
 
       if @post.save
-        respond_to do |format|
-          format.html { redirect_to edit_admin_post_path(@post), notice: t("flash.admin.posts.created") }
-          format.json { render json: post_json(@post), status: :created }
-        end
+        respond_with_saved(@post, notice: t("flash.admin.posts.created"), status: :created)
       else
-        respond_to do |format|
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity }
-        end
+        respond_with_errors(@post, :new)
       end
     end
 
@@ -47,15 +42,9 @@ module Admin
     def update
       if @post.update(post_params)
         @post.create_version_if_needed!(user: current_user)
-        respond_to do |format|
-          format.html { redirect_to edit_admin_post_path(@post), notice: t("flash.admin.posts.updated") }
-          format.json { render json: post_json(@post), status: :ok }
-        end
+        respond_with_saved(@post, notice: t("flash.admin.posts.updated"), status: :ok)
       else
-        respond_to do |format|
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity }
-        end
+        respond_with_errors(@post, :edit)
       end
     end
 
@@ -79,7 +68,7 @@ module Admin
       params.require(:post).permit(:title, :subtitle, :slug, :status, :published_at, :featured, :show_toc, :category_id, :content, :meta_description, :featured_image, :visibility, tag_ids: [])
     end
 
-    def post_json(post)
+    def resource_json(post)
       {
         slug: post.to_param,
         url: admin_post_path(post),
@@ -87,8 +76,8 @@ module Admin
       }
     end
 
-    def choose_layout
-      action_name.in?(%w[new edit create update]) ? "admin_editor" : "admin"
+    def edit_path_for(post)
+      edit_admin_post_path(post)
     end
   end
 end
