@@ -46,13 +46,15 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 2.1"
+# image_processing 2.x no longer depends on ruby-vips; Active Storage's :vips variant processor needs it
+gem "ruby-vips", "~> 2.0", require: false
 
 # Uncomment for S3-compatible storage (AWS S3, DigitalOcean Spaces, MinIO, Cloudflare R2)
 # gem "aws-sdk-s3", require: false
 
 # Modern rich text editor built on Lexical [https://github.com/basecamp/lexxy]
-gem "lexxy", "~> 0.9.0.beta"
+gem "lexxy", "~> 0.9.32"
 
 # Unified LLM interface for Claude, Gemini, and more [https://github.com/crmne/ruby_llm]
 gem "ruby_llm"

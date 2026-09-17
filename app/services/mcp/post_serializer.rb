@@ -15,7 +15,7 @@ module Mcp
         updated_at: post.updated_at.iso8601,
         author: post.user&.display_name,
         category: post.category&.name,
-        tags: post.tags.pluck(:name)
+        tags: post.tags.map(&:name)
       }
 
       if include_content
