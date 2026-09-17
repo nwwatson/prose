@@ -1,8 +1,9 @@
 module Mcp
   class SessionsController < ActionController::API
-    include Api::TokenAuthenticatable
-
+    # Declared before the token check so unauthenticated requests are throttled too.
     rate_limit to: 60, within: 1.minute
+
+    include Api::TokenAuthenticatable
 
     def create
       server = MCP::Server.new(

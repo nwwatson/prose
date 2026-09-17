@@ -20,4 +20,9 @@ class Api::V1::AssetsControllerTest < ActionDispatch::IntegrationTest
     post "/api/v1/assets", params: {}, headers: auth_header
     assert_response :unprocessable_entity
   end
+
+  test "returns an error when file is a plain string instead of an upload" do
+    post "/api/v1/assets", params: { file: "not-a-file" }, headers: auth_header
+    assert_response :unprocessable_entity
+  end
 end

@@ -1,18 +1,22 @@
 module Api
   module V1
     class PostsController < Api::V1::BaseController
+      class UnknownCategory < StandardError; end
+
+      rescue_from UnknownCategory, with: ->(exception) { render_error(exception.message) }
+
       def index
         posts = Post.for_listing.includes(:tags)
         posts = posts.where(status: params[:status]) if params[:status].present?
 
         if params[:category].present?
-          category = Category.find_by(name: params[:category]) || Category.find_by(slug: params[:category])
-          posts = posts.where(category: category)
+          category = find_category(params[:category])
+          posts = category ? posts.where(category: category) : posts.none
         end
 
         if params[:tag].present?
-          tag = Tag.find_by(name: params[:tag]) || Tag.find_by(slug: params[:tag])
-          posts = posts.joins(:tags).where(tags: { id: tag&.id })
+          tag = find_tag(params[:tag])
+          posts = tag ? posts.where(id: tag.posts.select(:id)) : posts.none
         end
 
         posts = posts.search(params[:search]) if params[:search].present?
@@ -22,7 +26,7 @@ module Api
       end
 
       def show
-        render json: Mcp::PostSerializer.call(find_post, include_content: true)
+        render json: Mcp::PostSerializer.call(find_post(params[:slug]), include_content: true)
       end
 
       def create
@@ -30,7 +34,7 @@ module Api
         post.user = Current.user
         post.status = :draft
         post.content = Mcp::MarkdownConverter.to_html(post_params[:content]) if post_params[:content].present?
-        post.category = find_category(post_params[:category]) if post_params[:category].present?
+        post.category = resolve_category(post_params[:category]) if post_params[:category].present?
         post.save!
         post.tags = find_or_create_tags(post_params[:tags]) if post_params[:tags].present?
 
@@ -38,30 +42,32 @@ module Api
       end
 
       def update
-        post = find_post
+        post = find_post(params[:slug])
         attrs = post_params.except(:content, :tags, :category).to_h
-        attrs[:category] = find_category(post_params[:category]) if post_params.key?(:category)
-        post.update!(attrs) if attrs.any?
-        post.content = Mcp::MarkdownConverter.to_html(post_params[:content]) if post_params.key?(:content)
+        attrs[:category] = resolve_category(post_params[:category]) if post_params.key?(:category)
+        post.assign_attributes(attrs)
+        post.content = Mcp::MarkdownConverter.to_html(post_params[:content].to_s) if post_params.key?(:content)
+        # Always save: a content-only change lives on the ActionText record, so
+        # `post.changed?` stays false and a guarded save would silently drop it.
+        post.save!
         post.tags = find_or_create_tags(post_params[:tags]) if post_params.key?(:tags)
-        post.save! if post.changed?
 
         render json: Mcp::PostSerializer.call(post.reload, include_content: true)
       end
 
       def destroy
-        find_post.destroy!
+        find_post(params[:slug]).destroy!
         head :no_content
       end
 
       def publish
-        post = find_post
+        post = find_post(params[:slug])
         post.publish!
         render json: Mcp::PostSerializer.call(post.reload)
       end
 
       def schedule
-        post = find_post
+        post = find_post(params[:slug])
         time = Time.iso8601(params.require(:published_at))
         post.schedule!(time)
         render json: Mcp::PostSerializer.call(post.reload)
@@ -70,24 +76,19 @@ module Api
       end
 
       def unpublish
-        post = find_post
+        post = find_post(params[:slug])
         post.revert_to_draft!
         render json: Mcp::PostSerializer.call(post.reload)
       end
 
       private
 
-      def find_post
-        identifier = params[:slug]
-        identifier.match?(/\A\d+\z/) ? Post.find(identifier) : Post.find_by!(slug: identifier)
-      end
+      # A blank value clears the category; an unknown name/slug is a client error
+      # rather than silently leaving the post uncategorized.
+      def resolve_category(name_or_slug)
+        return nil if name_or_slug.blank?
 
-      def find_category(name_or_slug)
-        Category.find_by(name: name_or_slug) || Category.find_by(slug: name_or_slug)
-      end
-
-      def find_or_create_tags(names)
-        names.map { |name| Tag.find_or_create_by!(name: name.strip) }
+        find_category(name_or_slug) || raise(UnknownCategory, "Category not found: #{name_or_slug}")
       end
 
       def post_params

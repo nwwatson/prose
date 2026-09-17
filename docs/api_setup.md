@@ -78,4 +78,6 @@ curl https://your-prose-instance.com/api/v1/posts \
 ## 4. Errors
 
 Errors are returned as `{ "error": "message" }` with an appropriate HTTP status: `401` for
-authentication failures, `404` when a record isn't found, `422` for validation failures.
+authentication failures, `400` when a required parameter is missing, `404` when a record isn't found,
+`422` for validation failures (including an unknown `category` on create/update), and `429` when rate limited.
+Filtering posts by a `category` or `tag` that doesn't exist returns an empty list.

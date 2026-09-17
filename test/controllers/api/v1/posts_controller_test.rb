@@ -115,6 +115,58 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Draft Post", post_record.title
   end
 
+  test "updates only the content" do
+    post_record = posts(:draft_post)
+
+    patch "/api/v1/posts/#{post_record.slug}", params: { content: "## Fresh content" }, headers: auth_header
+    assert_response :success
+
+    assert_includes post_record.reload.content.to_s, "<h2>"
+    assert_includes post_record.body_plain, "Fresh content"
+  end
+
+  test "rejects an unknown category on update" do
+    post_record = posts(:draft_post)
+
+    patch "/api/v1/posts/#{post_record.slug}", params: { category: "Nope" }, headers: auth_header
+    assert_response :unprocessable_entity
+  end
+
+  test "returns 400 when schedule is missing published_at" do
+    post "/api/v1/posts/#{posts(:draft_post).slug}/schedule", headers: auth_header
+    assert_response :bad_request
+    assert JSON.parse(response.body)["error"].present?
+  end
+
+  test "returns no posts for an unknown category filter" do
+    get "/api/v1/posts", params: { category: "does-not-exist" }, headers: auth_header
+    assert_response :success
+    assert_empty JSON.parse(response.body)["posts"]
+    assert_equal "0", response.headers["X-Total-Count"]
+  end
+
+  test "returns no posts for an unknown tag filter" do
+    get "/api/v1/posts", params: { tag: "does-not-exist" }, headers: auth_header
+    assert_response :success
+    assert_empty JSON.parse(response.body)["posts"]
+  end
+
+  test "rejects an unknown category on create" do
+    assert_no_difference "Post.count" do
+      post "/api/v1/posts", params: { title: "Orphan", category: "Nope" }, headers: auth_header
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test "rate limit runs before token authentication" do
+    [ Api::V1::BaseController, Mcp::SessionsController ].each do |controller|
+      filters = controller._process_action_callbacks.select { |cb| cb.kind == :before }.map(&:filter)
+      auth_index = filters.index(:authenticate_api_token!)
+      rate_limit_index = filters.index { |f| f.is_a?(Proc) }
+      assert rate_limit_index < auth_index, "#{controller} must rate limit before authenticating"
+    end
+  end
+
   # --- Destroy ---
 
   test "deletes a post" do

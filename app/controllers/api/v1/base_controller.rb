@@ -1,12 +1,15 @@
 module Api
   module V1
     class BaseController < ActionController::API
-      include Api::TokenAuthenticatable
-
+      # Declared before the token check so unauthenticated requests are throttled too.
       rate_limit to: 60, within: 1.minute
+
+      include Api::TokenAuthenticatable
+      include Mcp::ContentLookup
 
       rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
       rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable
+      rescue_from ActionController::ParameterMissing, with: :render_bad_request
 
       private
 
@@ -15,7 +18,15 @@ module Api
       end
 
       def render_unprocessable(exception)
-        render json: { error: exception.record.errors.full_messages.to_sentence }, status: :unprocessable_entity
+        render_error(exception.record.errors.full_messages.to_sentence)
+      end
+
+      def render_bad_request(exception)
+        render json: { error: exception.message }, status: :bad_request
+      end
+
+      def render_error(message, status: :unprocessable_entity)
+        render json: { error: message }, status: status
       end
 
       def paginate(scope)
