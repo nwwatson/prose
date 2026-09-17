@@ -154,4 +154,28 @@ class CommentTest < ActiveSupport::TestCase
       )
     end
   end
+
+  test "creating a comment enqueues a comment.created webhook delivery" do
+    assert_enqueued_jobs 1, only: DeliverWebhookJob do
+      Comment.create!(post: posts(:published_post), identity: identities(:subscriber_identity), body: "Nice post!")
+    end
+  end
+
+  test "approve! marks the comment approved and enqueues a comment.approved webhook delivery" do
+    comment = comments(:pending_comment)
+
+    assert_enqueued_jobs 1, only: DeliverWebhookJob do
+      comment.approve!
+    end
+
+    assert comment.approved?
+  end
+
+  test "approve! does nothing when already approved" do
+    comment = comments(:top_level)
+
+    assert_no_enqueued_jobs only: DeliverWebhookJob do
+      comment.approve!
+    end
+  end
 end

@@ -8,6 +8,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **AI Assistant** — Chat (proofread, critique, brainstorm), SEO/social metadata generation, featured image generation (Gemini/OpenAI), streaming responses
 - **MCP Server** — [Model Context Protocol](https://modelcontextprotocol.io) endpoint for managing posts, categories, tags, and assets from Claude Desktop, Claude Code, or any MCP client
 - **REST API** — Versioned JSON API at `/api/v1/` for posts, categories, tags, site info, and assets, sharing the same bearer token as MCP
+- **Webhooks** — HMAC-signed outbound webhooks for post, subscriber, and comment events, with retries, a delivery log, and auto-disable on repeated failure
 - **Content Organization** — Categories, tags with searchable combo box and inline creation
 - **Reader Engagement** — Comments with threading and moderation, loves, social share buttons, subscriber magic-link auth, email notifications
 - **Social Embeds** — X/Twitter and YouTube via oEmbed

@@ -1,0 +1,20 @@
+successful_delivery:
+  webhook: post_events_webhook
+  event: post.published
+  payload: <%= { id: 1, title: "Test Post" }.to_json %>
+  response_code: 200
+  success: true
+  attempted_at: <%= 2.days.ago %>
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+failed_delivery:
+  webhook: subscriber_events_webhook
+  event: subscriber.created
+  payload: <%= { id: 1, email: "test@example.com" }.to_json %>
+  response_code: 500
+  success: false
+  error_message: "Webhook endpoint returned 500"
+  attempted_at: <%= 1.day.ago %>
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>

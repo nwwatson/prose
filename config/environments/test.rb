@@ -56,4 +56,5 @@ Rails.application.configure do
   config.active_record.encryption.primary_key = "test-primary-key-that-is-32-bytes"
   config.active_record.encryption.deterministic_key = "test-deterministic-key-32-bytes!"
   config.active_record.encryption.key_derivation_salt = "test-key-derivation-salt-value!!"
+  config.active_record.encryption.encrypt_fixtures = true
 end

@@ -247,7 +247,16 @@ BEGIN
   VALUES (NEW.id, NEW.title, NEW.subtitle, NEW.body_plain);
 END;
 CREATE INDEX "index_posts_on_status_and_published_at" ON "posts" ("status", "published_at") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "webhooks" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "url" varchar NOT NULL, "events" json DEFAULT '[]' NOT NULL, "signing_secret" varchar, "active" boolean DEFAULT TRUE NOT NULL, "consecutive_failures" integer DEFAULT 0 NOT NULL, "last_triggered_at" datetime(6), "last_response_code" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
+CREATE TABLE IF NOT EXISTS "webhook_deliveries" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "webhook_id" integer NOT NULL, "event" varchar NOT NULL, "payload" json DEFAULT '{}' NOT NULL, "response_code" integer, "success" boolean DEFAULT FALSE NOT NULL, "error_message" text, "attempted_at" datetime(6) NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_bed195a05d"
+FOREIGN KEY ("webhook_id")
+  REFERENCES "webhooks" ("id")
+);
+CREATE INDEX "index_webhook_deliveries_on_webhook_id" ON "webhook_deliveries" ("webhook_id") /*application='Prose'*/;
+CREATE INDEX "index_webhook_deliveries_on_webhook_id_and_attempted_at" ON "webhook_deliveries" ("webhook_id", "attempted_at") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260910155225'),
+('20260910155224'),
 ('20260910010710'),
 ('20260910005605'),
 ('20260313202523'),

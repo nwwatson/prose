@@ -1,0 +1,32 @@
+<% content_for(:title, "#{t('admin.webhooks.edit.title')} — #{site_name}") %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.webhooks.edit.title') %></h1>
+    <%= button_to t('shared.delete'), admin_webhook_path(@webhook), method: :delete, data: { turbo_confirm: t('shared.are_you_sure') }, class: "rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500" %>
+  </div>
+
+  <% if flash[:raw_secret] %>
+    <div class="rounded-lg border border-green-200 bg-green-50 p-4">
+      <p class="text-sm font-medium text-green-800 mb-2"><%= t('admin.webhooks.edit.secret_shown') %></p>
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <code class="flex-1 rounded bg-white px-3 py-2 font-mono text-sm text-gray-900 border border-green-200 select-all break-all"><%= flash[:raw_secret] %></code>
+        <button type="button" onclick="navigator.clipboard.writeText('<%= flash[:raw_secret] %>')" class="self-start rounded bg-green-600 px-3 py-2 text-sm font-medium text-white hover:bg-green-700">
+          <%= t('admin.webhooks.edit.copy') %>
+        </button>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="flex flex-wrap gap-3">
+    <%= button_to t('admin.webhooks.edit.send_test'), test_admin_webhook_path(@webhook), method: :post,
+          class: admin_button_classes(variant: :outline) %>
+    <%= button_to t('admin.webhooks.edit.regenerate_secret'), regenerate_secret_admin_webhook_path(@webhook), method: :post,
+          data: { turbo_confirm: t('admin.webhooks.edit.regenerate_confirm') },
+          class: admin_button_classes(variant: :outline) %>
+    <%= link_to t('admin.webhooks.edit.view_deliveries'), admin_webhook_webhook_deliveries_path(@webhook),
+          class: admin_button_classes(variant: :outline) %>
+  </div>
+
+  <%= render "form", webhook: @webhook %>
+</div>

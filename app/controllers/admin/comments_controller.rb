@@ -13,7 +13,13 @@ module Admin
 
     def update
       @comment = Comment.find(params[:id])
-      @comment.update!(approved: params[:approved])
+
+      if ActiveModel::Type::Boolean.new.cast(params[:approved])
+        @comment.approve!
+      else
+        @comment.update!(approved: false)
+      end
+
       redirect_to admin_comments_path, notice: @comment.approved? ? t("flash.comments.approved") : t("flash.comments.rejected")
     end
 
