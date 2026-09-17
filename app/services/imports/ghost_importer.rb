@@ -18,7 +18,9 @@ module Imports
       @warned_missing_site_url = false
 
       parser.items.each do |item|
-        item.post_type == "page" ? import_page(item) : import_post(item)
+        import_item(title_for(item)) do
+          item.post_type == "page" ? import_page(item) : import_post(item)
+        end
       end
     end
 

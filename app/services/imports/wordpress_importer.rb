@@ -13,7 +13,9 @@ module Imports
       @converter = Wordpress::ContentConverter.new(downloader: @downloader, site_url: @site_url || parser.site_url, warn: method(:warn))
 
       parser.items.each do |item|
-        item.post_type == "page" ? import_page(item) : import_post(item)
+        import_item(title_for(item)) do
+          item.post_type == "page" ? import_page(item) : import_post(item)
+        end
       end
     end
 
