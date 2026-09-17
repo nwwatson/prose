@@ -151,9 +151,11 @@ module Imports
         end
       end
 
+      # Containers are resolved for every image before any replacement: replacing
+      # one image of a multi-image figure would otherwise detach its siblings
+      # (or make one look like the figure's only image and delete the rest).
       def convert_images(fragment)
-        fragment.css("img").each do |img|
-          container = image_container(img)
+        fragment.css("img").map { |img| [ img, image_container(img) ] }.each do |img, container|
           blob = image_candidates(img).lazy.filter_map { |url| @downloader.download(url) }.first
 
           unless blob
@@ -166,10 +168,13 @@ module Imports
         end
       end
 
+      # A linked image is replaced together with its link, and a figure together
+      # with its caption — but only when the figure holds just this one image.
       def image_container(img)
         container = img
         container = img.parent if img.parent&.name == "a" && img.parent.element_children.size == 1
-        container = container.parent if container.parent&.name == "figure"
+        figure = container.parent
+        container = figure if figure&.name == "figure" && figure.css("img").size == 1
         container
       end
 
