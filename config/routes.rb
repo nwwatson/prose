@@ -2,6 +2,23 @@ Rails.application.routes.draw do
   # MCP endpoint for Claude Desktop integration
   post "mcp", to: "mcp/sessions#create"
 
+  # REST API
+  namespace :api do
+    namespace :v1 do
+      resources :posts, only: [ :index, :show, :create, :update, :destroy ], param: :slug do
+        member do
+          post :publish
+          post :schedule
+          post :unpublish
+        end
+      end
+      resources :categories, only: [ :index ]
+      resources :tags, only: [ :index, :create ]
+      resource :site, only: [ :show ], controller: "site"
+      resources :assets, only: [ :create ]
+    end
+  end
+
   # Webhooks (public, no auth)
   post "webhooks/sendgrid", to: "webhooks/sendgrid#create"
   post "webhooks/stripe", to: "webhooks/stripe#create"
