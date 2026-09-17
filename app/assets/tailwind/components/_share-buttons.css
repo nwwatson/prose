@@ -43,3 +43,7 @@
 .share-buttons__copy-feedback {
   @apply absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-charcoal text-white text-xs px-2 py-1 dark:bg-gray-100 dark:text-charcoal;
 }
+
+.share-buttons__copy-feedback:empty {
+  @apply hidden;
+}

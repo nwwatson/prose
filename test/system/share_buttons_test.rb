@@ -22,7 +22,7 @@ class ShareButtonsTest < ApplicationSystemTestCase
 
     within ".share-buttons" do
       assert_selector "button[aria-label='Copy link']", visible: :visible
-      assert_selector ".share-buttons__copy-feedback", visible: :hidden, text: "Copied!"
+      assert_selector ".share-buttons__copy-feedback[role='status']", visible: :hidden, text: ""
     end
   end
 

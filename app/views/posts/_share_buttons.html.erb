@@ -2,7 +2,7 @@
   share_url = post_url(post)
   share_title = post.title
 %>
-<div class="share-buttons" data-controller="share" data-share-url-value="<%= share_url %>" data-share-title-value="<%= share_title %>">
+<div class="share-buttons" data-controller="share" data-share-url-value="<%= share_url %>" data-share-title-value="<%= share_title %>" data-share-copied-text-value="<%= t('posts.show.share.copied') %>">
   <span class="share-buttons__heading"><%= t('posts.show.share.heading') %></span>
 
   <div class="share-buttons__list">
@@ -39,7 +39,8 @@
         <svg class="share-buttons__icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>
         <span class="share-buttons__button-label"><%= t('posts.show.share.copy_link') %></span>
       </button>
-      <span class="share-buttons__copy-feedback" data-share-target="copyFeedback" aria-live="polite" hidden><%= t('posts.show.share.copied') %></span>
+      <%# Kept in the DOM (empty) so screen readers announce the text when it is inserted. %>
+      <span class="share-buttons__copy-feedback" data-share-target="copyFeedback" role="status" aria-live="polite"></span>
     </span>
 
     <button type="button" class="share-buttons__button" data-action="share#native" data-share-target="nativeButton" hidden aria-label="<%= t('posts.show.share.native_share') %>">
