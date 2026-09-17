@@ -23,7 +23,7 @@ module Imports
       reader = Substack::ExportReader.new(@io)
       @converter = Substack::ContentConverter.new(downloader: @downloader, site_url: @site_url, warn: method(:warn))
 
-      reader.posts.each { |row| import_post(row, reader.post_bodies) }
+      reader.posts.each { |row| import_item(row["title"].to_s.strip.presence || "Untitled") { import_post(row, reader.post_bodies) } }
       import_subscribers(reader.subscribers)
     end
 
@@ -82,22 +82,33 @@ module Imports
       return @stats["subscribers_skipped"] += 1 if existing.include?(email)
 
       signed_up_at = parse_time(row["created_at"]) || Time.current
-      subscriber = Subscriber.new(
-        email: email,
-        confirmed_at: signed_up_at,
-        unsubscribed_at: truthy?(row["email_disabled"]) ? Time.current : nil,
-        created_at: signed_up_at
-      )
+      # Resolved before the savepoint so a failing row can't roll back a label
+      # that later rows have already memoized.
       label = label_for(row)
-      subscriber.subscriber_labels << label if label
 
-      if subscriber.save
-        existing << email
-        @stats["subscribers_imported"] += 1
-      else
-        warn("Skipped subscriber #{email}: #{subscriber.errors.full_messages.to_sentence}")
-        @stats["subscribers_skipped"] += 1
+      # A savepoint per row: an unexpected failure rolls back only this
+      # subscriber, not the surrounding batch of SUBSCRIBER_BATCH_SIZE rows.
+      ActiveRecord::Base.transaction(requires_new: true) do
+        subscriber = Subscriber.new(
+          email: email,
+          confirmed_at: signed_up_at,
+          unsubscribed_at: truthy?(row["email_disabled"]) ? Time.current : nil,
+          created_at: signed_up_at
+        )
+        subscriber.subscriber_labels << label if label
+
+        if subscriber.save
+          existing << email
+          @stats["subscribers_imported"] += 1
+        else
+          warn("Skipped subscriber #{email}: #{subscriber.errors.full_messages.to_sentence}")
+          @stats["subscribers_skipped"] += 1
+        end
       end
+    rescue StandardError => e
+      Rails.logger.error("[Imports::SubstackImporter] #{email}: #{e.class}: #{e.message}")
+      warn("Skipped subscriber #{email}: #{e.class}: #{e.message.to_s.truncate(200)}")
+      @stats["subscribers_skipped"] += 1
     end
 
     def label_for(row)

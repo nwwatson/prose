@@ -113,6 +113,51 @@ class Imports::SubstackImporterTest < ActiveSupport::TestCase
     assert_no_enqueued_jobs(only: [ SendPostNotificationsJob, DeliverWebhookJob, ActionMailer::MailDeliveryJob ])
   end
 
+  test "an unexpected error on one post does not abort the import" do
+    boom = Class.new(Imports::Substack::ContentConverter) do
+      def convert(html, title: nil)
+        raise "boom" if title == "Paid Deep Dive"
+
+        super
+      end
+    end
+
+    stats = nil
+    with_converter(boom) { stats = run_import }
+
+    assert_equal 1, stats["failed"]
+    assert_equal 4, stats["posts_imported"]
+    assert_equal 4, stats["subscribers_imported"], "subscribers still import after a failed post"
+    assert_not Post.exists?(slug: "paid-deep-dive")
+    assert stats["warnings"].any? { |w| w.include?("Could not import \"Paid Deep Dive\": RuntimeError: boom") }
+  end
+
+  test "an unexpected error on one subscriber row does not abort the batch" do
+    original_new = Subscriber.method(:new)
+    Subscriber.define_singleton_method(:new) do |*args, **kwargs, &block|
+      raise "database is locked" if kwargs[:email] == "comp@example.com"
+
+      original_new.call(*args, **kwargs, &block)
+    end
+
+    stats = run_import
+
+    assert_equal 3, stats["subscribers_imported"]
+    assert_equal 3, stats["subscribers_skipped"]
+    assert Subscriber.exists?(email: "paid@example.com")
+    assert Subscriber.exists?(email: "gone@example.com"), "rows after the failure still import"
+    assert_not Subscriber.exists?(email: "comp@example.com")
+    assert stats["warnings"].any? { |w| w.include?("Skipped subscriber comp@example.com: RuntimeError: database is locked") }
+  ensure
+    Subscriber.singleton_class.send(:remove_method, :new)
+  end
+
+  test "a failure reading the export still fails the whole import" do
+    assert_raises(Imports::Substack::ExportReader::InvalidFile) do
+      run_import(content: "name\nbob\n")
+    end
+  end
+
   test "is idempotent" do
     run_import
     counts = [ Post.count, Subscriber.count, SubscriberLabel.count, SubscriberLabeling.count ]
@@ -126,6 +171,16 @@ class Imports::SubstackImporterTest < ActiveSupport::TestCase
   end
 
   private
+
+  def with_converter(klass)
+    original = Imports::Substack::ContentConverter
+    Imports::Substack.send(:remove_const, :ContentConverter)
+    Imports::Substack.const_set(:ContentConverter, klass)
+    yield
+  ensure
+    Imports::Substack.send(:remove_const, :ContentConverter)
+    Imports::Substack.const_set(:ContentConverter, original)
+  end
 
   def run_import(content: substack_export_zip)
     Imports::SubstackImporter.new(io: StringIO.new(content), user: users(:admin), downloader: FakeDownloader.new).call
