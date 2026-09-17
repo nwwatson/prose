@@ -120,6 +120,22 @@ class Imports::Wordpress::ContentConverterTest < ActiveSupport::TestCase
     assert_not_includes html, "<figcaption"
   end
 
+  test "keeps every image of a figure holding several images" do
+    html = convert(%(<!-- wp:html --><figure><img src="https://wp.example.com/one.png"><img src="https://wp.example.com/two.png"><figcaption>Pair</figcaption></figure><!-- /wp:html -->))
+
+    assert_equal 2, html.scan("<action-text-attachment").size
+    assert_not_includes html, "<img"
+  end
+
+  test "keeps every image of a gutenberg gallery block" do
+    html = convert(<<~HTML)
+      <!-- wp:gallery --><figure class="wp-block-gallery has-nested-images"><!-- wp:image --><figure class="wp-block-image"><img src="https://wp.example.com/a.png"></figure><!-- /wp:image --><!-- wp:image --><figure class="wp-block-image"><img src="https://wp.example.com/b.png"><figcaption>B</figcaption></figure><!-- /wp:image --></figure><!-- /wp:gallery -->
+    HTML
+
+    assert_equal 2, html.scan("<action-text-attachment").size
+    assert_includes html, %(caption="B")
+  end
+
   test "keeps the remote image when download fails" do
     html = convert(%(<p><img src="https://wp.example.com/broken.png" alt="x"></p>))
 
