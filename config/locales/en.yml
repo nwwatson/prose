@@ -6,7 +6,8 @@ en:
           attributes:
             file:
               too_large: "is too large (maximum is %{count} MB)"
-              invalid_type: "must be a WordPress XML export file"
+              invalid_wordpress_type: "must be a WordPress XML export file"
+              invalid_ghost_type: "must be a Ghost JSON export file"
   errors:
     messages:
       hex_color: "must be a valid hex color (e.g. #1a1a2e)"
@@ -549,9 +550,12 @@ en:
     imports:
       index:
         title: "Import Content"
-        wordpress_title: "WordPress"
         wordpress_description: "Upload the XML file from WordPress (Tools → Export → All content). Posts, pages, categories, tags, and images are imported. Items whose slug already exists are skipped, so it's safe to run again."
-        file_label: "WordPress export file (.xml)"
+        ghost_description: "Upload the JSON file from Ghost (Settings → Advanced → Import/Export → Export content). Posts, pages, tags, visibility, and images are imported; each post's primary tag becomes its category. Email-only posts import as drafts."
+        wordpress_file_label: "WordPress export file (.xml)"
+        ghost_file_label: "Ghost export file (.json)"
+        ghost_site_url_label: "Ghost site URL (optional)"
+        ghost_site_url_hint: "Needed to download images stored on your Ghost site; exports only contain a placeholder instead of your domain."
         file_hint: "Maximum size %{size}."
         start_import: "Start import"
         recent_imports: "Recent imports"
@@ -567,6 +571,7 @@ en:
         delete_confirm: "Delete this import record? Imported content is not removed."
       sources:
         wordpress: "WordPress"
+        ghost: "Ghost"
     exports:
       index:
         title: "Export Content"

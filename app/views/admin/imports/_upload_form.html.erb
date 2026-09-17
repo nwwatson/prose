@@ -1,0 +1,26 @@
+<%# locals: (source:, import: nil) %>
+<% import = import&.source == source ? import : Import.new(source: source) %>
+<div class="rounded-lg border border-gray-200 bg-white p-5">
+  <h2 class="text-sm font-semibold text-gray-900"><%= t("admin.imports.sources.#{source}") %></h2>
+  <p class="mt-1 text-sm text-gray-500"><%= t("admin.imports.index.#{source}_description") %></p>
+
+  <%= form_with model: import, url: admin_imports_path, class: "mt-4 space-y-4", id: "#{source}_import_form" do |f| %>
+    <%= render "admin/shared/form_errors", record: import, wrapper_class: "" %>
+    <%= f.hidden_field :source, value: source %>
+    <div>
+      <%= f.label :file, t("admin.imports.index.#{source}_file_label"), class: "block text-sm font-medium text-gray-900", for: "#{source}_import_file" %>
+      <%= f.file_field :file, id: "#{source}_import_file", required: true,
+            accept: Import::ACCEPTED_FILES.fetch(source).then { |a| [ ".#{a[:extension]}", *a[:content_types] ].join(",") },
+            class: "mt-2 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-gray-900 hover:file:bg-gray-200" %>
+      <p class="mt-1 text-xs text-gray-500"><%= t('admin.imports.index.file_hint', size: number_to_human_size(Import::MAX_FILE_SIZE)) %></p>
+    </div>
+    <% if source == "ghost" %>
+      <div>
+        <%= f.label :site_url, t('admin.imports.index.ghost_site_url_label'), class: "block text-sm font-medium text-gray-900", for: "ghost_import_site_url" %>
+        <%= f.url_field :site_url, id: "ghost_import_site_url", placeholder: "https://myblog.ghost.io", class: admin_input_classes(extra: "mt-2") %>
+        <p class="mt-1 text-xs text-gray-500"><%= t('admin.imports.index.ghost_site_url_hint') %></p>
+      </div>
+    <% end %>
+    <%= f.submit t('admin.imports.index.start_import'), class: admin_button_classes(variant: :primary) %>
+  <% end %>
+</div>

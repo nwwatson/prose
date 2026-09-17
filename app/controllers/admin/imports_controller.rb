@@ -3,7 +3,6 @@ module Admin
     before_action :require_admin
 
     def index
-      @import = Import.new(source: :wordpress)
       @imports = Import.recent.includes(user: :identity)
     end
 
@@ -27,7 +26,7 @@ module Admin
     private
 
     def import_params
-      params.fetch(:import, {}).permit(:source, :file)
+      params.fetch(:import, {}).permit(:source, :file, :site_url)
     end
   end
 end
