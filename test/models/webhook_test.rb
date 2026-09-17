@@ -81,4 +81,35 @@ class WebhookTest < ActiveSupport::TestCase
 
     assert_not_equal original_secret, webhook.signing_secret
   end
+
+  test "record_delivery_result! does not count a failure that will be retried" do
+    webhook = webhooks(:post_events_webhook)
+    webhook.record_delivery_result!(success: false, response_code: 500, count_failure: false)
+    assert_equal 0, webhook.consecutive_failures
+    assert_equal 500, webhook.last_response_code
+  end
+
+  test "prune_deliveries! keeps only the most recent deliveries" do
+    webhook = webhooks(:subscriber_events_webhook)
+    webhook.webhook_deliveries.delete_all
+    newest = webhook.webhook_deliveries.create!(event: "subscriber.created", attempted_at: 1.minute.ago)
+    webhook.webhook_deliveries.create!(event: "subscriber.created", attempted_at: 1.day.ago)
+    webhook.webhook_deliveries.create!(event: "subscriber.created", attempted_at: 2.days.ago)
+
+    webhook.prune_deliveries!(keep: 1)
+
+    assert_equal [ newest ], webhook.webhook_deliveries.reload.to_a
+  end
+
+  %w[
+    http://localhost/hook http://foo.localhost/hook http://127.0.0.1/hook http://10.0.0.5/hook
+    http://192.168.1.1/hook http://172.16.0.1/hook http://169.254.169.254/latest/meta-data
+    http://[::1]/hook http://[::ffff:127.0.0.1]/hook http://0.0.0.0/hook http://metadata.google.internal/
+  ].each do |url|
+    test "rejects SSRF-prone url #{url}" do
+      webhook = Webhook.new(url: url, events: [ "post.published" ])
+      assert_not webhook.valid?
+      assert webhook.errors[:url].any?
+    end
+  end
 end

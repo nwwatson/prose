@@ -1,7 +1,12 @@
 class DeliverWebhookJob < ApplicationJob
+  MAX_ATTEMPTS = 3
+
   queue_as :default
 
-  retry_on Webhooks::Sender::DeliveryError, wait: :polynomially_longer, attempts: 3
+  # Every attempt is already recorded in the delivery log, so once retries are
+  # exhausted the error is swallowed rather than left as a failed job.
+  retry_on Webhooks::Sender::DeliveryError, wait: :polynomially_longer, attempts: MAX_ATTEMPTS do |_job, _error|
+  end
 
   def perform(webhook_id, event, data)
     webhook = Webhook.find_by(id: webhook_id)
@@ -10,7 +15,7 @@ class DeliverWebhookJob < ApplicationJob
     envelope = { event: event, timestamp: Time.current.iso8601, data: data }.to_json
 
     begin
-      response = Webhooks::Sender.post(webhook.url, body: envelope, secret: webhook.signing_secret)
+      response = Webhooks::Sender.post(webhook.url, body: envelope, secret: webhook.signing_secret, event: event, delivery_id: job_id)
       log_delivery!(webhook, event, data, response_code: response.code, success: true)
     rescue Webhooks::Sender::DeliveryError => e
       log_delivery!(webhook, event, data, response_code: e.response_code, success: false, error_message: e.message)
@@ -29,6 +34,7 @@ class DeliverWebhookJob < ApplicationJob
       error_message: error_message,
       attempted_at: Time.current
     )
-    webhook.record_delivery_result!(success: success, response_code: response_code)
+    webhook.prune_deliveries!
+    webhook.record_delivery_result!(success: success, response_code: response_code, count_failure: executions >= MAX_ATTEMPTS)
   end
 end

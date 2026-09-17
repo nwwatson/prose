@@ -3,8 +3,10 @@ module Post::Webhookable
 
   included do
     after_update_commit :emit_status_webhook, if: :saved_change_to_status?
-    after_update_commit :emit_updated_webhook, unless: :saved_change_to_status?
-    after_destroy_commit :emit_deleted_webhook
+    # Only published posts emit post.updated/post.deleted, so draft titles and
+    # slugs never reach third-party endpoints before the post goes live.
+    after_update_commit :emit_updated_webhook, if: -> { !saved_change_to_status? && published? }
+    after_destroy_commit :emit_deleted_webhook, if: :published?
   end
 
   private

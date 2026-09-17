@@ -78,4 +78,24 @@ class Admin::WebhooksControllerTest < ActionDispatch::IntegrationTest
     get admin_webhooks_path
     assert_redirected_to new_admin_session_path
   end
+
+  test "POST create rejects a private network url" do
+    assert_no_difference "Webhook.count" do
+      post admin_webhooks_path, params: { webhook: { url: "http://169.254.169.254/latest", events: [ "post.published" ] } }
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test "writers cannot manage webhooks" do
+    delete admin_session_path
+    sign_in_as(:writer)
+
+    get admin_webhooks_path
+    assert_redirected_to admin_root_path
+
+    assert_no_difference "Webhook.count" do
+      post admin_webhooks_path, params: { webhook: { url: "https://example.com/hook", events: [ "post.published" ] } }
+    end
+    assert_redirected_to admin_root_path
+  end
 end

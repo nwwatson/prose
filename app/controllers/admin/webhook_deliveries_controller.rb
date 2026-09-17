@@ -1,5 +1,7 @@
 module Admin
   class WebhookDeliveriesController < BaseController
+    before_action :require_admin
+
     def index
       @webhook = Webhook.find(params[:webhook_id])
       @webhook_deliveries = @webhook.webhook_deliveries.recent.limit(50)

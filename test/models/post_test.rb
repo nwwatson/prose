@@ -102,9 +102,18 @@ class PostTest < ActiveSupport::TestCase
     end
   end
 
-  test "destroying a post enqueues a post.deleted webhook delivery" do
+  test "destroying a published post enqueues a post.deleted webhook delivery" do
     assert_enqueued_jobs 1, only: DeliverWebhookJob do
-      posts(:draft_post).destroy
+      posts(:published_post).destroy
+    end
+  end
+
+  test "updating or destroying a draft post does not emit webhooks" do
+    post = posts(:draft_post)
+
+    assert_no_enqueued_jobs only: DeliverWebhookJob do
+      post.update!(title: "Secret Draft Title")
+      post.destroy
     end
   end
 end

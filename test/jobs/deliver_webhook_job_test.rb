@@ -31,7 +31,7 @@ class DeliverWebhookJobTest < ActiveJob::TestCase
     assert_equal "subscriber.created", delivery.event
   end
 
-  test "records a failed delivery, increments consecutive_failures, and schedules a retry" do
+  test "records a failed delivery and schedules a retry without counting it toward auto-disable" do
     webhook = webhooks(:post_events_webhook)
     error = Webhooks::Sender::DeliveryError.new("Webhook endpoint returned 500", response_code: 500)
 
@@ -42,10 +42,28 @@ class DeliverWebhookJobTest < ActiveJob::TestCase
     end
 
     webhook.reload
-    assert_equal 1, webhook.consecutive_failures
+    assert_equal 0, webhook.consecutive_failures
+    assert_equal 500, webhook.last_response_code
     delivery = webhook.webhook_deliveries.recent.first
     assert_not delivery.success?
     assert_equal 500, delivery.response_code
+  end
+
+  test "counts a failure once retries are exhausted without re-raising" do
+    webhook = webhooks(:post_events_webhook)
+    error = Webhooks::Sender::DeliveryError.new("Webhook endpoint returned 500", response_code: 500)
+
+    with_sender_post(error) do
+      perform_enqueued_jobs(only: DeliverWebhookJob) do
+        assert_nothing_raised do
+          DeliverWebhookJob.perform_later(webhook.id, "post.published", { id: 1 })
+        end
+      end
+    end
+
+    webhook.reload
+    assert_equal 1, webhook.consecutive_failures
+    assert_equal DeliverWebhookJob::MAX_ATTEMPTS, webhook.webhook_deliveries.where(event: "post.published").where("attempted_at > ?", 1.minute.ago).count
   end
 
   test "disables the webhook once consecutive failures reach the maximum" do
@@ -54,10 +72,29 @@ class DeliverWebhookJobTest < ActiveJob::TestCase
     error = Webhooks::Sender::DeliveryError.new("Webhook endpoint returned 500", response_code: 500)
 
     with_sender_post(error) do
-      DeliverWebhookJob.perform_now(webhook.id, "post.published", { id: 1 })
+      job = DeliverWebhookJob.new(webhook.id, "post.published", { id: 1 })
+      job.executions = DeliverWebhookJob::MAX_ATTEMPTS - 1
+      job.perform_now
     end
 
     assert_not webhook.reload.active?
+  end
+
+  test "passes the event and job id to the sender" do
+    webhook = webhooks(:subscriber_events_webhook)
+    received = nil
+
+    with_sender_post(->(*) { Webhooks::Sender::Response.new(200, "ok") }) do
+      original = Webhooks::Sender.method(:post)
+      Webhooks::Sender.define_singleton_method(:post) do |*args, **kwargs|
+        received = kwargs
+        original.call(*args, **kwargs)
+      end
+      job = DeliverWebhookJob.new(webhook.id, "subscriber.created", { id: 1 })
+      job.perform_now
+      assert_equal "subscriber.created", received[:event]
+      assert_equal job.job_id, received[:delivery_id]
+    end
   end
 
   test "does nothing when the webhook is inactive" do

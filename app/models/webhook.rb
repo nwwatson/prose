@@ -6,6 +6,7 @@ class Webhook < ApplicationRecord
   ].freeze
 
   MAX_CONSECUTIVE_FAILURES = 5
+  DELIVERY_LOG_LIMIT = 100
 
   has_many :webhook_deliveries, dependent: :destroy
 
@@ -24,17 +25,25 @@ class Webhook < ApplicationRecord
     events.include?(event)
   end
 
-  def record_delivery_result!(success:, response_code: nil)
+  # A failure only counts toward auto-disable when `count_failure` is true —
+  # DeliverWebhookJob passes false for attempts that will still be retried, so
+  # one event exhausting its retries counts as a single failure.
+  def record_delivery_result!(success:, response_code: nil, count_failure: true)
     attrs = { last_triggered_at: Time.current, last_response_code: response_code }
 
     if success
       attrs[:consecutive_failures] = 0
-    else
+    elsif count_failure
       attrs[:consecutive_failures] = consecutive_failures + 1
       attrs[:active] = false if attrs[:consecutive_failures] >= MAX_CONSECUTIVE_FAILURES
     end
 
     update!(attrs)
+  end
+
+  def prune_deliveries!(keep: DELIVERY_LOG_LIMIT)
+    cutoff_ids = webhook_deliveries.recent.offset(keep).pluck(:id)
+    webhook_deliveries.where(id: cutoff_ids).delete_all if cutoff_ids.any?
   end
 
   def regenerate_secret!
@@ -56,7 +65,11 @@ class Webhook < ApplicationRecord
     return if url.blank?
 
     uri = URI.parse(url)
-    errors.add(:url, "must be a valid http:// or https:// URL") unless uri.is_a?(URI::HTTP) && uri.host.present?
+    if !uri.is_a?(URI::HTTP) || uri.host.blank?
+      errors.add(:url, "must be a valid http:// or https:// URL")
+    elsif Webhooks::UrlGuard.blocked_host?(uri.hostname)
+      errors.add(:url, "must not point to a local, private, or reserved network address")
+    end
   rescue URI::InvalidURIError
     errors.add(:url, "must be a valid http:// or https:// URL")
   end

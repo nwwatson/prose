@@ -15,4 +15,11 @@ class Admin::WebhookDeliveriesControllerTest < ActionDispatch::IntegrationTest
     get admin_webhook_webhook_deliveries_path(webhooks(:post_events_webhook))
     assert_redirected_to new_admin_session_path
   end
+
+  test "writers cannot view deliveries" do
+    delete admin_session_path
+    sign_in_as(:writer)
+    get admin_webhook_webhook_deliveries_path(webhooks(:post_events_webhook))
+    assert_redirected_to admin_root_path
+  end
 end

@@ -1,5 +1,6 @@
 module Admin
   class WebhooksController < BaseController
+    before_action :require_admin
     before_action :set_webhook, only: [ :show, :edit, :update, :destroy, :test, :regenerate_secret ]
 
     def index
