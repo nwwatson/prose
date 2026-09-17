@@ -135,4 +135,28 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 2, comment_queries
     assert_select ".comment__body", text: /Unapproved reply/, count: 0
   end
+
+  test "GET show renders share buttons with encoded post url and title" do
+    post = posts(:published_post)
+    post.update_columns(title: %q(Tips & "Tricks" <b>?</b> #1))
+
+    get post_path(post, slug: post.slug)
+
+    assert_response :success
+    share_url = "http://www.example.com/posts/#{post.slug}"
+    encoded_url = ERB::Util.url_encode(share_url)
+    encoded_title = ERB::Util.url_encode(post.title)
+
+    assert_select ".share-buttons[data-share-url-value=?]", share_url
+    assert_select ".share-buttons[data-share-title-value=?]", post.title
+    assert_select "a[href=?][target=_blank][rel='noopener noreferrer']",
+      "https://twitter.com/intent/tweet?url=#{encoded_url}&text=#{encoded_title}"
+    assert_select "a[href=?][target=_blank][rel='noopener noreferrer']",
+      "https://www.linkedin.com/sharing/share-offsite/?url=#{encoded_url}"
+    assert_select "a[href=?][target=_blank][rel='noopener noreferrer']",
+      "https://www.facebook.com/sharer/sharer.php?u=#{encoded_url}"
+    assert_select "a[href=?]", "mailto:?subject=#{encoded_title}&body=#{encoded_url}"
+    assert_select ".share-buttons [aria-label]", count: 6
+    assert_no_match %r{<b>\?</b>}, response.body
+  end
 end
