@@ -9,7 +9,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **MCP Server** — [Model Context Protocol](https://modelcontextprotocol.io) endpoint for managing posts, categories, tags, and assets from Claude Desktop, Claude Code, or any MCP client
 - **REST API** — Versioned JSON API at `/api/v1/` for posts, categories, tags, site info, and assets, sharing the same bearer token as MCP
 - **Content Organization** — Categories, tags with searchable combo box and inline creation
-- **Reader Engagement** — Comments with threading and moderation, loves, subscriber magic-link auth, email notifications
+- **Reader Engagement** — Comments with threading and moderation, loves, social share buttons, subscriber magic-link auth, email notifications
 - **Social Embeds** — X/Twitter and YouTube via oEmbed
 - **Analytics** — Dashboard with view tracking, subscriber growth, post engagement
 - **Custom Pages** — Static pages with rich text editor, top-level URLs (e.g. `/about`), optional navigation menu integration
