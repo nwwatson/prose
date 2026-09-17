@@ -10,7 +10,7 @@
     <div>
       <%= f.label :file, t("admin.imports.index.#{source}_file_label"), class: "block text-sm font-medium text-gray-900", for: "#{source}_import_file" %>
       <%= f.file_field :file, id: "#{source}_import_file", required: true,
-            accept: Import::ACCEPTED_FILES.fetch(source).then { |a| [ ".#{a[:extension]}", *a[:content_types] ].join(",") },
+            accept: Import::ACCEPTED_FILES.fetch(source).then { |a| [ *a[:extensions].map { |ext| ".#{ext}" }, *a[:content_types] ].join(",") },
             class: "mt-2 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-gray-900 hover:file:bg-gray-200" %>
       <p class="mt-1 text-xs text-gray-500"><%= t('admin.imports.index.file_hint', size: number_to_human_size(Import::MAX_FILE_SIZE)) %></p>
     </div>

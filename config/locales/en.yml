@@ -8,6 +8,7 @@ en:
               too_large: "is too large (maximum is %{count} MB)"
               invalid_wordpress_type: "must be a WordPress XML export file"
               invalid_ghost_type: "must be a Ghost JSON export file"
+              invalid_substack_type: "must be a Substack export .zip or subscriber .csv"
   errors:
     messages:
       hex_color: "must be a valid hex color (e.g. #1a1a2e)"
@@ -552,8 +553,10 @@ en:
         title: "Import Content"
         wordpress_description: "Upload the XML file from WordPress (Tools → Export → All content). Posts, pages, categories, tags, and images are imported. Items whose slug already exists are skipped, so it's safe to run again."
         ghost_description: "Upload the JSON file from Ghost (Settings → Advanced → Import/Export → Export content). Posts, pages, tags, visibility, and images are imported; each post's primary tag becomes its category. Email-only posts import as drafts."
+        substack_description: "Upload the .zip from Substack (Settings → Exports → Create new export) to import posts and subscribers, or just the email list .csv. Subscribers are added as confirmed without any emails being sent; paid and comp subscribers are labelled \"Substack paid\" / \"Substack comp\" (their billing stays on Substack)."
         wordpress_file_label: "WordPress export file (.xml)"
         ghost_file_label: "Ghost export file (.json)"
+        substack_file_label: "Substack export (.zip or email list .csv)"
         ghost_site_url_label: "Ghost site URL (optional)"
         ghost_site_url_hint: "Needed to download images stored on your Ghost site; exports only contain a placeholder instead of your domain."
         file_hint: "Maximum size %{size}."
@@ -561,6 +564,7 @@ en:
         recent_imports: "Recent imports"
         no_imports: "No imports yet."
         summary: "%{posts} posts, %{pages} pages, %{media} images imported · %{skipped} skipped"
+        subscribers_summary: "%{imported} subscribers imported, %{skipped} skipped"
         failed_items:
           one: "%{count} item failed"
           other: "%{count} items failed"
@@ -572,6 +576,7 @@ en:
       sources:
         wordpress: "WordPress"
         ghost: "Ghost"
+        substack: "Substack"
     exports:
       index:
         title: "Export Content"

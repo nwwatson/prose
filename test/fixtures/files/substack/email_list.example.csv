@@ -1,0 +1,7 @@
+email,active_subscription,expiry,plan,email_disabled,created_at,first_payment_at
+Reader.One@Example.com,false,,,false,2023-01-15T10:00:00.000Z,
+paid@example.com,true,2025-01-01T00:00:00.000Z,yearly,false,2023-02-01T10:00:00.000Z,2023-02-01T10:00:00.000Z
+comp@example.com,true,,comp,false,2023-03-01T10:00:00.000Z,
+gone@example.com,false,,,true,2023-04-01T10:00:00.000Z,
+subscriber@example.com,false,,,false,2023-05-01T10:00:00.000Z,
+not-an-email,false,,,false,2023-06-01T10:00:00.000Z,

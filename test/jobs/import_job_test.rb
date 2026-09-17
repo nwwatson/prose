@@ -1,7 +1,9 @@
 require "test_helper"
+require_relative "../test_helpers/substack_export_helper"
 
 class ImportJobTest < ActiveJob::TestCase
   include ActionCable::TestHelper
+  include SubstackExportHelper
 
   setup do
     # No network in tests: every media host "fails to resolve", so downloads
@@ -37,6 +39,17 @@ class ImportJobTest < ActiveJob::TestCase
     assert import.completed?, import.error_message
     assert_equal 5, import.stat(:posts_imported)
     assert import.warnings.none? { |w| w.include?("No Ghost site URL") }
+  end
+
+  test "runs the substack importer from an uploaded zip" do
+    import = create_import(substack_export_zip, source: :substack, filename: "substack.zip", content_type: "application/zip")
+
+    ImportJob.perform_now(import)
+
+    import.reload
+    assert import.completed?, import.error_message
+    assert_equal 5, import.stat(:posts_imported)
+    assert_equal 4, import.stat(:subscribers_imported)
   end
 
   test "marks the import failed for an invalid file" do

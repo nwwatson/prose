@@ -8,6 +8,7 @@ es:
               too_large: "es demasiado grande (el máximo es %{count} MB)"
               invalid_wordpress_type: "debe ser un archivo XML de exportación de WordPress"
               invalid_ghost_type: "debe ser un archivo JSON de exportación de Ghost"
+              invalid_substack_type: "debe ser un .zip de exportación de Substack o un .csv de suscriptores"
   errors:
     messages:
       hex_color: "debe ser un color hexadecimal válido (p. ej. #1a1a2e)"
@@ -548,8 +549,10 @@ es:
         title: "Importar contenido"
         wordpress_description: "Sube el archivo XML de WordPress (Herramientas → Exportar → Todo el contenido). Se importan publicaciones, páginas, categorías, etiquetas e imágenes. Los elementos cuyo slug ya existe se omiten, así que es seguro volver a ejecutarlo."
         ghost_description: "Sube el archivo JSON de Ghost (Settings → Advanced → Import/Export → Export content). Se importan publicaciones, páginas, etiquetas, visibilidad e imágenes; la etiqueta principal de cada publicación se convierte en su categoría. Las publicaciones solo enviadas por correo se importan como borradores."
+        substack_description: "Sube el .zip de Substack (Settings → Exports → Create new export) para importar publicaciones y suscriptores, o solo el .csv de la lista de correos. Los suscriptores se agregan como confirmados sin enviar ningún correo; los suscriptores de pago y cortesía se etiquetan como \"Substack paid\" / \"Substack comp\" (su facturación permanece en Substack)."
         wordpress_file_label: "Archivo de exportación de WordPress (.xml)"
         ghost_file_label: "Archivo de exportación de Ghost (.json)"
+        substack_file_label: "Exportación de Substack (.zip o .csv de la lista de correos)"
         ghost_site_url_label: "URL del sitio Ghost (opcional)"
         ghost_site_url_hint: "Necesaria para descargar las imágenes alojadas en tu sitio Ghost; las exportaciones solo contienen un marcador en lugar de tu dominio."
         file_hint: "Tamaño máximo %{size}."
@@ -557,6 +560,7 @@ es:
         recent_imports: "Importaciones recientes"
         no_imports: "Aún no hay importaciones."
         summary: "%{posts} publicaciones, %{pages} páginas, %{media} imágenes importadas · %{skipped} omitidas"
+        subscribers_summary: "%{imported} suscriptores importados, %{skipped} omitidos"
         failed_items:
           one: "%{count} elemento falló"
           other: "%{count} elementos fallaron"
@@ -568,6 +572,7 @@ es:
       sources:
         wordpress: "WordPress"
         ghost: "Ghost"
+        substack: "Substack"
     exports:
       index:
         title: "Exportar contenido"

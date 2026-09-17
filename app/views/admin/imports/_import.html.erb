@@ -16,6 +16,7 @@
           <%= t('admin.imports.index.summary',
                 posts: import.stat(:posts_imported), pages: import.stat(:pages_imported),
                 media: import.stat(:media_downloaded), skipped: import.stat(:skipped)) %>
+          <% if import.source_substack? %>· <%= t('admin.imports.index.subscribers_summary', imported: import.stat(:subscribers_imported), skipped: import.stat(:subscribers_skipped)) %><% end %>
           <% if import.stat(:failed).positive? %>· <%= t('admin.imports.index.failed_items', count: import.stat(:failed)) %><% end %>
         </p>
       <% end %>
