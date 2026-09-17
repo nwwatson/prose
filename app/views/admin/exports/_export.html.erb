@@ -3,7 +3,7 @@
   <div class="min-w-0">
     <div class="flex flex-wrap items-center gap-2">
       <p class="text-sm font-medium text-gray-900"><%= t("admin.exports.formats.#{export.format}") %></p>
-      <%= status_badge(t("admin.exports.statuses.#{export.status}"), color_class: export_status_color(export.status), size: :sm) %>
+      <%= status_badge(t("admin.shared.processing_statuses.#{export.status}"), color_class: processing_status_color(export.status), size: :sm) %>
     </div>
     <p class="mt-1 text-xs text-gray-500">
       <%= l(export.created_at, format: :with_time) %>

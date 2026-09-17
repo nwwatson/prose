@@ -9,7 +9,8 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **MCP Server** — [Model Context Protocol](https://modelcontextprotocol.io) endpoint for managing posts, categories, tags, and assets from Claude Desktop, Claude Code, or any MCP client
 - **REST API** — Versioned JSON API at `/api/v1/` for posts, categories, tags, site info, and assets, sharing the same bearer token as MCP
 - **Webhooks** — HMAC-signed outbound webhooks for post, subscriber, and comment events, with retries, a delivery log, and auto-disable on repeated failure
-- **Content Export** — Download your whole site as a Markdown zip (one file per post/page with YAML front matter, plus images) or a full JSON backup including subscribers; exports run in the background from **Admin → Export**
+- **Content Export** — Download your whole site as a Markdown zip (one file per post/page with YAML front matter, plus images) or a full JSON backup including subscribers; exports run in the background from **Admin → Import & Export**
+- **WordPress Import** — Upload a WordPress export (WXR `.xml`) to bring over posts, pages, categories, tags, and images; shortcodes and embeds are converted, and re-running an import skips anything already imported
 - **Content Organization** — Categories, tags with searchable combo box and inline creation
 - **Reader Engagement** — Comments with threading and moderation, loves, social share buttons, subscriber magic-link auth, email notifications
 - **Social Embeds** — X/Twitter and YouTube via oEmbed

@@ -1,4 +1,12 @@
 en:
+  activerecord:
+    errors:
+      models:
+        import:
+          attributes:
+            file:
+              too_large: "is too large (maximum is %{count} MB)"
+              invalid_type: "must be a WordPress XML export file"
   errors:
     messages:
       hex_color: "must be a valid hex color (e.g. #1a1a2e)"
@@ -96,7 +104,7 @@ en:
       passkeys: "Passkeys"
       api_tokens: "API Tokens"
       webhooks: "Webhooks"
-      exports: "Export"
+      import_export: "Import & Export"
 
   # Public views
   posts:
@@ -529,6 +537,36 @@ en:
         failed: "Failed"
         no_response: "No response"
         no_deliveries: "No deliveries yet."
+    shared:
+      import_export_tabs:
+        imports: "Import"
+        exports: "Export"
+      processing_statuses:
+        pending: "Queued"
+        processing: "Processing"
+        completed: "Ready"
+        failed: "Failed"
+    imports:
+      index:
+        title: "Import Content"
+        wordpress_title: "WordPress"
+        wordpress_description: "Upload the XML file from WordPress (Tools → Export → All content). Posts, pages, categories, tags, and images are imported. Items whose slug already exists are skipped, so it's safe to run again."
+        file_label: "WordPress export file (.xml)"
+        file_hint: "Maximum size %{size}."
+        start_import: "Start import"
+        recent_imports: "Recent imports"
+        no_imports: "No imports yet."
+        summary: "%{posts} posts, %{pages} pages, %{media} images imported · %{skipped} skipped"
+        failed_items:
+          one: "%{count} item failed"
+          other: "%{count} items failed"
+        warnings:
+          one: "%{count} warning"
+          other: "%{count} warnings"
+        more_warnings: "…and %{count} more"
+        delete_confirm: "Delete this import record? Imported content is not removed."
+      sources:
+        wordpress: "WordPress"
     exports:
       index:
         title: "Export Content"
@@ -546,11 +584,6 @@ en:
       formats:
         markdown: "Markdown archive"
         json: "Full site JSON"
-      statuses:
-        pending: "Queued"
-        processing: "Processing"
-        completed: "Ready"
-        failed: "Failed"
     newsletters:
       index:
         title: "Newsletters"
@@ -949,6 +982,9 @@ en:
         deleted: "Webhook deleted."
         test_sent: "Test event sent."
         secret_regenerated: "Signing secret regenerated."
+      imports:
+        started: "Import started. Progress will appear below."
+        deleted: "Import record deleted."
       exports:
         started: "Export started. It will be ready to download shortly."
         invalid_format: "Unknown export format."

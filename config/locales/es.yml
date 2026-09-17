@@ -1,4 +1,12 @@
 es:
+  activerecord:
+    errors:
+      models:
+        import:
+          attributes:
+            file:
+              too_large: "es demasiado grande (el máximo es %{count} MB)"
+              invalid_type: "debe ser un archivo XML de exportación de WordPress"
   errors:
     messages:
       hex_color: "debe ser un color hexadecimal válido (p. ej. #1a1a2e)"
@@ -94,7 +102,7 @@ es:
       passkeys: "Claves de acceso"
       api_tokens: "Tokens de API"
       webhooks: "Webhooks"
-      exports: "Exportar"
+      import_export: "Importar y exportar"
 
   posts:
     index:
@@ -525,6 +533,36 @@ es:
         failed: "Fallido"
         no_response: "Sin respuesta"
         no_deliveries: "Aún no hay entregas."
+    shared:
+      import_export_tabs:
+        imports: "Importar"
+        exports: "Exportar"
+      processing_statuses:
+        pending: "En cola"
+        processing: "Procesando"
+        completed: "Lista"
+        failed: "Fallida"
+    imports:
+      index:
+        title: "Importar contenido"
+        wordpress_title: "WordPress"
+        wordpress_description: "Sube el archivo XML de WordPress (Herramientas → Exportar → Todo el contenido). Se importan publicaciones, páginas, categorías, etiquetas e imágenes. Los elementos cuyo slug ya existe se omiten, así que es seguro volver a ejecutarlo."
+        file_label: "Archivo de exportación de WordPress (.xml)"
+        file_hint: "Tamaño máximo %{size}."
+        start_import: "Iniciar importación"
+        recent_imports: "Importaciones recientes"
+        no_imports: "Aún no hay importaciones."
+        summary: "%{posts} publicaciones, %{pages} páginas, %{media} imágenes importadas · %{skipped} omitidas"
+        failed_items:
+          one: "%{count} elemento falló"
+          other: "%{count} elementos fallaron"
+        warnings:
+          one: "%{count} advertencia"
+          other: "%{count} advertencias"
+        more_warnings: "…y %{count} más"
+        delete_confirm: "¿Eliminar este registro de importación? El contenido importado no se elimina."
+      sources:
+        wordpress: "WordPress"
     exports:
       index:
         title: "Exportar contenido"
@@ -542,11 +580,6 @@ es:
       formats:
         markdown: "Archivo Markdown"
         json: "JSON completo del sitio"
-      statuses:
-        pending: "En cola"
-        processing: "Procesando"
-        completed: "Lista"
-        failed: "Fallida"
     newsletters:
       index:
         title: "Boletines"
@@ -943,6 +976,9 @@ es:
         deleted: "Webhook eliminado."
         test_sent: "Evento de prueba enviado."
         secret_regenerated: "Secreto de firma regenerado."
+      imports:
+        started: "Importación iniciada. El progreso aparecerá abajo."
+        deleted: "Registro de importación eliminado."
       exports:
         started: "Exportación iniciada. Estará lista para descargar en breve."
         invalid_format: "Formato de exportación desconocido."
