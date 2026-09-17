@@ -254,7 +254,14 @@ FOREIGN KEY ("webhook_id")
 );
 CREATE INDEX "index_webhook_deliveries_on_webhook_id" ON "webhook_deliveries" ("webhook_id") /*application='Prose'*/;
 CREATE INDEX "index_webhook_deliveries_on_webhook_id_and_attempted_at" ON "webhook_deliveries" ("webhook_id", "attempted_at") /*application='Prose'*/;
+CREATE TABLE "exports" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "format" integer DEFAULT 0 NOT NULL, "status" integer DEFAULT 0 NOT NULL, "error_message" text, "completed_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_26b155474a"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+);
+CREATE INDEX "index_exports_on_user_id" ON "exports" ("user_id") /*application='Prose'*/;
+CREATE INDEX "index_exports_on_created_at" ON "exports" ("created_at") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260917120129'),
 ('20260910155225'),
 ('20260910155224'),
 ('20260910010710'),

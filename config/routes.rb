@@ -122,6 +122,8 @@ Rails.application.routes.draw do
       end
       resources :webhook_deliveries, only: [ :index ]
     end
+    resources :exports, only: [ :index, :create, :destroy ]
+    get "exports/:id/download", to: "export_downloads#show", as: :export_download
   end
 
   # Health check

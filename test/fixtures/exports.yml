@@ -1,0 +1,10 @@
+completed_json:
+  user: admin
+  format: 1
+  status: 2
+  completed_at: <%= 1.hour.ago %>
+
+pending_markdown:
+  user: admin
+  format: 0
+  status: 0

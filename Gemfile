@@ -65,6 +65,12 @@ gem "mcp", "~> 1.5"
 # Rust-backed CommonMark/GFM markdown to HTML [https://github.com/gjtorikian/commonmarker]
 gem "commonmarker", "~> 2.3"
 
+# HTML to Markdown conversion for content export [https://github.com/xijo/reverse_markdown]
+gem "reverse_markdown", "~> 3.0"
+
+# Zip archives for Markdown content export [https://github.com/rubyzip/rubyzip]
+gem "rubyzip", "~> 3.0", require: "zip"
+
 # Plain-text diffs for post version history [https://github.com/samg/diffy]
 gem "diffy"
 

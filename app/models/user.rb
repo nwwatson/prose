@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :posts, dependent: :nullify
   has_many :pages, dependent: :nullify
   has_many :newsletters, dependent: :nullify
+  has_many :exports, dependent: :destroy
 
   validates :password, password_complexity: true, if: -> { password.present? }
 

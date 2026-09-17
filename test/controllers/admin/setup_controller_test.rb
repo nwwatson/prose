@@ -100,6 +100,7 @@ class Admin::SetupControllerTest < ActionDispatch::IntegrationTest
     Passkey.delete_all
     NewsletterDelivery.delete_all
     Newsletter.delete_all
+    Export.delete_all
     User.delete_all
   end
 end

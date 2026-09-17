@@ -1,0 +1,27 @@
+<%# locals: (export:) %>
+<li id="<%= dom_id(export) %>" class="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+  <div class="min-w-0">
+    <div class="flex flex-wrap items-center gap-2">
+      <p class="text-sm font-medium text-gray-900"><%= t("admin.exports.formats.#{export.format}") %></p>
+      <%= status_badge(t("admin.exports.statuses.#{export.status}"), color_class: export_status_color(export.status), size: :sm) %>
+    </div>
+    <p class="mt-1 text-xs text-gray-500">
+      <%= l(export.created_at, format: :with_time) %>
+      <% if export.user %>· <%= export.user.display_name %><% end %>
+      <% if export.completed? && export.file.attached? %>· <%= number_to_human_size(export.file.byte_size) %><% end %>
+    </p>
+    <% if export.failed? && export.error_message.present? %>
+      <p class="mt-1 text-xs text-red-700"><%= export.error_message %></p>
+    <% end %>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <% if export.completed? && export.file.attached? %>
+      <%= link_to t('admin.exports.index.download'), admin_export_download_path(export),
+            class: admin_button_classes(variant: :outline), data: { turbo: false } %>
+    <% end %>
+    <%= button_to t('shared.delete'), admin_export_path(export), method: :delete,
+          class: "rounded-md bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-100",
+          data: { turbo_confirm: t('admin.exports.index.delete_confirm') } %>
+  </div>
+</li>

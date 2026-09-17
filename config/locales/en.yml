@@ -96,6 +96,7 @@ en:
       passkeys: "Passkeys"
       api_tokens: "API Tokens"
       webhooks: "Webhooks"
+      exports: "Export"
 
   # Public views
   posts:
@@ -528,6 +529,28 @@ en:
         failed: "Failed"
         no_response: "No response"
         no_deliveries: "No deliveries yet."
+    exports:
+      index:
+        title: "Export Content"
+        subtitle: "Download a copy of your site for backup or migration. Exports are built in the background and the most recent 10 are kept."
+        markdown_title: "Markdown archive"
+        markdown_description: "A zip file with every post and page as a Markdown file with front matter, plus featured and inline images."
+        export_markdown: "Export Markdown"
+        json_title: "Full site JSON"
+        json_description: "A complete JSON backup of settings, authors, categories, tags, posts, pages, and subscribers. API keys are never included."
+        export_json: "Export JSON"
+        recent_exports: "Recent exports"
+        no_exports: "No exports yet."
+        download: "Download"
+        delete_confirm: "Delete this export?"
+      formats:
+        markdown: "Markdown archive"
+        json: "Full site JSON"
+      statuses:
+        pending: "Queued"
+        processing: "Processing"
+        completed: "Ready"
+        failed: "Failed"
     newsletters:
       index:
         title: "Newsletters"
@@ -573,6 +596,7 @@ en:
     settings:
       edit:
         title: "Site Settings"
+        export_content: "Export your content (Markdown or JSON) →"
         subtitle: "Configure your site name, description, and default social sharing image."
         errors_prevented_html: "%{count} prevented settings from being saved:"
         description_placeholder: "A brief description of your site"
@@ -925,6 +949,11 @@ en:
         deleted: "Webhook deleted."
         test_sent: "Test event sent."
         secret_regenerated: "Signing secret regenerated."
+      exports:
+        started: "Export started. It will be ready to download shortly."
+        invalid_format: "Unknown export format."
+        deleted: "Export deleted."
+        file_missing: "That export file is no longer available."
       setup:
         welcome: "Welcome to %{site_name}! Your admin account has been created."
       ai:

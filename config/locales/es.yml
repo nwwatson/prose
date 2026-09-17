@@ -94,6 +94,7 @@ es:
       passkeys: "Claves de acceso"
       api_tokens: "Tokens de API"
       webhooks: "Webhooks"
+      exports: "Exportar"
 
   posts:
     index:
@@ -524,6 +525,28 @@ es:
         failed: "Fallido"
         no_response: "Sin respuesta"
         no_deliveries: "Aún no hay entregas."
+    exports:
+      index:
+        title: "Exportar contenido"
+        subtitle: "Descarga una copia de tu sitio como respaldo o para migrarlo. Las exportaciones se generan en segundo plano y se conservan las 10 más recientes."
+        markdown_title: "Archivo Markdown"
+        markdown_description: "Un archivo zip con cada publicación y página en Markdown con front matter, más las imágenes destacadas e insertadas."
+        export_markdown: "Exportar Markdown"
+        json_title: "JSON completo del sitio"
+        json_description: "Un respaldo JSON completo de ajustes, autores, categorías, etiquetas, publicaciones, páginas y suscriptores. Nunca incluye claves de API."
+        export_json: "Exportar JSON"
+        recent_exports: "Exportaciones recientes"
+        no_exports: "Aún no hay exportaciones."
+        download: "Descargar"
+        delete_confirm: "¿Eliminar esta exportación?"
+      formats:
+        markdown: "Archivo Markdown"
+        json: "JSON completo del sitio"
+      statuses:
+        pending: "En cola"
+        processing: "Procesando"
+        completed: "Lista"
+        failed: "Fallida"
     newsletters:
       index:
         title: "Boletines"
@@ -569,6 +592,7 @@ es:
     settings:
       edit:
         title: "Configuración del sitio"
+        export_content: "Exportar tu contenido (Markdown o JSON) →"
         subtitle: "Configura el nombre, descripción e imagen de compartir social predeterminada de tu sitio."
         errors_prevented_html: "%{count} impidieron que la configuración se guardara:"
         description_placeholder: "Una breve descripción de tu sitio"
@@ -919,6 +943,11 @@ es:
         deleted: "Webhook eliminado."
         test_sent: "Evento de prueba enviado."
         secret_regenerated: "Secreto de firma regenerado."
+      exports:
+        started: "Exportación iniciada. Estará lista para descargar en breve."
+        invalid_format: "Formato de exportación desconocido."
+        deleted: "Exportación eliminada."
+        file_missing: "Ese archivo de exportación ya no está disponible."
       setup:
         welcome: "¡Bienvenido a %{site_name}! Tu cuenta de administrador ha sido creada."
       ai:
