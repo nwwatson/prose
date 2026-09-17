@@ -140,6 +140,32 @@ class Imports::WordpressImporterTest < ActiveSupport::TestCase
     Post.singleton_class.send(:remove_method, :new)
   end
 
+  test "an unexpected error on one item does not abort the import" do
+    boom = Class.new(Imports::Wordpress::ContentConverter) do
+      def convert(html, title: nil)
+        raise "Cannot replace a node with no parent" if title == "Classic Draft"
+
+        super
+      end
+    end
+
+    stats = nil
+    with_converter(boom) { stats = run_import }
+
+    assert_equal 1, stats["failed"]
+    assert_equal 2, stats["posts_imported"]
+    assert_equal 1, stats["pages_imported"]
+    assert Post.exists?(slug: "hello-welcome")
+    assert_not Post.exists?(slug: "classic-draft")
+    assert stats["warnings"].any? { |w| w.include?("Could not import \"Classic Draft\": RuntimeError: Cannot replace a node") }
+  end
+
+  test "a failure reading the export still fails the whole import" do
+    assert_raises(Imports::Wordpress::WxrParser::InvalidFile) do
+      run_import(io: StringIO.new("<feed/>"))
+    end
+  end
+
   test "purges downloaded blobs that ended up unused" do
     downloader = FakeDownloader.new
     orphan = ActiveStorage::Blob.create_and_upload!(io: StringIO.new("GIF89a"), filename: "orphan.gif", content_type: "image/gif")
@@ -160,6 +186,16 @@ class Imports::WordpressImporterTest < ActiveSupport::TestCase
   end
 
   private
+
+  def with_converter(klass)
+    original = Imports::Wordpress::ContentConverter
+    Imports::Wordpress.send(:remove_const, :ContentConverter)
+    Imports::Wordpress.const_set(:ContentConverter, klass)
+    yield
+  ensure
+    Imports::Wordpress.send(:remove_const, :ContentConverter)
+    Imports::Wordpress.const_set(:ContentConverter, original)
+  end
 
   def run_import(io: file_fixture("wordpress.xml").open, downloader: FakeDownloader.new)
     Imports::WordpressImporter.new(io: io, user: users(:admin), downloader: downloader).call

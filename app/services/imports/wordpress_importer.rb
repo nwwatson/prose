@@ -27,7 +27,9 @@ module Imports
       @converter = Wordpress::ContentConverter.new(downloader: @downloader, site_url: parser.site_url, warn: method(:warn))
 
       parser.items.each do |item|
-        item.post_type == "page" ? import_page(item) : import_post(item)
+        import_item(title_for(item)) do
+          item.post_type == "page" ? import_page(item) : import_post(item)
+        end
       end
 
       purge_unused_blobs
@@ -99,6 +101,18 @@ module Imports
 
       save_item(page, title)
       @stats["pages_imported"] += 1 if page.persisted?
+    end
+
+    # Confines an unexpected failure (bad markup crashing the converter, a
+    # storage error attaching an image) to the item it happened on: the import
+    # continues with the rest. Failures while reading the export file itself
+    # happen outside this and still fail the whole import.
+    def import_item(title)
+      yield
+    rescue StandardError => e
+      Rails.logger.error("[Imports::WordpressImporter] #{title}: #{e.class}: #{e.message}")
+      warn("Could not import \"#{title}\": #{e.class}: #{e.message.to_s.truncate(200)}")
+      @stats["failed"] += 1
     end
 
     def save_item(record, title)
