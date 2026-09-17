@@ -3,3 +3,7 @@
 
 ignore:
   - CVE-THAT-DOES-NOT-APPLY
+  # ruby_llm ReDoS in RubyLLM::Utils.underscore (GHSA-42r3-x6vx-x49x) only affects Ruby 3.1.x;
+  # Prose runs Ruby 3.4.4. The only patched release is the 2.0.0 prerelease — remove this
+  # entry once ruby_llm 2.0.0 is stable and we've upgraded.
+  - CVE-2026-67991
