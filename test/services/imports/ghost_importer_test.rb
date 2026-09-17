@@ -108,6 +108,31 @@ class Imports::GhostImporterTest < ActiveSupport::TestCase
     assert_equal 7, stats["skipped"]
   end
 
+  test "an unexpected error on one item does not abort the import" do
+    boom = Class.new(Imports::Ghost::ContentConverter) do
+      def convert(html, title: nil)
+        raise "boom" if title == "Mobiledoc Only"
+
+        super
+      end
+    end
+
+    stats = nil
+    with_converter(boom) { stats = run_import }
+
+    assert_equal 1, stats["failed"]
+    assert_equal 4, stats["posts_imported"]
+    assert Post.exists?(slug: "ghost-cards")
+    assert_not Post.exists?(slug: "mobiledoc-only")
+    assert stats["warnings"].any? { |w| w.include?("Could not import \"Mobiledoc Only\": RuntimeError: boom") }
+  end
+
+  test "a failure reading the export still fails the whole import" do
+    assert_raises(Imports::Ghost::ExportParser::InvalidFile) do
+      Imports::GhostImporter.new(io: StringIO.new("{}"), user: users(:admin), downloader: FakeDownloader.new).call
+    end
+  end
+
   test "does not notify subscribers, fire webhooks or create versions" do
     Webhook.create!(url: "https://hooks.example.com/prose", events: Webhook::EVENTS)
 
@@ -118,6 +143,16 @@ class Imports::GhostImporterTest < ActiveSupport::TestCase
   end
 
   private
+
+  def with_converter(klass)
+    original = Imports::Ghost::ContentConverter
+    Imports::Ghost.send(:remove_const, :ContentConverter)
+    Imports::Ghost.const_set(:ContentConverter, klass)
+    yield
+  ensure
+    Imports::Ghost.send(:remove_const, :ContentConverter)
+    Imports::Ghost.const_set(:ContentConverter, original)
+  end
 
   def run_import(site_url: nil, downloader: FakeDownloader.new)
     Imports::GhostImporter.new(io: file_fixture("ghost.json").open("rb"), user: users(:admin), site_url: site_url, downloader: downloader).call

@@ -57,6 +57,18 @@ module Imports
       false
     end
 
+    # Confines an unexpected failure (odd markup crashing the converter, a
+    # storage error attaching an image) to the item it happened on, so the rest
+    # of the import still lands. Reading/parsing the export happens outside
+    # this and still fails the whole import.
+    def import_item(title)
+      yield
+    rescue StandardError => e
+      Rails.logger.error("[#{self.class.name}] #{title}: #{e.class}: #{e.message}")
+      warn("Could not import \"#{title}\": #{e.class}: #{e.message.to_s.truncate(200)}")
+      @stats["failed"] += 1
+    end
+
     def save_item(record, title, counter)
       ActiveRecord::Base.transaction do
         yield if block_given?
