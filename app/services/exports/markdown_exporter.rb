@@ -68,8 +68,6 @@ module Exports
         "status" => page.status,
         "published_at" => page.published_at&.iso8601,
         "author" => page.user&.display_name,
-        "show_in_navigation" => page.show_in_navigation,
-        "position" => page.position,
         "meta_description" => page.meta_description
       }
 

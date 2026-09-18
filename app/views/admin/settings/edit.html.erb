@@ -7,6 +7,9 @@
     <p class="mt-2 text-sm text-gray-600">
       <%= link_to t('admin.settings.edit.export_content'), admin_exports_path, class: "font-medium text-gray-900 underline hover:text-gray-600" %>
     </p>
+    <p class="mt-1 text-sm text-gray-600">
+      <%= link_to t('admin.settings.edit.manage_navigation'), admin_navigation_items_path, class: "font-medium text-gray-900 underline hover:text-gray-600" %>
+    </p>
   <% end %>
 
   <%= form_with model: @site_setting, url: admin_settings_path, class: "mt-8 space-y-6" do |f| %>

@@ -1,0 +1,54 @@
+<%# locals: (item:, inline: false) %>
+<%= form_with model: [ :admin, item ], class: inline ? "mt-3" : "space-y-6" do |f| %>
+  <%= render "admin/shared/form_errors", record: item, wrapper_class: inline ? "mb-3" : "" %>
+
+  <% if inline %>
+    <%= f.hidden_field :location %>
+    <div class="grid gap-3 sm:grid-cols-[1fr_2fr_auto] sm:items-end">
+      <div>
+        <%= f.label :label, t("admin.navigation_items.form.label"), class: "block text-xs font-medium text-gray-700" %>
+        <%= f.text_field :label, id: "#{item.location}_navigation_item_label", required: true, maxlength: 50,
+              placeholder: t("admin.navigation_items.form.label_placeholder.#{item.location}"),
+              class: admin_input_classes(extra: "mt-1") %>
+      </div>
+      <div>
+        <%= f.label :url, t("admin.navigation_items.form.url"), class: "block text-xs font-medium text-gray-700" %>
+        <%= f.text_field :url, id: "#{item.location}_navigation_item_url", required: true,
+              placeholder: t("admin.navigation_items.form.url_placeholder.#{item.location}"),
+              class: admin_input_classes(extra: "mt-1 font-mono") %>
+      </div>
+      <%= f.submit t("admin.navigation_items.form.add"), class: "#{admin_button_classes(variant: :primary)} cursor-pointer" %>
+    </div>
+    <label class="mt-2 inline-flex items-center text-sm text-gray-700">
+      <%= f.check_box :open_in_new_tab, id: "#{item.location}_navigation_item_open_in_new_tab", class: "rounded border-gray-300 text-gray-600 focus:ring-gray-600" %>
+      <span class="ml-2"><%= t("admin.navigation_items.form.open_in_new_tab") %></span>
+    </label>
+  <% else %>
+    <div class="max-w-lg space-y-6">
+      <div>
+        <%= f.label :label, t("admin.navigation_items.form.label"), class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2"><%= f.text_field :label, required: true, maxlength: 50, class: admin_input_classes %></div>
+      </div>
+      <div>
+        <%= f.label :url, t("admin.navigation_items.form.url"), class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2"><%= f.text_field :url, required: true, class: admin_input_classes(extra: "font-mono") %></div>
+        <p class="mt-1 text-xs text-gray-500"><%= t("admin.navigation_items.form.url_help") %></p>
+      </div>
+      <div>
+        <%= f.label :location, t("admin.navigation_items.form.location"), class: "block text-sm font-medium text-gray-900" %>
+        <div class="mt-2">
+          <%= f.select :location, NavigationItem.locations.keys.map { |l| [ t("admin.navigation_items.locations.#{l}.title"), l ] },
+                {}, class: admin_input_classes %>
+        </div>
+      </div>
+      <label class="inline-flex items-center text-sm text-gray-900">
+        <%= f.check_box :open_in_new_tab, class: "rounded border-gray-300 text-gray-600 focus:ring-gray-600" %>
+        <span class="ml-2"><%= t("admin.navigation_items.form.open_in_new_tab") %></span>
+      </label>
+      <div class="flex justify-end space-x-3">
+        <%= link_to t("shared.cancel"), admin_navigation_items_path(anchor: item.location_was), class: admin_button_classes(variant: :outline) %>
+        <%= f.submit t("admin.navigation_items.form.save"), class: "#{admin_button_classes(variant: :primary)} cursor-pointer" %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

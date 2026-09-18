@@ -9,7 +9,7 @@
  *   .masthead__theme-toggle  Absolute-positioned toggle wrapper
  *   .masthead__toggle-btn  Theme toggle button
  *   .masthead__nav         Navigation link row
- *   .masthead__nav-link    Individual nav link
+ *   .masthead__nav-link    Individual nav link (aria-current="page" when active)
  * ========================================================================== */
 
 .masthead {
@@ -37,9 +37,13 @@
 }
 
 .masthead__nav {
-  @apply mt-3 flex justify-center space-x-6 text-sm;
+  @apply mt-3 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm;
 }
 
 .masthead__nav-link {
   @apply text-gray-600 dark:text-gray-400 hover:text-charcoal;
+}
+
+.masthead__nav-link[aria-current="page"] {
+  @apply text-charcoal;
 }

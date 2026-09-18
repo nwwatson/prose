@@ -1,0 +1,9 @@
+<% header_items = NavigationItem.for_location(:header) %>
+<% if header_items.any? %>
+  <nav class="masthead__nav" aria-label="<%= t('layouts.application.primary_navigation') %>">
+    <% header_items.each do |item| %>
+      <%= navigation_link item, class: "masthead__nav-link",
+            aria: { current: ("page" if !item.external? && current_page?(item.url)) } %>
+    <% end %>
+  </nav>
+<% end %>

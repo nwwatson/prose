@@ -1,7 +1,6 @@
 class Page < ApplicationRecord
   include Sluggable
   include Publishable
-  include Navigable
 
   enum :status, { draft: 0, published: 1 }
   publishes_at :published_at

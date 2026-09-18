@@ -1,0 +1,28 @@
+<% footer_items = NavigationItem.for_location(:footer) %>
+<% social_items = NavigationItem.for_location(:social) %>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <% if footer_items.any? %>
+      <nav class="site-footer__nav" aria-label="<%= t('layouts.application.footer_navigation') %>">
+        <% footer_items.each do |item| %>
+          <%= navigation_link item, class: "site-footer__link" %>
+        <% end %>
+      </nav>
+    <% end %>
+
+    <% if social_items.any? %>
+      <ul class="site-footer__social" aria-label="<%= t('layouts.application.social_links') %>">
+        <% social_items.each do |item| %>
+          <li>
+            <%= navigation_link item, class: "site-footer__social-link", title: item.label do %>
+              <%= social_icon item.social_platform, class: "site-footer__social-icon" %>
+              <span class="sr-only"><%= item.label %></span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <p><%= t('layouts.application.copyright_html', year: Date.current.year, site_name: site_name) %></p>
+  </div>
+</footer>

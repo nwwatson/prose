@@ -1,6 +1,8 @@
 es:
   errors:
     messages:
+      navigation_link: "debe ser una ruta que empiece con / (p. ej. /acerca), una URL http(s) o un enlace mailto:"
+      navigation_social_url: "debe ser una URL http(s) completa para los enlaces sociales"
       hex_color: "debe ser un color hexadecimal válido (p. ej. #1a1a2e)"
   date:
     formats:
@@ -54,6 +56,9 @@ es:
 
   layouts:
     application:
+      primary_navigation: "Principal"
+      footer_navigation: "Pie de página"
+      social_links: "Redes sociales"
       toggle_dark_mode: "Alternar modo oscuro"
       copyright_html: "&copy; %{year} %{site_name}. Todos los derechos reservados."
     editor:
@@ -95,6 +100,7 @@ es:
       api_tokens: "Tokens de API"
       webhooks: "Webhooks"
       exports: "Exportar"
+      navigation: "Navegación"
 
   posts:
     index:
@@ -527,6 +533,46 @@ es:
         failed: "Fallido"
         no_response: "Sin respuesta"
         no_deliveries: "Aún no hay entregas."
+    navigation_items:
+      index:
+        title: "Navegación"
+        subtitle: "Elige los enlaces que aparecen en el encabezado y el pie de página. Arrastra los elementos (o usa las flechas) para reordenarlos."
+        empty: "Aún no hay enlaces."
+        add_item: "Añadir un enlace"
+      edit:
+        title: "Editar enlace"
+      item:
+        drag: "Arrastra para reordenar"
+        new_tab: "se abre en una pestaña nueva"
+        move_up: "Subir"
+        move_down: "Bajar"
+        confirm_delete: "¿Quitar «%{label}» de la navegación?"
+      form:
+        label: "Etiqueta"
+        url: "URL"
+        url_help: "Una ruta de este sitio (/acerca), una URL completa (https://…) o un enlace mailto:. Los enlaces sociales deben ser URL completas."
+        location: "Ubicación"
+        open_in_new_tab: "Abrir en una pestaña nueva"
+        add: "Añadir"
+        save: "Guardar"
+        label_placeholder:
+          header: "Acerca de"
+          footer: "Privacidad"
+          social: "GitHub"
+        url_placeholder:
+          header: "/acerca"
+          footer: "/privacidad"
+          social: "https://github.com/tu-usuario"
+      locations:
+        header:
+          title: "Encabezado"
+          description: "Enlaces en el encabezado del sitio, debajo del nombre."
+        footer:
+          title: "Pie de página"
+          description: "Enlaces de texto en el pie de página del sitio."
+        social:
+          title: "Redes sociales"
+          description: "Enlaces con icono en el pie de página. El icono se elige según la URL (X, GitHub, LinkedIn, Bluesky, Mastodon, YouTube, Instagram y más)."
     exports:
       index:
         title: "Exportar contenido"
@@ -595,6 +641,7 @@ es:
       edit:
         title: "Configuración del sitio"
         export_content: "Exportar tu contenido (Markdown o JSON) →"
+        manage_navigation: "Gestionar enlaces del encabezado, pie de página y redes sociales →"
         subtitle: "Configura el nombre, descripción e imagen de compartir social predeterminada de tu sitio."
         errors_prevented_html: "%{count} impidieron que la configuración se guardara:"
         description_placeholder: "Una breve descripción de tu sitio"
@@ -768,9 +815,7 @@ es:
         new_page: "Nueva página"
         title_header: "Título"
         status: "Estado"
-        nav: "Nav"
         slug: "Slug"
-        in_nav: "En Nav"
         no_pages: "Aún no hay páginas"
         get_started: "Crea tu primera página para comenzar."
       form:
@@ -781,9 +826,8 @@ es:
       settings_fields:
         slug_placeholder: "generado-automaticamente"
         slug_help: "Identificador amigable para URL. Las páginas se sirven en /{slug}."
-        show_in_navigation: "Mostrar en la navegación"
-        show_in_navigation_help: "Mostrar esta página en el encabezado del sitio."
-        position_help: "Los números más bajos aparecen primero en la navegación."
+        navigation_help: "Las páginas no se añaden al menú del sitio automáticamente."
+        manage_navigation: "Gestionar navegación →"
         meta_description: "Meta descripción"
         meta_description_placeholder: "Breve descripción para motores de búsqueda..."
         meta_description_help: "Hasta 160 caracteres. Usado por motores de búsqueda."
@@ -958,6 +1002,10 @@ es:
         deleted: "Webhook eliminado."
         test_sent: "Evento de prueba enviado."
         secret_regenerated: "Secreto de firma regenerado."
+      navigation_items:
+        created: "Enlace añadido."
+        updated: "Enlace actualizado."
+        deleted: "Enlace eliminado."
       exports:
         started: "Exportación iniciada. Estará lista para descargar en breve."
         invalid_format: "Formato de exportación desconocido."

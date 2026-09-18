@@ -2,8 +2,13 @@
  * .site-footer — Site footer BEM block
  *
  * Usage:
- *   .site-footer        Footer container with top border
- *   .site-footer__inner Centered content wrapper
+ *   .site-footer               Footer container with top border
+ *   .site-footer__inner        Centered content wrapper
+ *   .site-footer__nav          Row of footer navigation links
+ *   .site-footer__link         Individual footer link
+ *   .site-footer__social       Row of social icon links
+ *   .site-footer__social-link  Individual social icon link
+ *   .site-footer__social-icon  The icon SVG inside a social link
  * ========================================================================== */
 
 .site-footer {
@@ -11,5 +16,25 @@
 }
 
 .site-footer__inner {
-  @apply mx-auto max-w-3xl px-4 text-center text-sm text-gray-500 dark:text-gray-400;
+  @apply mx-auto max-w-3xl px-4 text-center text-sm text-gray-500 dark:text-gray-400 space-y-4;
+}
+
+.site-footer__nav {
+  @apply flex flex-wrap justify-center gap-x-5 gap-y-2;
+}
+
+.site-footer__link {
+  @apply text-gray-600 dark:text-gray-400 hover:text-charcoal transition-colors;
+}
+
+.site-footer__social {
+  @apply flex flex-wrap justify-center gap-4;
+}
+
+.site-footer__social-link {
+  @apply inline-flex text-gray-500 dark:text-gray-400 hover:text-charcoal transition-colors;
+}
+
+.site-footer__social-icon {
+  @apply h-5 w-5;
 }

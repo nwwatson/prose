@@ -1,7 +1,7 @@
 module Exports
   # Builds a full-site JSON backup: settings, authors, taxonomy, posts, pages,
-  # and subscribers. Rich text is exported as HTML so nothing is lost in
-  # conversion.
+  # navigation, and subscribers. Rich text is exported as HTML so nothing is
+  # lost in conversion.
   #
   # Site settings use an explicit allowlist (SITE_SETTING_ATTRIBUTES) rather
   # than excluding known secrets, so a newly added API key column is never
@@ -44,6 +44,7 @@ module Exports
         tags: tags,
         posts: posts,
         pages: pages,
+        navigation_items: navigation_items,
         subscriber_labels: subscriber_labels,
         subscribers: subscribers
       }
@@ -53,6 +54,12 @@ module Exports
 
     def site
       SiteSetting.current.attributes.slice(*SITE_SETTING_ATTRIBUTES)
+    end
+
+    def navigation_items
+      NavigationItem.order(:location, :position, :id).map do |item|
+        item.slice(:label, :url, :location, :position, :open_in_new_tab)
+      end
     end
 
     def authors
@@ -99,7 +106,7 @@ module Exports
 
     def pages
       Page.includes(:rich_text_content).order(:id).map do |page|
-        page.slice(:id, :title, :slug, :status, :meta_description, :show_in_navigation, :position, :user_id).merge(
+        page.slice(:id, :title, :slug, :status, :meta_description, :user_id).merge(
           published_at: page.published_at&.iso8601,
           created_at: page.created_at.iso8601,
           updated_at: page.updated_at.iso8601,

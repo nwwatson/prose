@@ -152,7 +152,7 @@ FOREIGN KEY ("subscriber_id")
 CREATE INDEX "index_newsletter_deliveries_on_newsletter_id" ON "newsletter_deliveries" ("newsletter_id") /*application='Prose'*/;
 CREATE INDEX "index_newsletter_deliveries_on_subscriber_id" ON "newsletter_deliveries" ("subscriber_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_newsletter_deliveries_on_newsletter_id_and_subscriber_id" ON "newsletter_deliveries" ("newsletter_id", "subscriber_id") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "pages" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "slug" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "meta_description" text, "show_in_navigation" boolean DEFAULT FALSE NOT NULL, "position" integer DEFAULT 0 NOT NULL, "published_at" datetime(6), "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_84a58494eb"
+CREATE TABLE IF NOT EXISTS "pages" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "slug" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "meta_description" text, "published_at" datetime(6), "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_84a58494eb"
 FOREIGN KEY ("user_id")
   REFERENCES "users" ("id")
 );
@@ -279,7 +279,10 @@ CREATE INDEX "index_fediverse_likes_on_post_id" ON "fediverse_likes" ("post_id")
 CREATE INDEX "index_fediverse_likes_on_fediverse_actor_id" ON "fediverse_likes" ("fediverse_actor_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_fediverse_likes_on_post_id_and_fediverse_actor_id" ON "fediverse_likes" ("post_id", "fediverse_actor_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_comments_on_activitypub_uri" ON "comments" ("activitypub_uri") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "navigation_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "label" varchar NOT NULL, "url" varchar NOT NULL, "location" integer DEFAULT 0 NOT NULL, "position" integer DEFAULT 0 NOT NULL, "open_in_new_tab" boolean DEFAULT FALSE NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
+CREATE INDEX "index_navigation_items_on_location_and_position" ON "navigation_items" ("location", "position") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260918120000'),
 ('20260918010855'),
 ('20260917120129'),
 ('20260910155225'),

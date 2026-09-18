@@ -30,6 +30,7 @@ class Exports::JsonExporterTest < ActiveSupport::TestCase
     assert_equal Tag.count, data["tags"].size
     assert_equal Post.count, data["posts"].size
     assert_equal Page.count, data["pages"].size
+    assert_equal NavigationItem.count, data["navigation_items"].size
     assert_equal Subscriber.count, data["subscribers"].size
     assert_equal SubscriberLabel.count, data["subscriber_labels"].size
   end
@@ -41,6 +42,12 @@ class Exports::JsonExporterTest < ActiveSupport::TestCase
     assert_includes exported["content_html"], "Exported <em>body</em>"
     assert_equal post.tags.pluck(:id).sort, exported["tag_ids"]
     assert_equal "published", exported["status"]
+  end
+
+  test "navigation items include location, order and new-tab flag" do
+    github = export_data["navigation_items"].find { |item| item["label"] == "GitHub" }
+
+    assert_equal({ "label" => "GitHub", "url" => "https://github.com/prose", "location" => "social", "position" => 0, "open_in_new_tab" => true }, github)
   end
 
   test "subscribers include email and label ids" do

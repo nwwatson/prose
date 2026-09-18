@@ -1,6 +1,8 @@
 en:
   errors:
     messages:
+      navigation_link: "must be a path starting with / (e.g. /about), an http(s) URL, or a mailto: link"
+      navigation_social_url: "must be a full http(s) URL for social links"
       hex_color: "must be a valid hex color (e.g. #1a1a2e)"
   date:
     formats:
@@ -56,6 +58,9 @@ en:
   # Public-facing layouts
   layouts:
     application:
+      primary_navigation: "Primary"
+      footer_navigation: "Footer"
+      social_links: "Social links"
       toggle_dark_mode: "Toggle dark mode"
       copyright_html: "&copy; %{year} %{site_name}. All rights reserved."
     editor:
@@ -97,6 +102,7 @@ en:
       api_tokens: "API Tokens"
       webhooks: "Webhooks"
       exports: "Export"
+      navigation: "Navigation"
 
   # Public views
   posts:
@@ -531,6 +537,46 @@ en:
         failed: "Failed"
         no_response: "No response"
         no_deliveries: "No deliveries yet."
+    navigation_items:
+      index:
+        title: "Navigation"
+        subtitle: "Choose the links shown in your site header and footer. Drag items (or use the arrows) to reorder them."
+        empty: "No links yet."
+        add_item: "Add a link"
+      edit:
+        title: "Edit Link"
+      item:
+        drag: "Drag to reorder"
+        new_tab: "opens in new tab"
+        move_up: "Move up"
+        move_down: "Move down"
+        confirm_delete: "Remove “%{label}” from navigation?"
+      form:
+        label: "Label"
+        url: "URL"
+        url_help: "A path on this site (/about), a full URL (https://…), or a mailto: link. Social links must be full URLs."
+        location: "Location"
+        open_in_new_tab: "Open in new tab"
+        add: "Add"
+        save: "Save"
+        label_placeholder:
+          header: "About"
+          footer: "Privacy"
+          social: "GitHub"
+        url_placeholder:
+          header: "/about"
+          footer: "/privacy"
+          social: "https://github.com/you"
+      locations:
+        header:
+          title: "Header"
+          description: "Links in the site header, below the site name."
+        footer:
+          title: "Footer"
+          description: "Text links shown in the site footer."
+        social:
+          title: "Social"
+          description: "Icon links shown in the footer. The icon is picked from the URL (X, GitHub, LinkedIn, Bluesky, Mastodon, YouTube, Instagram, and more)."
     exports:
       index:
         title: "Export Content"
@@ -599,6 +645,7 @@ en:
       edit:
         title: "Site Settings"
         export_content: "Export your content (Markdown or JSON) →"
+        manage_navigation: "Manage header, footer and social links →"
         subtitle: "Configure your site name, description, and default social sharing image."
         errors_prevented_html: "%{count} prevented settings from being saved:"
         description_placeholder: "A brief description of your site"
@@ -772,9 +819,7 @@ en:
         new_page: "New Page"
         title_header: "Title"
         status: "Status"
-        nav: "Nav"
         slug: "Slug"
-        in_nav: "In Nav"
         no_pages: "No pages yet"
         get_started: "Create your first page to get started."
       form:
@@ -785,9 +830,8 @@ en:
       settings_fields:
         slug_placeholder: "auto-generated-from-title"
         slug_help: "URL-friendly identifier. Pages are served at /{slug}."
-        show_in_navigation: "Show in navigation"
-        show_in_navigation_help: "Display this page in the site header."
-        position_help: "Lower numbers appear first in navigation."
+        navigation_help: "Pages aren't added to the site menu automatically."
+        manage_navigation: "Manage navigation →"
         meta_description: "Meta description"
         meta_description_placeholder: "Brief description for search engines..."
         meta_description_help: "Up to 160 characters. Used by search engines."
@@ -964,6 +1008,10 @@ en:
         deleted: "Webhook deleted."
         test_sent: "Test event sent."
         secret_regenerated: "Signing secret regenerated."
+      navigation_items:
+        created: "Link added."
+        updated: "Link updated."
+        deleted: "Link removed."
       exports:
         started: "Export started. It will be ready to download shortly."
         invalid_format: "Unknown export format."

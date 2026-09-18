@@ -99,8 +99,6 @@ about_page = Page.create!(
   user: admin,
   status: :published,
   published_at: 1.year.ago,
-  show_in_navigation: true,
-  position: 0,
   meta_description: "Learn more about #{SiteSetting.current.site_name}",
   content: "<p>#{SiteSetting.current.site_name} is a thoughtfully crafted publication focused on delivering quality writing and ideas.</p><p>We believe in the power of long-form writing to educate, inspire, and spark meaningful conversations.</p>"
 )
@@ -111,13 +109,25 @@ contact_page = Page.create!(
   user: admin,
   status: :published,
   published_at: 1.year.ago,
-  show_in_navigation: true,
-  position: 1,
   meta_description: "Get in touch with us",
   content: "<p>We'd love to hear from you. Whether you have a question, feedback, or just want to say hello, don't hesitate to reach out.</p><p>Email us at hello@example.com</p>"
 )
 
 puts "  Created 2 pages (About, Contact)"
+
+# ---------------------------------------------------------------------------
+# Navigation
+# ---------------------------------------------------------------------------
+NavigationItem.delete_all
+[
+  { label: "Home", url: "/", location: :header },
+  { label: about_page.title, url: "/#{about_page.slug}", location: :header },
+  { label: contact_page.title, url: "/#{contact_page.slug}", location: :header },
+  { label: "RSS", url: "/feed.xml", location: :footer },
+  { label: "GitHub", url: "https://github.com/nwwatson/prose", location: :social, open_in_new_tab: true }
+].each { |attrs| NavigationItem.create!(attrs) }
+
+puts "  Created #{NavigationItem.count} navigation items"
 
 # ---------------------------------------------------------------------------
 # Subscribers (100)

@@ -1,0 +1,12 @@
+<% content_for(:title, "#{t('admin.navigation_items.index.title')} — #{site_name}") %>
+
+<div class="max-w-4xl space-y-8">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900"><%= t("admin.navigation_items.index.title") %></h1>
+    <p class="mt-1 text-sm text-gray-600"><%= t("admin.navigation_items.index.subtitle") %></p>
+  </div>
+
+  <% @sections.each do |location, items| %>
+    <%= render "section", location: location, items: items, new_item: @new_items[location] %>
+  <% end %>
+</div>

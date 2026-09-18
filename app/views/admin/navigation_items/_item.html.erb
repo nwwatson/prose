@@ -1,0 +1,46 @@
+<%# locals: (item:) %>
+<li class="group/item flex items-center gap-3 px-4 py-3 sm:px-6"
+    id="<%= dom_id(item) %>"
+    draggable="true"
+    data-sortable-target="item"
+    data-id="<%= item.id %>"
+    data-action="dragstart->sortable#start dragend->sortable#end">
+  <span class="hidden cursor-grab text-gray-400 sm:block" title="<%= t('admin.navigation_items.item.drag') %>" aria-hidden="true">
+    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+    </svg>
+  </span>
+
+  <% if item.social? %>
+    <span class="text-gray-500"><%= social_icon(item.social_platform, class: "h-5 w-5") %></span>
+  <% end %>
+
+  <div class="min-w-0 flex-1">
+    <p class="truncate text-sm font-medium text-gray-900"><%= item.label %></p>
+    <p class="truncate font-mono text-xs text-gray-500">
+      <%= item.url %>
+      <% if item.open_in_new_tab? %>
+        <span class="ml-1 font-sans text-gray-400">· <%= t("admin.navigation_items.item.new_tab") %></span>
+      <% end %>
+    </p>
+  </div>
+
+  <div class="flex flex-shrink-0 items-center gap-1">
+    <%= button_to move_admin_navigation_item_path(item, direction: "up"), method: :patch,
+          class: "rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700",
+          form_class: "group-first/item:invisible",
+          title: t("admin.navigation_items.item.move_up"), aria: { label: t("admin.navigation_items.item.move_up") } do %>
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" /></svg>
+    <% end %>
+    <%= button_to move_admin_navigation_item_path(item, direction: "down"), method: :patch,
+          class: "rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700",
+          form_class: "group-last/item:invisible",
+          title: t("admin.navigation_items.item.move_down"), aria: { label: t("admin.navigation_items.item.move_down") } do %>
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+    <% end %>
+    <%= link_to t("shared.edit"), edit_admin_navigation_item_path(item), class: "ml-2 text-sm font-medium text-gray-600 hover:text-gray-900" %>
+    <%= button_to t("shared.delete"), admin_navigation_item_path(item), method: :delete,
+          class: "ml-2 text-sm font-medium text-red-600 hover:text-red-800",
+          data: { turbo_confirm: t("admin.navigation_items.item.confirm_delete", label: item.label) } %>
+  </div>
+</li>

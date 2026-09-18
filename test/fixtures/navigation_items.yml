@@ -1,0 +1,24 @@
+home:
+  label: Home
+  url: /
+  location: header
+  position: 0
+
+about:
+  label: About Us
+  url: /about-us
+  location: header
+  position: 1
+
+privacy:
+  label: Privacy
+  url: /privacy
+  location: footer
+  position: 0
+
+github:
+  label: GitHub
+  url: https://github.com/prose
+  location: social
+  position: 0
+  open_in_new_tab: true

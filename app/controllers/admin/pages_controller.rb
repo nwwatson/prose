@@ -6,7 +6,7 @@ module Admin
     before_action :set_page, only: [ :edit, :update, :destroy ]
 
     def index
-      @pages = Page.includes(:user).order(:position, :title)
+      @pages = Page.includes(:user).order(:title)
     end
 
     def new
@@ -46,7 +46,7 @@ module Admin
     end
 
     def page_params
-      params.require(:page).permit(:title, :slug, :status, :content, :meta_description, :show_in_navigation, :position, :published_at)
+      params.require(:page).permit(:title, :slug, :status, :content, :meta_description, :published_at)
     end
 
     def resource_json(page)

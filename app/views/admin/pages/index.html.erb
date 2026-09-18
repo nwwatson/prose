@@ -15,9 +15,6 @@
           </div>
           <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-gray-500">
             <span class="font-mono">/<%= page.slug %></span>
-            <% if page.show_in_navigation? %>
-              <span class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800"><%= t("admin.pages.index.in_nav") %></span>
-            <% end %>
           </div>
         <% end %>
       <% end %>
@@ -30,7 +27,6 @@
           <tr>
             <th class="<%= admin_th_classes %>"><%= t("admin.pages.index.title_header") %></th>
             <th class="<%= admin_th_classes %>"><%= t("admin.pages.index.status") %></th>
-            <th class="<%= admin_th_classes %>"><%= t("admin.pages.index.nav") %></th>
             <th class="<%= admin_th_classes %>"><%= t("admin.pages.index.slug") %></th>
             <th class="relative px-6 py-3"><span class="sr-only"><%= t("shared.actions") %></span></th>
           </tr>
@@ -43,11 +39,6 @@
               </td>
               <td class="whitespace-nowrap px-6 py-4">
                 <%= status_badge(page.status.capitalize, color_class: page.published? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800') %>
-              </td>
-              <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                <% if page.show_in_navigation? %>
-                  <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"><%= t("admin.pages.index.in_nav") %></span>
-                <% end %>
               </td>
               <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 font-mono">/<%= page.slug %></td>
               <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">

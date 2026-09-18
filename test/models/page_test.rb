@@ -95,14 +95,6 @@ class PageTest < ActiveSupport::TestCase
     assert_nil page.published_at
   end
 
-  test "navigation scope returns published navigation pages ordered by position" do
-    nav_pages = Page.navigation
-    assert_includes nav_pages, pages(:published_page)
-    assert_includes nav_pages, pages(:contact_page)
-    assert_not_includes nav_pages, pages(:draft_page)
-    assert_equal pages(:published_page), nav_pages.first
-  end
-
   test "belongs to user" do
     assert_equal users(:admin), pages(:published_page).user
   end

@@ -123,6 +123,10 @@ Rails.application.routes.draw do
     resource :settings, only: [ :edit, :update ]
     resource :newsletter_settings, only: [ :edit, :update ]
     resources :pages
+    resources :navigation_items, path: "navigation", except: [ :show, :new ] do
+      member { patch :move }
+      collection { patch :reorder }
+    end
     resources :membership_tiers, except: [ :show ]
     resources :memberships, only: [ :index, :show, :destroy ]
     resource :revenue, only: [ :show ], controller: "revenue"
