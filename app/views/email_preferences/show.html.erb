@@ -1,0 +1,41 @@
+<% content_for(:title, t('email_preferences.show.title')) %>
+
+<div class="email-preferences">
+  <h1 class="email-preferences__heading"><%= t('email_preferences.show.title') %></h1>
+  <p class="email-preferences__message">
+    <%= t('email_preferences.show.intro_html', email: @subscriber.email) %>
+  </p>
+
+  <% if @subscriber.unsubscribed? %>
+    <p class="email-preferences__notice"><%= t('email_preferences.show.unsubscribed_notice') %></p>
+  <% end %>
+
+  <%= form_with model: @subscriber, url: email_preferences_path, method: :patch do |f| %>
+    <%= hidden_field_tag :token, params[:token] if params[:token].present? %>
+
+    <fieldset class="email-preferences__options">
+      <legend class="sr-only"><%= t('email_preferences.show.legend') %></legend>
+      <% Subscriber.email_frequencies.each_key do |frequency| %>
+        <label class="email-preferences__option">
+          <%= f.radio_button :email_frequency, frequency, class: "email-preferences__radio" %>
+          <span>
+            <span class="email-preferences__option-label"><%= t("email_preferences.frequencies.#{frequency}.label") %></span>
+            <span class="email-preferences__option-hint"><%= t("email_preferences.frequencies.#{frequency}.hint") %></span>
+          </span>
+        </label>
+      <% end %>
+    </fieldset>
+
+    <% if @subscriber.errors[:email_frequency].any? %>
+      <p class="email-preferences__error"><%= @subscriber.errors.full_messages_for(:email_frequency).to_sentence %></p>
+    <% end %>
+
+    <div class="email-preferences__action">
+      <%= f.submit t('email_preferences.show.save'), class: "btn btn--primary" %>
+    </div>
+  <% end %>
+
+  <p class="email-preferences__footer">
+    <%= link_to t('email_preferences.show.return_to_site'), root_path, class: "text-link--muted" %>
+  </p>
+</div>

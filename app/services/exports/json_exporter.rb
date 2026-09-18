@@ -126,6 +126,7 @@ module Exports
           email: subscriber.email,
           confirmed_at: subscriber.confirmed_at&.iso8601,
           unsubscribed_at: subscriber.unsubscribed_at&.iso8601,
+          email_frequency: subscriber.email_frequency,
           created_at: subscriber.created_at.iso8601,
           label_ids: subscriber.subscriber_labelings.map(&:subscriber_label_id).sort
         }

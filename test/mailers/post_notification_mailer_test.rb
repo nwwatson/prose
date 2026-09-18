@@ -41,6 +41,21 @@ class PostNotificationMailerTest < ActionMailer::TestCase
     assert_match %r{/unsubscribe\?token=}, mail.text_part.body.to_s
   end
 
+  test "new_post email links to the post" do
+    post = posts(:published_post)
+    mail = PostNotificationMailer.new_post(subscribers(:confirmed), post)
+
+    assert_includes mail.html_part.body.to_s, "/posts/#{post.slug}\""
+    assert_match %r{/posts/#{post.slug}$}, mail.text_part.body.to_s
+  end
+
+  test "new_post email links to email preferences" do
+    mail = PostNotificationMailer.new_post(subscribers(:confirmed), posts(:published_post))
+
+    assert_match %r{/email-preferences\?token=}, mail.html_part.body.to_s
+    assert_match %r{/email-preferences\?token=}, mail.text_part.body.to_s
+  end
+
   test "new_post email uses custom background and font" do
     site = SiteSetting.current
     site.update!(email_background_color: "#fafafa", email_font_family: "georgia")

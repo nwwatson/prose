@@ -10,6 +10,18 @@ class SendPostNotificationsJobTest < ActiveJob::TestCase
     end
   end
 
+  test "skips subscribers who chose a digest or no post emails" do
+    post = posts(:published_post)
+    subscribers(:confirmed).update!(email_frequency: :weekly)
+    subscribers(:with_token).update!(email_frequency: :none)
+    immediate_count = Subscriber.confirmed.email_immediate.count
+
+    assert_enqueued_jobs immediate_count, only: ActionMailer::MailDeliveryJob do
+      SendPostNotificationsJob.perform_now(post.id)
+    end
+    assert_equal Subscriber.confirmed.count - 2, immediate_count
+  end
+
   test "does not enqueue email for unconfirmed subscribers" do
     post = posts(:published_post)
 

@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS "x_posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT
 CREATE UNIQUE INDEX "index_x_posts_on_url" ON "x_posts" ("url") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "youtube_videos" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "url" varchar NOT NULL, "video_id" varchar NOT NULL, "title" varchar, "author_name" varchar, "thumbnail_url" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
 CREATE UNIQUE INDEX "index_youtube_videos_on_url" ON "youtube_videos" ("url") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "subscribers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "confirmed_at" datetime(6), "auth_token" varchar, "auth_token_sent_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "identity_id" integer NOT NULL, "source_post_id" integer, "unsubscribed_at" datetime(6) /*application='Prose'*/, CONSTRAINT "fk_rails_5fff778d93"
+CREATE TABLE IF NOT EXISTS "subscribers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "confirmed_at" datetime(6), "auth_token" varchar, "auth_token_sent_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "identity_id" integer NOT NULL, "source_post_id" integer, "unsubscribed_at" datetime(6) /*application='Prose'*/, "email_frequency" integer DEFAULT 0 NOT NULL /*application='Prose'*/, "last_digest_at" datetime(6) /*application='Prose'*/, CONSTRAINT "fk_rails_5fff778d93"
 FOREIGN KEY ("identity_id")
   REFERENCES "identities" ("id")
 , CONSTRAINT "fk_rails_f1d772a46a"
@@ -128,6 +128,7 @@ CREATE UNIQUE INDEX "index_subscribers_on_email" ON "subscribers" ("email") /*ap
 CREATE UNIQUE INDEX "index_subscribers_on_auth_token" ON "subscribers" ("auth_token") /*application='Prose'*/;
 CREATE INDEX "index_subscribers_on_identity_id" ON "subscribers" ("identity_id") /*application='Prose'*/;
 CREATE INDEX "index_subscribers_on_source_post_id" ON "subscribers" ("source_post_id") /*application='Prose'*/;
+CREATE INDEX "index_subscribers_on_email_frequency" ON "subscribers" ("email_frequency") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "api_tokens" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "name" varchar NOT NULL, "token_digest" varchar NOT NULL, "token_prefix" varchar NOT NULL, "last_used_at" datetime(6), "last_used_ip" varchar, "revoked_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_f16b5e0447"
 FOREIGN KEY ("user_id")
   REFERENCES "users" ("id")
@@ -291,6 +292,7 @@ FOREIGN KEY ("post_id")
 CREATE INDEX "index_reading_list_items_on_post_id" ON "reading_list_items" ("post_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_reading_list_items_on_identity_id_and_post_id" ON "reading_list_items" ("identity_id", "post_id") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260918120002'),
 ('20260918120001'),
 ('20260918120000'),
 ('20260918010855'),

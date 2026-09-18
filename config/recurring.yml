@@ -8,20 +8,44 @@
 #     command: "SoftDeletedRecord.due.delete_all"
 #     priority: 2
 #     schedule: at 5am every day
+#
+# Solid Queue loads only the block named after the current environment when one
+# exists, so tasks every environment needs live under `default` and are merged
+# into each environment block.
 
-publish_scheduled_posts:
-  class: PublishScheduledPostsJob
-  schedule: every minute
+default: &default
+  publish_scheduled_posts:
+    class: PublishScheduledPostsJob
+    schedule: every minute
 
-send_scheduled_newsletters:
-  class: SendScheduledNewslettersJob
-  schedule: every minute
+  send_scheduled_newsletters:
+    class: SendScheduledNewslettersJob
+    schedule: every minute
 
-sync_stripe_subscriptions:
-  class: SyncStripeSubscriptionJob
-  schedule: every day at 3am
+  sync_stripe_subscriptions:
+    class: SyncStripeSubscriptionJob
+    schedule: every day at 3am
+
+  # Digest emails for subscribers who chose a weekly or monthly email frequency.
+  # Cron times are in the server time zone (UTC in the Docker image).
+  send_weekly_digests:
+    class: SendDigestsJob
+    args: [ "weekly" ]
+    schedule: "0 8 * * 1" # Mondays at 08:00
+
+  send_monthly_digests:
+    class: SendDigestsJob
+    args: [ "monthly" ]
+    schedule: "0 8 1 * *" # the 1st of each month at 08:00
+
+development:
+  <<: *default
+
+test:
+  <<: *default
 
 production:
+  <<: *default
   clear_solid_queue_finished_jobs:
     command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
     schedule: every hour at minute 12

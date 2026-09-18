@@ -13,6 +13,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **Content Export** — Download your whole site as a Markdown zip (one file per post/page with YAML front matter, plus images) or a full JSON backup including subscribers; exports run in the background from **Admin → Export**
 - **Content Organization** — Categories, tags with searchable combo box and inline creation
 - **Reader Engagement** — Comments with threading and moderation, loves, social share buttons, subscriber magic-link auth, email notifications
+- **Email Digests** — Subscribers choose how often they hear about new posts at `/email-preferences` (linked from every post email and the unsubscribe page): every new post, a weekly digest (Mondays 08:00), a monthly digest (the 1st, 08:00), or no post emails; newsletters are unaffected. Digests use the site's email branding and are skipped when nothing new was published
 - **Reading List** — Readers bookmark posts to `/reading-list`; saved on the device with no account, and synced across devices once they subscribe and sign in
 - **Social Embeds** — X/Twitter and YouTube via oEmbed
 - **Analytics** — Dashboard with view tracking, subscriber growth, post engagement
@@ -255,6 +256,8 @@ env:
     SMTP_USERNAME: your-username
     SMTP_FROM: noreply@yourdomain.com
 ```
+
+Recurring email jobs (post digests, scheduled newsletters) run on the schedules in `config/recurring.yml`. Cron times use the server time zone, which is UTC in the Docker image.
 
 ### Optional: S3-Compatible Storage
 

@@ -204,11 +204,35 @@ es:
       about_description: "%{site_name} es una publicación cuidadosamente elaborada enfocada en ofrecer escritura e ideas de calidad."
     show: {}
 
+  email_preferences:
+    show:
+      title: "Preferencias de correo"
+      intro_html: "Elige con qué frecuencia <strong>%{email}</strong> recibe avisos de nuevas publicaciones."
+      legend: "Frecuencia de correo"
+      unsubscribed_notice: "Esta dirección está dada de baja, así que no recibirá correos hasta que vuelva a suscribirse."
+      save: "Guardar preferencias"
+      return_to_site: "Volver al sitio"
+    frequencies:
+      immediate:
+        label: "Cada nueva publicación"
+        hint: "Un correo en cuanto se publica cada entrada."
+      weekly:
+        label: "Resumen semanal"
+        hint: "Un correo cada lunes con las publicaciones de la semana."
+      monthly:
+        label: "Resumen mensual"
+        hint: "Un correo el día 1 de cada mes con las publicaciones del mes."
+      none:
+        label: "Sin correos de publicaciones"
+        hint: "Deja de recibir avisos de nuevas publicaciones. Seguirás recibiendo los boletines."
+  
   unsubscribes:
     show:
       title: "Cancelar suscripción"
       confirm_message_html: "¿Estás seguro de que quieres cancelar la suscripción de <strong>%{email}</strong> a nuestro boletín?"
       yes_unsubscribe: "Sí, cancelar mi suscripción"
+      fewer_emails: "¿Recibes demasiados correos?"
+      change_frequency: "Cambia a un resumen semanal o mensual."
     create:
       title: "Te has dado de baja"
       removed_html: "<strong>%{email}</strong> ha sido eliminado de nuestra lista de correo."
@@ -347,6 +371,7 @@ es:
         handle: "Nombre de usuario"
         status: "Estado"
         subscribed: "Suscrito"
+        email_frequency: "Frecuencia de correo"
         labels: "Etiquetas"
         add_label: "Agregar etiqueta"
         grant_membership: "Otorgar membresía de cortesía"
@@ -886,6 +911,7 @@ es:
   mailer:
     footer:
       unsubscribe: "Cancelar suscripción"
+      email_preferences: "Preferencias de correo"
 
   comment_mailer:
     reply_notification:
@@ -908,6 +934,19 @@ es:
       click_to_sign_in: "Haz clic en el enlace de abajo para iniciar sesión:"
       sign_in: "Iniciar sesión"
       link_expiry: "Este enlace expirará en 15 minutos."
+  digest_mailer:
+    digest:
+      subject:
+        one: "1 nueva publicación en %{site_name}"
+        other: "%{count} nuevas publicaciones en %{site_name}"
+      heading: "Novedades en %{site_name}"
+      intro:
+        one: "Esta es la publicación de desde tu último resumen."
+        other: "Estas son las %{count} publicaciones de desde tu último resumen."
+      read_more: "Leer más"
+      view_all:
+        one: "Ver 1 publicación más"
+        other: "Ver %{count} publicaciones más"
   post_notification_mailer:
     new_post:
       read_full_post: "Leer la publicación completa"
@@ -943,6 +982,9 @@ es:
       not_authorized: "No estás autorizado para realizar esta acción."
     unsubscribes:
       invalid_link: "Enlace de cancelación de suscripción inválido o expirado."
+    email_preferences:
+      updated: "Tus preferencias de correo se han guardado."
+      invalid_link: "Enlace de preferencias de correo no válido o caducado."
     comments:
       could_not_save: "No se pudo guardar el comentario."
       approved: "Comentario aprobado."

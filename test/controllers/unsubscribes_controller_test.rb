@@ -16,6 +16,12 @@ class UnsubscribesControllerTest < ActionDispatch::IntegrationTest
     assert_match @subscriber.email, response.body
   end
 
+  test "GET show offers switching to a digest instead" do
+    get unsubscribe_path(token: @token)
+
+    assert_select "a[href^='/email-preferences?token=']"
+  end
+
   test "GET show redirects with invalid token" do
     get unsubscribe_path(token: "invalid-token")
     assert_redirected_to root_path

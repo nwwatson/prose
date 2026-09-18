@@ -1,6 +1,7 @@
 class Subscriber < ApplicationRecord
   include Authenticatable
   include Billable
+  include EmailPreferences
   include IdentityBacked
 
   belongs_to :source_post, class_name: "Post", optional: true

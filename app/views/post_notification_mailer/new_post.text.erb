@@ -4,6 +4,7 @@
 
 <% end %><%= t('shared.by') %> <%= @post.user.display_name %>
 
-<%= t('post_notification_mailer.new_post.read_full_post') %>: <%= post_url(@post, slug: @post.slug) %>
+<%= t('post_notification_mailer.new_post.read_full_post') %>: <%= post_url(slug: @post.slug) %>
 
+<%= t('mailer.footer.email_preferences') %>: <%= @email_preferences_url %>
 <%= t('mailer.footer.unsubscribe') %>: <%= @unsubscribe_url %>

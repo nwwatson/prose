@@ -3,7 +3,7 @@ class SendPostNotificationsJob < ApplicationJob
 
   def perform(post_id)
     post = Post.find(post_id)
-    Subscriber.confirmed.find_each do |subscriber|
+    Subscriber.confirmed.email_immediate.find_each do |subscriber|
       PostNotificationMailer.new_post(subscriber, post).deliver_later
     end
   end

@@ -207,11 +207,35 @@ en:
       about_description: "%{site_name} is a thoughtfully crafted publication focused on delivering quality writing and ideas."
     show: {}
 
+  email_preferences:
+    show:
+      title: "Email preferences"
+      intro_html: "Choose how often <strong>%{email}</strong> hears about new posts."
+      legend: "Email frequency"
+      unsubscribed_notice: "This address is unsubscribed, so it won't receive any emails until it subscribes again."
+      save: "Save preferences"
+      return_to_site: "Return to site"
+    frequencies:
+      immediate:
+        label: "Every new post"
+        hint: "An email as soon as each post is published."
+      weekly:
+        label: "Weekly digest"
+        hint: "One email every Monday with the week's posts."
+      monthly:
+        label: "Monthly digest"
+        hint: "One email on the 1st of each month with the month's posts."
+      none:
+        label: "No post emails"
+        hint: "Stop emails about new posts. You'll still get newsletters."
+  
   unsubscribes:
     show:
       title: "Unsubscribe"
       confirm_message_html: "Are you sure you want to unsubscribe <strong>%{email}</strong> from our newsletter?"
       yes_unsubscribe: "Yes, unsubscribe me"
+      fewer_emails: "Getting too many emails?"
+      change_frequency: "Switch to a weekly or monthly digest instead."
     create:
       title: "You've been unsubscribed"
       removed_html: "<strong>%{email}</strong> has been removed from our mailing list."
@@ -351,6 +375,7 @@ en:
         handle: "Handle"
         status: "Status"
         subscribed: "Subscribed"
+        email_frequency: "Email frequency"
         labels: "Labels"
         add_label: "Add label"
         grant_membership: "Grant complimentary membership"
@@ -891,6 +916,7 @@ en:
   mailer:
     footer:
       unsubscribe: "Unsubscribe"
+      email_preferences: "Email preferences"
   comment_mailer:
     reply_notification:
       subject: "New reply to your comment on %{site_name}"
@@ -913,6 +939,19 @@ en:
       click_to_sign_in: "Click the link below to sign in:"
       sign_in: "Sign in"
       link_expiry: "This link will expire in 15 minutes."
+  digest_mailer:
+    digest:
+      subject:
+        one: "1 new post from %{site_name}"
+        other: "%{count} new posts from %{site_name}"
+      heading: "What's new at %{site_name}"
+      intro:
+        one: "Here's the post published since your last digest."
+        other: "Here are the %{count} posts published since your last digest."
+      read_more: "Read more"
+      view_all:
+        one: "See 1 more post"
+        other: "See %{count} more posts"
   post_notification_mailer:
     new_post:
       read_full_post: "Read the full post"
@@ -949,6 +988,9 @@ en:
       not_authorized: "You are not authorized to perform this action."
     unsubscribes:
       invalid_link: "Invalid or expired unsubscribe link."
+    email_preferences:
+      updated: "Your email preferences have been saved."
+      invalid_link: "Invalid or expired email preferences link."
     comments:
       could_not_save: "Comment could not be saved."
       approved: "Comment approved."

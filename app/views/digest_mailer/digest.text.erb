@@ -1,0 +1,17 @@
+<%= t('digest_mailer.digest.heading', site_name: @site_name) %>
+
+<%= t('digest_mailer.digest.intro', count: @total_count) %>
+<% @posts.each do |post| %>
+
+<%= post.title %>
+<%= t('shared.by') %> <%= post.user.display_name %> - <%= l(post.published_at.to_date, format: :long) %>
+<% if post.seo_description.present? %><%= post.seo_description %>
+<% end %><%= t('digest_mailer.digest.read_more') %>: <%= post_url(slug: post.slug) %>
+<% end %>
+<% if @total_count > @posts.size %>
+
+<%= t('digest_mailer.digest.view_all', count: @total_count - @posts.size) %>: <%= root_url %>
+<% end %>
+
+<%= t('mailer.footer.email_preferences') %>: <%= @email_preferences_url %>
+<%= t('mailer.footer.unsubscribe') %>: <%= @unsubscribe_url %>

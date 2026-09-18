@@ -9,6 +9,10 @@
       <% end %>
       <% if @unsubscribe_url.present? %>
         <p style="margin: 0;">
+          <% if @email_preferences_url.present? %>
+            <a href="<%= @email_preferences_url %>" style="color: #71717a; text-decoration: underline;"><%= t('mailer.footer.email_preferences') %></a>
+            &middot;
+          <% end %>
           <a href="<%= @unsubscribe_url %>" style="color: #71717a; text-decoration: underline;"><%= t('mailer.footer.unsubscribe') %></a>
         </p>
       <% end %>

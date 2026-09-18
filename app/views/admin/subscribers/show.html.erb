@@ -16,6 +16,10 @@
       <dt class="text-sm font-medium text-gray-500"><%= t('admin.subscribers.show.subscribed') %></dt>
       <dd class="mt-1 text-sm text-gray-900"><%= l(@subscriber.created_at.to_date, format: :long) %></dd>
     </div>
+    <div class="rounded-lg bg-white p-4 shadow ring-1 ring-gray-200">
+      <dt class="text-sm font-medium text-gray-500"><%= t('admin.subscribers.show.email_frequency') %></dt>
+      <dd class="mt-1 text-sm text-gray-900"><%= t("email_preferences.frequencies.#{@subscriber.email_frequency}.label") %></dd>
+    </div>
   </dl>
 
   <%# Labels management %>

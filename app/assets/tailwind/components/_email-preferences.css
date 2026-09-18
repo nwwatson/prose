@@ -1,0 +1,65 @@
+/* ==========================================================================
+ * .email-preferences — Subscriber email frequency page BEM block
+ *
+ * Usage:
+ *   .email-preferences                Page container
+ *   .email-preferences__heading       Page heading
+ *   .email-preferences__message       Intro text
+ *   .email-preferences__notice        Muted note (e.g. already unsubscribed)
+ *   .email-preferences__options       Radio option list (fieldset)
+ *   .email-preferences__option        One selectable option (label)
+ *   .email-preferences__radio         Radio input
+ *   .email-preferences__option-label  Option name
+ *   .email-preferences__option-hint   Option description
+ *   .email-preferences__error         Validation error text
+ *   .email-preferences__action        Submit button container
+ *   .email-preferences__footer        Secondary links (unsubscribe/return)
+ * ========================================================================== */
+
+.email-preferences {
+  @apply mx-auto max-w-md py-16;
+}
+
+.email-preferences__heading {
+  @apply text-center text-2xl font-bold text-gray-900 dark:text-gray-100;
+}
+
+.email-preferences__message {
+  @apply mt-4 text-center text-gray-600 dark:text-gray-400;
+}
+
+.email-preferences__notice {
+  @apply mt-4 rounded-md bg-gray-100 px-4 py-3 text-center text-sm text-gray-600 dark:bg-gray-800 dark:text-gray-300;
+}
+
+.email-preferences__options {
+  @apply mt-8 space-y-3;
+}
+
+.email-preferences__option {
+  @apply flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400 has-[:checked]:border-gray-900 dark:border-gray-700 dark:hover:border-gray-500 dark:has-[:checked]:border-gray-100;
+}
+
+.email-preferences__radio {
+  @apply mt-1 accent-gray-900 dark:accent-gray-100;
+}
+
+.email-preferences__option-label {
+  @apply block font-medium text-gray-900 dark:text-gray-100;
+}
+
+.email-preferences__option-hint {
+  @apply block text-sm text-gray-500 dark:text-gray-400;
+}
+
+.email-preferences__error {
+  @apply mt-4 text-center text-sm text-red-600 dark:text-red-400;
+}
+
+.email-preferences__action {
+  @apply mt-6 text-center;
+}
+
+.email-preferences__footer {
+  @apply mt-6 text-center text-sm text-gray-500 dark:text-gray-400;
+}

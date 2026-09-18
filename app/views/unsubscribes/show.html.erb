@@ -12,6 +12,11 @@
           class: "btn btn--danger" %>
   <% end %>
 
+  <p class="unsubscribe-page__sub-message">
+    <%= t('unsubscribes.show.fewer_emails') %>
+    <%= link_to t('unsubscribes.show.change_frequency'), email_preferences_path(token: @subscriber.email_preferences_token), class: "text-link" %>
+  </p>
+
   <p class="unsubscribe-page__cancel">
     <%= link_to t('shared.cancel'), root_path, class: "text-link--muted" %>
   </p>

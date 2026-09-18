@@ -49,6 +49,7 @@ Rails.application.routes.draw do
   resource :handle, only: [ :update ]
   resource :handle_availability, only: [ :show ]
   resource :unsubscribe, only: [ :show, :create ]
+  resource :email_preferences, only: [ :show, :update ], path: "email-preferences"
   resource :comment_notification, only: [ :destroy ]
   resource :reading_list, only: [ :show ], path: "reading-list", controller: "reading_list" do
     resources :posts, only: [ :index ], controller: "reading_list_posts"
