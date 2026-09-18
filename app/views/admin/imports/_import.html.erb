@@ -1,0 +1,45 @@
+<%# locals: (import:) %>
+<li id="<%= dom_id(import) %>" class="p-4">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div class="min-w-0">
+      <div class="flex flex-wrap items-center gap-2">
+        <p class="text-sm font-medium text-gray-900"><%= t("admin.imports.sources.#{import.source}") %></p>
+        <%= status_badge(t("admin.shared.processing_statuses.#{import.status}"), color_class: processing_status_color(import.status), size: :sm) %>
+      </div>
+      <p class="mt-1 text-xs text-gray-500">
+        <%= l(import.created_at, format: :with_time) %>
+        <% if import.user %>· <%= import.user.display_name %><% end %>
+        <% if import.file.attached? %>· <%= import.file.filename %><% end %>
+      </p>
+      <% if import.completed? %>
+        <p class="mt-1 text-xs text-gray-700">
+          <%= t('admin.imports.index.summary',
+                posts: import.stat(:posts_imported), pages: import.stat(:pages_imported),
+                media: import.stat(:media_downloaded), skipped: import.stat(:skipped)) %>
+          <% if import.stat(:failed).positive? %>· <%= t('admin.imports.index.failed_items', count: import.stat(:failed)) %><% end %>
+        </p>
+      <% end %>
+      <% if import.failed? && import.error_message.present? %>
+        <p class="mt-1 text-xs text-red-700"><%= import.error_message %></p>
+      <% end %>
+    </div>
+
+    <%= button_to t('shared.delete'), admin_import_path(import), method: :delete,
+          class: "self-start rounded-md bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-100 sm:self-auto",
+          data: { turbo_confirm: t('admin.imports.index.delete_confirm') } %>
+  </div>
+
+  <% if import.warnings.any? %>
+    <details class="mt-2">
+      <summary class="cursor-pointer text-xs font-medium text-yellow-800"><%= t('admin.imports.index.warnings', count: import.warnings.size + import.stat(:warnings_truncated)) %></summary>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-xs text-gray-600">
+        <% import.warnings.each do |warning| %>
+          <li><%= warning %></li>
+        <% end %>
+        <% if import.stat(:warnings_truncated).positive? %>
+          <li><%= t('admin.imports.index.more_warnings', count: import.stat(:warnings_truncated)) %></li>
+        <% end %>
+      </ul>
+    </details>
+  <% end %>
+</li>

@@ -101,6 +101,7 @@ class Admin::SetupControllerTest < ActionDispatch::IntegrationTest
     NewsletterDelivery.delete_all
     Newsletter.delete_all
     Export.delete_all
+    Import.delete_all
     User.delete_all
   end
 end

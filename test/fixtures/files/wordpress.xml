@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0"
+	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:wp="http://wordpress.org/export/1.2/"
+>
+<channel>
+	<title>My WordPress Blog</title>
+	<link>https://wp.example.com</link>
+	<wp:wxr_version>1.2</wp:wxr_version>
+	<wp:author><wp:author_id>1</wp:author_id><wp:author_login><![CDATA[jane]]></wp:author_login><wp:author_email><![CDATA[jane@example.com]]></wp:author_email></wp:author>
+	<wp:category><wp:term_id>2</wp:term_id><wp:category_nicename><![CDATA[travel]]></wp:category_nicename><wp:cat_name><![CDATA[Travel]]></wp:cat_name></wp:category>
+
+	<item>
+		<title><![CDATA[Hero image]]></title>
+		<wp:post_id>10</wp:post_id>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:attachment_url><![CDATA[https://wp.example.com/wp-content/uploads/2024/01/hero.jpg]]></wp:attachment_url>
+	</item>
+
+	<item>
+		<title><![CDATA[Hello &amp; Welcome]]></title>
+		<dc:creator><![CDATA[jane]]></dc:creator>
+		<content:encoded><![CDATA[<!-- wp:paragraph -->
+<p>First <strong>paragraph</strong>.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:image -->
+<figure class="wp-block-image"><img src="https://wp.example.com/wp-content/uploads/2024/01/inline.png" alt="Inline"/><figcaption>An inline image</figcaption></figure>
+<!-- /wp:image -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[A short summary of the post.]]></excerpt:encoded>
+		<wp:post_id>11</wp:post_id>
+		<wp:post_date><![CDATA[2024-01-15 09:30:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2024-01-15 14:30:00]]></wp:post_date_gmt>
+		<wp:post_name><![CDATA[hello-welcome]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_type><![CDATA[post]]></wp:post_type>
+		<category domain="category" nicename="travel"><![CDATA[Travel]]></category>
+		<category domain="category" nicename="food"><![CDATA[Food]]></category>
+		<category domain="post_tag" nicename="europe"><![CDATA[Europe]]></category>
+		<wp:postmeta><wp:meta_key><![CDATA[_thumbnail_id]]></wp:meta_key><wp:meta_value><![CDATA[10]]></wp:meta_value></wp:postmeta>
+	</item>
+
+	<item>
+		<title><![CDATA[Classic Draft]]></title>
+		<content:encoded><![CDATA[Line one of a classic post.
+Still paragraph one.
+
+[caption id="attachment_5" align="aligncenter" width="300"]<img src="https://wp.example.com/uploads/cat.jpg" alt="cat" /> A sleepy cat[/caption]
+
+[embed]https://www.youtube.com/watch?v=abc123[/embed]
+
+[gallery ids="1,2,3"]
+
+Some text with [sic] and [custom_widget id="4"] inside.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>12</wp:post_id>
+		<wp:post_date_gmt><![CDATA[0000-00-00 00:00:00]]></wp:post_date_gmt>
+		<wp:post_date><![CDATA[2024-02-01 08:00:00]]></wp:post_date>
+		<wp:post_name><![CDATA[]]></wp:post_name>
+		<wp:status><![CDATA[draft]]></wp:status>
+		<wp:post_type><![CDATA[post]]></wp:post_type>
+		<category domain="category" nicename="uncategorized"><![CDATA[Uncategorized]]></category>
+	</item>
+
+	<item>
+		<title><![CDATA[Future Post]]></title>
+		<content:encoded><![CDATA[<p>Coming soon.</p>]]></content:encoded>
+		<wp:post_id>13</wp:post_id>
+		<wp:post_date_gmt><![CDATA[2099-06-01 12:00:00]]></wp:post_date_gmt>
+		<wp:post_name><![CDATA[future-post]]></wp:post_name>
+		<wp:status><![CDATA[future]]></wp:status>
+		<wp:post_type><![CDATA[post]]></wp:post_type>
+	</item>
+
+	<item>
+		<title><![CDATA[Trashed]]></title>
+		<content:encoded><![CDATA[<p>Gone.</p>]]></content:encoded>
+		<wp:post_id>14</wp:post_id>
+		<wp:post_name><![CDATA[trashed]]></wp:post_name>
+		<wp:status><![CDATA[trash]]></wp:status>
+		<wp:post_type><![CDATA[post]]></wp:post_type>
+	</item>
+
+	<item>
+		<title><![CDATA[About Me]]></title>
+		<content:encoded><![CDATA[<p>I write things.</p>]]></content:encoded>
+		<wp:post_id>20</wp:post_id>
+		<wp:post_date_gmt><![CDATA[2023-05-01 10:00:00]]></wp:post_date_gmt>
+		<wp:post_name><![CDATA[about-me]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_type><![CDATA[page]]></wp:post_type>
+		<wp:menu_order>3</wp:menu_order>
+	</item>
+
+	<item>
+		<title><![CDATA[Feed]]></title>
+		<content:encoded><![CDATA[<p>Reserved slug.</p>]]></content:encoded>
+		<wp:post_id>21</wp:post_id>
+		<wp:post_name><![CDATA[feed]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_type><![CDATA[page]]></wp:post_type>
+	</item>
+
+	<item>
+		<title><![CDATA[Menu item]]></title>
+		<wp:post_id>30</wp:post_id>
+		<wp:post_type><![CDATA[nav_menu_item]]></wp:post_type>
+		<wp:status><![CDATA[publish]]></wp:status>
+	</item>
+</channel>
+</rss>

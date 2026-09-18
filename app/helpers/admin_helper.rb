@@ -82,7 +82,7 @@ module AdminHelper
     end
   end
 
-  def export_status_color(status)
+  def processing_status_color(status)
     case status
     when "completed" then "bg-green-100 text-green-800"
     when "processing" then "bg-blue-100 text-blue-800"

@@ -1,0 +1,8 @@
+<%# locals: (current:) %>
+<nav class="flex gap-2 border-b border-gray-200" aria-label="<%= t('layouts.admin.import_export') %>">
+  <% { imports: admin_imports_path, exports: admin_exports_path }.each do |key, path| %>
+    <%= link_to t("admin.shared.import_export_tabs.#{key}"), path,
+          class: "-mb-px border-b-2 px-3 py-2 text-sm font-medium #{current == key ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700'}",
+          aria: { current: (current == key ? "page" : nil) } %>
+  <% end %>
+</nav>

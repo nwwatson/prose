@@ -64,7 +64,7 @@
         <%= admin_nav_link t('layouts.admin.passkeys'), admin_passkeys_path, icon: "finger-print" %>
         <%= admin_nav_link t('layouts.admin.api_tokens'), admin_api_tokens_path, icon: "key" %>
         <%= admin_nav_link t('layouts.admin.webhooks'), admin_webhooks_path, icon: "bolt" if current_user.admin? %>
-        <%= admin_nav_link t('layouts.admin.exports'), admin_exports_path, icon: "arrow-down-tray" if current_user.admin? %>
+        <%= admin_nav_link t('layouts.admin.import_export'), admin_imports_path, icon: "arrow-down-tray" if current_user.admin? %>
       </div>
     </div>
   </nav>

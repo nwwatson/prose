@@ -1,0 +1,6 @@
+completed_wordpress:
+  user: admin
+  source: 0
+  status: 2
+  completed_at: <%= 1.hour.ago %>
+  stats: <%= { "posts_imported" => 3, "pages_imported" => 1, "media_downloaded" => 2, "skipped" => 1, "warnings" => ["Classic Draft: Left unrecognized shortcode [sic] as text"], "warnings_truncated" => 0 }.to_json %>
