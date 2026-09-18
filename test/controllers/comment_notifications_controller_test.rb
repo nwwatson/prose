@@ -10,7 +10,7 @@ class CommentNotificationsControllerTest < ActionDispatch::IntegrationTest
 
     comment.reload
     assert_not comment.notify_on_reply?
-    assert_redirected_to post_path(comment.post, slug: comment.post.slug)
+    assert_redirected_to post_path(slug: comment.post.slug)
   end
 
   test "DELETE with invalid token redirects to root" do

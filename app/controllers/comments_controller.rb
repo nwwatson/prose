@@ -12,12 +12,12 @@ class CommentsController < ApplicationController
     if @comment.save
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.append("comments", partial: "comments/comment", locals: { comment: @comment, post: @post }) }
-        format.html { redirect_to post_path(@post, slug: @post.slug, anchor: "comment_#{@comment.id}") }
+        format.html { redirect_to post_path(slug: @post.slug, anchor: "comment_#{@comment.id}") }
       end
     else
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_form", partial: "comments/form", locals: { post: @post, comment: @comment }) }
-        format.html { redirect_to post_path(@post, slug: @post.slug), alert: t("flash.comments.could_not_save") }
+        format.html { redirect_to post_path(slug: @post.slug), alert: t("flash.comments.could_not_save") }
       end
     end
   end
@@ -26,12 +26,12 @@ class CommentsController < ApplicationController
     if @comment.update(body: comment_params[:body], edited_at: Time.current)
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_#{@comment.id}", partial: "comments/comment", locals: { comment: @comment, post: @post }) }
-        format.html { redirect_to post_path(@post, slug: @post.slug, anchor: "comment_#{@comment.id}") }
+        format.html { redirect_to post_path(slug: @post.slug, anchor: "comment_#{@comment.id}") }
       end
     else
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.replace("edit_comment_#{@comment.id}", partial: "comments/edit_form", locals: { post: @post, comment: @comment }) }
-        format.html { redirect_to post_path(@post, slug: @post.slug), alert: t("flash.comments.could_not_save") }
+        format.html { redirect_to post_path(slug: @post.slug), alert: t("flash.comments.could_not_save") }
       end
     end
   end
@@ -41,7 +41,7 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_#{@comment.id}", partial: "comments/comment", locals: { comment: @comment, post: @post }) }
-      format.html { redirect_to post_path(@post, slug: @post.slug), notice: t("flash.comments.deleted") }
+      format.html { redirect_to post_path(slug: @post.slug), notice: t("flash.comments.deleted") }
     end
   end
 
@@ -53,13 +53,13 @@ class CommentsController < ApplicationController
 
   def authorize_edit
     unless @comment.editable_by?(current_identity)
-      redirect_to post_path(@post, slug: @post.slug), alert: t("flash.comments.cannot_edit")
+      redirect_to post_path(slug: @post.slug), alert: t("flash.comments.cannot_edit")
     end
   end
 
   def authorize_delete
     unless @comment.deletable_by?(current_identity)
-      redirect_to post_path(@post, slug: @post.slug), alert: t("flash.comments.cannot_delete")
+      redirect_to post_path(slug: @post.slug), alert: t("flash.comments.cannot_delete")
     end
   end
 

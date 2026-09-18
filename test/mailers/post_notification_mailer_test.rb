@@ -61,4 +61,12 @@ class PostNotificationMailerTest < ActionMailer::TestCase
 
     assert_includes mail.body.encoded, "Thanks for reading our blog!"
   end
+
+  test "new_post email links to the plain post URL" do
+    post = posts(:published_post)
+    mail = PostNotificationMailer.new_post(subscribers(:confirmed), post)
+
+    assert_includes mail.html_part.body.to_s, "/posts/#{post.slug}\""
+    assert_match %r{/posts/#{post.slug}$}, mail.text_part.body.to_s
+  end
 end

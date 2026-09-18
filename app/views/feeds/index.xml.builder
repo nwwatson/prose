@@ -16,8 +16,8 @@ xml.rss version: "2.0",
         xml.description post.seo_description if post.seo_description.present?
         xml.tag! "content:encoded", post.content.to_s
         xml.pubDate post.published_at.rfc822
-        xml.link post_url(post, slug: post.slug)
-        xml.guid post_url(post, slug: post.slug)
+        xml.link post_url(slug: post.slug)
+        xml.guid post_url(slug: post.slug)
         xml.tag! "dc:creator", post.user.display_name
         xml.category post.category.name if post.category.present?
         post.tags.each do |tag|

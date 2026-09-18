@@ -3,7 +3,7 @@
     <div class="post-nav__inner">
       <div class="post-nav__side">
         <% if previous_post %>
-          <%= link_to post_path(previous_post, slug: previous_post.slug), class: "post-nav__link group" do %>
+          <%= link_to post_path(slug: previous_post.slug), class: "post-nav__link group" do %>
             <span class="post-nav__label">&larr; <%= t('posts.post_navigation.previous_post') %></span>
             <p class="post-nav__title"><%= previous_post.title %></p>
           <% end %>
@@ -11,7 +11,7 @@
       </div>
       <div class="post-nav__side post-nav__side--right">
         <% if next_post %>
-          <%= link_to post_path(next_post, slug: next_post.slug), class: "post-nav__link group" do %>
+          <%= link_to post_path(slug: next_post.slug), class: "post-nav__link group" do %>
             <span class="post-nav__label"><%= t('posts.post_navigation.next_post') %> &rarr;</span>
             <p class="post-nav__title"><%= next_post.title %></p>
           <% end %>

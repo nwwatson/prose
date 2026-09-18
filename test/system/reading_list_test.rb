@@ -23,7 +23,7 @@ class ReadingListTest < ApplicationSystemTestCase
 
   test "un-saving updates every button for that post and empties the list" do
     post = posts(:published_post)
-    visit post_path(post, slug: post.slug)
+    visit post_path(slug: post.slug)
 
     find("button.bookmark-btn[data-bookmark-post-id-value='#{post.id}']").click
     assert_equal [ post.id ], stored_ids

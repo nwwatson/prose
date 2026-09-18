@@ -33,13 +33,13 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET show renders published post" do
-    get post_path(posts(:published_post), slug: posts(:published_post).slug)
+    get post_path(slug: posts(:published_post).slug)
     assert_response :success
     assert_select "h1", text: posts(:published_post).title
   end
 
   test "GET show returns 404 for draft post" do
-    get post_path(posts(:draft_post), slug: posts(:draft_post).slug)
+    get post_path(slug: posts(:draft_post).slug)
     assert_response :not_found
   end
 
@@ -47,7 +47,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     SiteSetting.current.update!(locale: "es")
     post = posts(:published_post)
 
-    get post_path(post, slug: post.slug)
+    get post_path(slug: post.slug)
 
     assert_response :success
     assert_select "time", text: I18n.l(post.published_at.to_date, format: :long, locale: :es)
@@ -56,7 +56,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET show includes meta tags" do
-    get post_path(posts(:published_post), slug: posts(:published_post).slug)
+    get post_path(slug: posts(:published_post).slug)
     assert_response :success
     assert_select "meta[property='og:title']" do |elements|
       assert_equal posts(:published_post).title, elements.first["content"]
@@ -64,7 +64,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET show includes JSON-LD" do
-    get post_path(posts(:published_post), slug: posts(:published_post).slug)
+    get post_path(slug: posts(:published_post).slug)
     assert_select "script[type='application/ld+json']"
   end
 
@@ -128,7 +128,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     end
 
     ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
-      get post_path(post, slug: post.slug)
+      get post_path(slug: post.slug)
     end
 
     assert_response :success
@@ -140,7 +140,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     post = posts(:published_post)
     post.update_columns(title: %q(Tips & "Tricks" <b>?</b> #1))
 
-    get post_path(post, slug: post.slug)
+    get post_path(slug: post.slug)
 
     assert_response :success
     share_url = "http://www.example.com/posts/#{post.slug}"

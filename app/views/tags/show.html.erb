@@ -4,7 +4,7 @@
   <%= seo_head_tags(
         title: "Tagged: #{@tag.name} — #{site_name}",
         description: "Posts tagged with #{@tag.name}",
-        url: tag_url(@tag, slug: @tag.slug)
+        url: tag_url(slug: @tag.slug)
       ) %>
 <% end %>
 

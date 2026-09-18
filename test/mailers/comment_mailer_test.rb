@@ -25,4 +25,14 @@ class CommentMailerTest < ActionMailer::TestCase
     email = CommentMailer.reply_notification(reply)
     assert_includes email.html_part.body.to_s, "comment_notification"
   end
+
+  test "reply_notification links to the comment on the plain post URL" do
+    reply = comments(:reply)
+    reply.parent_comment.update!(notify_on_reply: true)
+
+    email = CommentMailer.reply_notification(reply)
+    expected = "/posts/#{reply.post.slug}#comment_#{reply.id}"
+    assert_includes email.html_part.body.to_s, expected
+    assert_includes email.text_part.body.to_s, expected
+  end
 end

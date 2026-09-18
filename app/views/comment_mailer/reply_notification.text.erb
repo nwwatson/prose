@@ -4,6 +4,6 @@
 
 "<%= truncate(strip_tags(@comment.rendered_body), length: 300) %>"
 
-<%= t('comment_mailer.reply_notification.view_comment') %>: <%= post_url(@post, slug: @post.slug, anchor: "comment_#{@comment.id}") %>
+<%= t('comment_mailer.reply_notification.view_comment') %>: <%= post_url(slug: @post.slug, anchor: "comment_#{@comment.id}") %>
 
 <%= t('comment_mailer.reply_notification.unsubscribe_text') %>: <%= @unsubscribe_url %>

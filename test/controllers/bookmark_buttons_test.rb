@@ -11,7 +11,7 @@ class BookmarkButtonsTest < ActionDispatch::IntegrationTest
   test "the post page renders a bookmark button for the post" do
     post = posts(:published_post)
 
-    get post_path(post, slug: post.slug)
+    get post_path(slug: post.slug)
 
     assert_select ".post-detail__meta button.bookmark-btn[data-controller='bookmark'][data-bookmark-post-id-value='#{post.id}']"
   end

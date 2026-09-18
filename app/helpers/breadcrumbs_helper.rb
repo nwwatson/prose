@@ -10,8 +10,8 @@ module BreadcrumbsHelper
       category = post.category
       items << {
         name: category.name,
-        path: category_path(category, slug: category.slug),
-        url: category_url(category, slug: category.slug)
+        path: category_path(slug: category.slug),
+        url: category_url(slug: category.slug)
       }
     end
 

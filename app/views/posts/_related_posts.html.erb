@@ -5,7 +5,7 @@
       <% related_posts.each do |post| %>
         <article>
           <% if post.featured_image.attached? %>
-            <%= link_to post_path(post, slug: post.slug) do %>
+            <%= link_to post_path(slug: post.slug) do %>
               <%= image_tag post.featured_image.variant(resize_to_fill: [400, 225]),
                     class: "related-posts__image",
                     alt: post.title,
@@ -13,7 +13,7 @@
             <% end %>
           <% end %>
           <h4 class="related-posts__title">
-            <%= link_to post.title, post_path(post, slug: post.slug),
+            <%= link_to post.title, post_path(slug: post.slug),
                   class: "related-posts__link" %>
           </h4>
           <%= published_on(post, class: "related-posts__date") %>

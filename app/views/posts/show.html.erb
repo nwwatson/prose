@@ -28,7 +28,7 @@
       <span><%= @post.reading_time_minutes %> <%= t('shared.min_read') %></span>
       <% if @post.category %>
         <span class="post-meta__separator">&middot;</span>
-        <%= link_to @post.category.name, category_path(@post.category, slug: @post.category.slug), class: "text-link--category" %>
+        <%= link_to @post.category.name, category_path(slug: @post.category.slug), class: "text-link--category" %>
       <% end %>
       <%= bookmark_button(@post) %>
     </div>
@@ -61,7 +61,7 @@
     <% if @post.tags.any? %>
       <footer class="post-detail__tags">
         <% @post.tags.each do |post_tag| %>
-          <%= link_to post_tag.name, tag_path(post_tag, slug: post_tag.slug),
+          <%= link_to post_tag.name, tag_path(slug: post_tag.slug),
                 class: "post-detail__tag" %>
         <% end %>
       </footer>

@@ -113,7 +113,7 @@ class MetaTagsHelperTest < ActionView::TestCase
     assert_equal [ @post.seo_description ], doc.css("meta[name='description']").map { |t| t["content"] }
     assert_equal [ @post.published_at.iso8601 ], doc.css("meta[property='article:published_time']").map { |t| t["content"] }
     assert_equal @post.tags.map(&:name).sort, doc.css("meta[property='article:tag']").map { |t| t["content"] }.sort
-    assert_equal [ post_url(@post, slug: @post.slug) ], doc.css("link[rel='canonical']").map { |t| t["href"] }
+    assert_equal [ post_url(slug: @post.slug) ], doc.css("link[rel='canonical']").map { |t| t["href"] }
 
     assert_operator html.index("og:site_name"), :<, html.index("article:published_time")
     assert_operator html.index("article:published_time"), :<, html.index("twitter:card")

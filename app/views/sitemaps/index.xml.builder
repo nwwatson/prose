@@ -17,7 +17,7 @@ xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9" do
 
   @posts.each do |post|
     xml.url do
-      xml.loc post_url(post, slug: post.slug)
+      xml.loc post_url(slug: post.slug)
       xml.lastmod post.updated_at.iso8601
       xml.changefreq "weekly"
       xml.priority 0.8
@@ -26,7 +26,7 @@ xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9" do
 
   @categories.each do |category|
     xml.url do
-      xml.loc category_url(category, slug: category.slug)
+      xml.loc category_url(slug: category.slug)
       xml.changefreq "weekly"
       xml.priority 0.6
     end
@@ -34,7 +34,7 @@ xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9" do
 
   @tags.each do |tag|
     xml.url do
-      xml.loc tag_url(tag, slug: tag.slug)
+      xml.loc tag_url(slug: tag.slug)
       xml.changefreq "weekly"
       xml.priority 0.5
     end

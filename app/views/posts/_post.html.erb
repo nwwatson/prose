@@ -4,7 +4,7 @@
   <article class="post-card<%= " post-card--featured" if featured %>">
     <header>
       <%= content_tag heading, class: "post-card__title" do %>
-        <%= link_to post.title, post_path(post, slug: post.slug), class: "post-card__link" %>
+        <%= link_to post.title, post_path(slug: post.slug), class: "post-card__link" %>
       <% end %>
       <% if show_subtitle && post.subtitle.present? %>
         <p class="post-card__subtitle"><%= post.subtitle %></p>
@@ -21,7 +21,7 @@
         <% end %>
         <% if show_category && post.category %>
           <span class="post-meta__separator">&middot;</span>
-          <%= link_to post.category.name, category_path(post.category, slug: post.category.slug), class: "text-link--category" %>
+          <%= link_to post.category.name, category_path(slug: post.category.slug), class: "text-link--category" %>
         <% end %>
         <%= bookmark_button(post) %>
       </div>

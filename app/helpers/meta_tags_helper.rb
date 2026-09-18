@@ -63,7 +63,7 @@ module MetaTagsHelper
     seo_head_tags(
       title: post.title,
       description: post.seo_description,
-      url: post_url(post, slug: post.slug),
+      url: post_url(slug: post.slug),
       type: "article",
       image: post_og_image_url(post),
       extra_tags: article_meta_tags(post)

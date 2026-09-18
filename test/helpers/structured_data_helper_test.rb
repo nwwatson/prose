@@ -68,7 +68,7 @@ class StructuredDataHelperTest < ActionView::TestCase
     @post.save!
     result = json_ld_breadcrumb_list(@post)
 
-    category_url_str = category_url(@category, slug: @category.slug)
+    category_url_str = category_url(slug: @category.slug)
     assert_includes result, category_url_str
   end
 

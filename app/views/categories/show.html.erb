@@ -5,8 +5,8 @@
   <%= seo_head_tags(
         title: "#{@category.name} — #{site_name}",
         description: cat_description,
-        url: category_url(@category, slug: @category.slug),
-        json_ld: { "@context": "https://schema.org", "@type": "CollectionPage", name: @category.name, description: cat_description, url: category_url(@category, slug: @category.slug) }
+        url: category_url(slug: @category.slug),
+        json_ld: { "@context": "https://schema.org", "@type": "CollectionPage", name: @category.name, description: cat_description, url: category_url(slug: @category.slug) }
       ) %>
 <% end %>
 

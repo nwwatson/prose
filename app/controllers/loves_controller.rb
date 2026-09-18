@@ -7,7 +7,7 @@ class LovesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("love_button_#{@post.id}", partial: "loves/button", locals: { post: @post.reload }) }
-      format.html { redirect_to post_path(@post, slug: @post.slug) }
+      format.html { redirect_to post_path(slug: @post.slug) }
     end
   end
 
@@ -17,7 +17,7 @@ class LovesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("love_button_#{@post.id}", partial: "loves/button", locals: { post: @post.reload }) }
-      format.html { redirect_to post_path(@post, slug: @post.slug) }
+      format.html { redirect_to post_path(slug: @post.slug) }
     end
   end
 end

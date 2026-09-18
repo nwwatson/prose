@@ -13,7 +13,7 @@
 </div>
 
 <%= render "mailer/cta_button",
-           url: post_url(@post, slug: @post.slug, anchor: "comment_#{@comment.id}"),
+           url: post_url(slug: @post.slug, anchor: "comment_#{@comment.id}"),
            label: t('comment_mailer.reply_notification.view_comment'),
            color: @email_accent_color %>
 

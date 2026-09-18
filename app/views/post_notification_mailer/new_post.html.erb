@@ -13,6 +13,6 @@
 </p>
 
 <%= render "mailer/cta_button",
-           url: post_url(@post, slug: @post.slug),
+           url: post_url(slug: @post.slug),
            label: t('post_notification_mailer.new_post.read_full_post'),
            color: @email_accent_color %>

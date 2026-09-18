@@ -44,7 +44,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     comment = comments(:top_level)
 
     patch post_comment_path(posts(:published_post), comment), params: { comment: { body: "Should fail" } }
-    assert_redirected_to post_path(posts(:published_post), slug: posts(:published_post).slug)
+    assert_redirected_to post_path(slug: posts(:published_post).slug)
     comment.reload
     assert_equal "Great post!", comment.body
   end
@@ -54,7 +54,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     comment = comments(:recent_comment)
 
     patch post_comment_path(posts(:published_post), comment), params: { comment: { body: "Not my comment" } }
-    assert_redirected_to post_path(posts(:published_post), slug: posts(:published_post).slug)
+    assert_redirected_to post_path(slug: posts(:published_post).slug)
     comment.reload
     assert_equal "A recent comment within edit window", comment.body
   end
@@ -74,7 +74,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     comment = comments(:recent_comment)
 
     delete post_comment_path(posts(:published_post), comment)
-    assert_redirected_to post_path(posts(:published_post), slug: posts(:published_post).slug)
+    assert_redirected_to post_path(slug: posts(:published_post).slug)
     comment.reload
     assert_not comment.deleted?
   end
