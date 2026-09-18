@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # MCP endpoint for Claude Desktop integration
-  post "mcp", to: "mcp/sessions#create"
+  match "mcp", to: "mcp/sessions#handle", via: %i[get post delete]
 
   # REST API
   namespace :api do

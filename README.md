@@ -88,17 +88,19 @@ Prose exposes a [Model Context Protocol](https://modelcontextprotocol.io) server
 
    **Claude Code:**
    ```bash
-   claude mcp add prose --transport streamable-http https://your-domain.com/mcp \
+   claude mcp add --transport http prose https://your-domain.com/mcp \
      --header "Authorization: Bearer prose_YOUR_TOKEN"
    ```
 
-   **Claude Desktop** — add to `claude_desktop_config.json`:
+   **Claude Desktop** connects through the [`mcp-remote`](https://www.npmjs.com/package/mcp-remote) bridge (requires Node.js). Add this to `claude_desktop_config.json`:
    ```json
    {
      "mcpServers": {
        "prose": {
-         "url": "https://your-domain.com/mcp",
-         "headers": { "Authorization": "Bearer prose_YOUR_TOKEN" }
+         "command": "npx",
+         "args": ["-y", "mcp-remote", "https://your-domain.com/mcp",
+                  "--header", "Authorization:${PROSE_AUTH_HEADER}"],
+         "env": { "PROSE_AUTH_HEADER": "Bearer prose_YOUR_TOKEN" }
        }
      }
    }

@@ -95,7 +95,8 @@ class McpFlowTest < ActionDispatch::IntegrationTest
       params: body.to_json,
       headers: {
         "Authorization" => "Bearer #{TOKEN}",
-        "Content-Type" => "application/json"
+        "Content-Type" => "application/json",
+        "Accept" => "application/json, text/event-stream"
       }
 
     assert_response :success
