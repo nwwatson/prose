@@ -13,6 +13,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **Content Export** — Download your whole site as a Markdown zip (one file per post/page with YAML front matter, plus images) or a full JSON backup including subscribers; exports run in the background from **Admin → Export**
 - **Content Organization** — Categories, tags with searchable combo box and inline creation
 - **Reader Engagement** — Comments with threading and moderation, loves, social share buttons, subscriber magic-link auth, email notifications
+- **Reading List** — Readers bookmark posts to `/reading-list`; saved on the device with no account, and synced across devices once they subscribe and sign in
 - **Social Embeds** — X/Twitter and YouTube via oEmbed
 - **Analytics** — Dashboard with view tracking, subscriber growth, post engagement
 - **Custom Pages** — Static pages with rich text editor, top-level URLs (e.g. `/about`)

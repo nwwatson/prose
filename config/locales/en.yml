@@ -4,6 +4,7 @@ en:
       navigation_link: "must be a path starting with / (e.g. /about), an http(s) URL, or a mailto: link"
       navigation_social_url: "must be a full http(s) URL for social links"
       hex_color: "must be a valid hex color (e.g. #1a1a2e)"
+      reading_list_full: "Your reading list is full (up to %{count} posts)"
   date:
     formats:
       short: "%b %-d, %Y"
@@ -62,6 +63,7 @@ en:
       footer_navigation: "Footer"
       social_links: "Social links"
       toggle_dark_mode: "Toggle dark mode"
+      reading_list: "Reading list"
       copyright_html: "&copy; %{year} %{site_name}. All rights reserved."
     editor:
       keep_editing: "Keep editing"
@@ -139,6 +141,18 @@ en:
       paid_description: "Become a paid member of %{site_name} to access this and all premium content."
       upgrade_cta: "See membership options"
 
+  reading_list:
+    show:
+      title: "Reading list"
+      description: "Posts you saved to read later."
+      empty: "Nothing saved yet. Use the bookmark icon on any post to save it for later."
+      sync_heading: "Keep your reading list everywhere"
+      sync_description: "Your list is saved on this device only. Subscribe to %{site_name} to sync it across all your devices."
+    bookmark:
+      save: "Save to reading list"
+      remove: "Remove from reading list"
+    errors:
+      not_found: "Post not found"
   memberships:
     index:
       title: "Membership"

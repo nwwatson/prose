@@ -1,0 +1,15 @@
+/* ==========================================================================
+ * .reading-list — Reader's saved-posts page BEM block
+ *
+ * Usage:
+ *   .reading-list__header    Page heading + description wrapper
+ *   .reading-list__loading   Placeholder while an anonymous list loads
+ * ========================================================================== */
+
+.reading-list__header {
+  @apply mb-8;
+}
+
+.reading-list__loading {
+  @apply py-16 text-center text-gray-500 dark:text-gray-400;
+}

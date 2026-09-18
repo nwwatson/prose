@@ -1,0 +1,28 @@
+<% content_for(:title, page_title(t('reading_list.show.title'))) %>
+
+<% content_for(:head) do %>
+  <%= tag.meta name: "robots", content: "noindex" %>
+<% end %>
+
+<div class="reading-list__header">
+  <h1 class="page-heading"><%= t('reading_list.show.title') %></h1>
+  <p class="page-subtitle"><%= t('reading_list.show.description') %></p>
+</div>
+
+<% if identity_signed_in? %>
+  <%= render "reading_list/posts", posts: @posts, framed: false %>
+<% else %>
+  <div data-controller="reading-list" data-reading-list-url-value="<%= reading_list_posts_path %>">
+    <%= turbo_frame_tag "reading_list_posts", data: { reading_list_target: "frame" }, target: "_top" do %>
+      <p class="reading-list__loading"><%= t('shared.loading') %></p>
+    <% end %>
+  </div>
+
+  <div class="subscribe-cta">
+    <h2 class="subscribe-cta__heading"><%= t('reading_list.show.sync_heading') %></h2>
+    <p class="subscribe-cta__description"><%= t('reading_list.show.sync_description', site_name: site_name) %></p>
+    <div class="subscribe-cta__form-wrapper">
+      <%= render "subscriptions/form" %>
+    </div>
+  </div>
+<% end %>

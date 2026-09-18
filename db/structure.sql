@@ -281,7 +281,17 @@ CREATE UNIQUE INDEX "index_fediverse_likes_on_post_id_and_fediverse_actor_id" ON
 CREATE UNIQUE INDEX "index_comments_on_activitypub_uri" ON "comments" ("activitypub_uri") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "navigation_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "label" varchar NOT NULL, "url" varchar NOT NULL, "location" integer DEFAULT 0 NOT NULL, "position" integer DEFAULT 0 NOT NULL, "open_in_new_tab" boolean DEFAULT FALSE NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
 CREATE INDEX "index_navigation_items_on_location_and_position" ON "navigation_items" ("location", "position") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "reading_list_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "identity_id" integer NOT NULL, "post_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_6512cacd84"
+FOREIGN KEY ("identity_id")
+  REFERENCES "identities" ("id")
+, CONSTRAINT "fk_rails_5a6f280c53"
+FOREIGN KEY ("post_id")
+  REFERENCES "posts" ("id")
+);
+CREATE INDEX "index_reading_list_items_on_post_id" ON "reading_list_items" ("post_id") /*application='Prose'*/;
+CREATE UNIQUE INDEX "index_reading_list_items_on_identity_id_and_post_id" ON "reading_list_items" ("identity_id", "post_id") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260918120001'),
 ('20260918120000'),
 ('20260918010855'),
 ('20260917120129'),

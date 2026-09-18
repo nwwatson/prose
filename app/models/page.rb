@@ -16,6 +16,7 @@ class Page < ApplicationRecord
   RESERVED_SLUGS = %w[
     admin posts authors categories tags subscriptions feed sitemap robots up mcp
     subscriber_session handle handle_availability unsubscribe webhooks
+    reading-list
   ].freeze
 
   validates :slug, exclusion: { in: RESERVED_SLUGS, message: "is reserved" }

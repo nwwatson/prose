@@ -88,6 +88,7 @@ class Admin::SetupControllerTest < ActionDispatch::IntegrationTest
   def destroy_all_users
     Comment.delete_all
     Love.delete_all
+    ReadingListItem.delete_all
     Subscriber.update_all(source_post_id: nil)
     PostView.delete_all
     PostTag.delete_all

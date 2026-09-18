@@ -50,6 +50,11 @@ Rails.application.routes.draw do
   resource :handle_availability, only: [ :show ]
   resource :unsubscribe, only: [ :show, :create ]
   resource :comment_notification, only: [ :destroy ]
+  resource :reading_list, only: [ :show ], path: "reading-list", controller: "reading_list" do
+    resources :posts, only: [ :index ], controller: "reading_list_posts"
+    resources :items, only: [ :create, :destroy ], controller: "reading_list_items", param: :post_id
+    resource :import, only: [ :create ], controller: "reading_list_imports"
+  end
   resources :memberships, only: [ :index ] do
     collection do
       post :checkout

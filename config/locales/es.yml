@@ -4,6 +4,7 @@ es:
       navigation_link: "debe ser una ruta que empiece con / (p. ej. /acerca), una URL http(s) o un enlace mailto:"
       navigation_social_url: "debe ser una URL http(s) completa para los enlaces sociales"
       hex_color: "debe ser un color hexadecimal válido (p. ej. #1a1a2e)"
+      reading_list_full: "Tu lista de lectura está llena (hasta %{count} artículos)"
   date:
     formats:
       short: "%-d %b %Y"
@@ -60,6 +61,7 @@ es:
       footer_navigation: "Pie de página"
       social_links: "Redes sociales"
       toggle_dark_mode: "Alternar modo oscuro"
+      reading_list: "Lista de lectura"
       copyright_html: "&copy; %{year} %{site_name}. Todos los derechos reservados."
     editor:
       keep_editing: "Seguir editando"
@@ -136,6 +138,18 @@ es:
       paid_description: "Conviértete en miembro de pago de %{site_name} para acceder a este y todo el contenido premium."
       upgrade_cta: "Ver opciones de membresía"
 
+  reading_list:
+    show:
+      title: "Lista de lectura"
+      description: "Artículos que guardaste para leer más tarde."
+      empty: "Todavía no has guardado nada. Usa el icono de marcador en cualquier artículo para guardarlo."
+      sync_heading: "Lleva tu lista de lectura a todas partes"
+      sync_description: "Tu lista solo se guarda en este dispositivo. Suscríbete a %{site_name} para sincronizarla en todos tus dispositivos."
+    bookmark:
+      save: "Guardar en la lista de lectura"
+      remove: "Quitar de la lista de lectura"
+    errors:
+      not_found: "Artículo no encontrado"
   memberships:
     index:
       title: "Membresía"

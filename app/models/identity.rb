@@ -1,6 +1,7 @@
 class Identity < ApplicationRecord
   include Handleable
   include Profileable
+  include ReadingListable
 
   has_many :comments, dependent: :destroy
   has_many :loves, dependent: :destroy

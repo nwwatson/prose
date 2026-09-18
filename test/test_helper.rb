@@ -44,6 +44,16 @@ module ActiveSupport
       ActionController::Base.perform_caching = original_perform_caching
     end
 
+    def with_reading_list_limit(limit)
+      original = ReadingListItem::MAX_ITEMS
+      ReadingListItem.send(:remove_const, :MAX_ITEMS)
+      ReadingListItem.const_set(:MAX_ITEMS, limit)
+      yield
+    ensure
+      ReadingListItem.send(:remove_const, :MAX_ITEMS)
+      ReadingListItem.const_set(:MAX_ITEMS, original)
+    end
+
     def assert_query_count(expected, table:)
       count = 0
       counter = ->(*, payload) do

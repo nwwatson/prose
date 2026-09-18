@@ -1,0 +1,31 @@
+/* ==========================================================================
+ * .bookmark-btn — Save-for-later (reading list) toggle BEM block
+ *
+ * Rendered hidden inside cached post cards; bookmark_controller reveals it
+ * and toggles the saved modifier from the reader's reading list.
+ *
+ * Usage:
+ *   .bookmark-btn          Icon button (sits at the end of a .post-meta row)
+ *   .bookmark-btn--saved   Post is in the reading list (filled icon)
+ *   .bookmark-btn__icon    Bookmark SVG icon
+ * ========================================================================== */
+
+.bookmark-btn {
+  @apply ml-auto inline-flex items-center rounded-md p-1 text-gray-400 dark:text-gray-500 hover:text-charcoal transition-colors cursor-pointer;
+}
+
+.bookmark-btn[hidden] {
+  @apply hidden;
+}
+
+.bookmark-btn--saved {
+  @apply text-ink-blue hover:text-ink-blue;
+}
+
+.bookmark-btn__icon {
+  @apply h-5 w-5;
+}
+
+.bookmark-btn--saved .bookmark-btn__icon {
+  @apply fill-current;
+}

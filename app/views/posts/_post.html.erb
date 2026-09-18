@@ -23,6 +23,7 @@
           <span class="post-meta__separator">&middot;</span>
           <%= link_to post.category.name, category_path(post.category, slug: post.category.slug), class: "text-link--category" %>
         <% end %>
+        <%= bookmark_button(post) %>
       </div>
     </header>
     <% if snippet&.body_snippet.present? %>

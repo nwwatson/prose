@@ -1,0 +1,22 @@
+<%# locals: (posts:, framed:) %>
+<% list = capture do %>
+  <% if posts.any? %>
+    <div class="post-listing">
+      <% posts.each do |post| %>
+        <%= render "posts/post", post: post %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <p class="empty-state__text"><%= t('reading_list.show.empty') %></p>
+    </div>
+  <% end %>
+<% end %>
+
+<% if framed %>
+  <%= turbo_frame_tag "reading_list_posts", target: "_top" do %>
+    <%= list %>
+  <% end %>
+<% else %>
+  <%= list %>
+<% end %>
