@@ -14,11 +14,7 @@ module Webhooks
     end
 
     def self.post_url(post)
-      Rails.application.routes.url_helpers.post_url(post, slug: post.slug, host: default_url_host)
-    end
-
-    def self.default_url_host
-      Rails.application.routes.default_url_options[:host] || "localhost:3000"
+      Rails.application.routes.url_helpers.post_url(slug: post.slug, **AppUrlOptions.call)
     end
   end
 end

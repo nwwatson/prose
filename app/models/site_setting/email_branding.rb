@@ -34,7 +34,7 @@ module SiteSetting::EmailBranding
 
   def email_header_logo_url
     return nil unless email_header_logo.attached?
-    Rails.application.routes.url_helpers.rails_blob_url(email_header_logo, only_path: false, host: default_url_host)
+    Rails.application.routes.url_helpers.rails_blob_url(email_header_logo, **AppUrlOptions.call)
   end
 
   def email_branding
@@ -48,11 +48,5 @@ module SiteSetting::EmailBranding
       site_name: site_name,
       logo_url: email_header_logo_url
     }
-  end
-
-  private
-
-  def default_url_host
-    Rails.application.routes.default_url_options[:host] || "localhost:3000"
   end
 end
