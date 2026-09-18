@@ -68,6 +68,9 @@ gem "commonmarker", "~> 2.3"
 # HTML to Markdown conversion for content export [https://github.com/xijo/reverse_markdown]
 gem "reverse_markdown", "~> 3.0"
 
+# CSV parsing for Substack imports (no longer a default gem as of Ruby 3.4)
+gem "csv", "~> 3.3"
+
 # Zip archives for Markdown content export [https://github.com/rubyzip/rubyzip]
 gem "rubyzip", "~> 3.0", require: "zip"
 

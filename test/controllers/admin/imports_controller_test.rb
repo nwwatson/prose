@@ -46,6 +46,8 @@ class Admin::ImportsControllerTest < ActionDispatch::IntegrationTest
     assert_select "form#ghost_import_form input[name='import[source]'][value=ghost]"
     assert_select "form#ghost_import_form input[name='import[site_url]']"
     assert_select "form#wordpress_import_form input[name='import[site_url]']", count: 0
+    assert_select "form#substack_import_form input[name='import[source]'][value=substack]"
+    assert_select "form#substack_import_form input[name='import[site_url]']", count: 0
   end
 
   test "POST create queues a ghost import with site url" do
@@ -58,6 +60,25 @@ class Admin::ImportsControllerTest < ActionDispatch::IntegrationTest
     import = Import.recent.first
     assert import.source_ghost?
     assert_equal "https://blog.example.com", import.site_url
+  end
+
+  test "POST create queues a substack import" do
+    sign_in_as(:admin)
+
+    assert_enqueued_with(job: ImportJob) do
+      post admin_imports_path, params: { import: { source: "substack", file: fixture_file_upload("substack/email_list.example.csv", "text/csv") } }
+    end
+    assert Import.recent.first.source_substack?
+  end
+
+  test "GET index shows subscriber counts for substack imports" do
+    Import.create!(user: users(:admin), source: :substack, status: :completed,
+                   stats: { "posts_imported" => 1, "subscribers_imported" => 12, "subscribers_skipped" => 3 },
+                   file: fixture_file_upload("substack/email_list.example.csv", "text/csv"))
+    sign_in_as(:admin)
+    get admin_imports_path
+
+    assert_select "li p", text: /12 subscribers imported, 3 skipped/
   end
 
   test "POST create shows errors on the form for the submitted source" do

@@ -1,12 +1,13 @@
 class Import < ApplicationRecord
   MAX_FILE_SIZE = 50.megabytes
   ACCEPTED_FILES = {
-    "wordpress" => { content_types: %w[application/xml text/xml application/rss+xml], extension: "xml" },
-    "ghost" => { content_types: %w[application/json], extension: "json" }
+    "wordpress" => { content_types: %w[application/xml text/xml application/rss+xml], extensions: %w[xml] },
+    "ghost" => { content_types: %w[application/json], extensions: %w[json] },
+    "substack" => { content_types: %w[application/zip application/x-zip-compressed text/csv], extensions: %w[zip csv] }
   }.freeze
   MAX_WARNINGS = 50
 
-  enum :source, { wordpress: 0, ghost: 1 }, prefix: :source, validate: true
+  enum :source, { wordpress: 0, ghost: 1, substack: 2 }, prefix: :source, validate: true
   enum :status, { pending: 0, processing: 1, completed: 2, failed: 3 }
 
   belongs_to :user
@@ -23,6 +24,7 @@ class Import < ApplicationRecord
     case source.to_s
     when "wordpress" then Imports::WordpressImporter
     when "ghost" then Imports::GhostImporter
+    when "substack" then Imports::SubstackImporter
     else raise ArgumentError, "Unknown import source: #{source}"
     end
   end
@@ -65,7 +67,8 @@ class Import < ApplicationRecord
 
   def accepted_file_type?
     accepted = ACCEPTED_FILES.fetch(source)
-    accepted[:content_types].include?(file.blob.content_type) || file.blob.filename.extension.casecmp?(accepted[:extension])
+    extension = file.blob.filename.extension.to_s.downcase
+    accepted[:content_types].include?(file.blob.content_type) || accepted[:extensions].include?(extension)
   end
 
   def site_url_is_http

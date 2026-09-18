@@ -12,6 +12,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **Content Export** — Download your whole site as a Markdown zip (one file per post/page with YAML front matter, plus images) or a full JSON backup including subscribers; exports run in the background from **Admin → Import & Export**
 - **WordPress Import** — Upload a WordPress export (WXR `.xml`) to bring over posts, pages, categories, tags, and images; shortcodes and embeds are converted, and re-running an import skips anything already imported
 - **Ghost Import** — Upload a Ghost JSON export to bring over posts, pages, tags, featured posts, and member/paid visibility; Koenig cards and Mobiledoc content are converted, and images are downloaded when you provide your Ghost site URL
+- **Substack Import** — Upload your Substack export .zip to bring over posts (with paid/free audiences) and your subscriber list; subscribers are added as confirmed without sending any emails, and paid/comp subscribers are labelled for follow-up
 - **Content Organization** — Categories, tags with searchable combo box and inline creation
 - **Reader Engagement** — Comments with threading and moderation, loves, social share buttons, subscriber magic-link auth, email notifications
 - **Social Embeds** — X/Twitter and YouTube via oEmbed

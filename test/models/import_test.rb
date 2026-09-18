@@ -34,7 +34,8 @@ class ImportTest < ActiveSupport::TestCase
   test "importer_for resolves each source and rejects unknown ones" do
     assert_equal Imports::WordpressImporter, Import.importer_for(:wordpress)
     assert_equal Imports::GhostImporter, Import.importer_for(:ghost)
-    assert_raises(ArgumentError) { Import.importer_for(:substack) }
+    assert_equal Imports::SubstackImporter, Import.importer_for(:substack)
+    assert_raises(ArgumentError) { Import.importer_for(:medium) }
   end
 
   test "ghost imports require a json file" do
@@ -43,6 +44,16 @@ class ImportTest < ActiveSupport::TestCase
     import = build_import(source: :ghost)
     assert_not import.valid?
     assert_includes import.errors[:file], I18n.t("activerecord.errors.models.import.attributes.file.invalid_ghost_type")
+  end
+
+  test "substack imports accept a zip or csv" do
+    assert build_import(source: :substack, filename: "export.zip", content_type: "application/zip").valid?
+    assert build_import(source: :substack, filename: "email_list.csv", content_type: "text/csv").valid?
+    assert build_import(source: :substack, filename: "EMAIL_LIST.CSV", content_type: "application/octet-stream").valid?
+
+    import = build_import(source: :substack, filename: "ghost.json", content_type: "application/json")
+    assert_not import.valid?
+    assert_includes import.errors[:file], I18n.t("activerecord.errors.models.import.attributes.file.invalid_substack_type")
   end
 
   test "site_url is optional, normalized and must be http(s)" do

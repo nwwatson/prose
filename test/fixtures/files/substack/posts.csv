@@ -1,0 +1,8 @@
+post_id,post_date,is_published,email_sent_at,inbox_sent_at,type,audience,title,subtitle,podcast_url
+101.first-issue,2024-03-01T15:00:00.000Z,true,2024-03-01T15:00:05.000Z,,newsletter,everyone,First Issue,Welcome aboard,
+102.paid-deep-dive,2024-04-01T15:00:00.000Z,true,,,newsletter,only_paid,Paid Deep Dive,For supporters,
+103.free-members,2024-05-01T15:00:00.000Z,true,,,newsletter,only_free,Free Members Post,,
+104.draft-idea,,false,,,newsletter,everyone,Draft Idea,,
+105.episode-one,2024-06-01T15:00:00.000Z,true,,,podcast,founding,Episode One,,https://example.com/ep1.mp3
+106.a-thread,2024-06-02T15:00:00.000Z,true,,,thread,everyone,A Thread,,
+107.missing-body,2024-06-03T15:00:00.000Z,true,,,newsletter,everyone,Missing Body,,
