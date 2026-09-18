@@ -87,3 +87,43 @@ class EmailPreferencesControllerTest < ActionDispatch::IntegrationTest
     assert @subscriber.reload.unsubscribed?
   end
 end
+
+class EmailPreferencesMailingListsTest < ActionDispatch::IntegrationTest
+  setup do
+    @subscriber = subscribers(:confirmed)
+    @token = @subscriber.email_preferences_token
+  end
+
+  test "GET show lists active mailing lists with the subscriber's checked" do
+    get email_preferences_path(token: @token)
+
+    assert_select "input[type=checkbox][name='subscriber[selected_mailing_list_ids][]'][checked]", 2
+    assert_select "input[type=checkbox][value=?]", mailing_lists(:retired).id.to_s, count: 0
+    assert_match "Deep Dives", response.body
+  end
+
+  test "GET show hides the list choice when only one list is active" do
+    mailing_lists(:deep_dives).update!(active: false)
+
+    get email_preferences_path(token: @token)
+
+    assert_select "input[type=checkbox][name='subscriber[selected_mailing_list_ids][]']", 0
+  end
+
+  test "PATCH update changes list subscriptions" do
+    patch email_preferences_path, params: {
+      token: @token,
+      subscriber: { email_frequency: "immediate", selected_mailing_list_ids: [ "", mailing_lists(:deep_dives).id ] }
+    }
+
+    assert_redirected_to email_preferences_path(token: @token)
+    assert_equal [ mailing_lists(:deep_dives), mailing_lists(:retired) ].sort_by(&:id), @subscriber.mailing_lists.reload.sort_by(&:id)
+  end
+
+  test "PATCH update without list params keeps subscriptions" do
+    patch email_preferences_path, params: { token: @token, subscriber: { email_frequency: "weekly" } }
+
+    assert_equal 3, @subscriber.mailing_lists.reload.count
+    assert @subscriber.reload.email_weekly?
+  end
+end

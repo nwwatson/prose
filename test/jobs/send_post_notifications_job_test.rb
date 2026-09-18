@@ -33,3 +33,24 @@ class SendPostNotificationsJobTest < ActiveJob::TestCase
     assert enqueued_recipients.none? { |r| r.include?(subscribers(:unconfirmed).id.to_s) }
   end
 end
+
+class SendPostNotificationsJobListsTest < ActiveJob::TestCase
+  include ActionMailer::TestHelper
+
+  test "only emails subscribers of the post's lists" do
+    post = posts(:published_post)
+    post.update!(mailing_lists: [ mailing_lists(:deep_dives) ])
+
+    assert_enqueued_email_with PostNotificationMailer, :new_post, args: [ subscribers(:confirmed), post ] do
+      SendPostNotificationsJob.perform_now(post.id)
+    end
+    assert_enqueued_jobs 1, only: ActionMailer::MailDeliveryJob
+  end
+
+  test "a post with no lists emails nobody" do
+    post = posts(:published_post)
+    post.update!(mailing_lists: [])
+
+    assert_no_enqueued_jobs(only: ActionMailer::MailDeliveryJob) { SendPostNotificationsJob.perform_now(post.id) }
+  end
+end

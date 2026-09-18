@@ -33,6 +33,7 @@ class Exports::JsonExporterTest < ActiveSupport::TestCase
     assert_equal NavigationItem.count, data["navigation_items"].size
     assert_equal Subscriber.count, data["subscribers"].size
     assert_equal SubscriberLabel.count, data["subscriber_labels"].size
+    assert_equal MailingList.count, data["mailing_lists"].size
   end
 
   test "posts include html content and tag ids" do
@@ -56,6 +57,17 @@ class Exports::JsonExporterTest < ActiveSupport::TestCase
 
     assert_equal subscriber.email, exported["email"]
     assert_equal subscriber.subscriber_labels.pluck(:id).sort, exported["label_ids"]
+    assert_equal subscriber.mailing_lists.pluck(:id).sort, exported["mailing_list_ids"]
+  end
+
+  test "mailing lists and post list ids are exported" do
+    data = export_data
+    list = data["mailing_lists"].find { |l| l["slug"] == "deep-dives" }
+    post = data["posts"].find { |p| p["id"] == posts(:design_post).id }
+
+    assert_equal({ "id" => mailing_lists(:deep_dives).id, "name" => "Deep Dives", "slug" => "deep-dives", "description" => "Long-form technical essays.",
+                   "frequency" => "Monthly", "active" => true, "subscribe_by_default" => false }, list)
+    assert_equal [ mailing_lists(:main).id, mailing_lists(:deep_dives).id ].sort, post["mailing_list_ids"]
   end
 
   test "never includes secrets, password digests or auth tokens" do

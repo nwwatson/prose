@@ -116,6 +116,7 @@ Rails.application.routes.draw do
       end
     end
     resources :subscriber_labels
+    resources :mailing_lists, except: [ :show ]
     resources :segments do
       member { get :count }
     end

@@ -69,6 +69,21 @@ class Admin::NewslettersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Updated Title", newsletters(:draft_newsletter).reload.title
   end
 
+  test "PATCH update targets a mailing list" do
+    newsletter = newsletters(:draft_newsletter)
+
+    patch admin_newsletter_path(newsletter), params: { newsletter: { mailing_list_id: mailing_lists(:deep_dives).id } }
+
+    assert_equal mailing_lists(:deep_dives), newsletter.reload.mailing_list
+  end
+
+  test "GET edit offers active mailing lists" do
+    get edit_admin_newsletter_path(newsletters(:draft_newsletter))
+
+    assert_select "select[name='newsletter[mailing_list_id]'] option[value=?]", mailing_lists(:deep_dives).id.to_s
+    assert_select "select[name='newsletter[mailing_list_id]'] option[value=?]", mailing_lists(:retired).id.to_s, count: 0
+  end
+
   test "DELETE destroy removes newsletter" do
     assert_difference "Newsletter.count", -1 do
       delete admin_newsletter_path(newsletters(:draft_newsletter))

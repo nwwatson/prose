@@ -1,10 +1,12 @@
 class SegmentSubscribersQuery
-  def initialize(criteria = {})
+  # scope: the subscribers the criteria narrow down (e.g. one mailing list).
+  def initialize(criteria = {}, scope: Subscriber.confirmed)
     @criteria = criteria.deep_symbolize_keys
+    @scope = scope
   end
 
   def resolve
-    scope = Subscriber.confirmed
+    scope = @scope
 
     scope = apply_label_filters(scope)
     scope = apply_date_filters(scope)

@@ -1,0 +1,31 @@
+confirmed_main:
+  mailing_list: main
+  subscriber: confirmed
+
+unconfirmed_main:
+  mailing_list: main
+  subscriber: unconfirmed
+
+with_token_main:
+  mailing_list: main
+  subscriber: with_token
+
+expired_token_main:
+  mailing_list: main
+  subscriber: expired_token
+
+from_published_post_main:
+  mailing_list: main
+  subscriber: from_published_post
+
+from_featured_post_main:
+  mailing_list: main
+  subscriber: from_featured_post
+
+confirmed_deep_dives:
+  mailing_list: deep_dives
+  subscriber: confirmed
+
+confirmed_retired:
+  mailing_list: retired
+  subscriber: confirmed

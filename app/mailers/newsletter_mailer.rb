@@ -7,6 +7,7 @@ class NewsletterMailer < ApplicationMailer
     @email_settings = newsletter.email_settings
     @site_name = @email_settings[:site_name]
     @unsubscribe_url = generate_unsubscribe_url(subscriber)
+    @email_preferences_url = email_preferences_url(token: subscriber.email_preferences_token)
 
     set_list_unsubscribe_headers(@unsubscribe_url)
 

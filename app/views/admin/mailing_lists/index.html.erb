@@ -1,0 +1,61 @@
+<% content_for(:title, "#{t('admin.mailing_lists.index.title')} — #{site_name}") %>
+
+<div class="space-y-6">
+  <%= render "admin/shared/page_header", title: t('admin.mailing_lists.index.title'),
+        action: link_to(t('admin.mailing_lists.index.new_list'), new_admin_mailing_list_path, class: admin_button_classes(variant: :primary, extra: "self-start")) %>
+
+  <p class="max-w-2xl text-sm text-gray-500"><%= t('admin.mailing_lists.index.intro') %></p>
+
+  <% if @mailing_lists.any? %>
+    <%# Mobile card layout %>
+    <div class="space-y-3 lg:hidden">
+      <% @mailing_lists.each do |list| %>
+        <%= link_to edit_admin_mailing_list_path(list), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-sm font-medium text-gray-900"><%= list.name %></span>
+            <p class="text-sm text-gray-500"><%= t('admin.mailing_lists.index.subscriber_count', count: @subscriber_counts.fetch(list.id, 0)) %></p>
+          </div>
+          <div class="mt-2 flex flex-wrap gap-2">
+            <%= render "badges", list: list %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%# Desktop table layout %>
+    <div class="hidden overflow-hidden bg-white shadow ring-1 ring-gray-200 sm:rounded-lg lg:block">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="<%= admin_th_classes %>"><%= t('admin.mailing_lists.index.name') %></th>
+            <th class="<%= admin_th_classes %>"><%= t('admin.mailing_lists.index.frequency') %></th>
+            <th class="<%= admin_th_classes %>"><%= t('admin.mailing_lists.index.status') %></th>
+            <th class="<%= admin_th_classes %>"><%= t('admin.mailing_lists.index.subscribers') %></th>
+            <th class="relative px-6 py-3"><span class="sr-only"><%= t('shared.actions') %></span></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 bg-white">
+          <% @mailing_lists.each do |list| %>
+            <tr>
+              <td class="px-6 py-4 text-sm">
+                <p class="font-medium text-gray-900"><%= list.name %></p>
+                <% if list.description.present? %>
+                  <p class="mt-1 max-w-md truncate text-gray-500"><%= list.description %></p>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500"><%= list.frequency.presence || "—" %></td>
+              <td class="px-6 py-4 text-sm"><div class="flex flex-wrap gap-2"><%= render "badges", list: list %></div></td>
+              <td class="px-6 py-4 text-sm text-gray-500"><%= @subscriber_counts.fetch(list.id, 0) %></td>
+              <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                <%= link_to t('shared.edit'), edit_admin_mailing_list_path(list), class: "text-gray-600 hover:text-gray-900" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <%= render "admin/shared/empty_state", title: t('admin.mailing_lists.index.no_lists'), description: t('admin.mailing_lists.index.get_started'),
+          action_label: t('admin.mailing_lists.index.new_list'), action_path: new_admin_mailing_list_path %>
+  <% end %>
+</div>

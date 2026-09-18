@@ -90,4 +90,11 @@ class NewsletterMailerTest < ActionMailer::TestCase
 
     assert_match "Check out our latest update", email.html_part.body.to_s
   end
+
+  test "campaign email links to email preferences" do
+    email = NewsletterMailer.campaign(subscribers(:confirmed), newsletters(:sent_newsletter))
+
+    assert_match %r{/email-preferences\?token=}, email.text_part.body.to_s
+    assert_match %r{/email-preferences\?token=}, email.html_part.body.to_s
+  end
 end

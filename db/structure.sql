@@ -182,17 +182,21 @@ CREATE INDEX "index_subscriber_labelings_on_subscriber_id" ON "subscriber_labeli
 CREATE INDEX "index_subscriber_labelings_on_subscriber_label_id" ON "subscriber_labelings" ("subscriber_label_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "idx_subscriber_labelings_uniqueness" ON "subscriber_labelings" ("subscriber_id", "subscriber_label_id") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "segments" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "description" text, "filter_criteria" json DEFAULT '{}' NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
-CREATE TABLE IF NOT EXISTS "newsletters" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "sent_at" datetime(6), "scheduled_for" datetime(6), "recipients_count" integer DEFAULT 0, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "template" varchar, "accent_color" varchar, "preheader_text" varchar, "segment_id" integer, CONSTRAINT "fk_rails_e6829818c0"
-FOREIGN KEY ("user_id")
-  REFERENCES "users" ("id")
-, CONSTRAINT "fk_rails_99b32dc07a"
+CREATE TABLE IF NOT EXISTS "newsletters" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "sent_at" datetime(6), "scheduled_for" datetime(6), "recipients_count" integer DEFAULT 0, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "template" varchar, "accent_color" varchar, "preheader_text" varchar, "segment_id" integer, "mailing_list_id" integer, CONSTRAINT "fk_rails_99b32dc07a"
 FOREIGN KEY ("segment_id")
   REFERENCES "segments" ("id")
+, CONSTRAINT "fk_rails_e6829818c0"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_42990fb36b"
+FOREIGN KEY ("mailing_list_id")
+  REFERENCES "mailing_lists" ("id")
 );
 CREATE INDEX "index_newsletters_on_user_id" ON "newsletters" ("user_id") /*application='Prose'*/;
 CREATE INDEX "index_newsletters_on_status" ON "newsletters" ("status") /*application='Prose'*/;
 CREATE INDEX "index_newsletters_on_scheduled_for" ON "newsletters" ("scheduled_for") /*application='Prose'*/;
 CREATE INDEX "index_newsletters_on_segment_id" ON "newsletters" ("segment_id") /*application='Prose'*/;
+CREATE INDEX "index_newsletters_on_mailing_list_id" ON "newsletters" ("mailing_list_id") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "post_versions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "post_id" integer NOT NULL, "user_id" integer NOT NULL, "version_number" integer NOT NULL, "title" varchar NOT NULL, "subtitle" varchar, "content_html" text, "body_plain" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_5f7c4b6bbb"
 FOREIGN KEY ("post_id")
   REFERENCES "posts" ("id")
@@ -219,7 +223,7 @@ CREATE INDEX "index_memberships_on_membership_tier_id" ON "memberships" ("member
 CREATE UNIQUE INDEX "index_memberships_on_stripe_subscription_id" ON "memberships" ("stripe_subscription_id") /*application='Prose'*/;
 CREATE INDEX "index_memberships_on_stripe_customer_id" ON "memberships" ("stripe_customer_id") /*application='Prose'*/;
 CREATE INDEX "index_memberships_on_status" ON "memberships" ("status") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "subtitle" varchar, "slug" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "published_at" datetime(6), "featured" boolean DEFAULT FALSE NOT NULL, "reading_time_minutes" integer DEFAULT 0, "category_id" integer, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "loves_count" integer DEFAULT 0 NOT NULL, "meta_description" text, "body_plain" text, "show_toc" boolean DEFAULT FALSE NOT NULL, "visibility" integer DEFAULT 0 NOT NULL, CONSTRAINT "fk_rails_9b1b26f040"
+CREATE TABLE IF NOT EXISTS "posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "subtitle" varchar, "slug" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "published_at" datetime(6), "featured" boolean DEFAULT FALSE NOT NULL, "reading_time_minutes" integer DEFAULT 0, "category_id" integer, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "loves_count" integer DEFAULT 0 NOT NULL, "meta_description" text, "body_plain" text, "show_toc" boolean DEFAULT FALSE NOT NULL, "visibility" integer DEFAULT 0 NOT NULL, "subscribers_notified_at" datetime(6) /*application=\x27Prose\x27*/, CONSTRAINT "fk_rails_9b1b26f040"
 FOREIGN KEY ("category_id")
   REFERENCES "categories" ("id")
 , CONSTRAINT "fk_rails_5b5ddfd518"
@@ -291,7 +295,28 @@ FOREIGN KEY ("post_id")
 );
 CREATE INDEX "index_reading_list_items_on_post_id" ON "reading_list_items" ("post_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_reading_list_items_on_identity_id_and_post_id" ON "reading_list_items" ("identity_id", "post_id") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "mailing_lists" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "slug" varchar NOT NULL, "description" text, "frequency" varchar, "active" boolean DEFAULT TRUE NOT NULL, "subscribe_by_default" boolean DEFAULT FALSE NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
+CREATE UNIQUE INDEX "index_mailing_lists_on_slug" ON "mailing_lists" ("slug") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "mailing_list_subscriptions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "mailing_list_id" integer NOT NULL, "subscriber_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_f5aa393b7e"
+FOREIGN KEY ("mailing_list_id")
+  REFERENCES "mailing_lists" ("id")
+, CONSTRAINT "fk_rails_30e5c652d3"
+FOREIGN KEY ("subscriber_id")
+  REFERENCES "subscribers" ("id")
+);
+CREATE INDEX "index_mailing_list_subscriptions_on_mailing_list_id" ON "mailing_list_subscriptions" ("mailing_list_id") /*application='Prose'*/;
+CREATE UNIQUE INDEX "idx_on_subscriber_id_mailing_list_id_cd25a5e438" ON "mailing_list_subscriptions" ("subscriber_id", "mailing_list_id") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "mailing_list_posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "mailing_list_id" integer NOT NULL, "post_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_7145fa6681"
+FOREIGN KEY ("mailing_list_id")
+  REFERENCES "mailing_lists" ("id")
+, CONSTRAINT "fk_rails_b28c8aab16"
+FOREIGN KEY ("post_id")
+  REFERENCES "posts" ("id")
+);
+CREATE INDEX "index_mailing_list_posts_on_mailing_list_id" ON "mailing_list_posts" ("mailing_list_id") /*application='Prose'*/;
+CREATE UNIQUE INDEX "index_mailing_list_posts_on_post_id_and_mailing_list_id" ON "mailing_list_posts" ("post_id", "mailing_list_id") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20260918130000'),
 ('20260918120002'),
 ('20260918120001'),
 ('20260918120000'),

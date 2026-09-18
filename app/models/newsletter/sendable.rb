@@ -21,8 +21,10 @@ module Newsletter::Sendable
     update!(status: :draft, sent_at: nil, scheduled_for: nil)
   end
 
+  # The campaign's list (or every confirmed subscriber), narrowed by its segment.
   def target_subscribers
-    segment.present? ? segment.resolve : Subscriber.confirmed
+    audience = mailing_list ? mailing_list.recipients : Subscriber.confirmed
+    segment ? segment.resolve(audience) : audience
   end
 
   def sendable?

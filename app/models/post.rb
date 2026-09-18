@@ -7,6 +7,7 @@ class Post < ApplicationRecord
   include Accessible
   include Webhookable
   include Federatable
+  include Notifiable
 
   enum :status, { draft: 0, scheduled: 1, published: 2 }
 

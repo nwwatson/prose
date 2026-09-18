@@ -87,4 +87,24 @@ class NewsletterTest < ActiveSupport::TestCase
     results = Newsletter.by_recency.to_a
     assert results.index(recent) < results.index(old)
   end
+
+  test "target_subscribers defaults to every confirmed subscriber" do
+    assert_equal Subscriber.confirmed.ids.sort, newsletters(:draft_newsletter).target_subscribers.ids.sort
+  end
+
+  test "target_subscribers is limited to the chosen mailing list" do
+    newsletter = newsletters(:draft_newsletter)
+    newsletter.update!(mailing_list: mailing_lists(:deep_dives))
+
+    assert_equal [ subscribers(:confirmed) ], newsletter.target_subscribers.to_a
+  end
+
+  test "target_subscribers narrows the mailing list by segment" do
+    newsletter = newsletters(:draft_newsletter)
+    newsletter.update!(mailing_list: mailing_lists(:main), segment: segments(:vip_segment))
+    assert_equal segments(:vip_segment).resolve.ids.sort, newsletter.target_subscribers.ids.sort
+
+    subscribers(:confirmed).update!(selected_mailing_list_ids: [ mailing_lists(:deep_dives).id ])
+    assert_not_includes newsletter.target_subscribers, subscribers(:confirmed)
+  end
 end

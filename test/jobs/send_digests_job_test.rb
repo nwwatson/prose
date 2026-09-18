@@ -89,6 +89,33 @@ class SendDigestsJobTest < ActiveJob::TestCase
     end
   end
 
+  test "only includes posts sent to the subscriber's lists" do
+    @weekly.update!(selected_mailing_list_ids: [ mailing_lists(:deep_dives).id ])
+    post = posts(:published_post)
+    post.update_columns(published_at: 1.day.ago)
+    MailingListPost.create!(post: post, mailing_list: mailing_lists(:deep_dives))
+
+    freeze_time do
+      expected_ids = Post.live.where(published_at: 1.week.ago...Time.current)
+        .where(id: mailing_lists(:deep_dives).mailing_list_posts.select(:post_id)).by_publication_date.pluck(:id)
+      assert_includes expected_ids, post.id
+      assert_operator expected_ids.size, :<, Post.live.where(published_at: 1.week.ago...Time.current).count
+
+      assert_enqueued_email_with DigestMailer, :digest, args: [ @weekly, expected_ids, expected_ids.size ] do
+        SendDigestsJob.perform_now("weekly")
+      end
+    end
+  end
+
+  test "skips subscribers who aren't on any active list" do
+    @weekly.update!(selected_mailing_list_ids: [])
+
+    assert_no_enqueued_emails do
+      SendDigestsJob.perform_now("weekly")
+    end
+    assert_nil @weekly.reload.last_digest_at
+  end
+
   test "rejects an unknown frequency" do
     assert_raises(ArgumentError) { SendDigestsJob.perform_now("immediate") }
   end

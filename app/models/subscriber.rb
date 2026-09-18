@@ -3,6 +3,7 @@ class Subscriber < ApplicationRecord
   include Billable
   include EmailPreferences
   include IdentityBacked
+  include ListSubscribable
 
   belongs_to :source_post, class_name: "Post", optional: true
   has_many :loves, through: :identity

@@ -1,0 +1,50 @@
+<%# locals: (mailing_list:) %>
+<%= form_with model: [ :admin, mailing_list ], class: "space-y-6" do |f| %>
+  <%= render "admin/shared/form_errors", record: mailing_list, wrapper_class: "" %>
+
+  <div class="max-w-lg space-y-6">
+    <div>
+      <%= f.label :name, t('admin.mailing_lists.form.name'), class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= f.text_field :name, class: admin_input_classes, placeholder: t('admin.mailing_lists.form.name_placeholder') %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :description, t('admin.mailing_lists.form.description'), class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= f.text_area :description, rows: 3, class: admin_input_classes %>
+      </div>
+      <p class="mt-1 text-xs text-gray-500"><%= t('admin.mailing_lists.form.description_hint') %></p>
+    </div>
+
+    <div>
+      <%= f.label :frequency, t('admin.mailing_lists.form.frequency'), class: "block text-sm font-medium text-gray-900" %>
+      <div class="mt-2">
+        <%= f.text_field :frequency, class: admin_input_classes, placeholder: t('admin.mailing_lists.form.frequency_placeholder') %>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <label class="flex items-start gap-3">
+        <%= f.check_box :active, class: "mt-1 h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900" %>
+        <span>
+          <span class="block text-sm font-medium text-gray-900"><%= t('admin.mailing_lists.form.active') %></span>
+          <span class="block text-xs text-gray-500"><%= t('admin.mailing_lists.form.active_hint') %></span>
+        </span>
+      </label>
+      <label class="flex items-start gap-3">
+        <%= f.check_box :subscribe_by_default, class: "mt-1 h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900" %>
+        <span>
+          <span class="block text-sm font-medium text-gray-900"><%= t('admin.mailing_lists.form.subscribe_by_default') %></span>
+          <span class="block text-xs text-gray-500"><%= t('admin.mailing_lists.form.subscribe_by_default_hint') %></span>
+        </span>
+      </label>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+      <%= link_to t('shared.cancel'), admin_mailing_lists_path, class: admin_button_classes(variant: :outline) %>
+      <%= f.submit t('admin.mailing_lists.form.save'), class: "#{admin_button_classes(variant: :primary)} cursor-pointer" %>
+    </div>
+  </div>
+<% end %>

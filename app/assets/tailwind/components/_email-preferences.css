@@ -6,10 +6,12 @@
  *   .email-preferences__heading       Page heading
  *   .email-preferences__message       Intro text
  *   .email-preferences__notice        Muted note (e.g. already unsubscribed)
- *   .email-preferences__options       Radio option list (fieldset)
+ *   .email-preferences__options       Option list (fieldset: lists or frequency)
+ *   .email-preferences__legend        Visible heading for an option list
  *   .email-preferences__option        One selectable option (label)
  *   .email-preferences__radio         Radio input
  *   .email-preferences__option-label  Option name
+ *   .email-preferences__option-meta   Muted inline note (e.g. list frequency)
  *   .email-preferences__option-hint   Option description
  *   .email-preferences__error         Validation error text
  *   .email-preferences__action        Submit button container
@@ -36,6 +38,10 @@
   @apply mt-8 space-y-3;
 }
 
+.email-preferences__legend {
+  @apply mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400;
+}
+
 .email-preferences__option {
   @apply flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400 has-[:checked]:border-gray-900 dark:border-gray-700 dark:hover:border-gray-500 dark:has-[:checked]:border-gray-100;
 }
@@ -46,6 +52,10 @@
 
 .email-preferences__option-label {
   @apply block font-medium text-gray-900 dark:text-gray-100;
+}
+
+.email-preferences__option-meta {
+  @apply ml-1 text-sm font-normal text-gray-500 dark:text-gray-400;
 }
 
 .email-preferences__option-hint {

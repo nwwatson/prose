@@ -13,8 +13,30 @@
   <%= form_with model: @subscriber, url: email_preferences_path, method: :patch do |f| %>
     <%= hidden_field_tag :token, params[:token] if params[:token].present? %>
 
+    <% if @mailing_lists.many? %>
+      <fieldset class="email-preferences__options">
+        <legend class="email-preferences__legend"><%= t('email_preferences.show.lists_legend') %></legend>
+        <%= f.collection_check_boxes :selected_mailing_list_ids, @mailing_lists, :id, :name do |b| %>
+          <label class="email-preferences__option">
+            <%= b.check_box class: "email-preferences__radio" %>
+            <span>
+              <span class="email-preferences__option-label">
+                <%= b.object.name %>
+                <% if b.object.frequency.present? %>
+                  <span class="email-preferences__option-meta"><%= b.object.frequency %></span>
+                <% end %>
+              </span>
+              <% if b.object.description.present? %>
+                <span class="email-preferences__option-hint"><%= b.object.description %></span>
+              <% end %>
+            </span>
+          </label>
+        <% end %>
+      </fieldset>
+    <% end %>
+
     <fieldset class="email-preferences__options">
-      <legend class="sr-only"><%= t('email_preferences.show.legend') %></legend>
+      <legend class="<%= @mailing_lists.many? ? 'email-preferences__legend' : 'sr-only' %>"><%= t('email_preferences.show.legend') %></legend>
       <% Subscriber.email_frequencies.each_key do |frequency| %>
         <label class="email-preferences__option">
           <%= f.radio_button :email_frequency, frequency, class: "email-preferences__radio" %>

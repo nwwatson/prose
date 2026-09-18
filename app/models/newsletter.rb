@@ -6,6 +6,7 @@ class Newsletter < ApplicationRecord
 
   belongs_to :user
   belongs_to :segment, optional: true
+  belongs_to :mailing_list, optional: true
   has_many :newsletter_deliveries, dependent: :destroy
   has_rich_text :body
 

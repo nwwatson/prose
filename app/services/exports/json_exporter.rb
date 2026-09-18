@@ -45,6 +45,7 @@ module Exports
         posts: posts,
         pages: pages,
         navigation_items: navigation_items,
+        mailing_lists: mailing_lists,
         subscriber_labels: subscriber_labels,
         subscribers: subscribers
       }
@@ -91,13 +92,14 @@ module Exports
     end
 
     def posts
-      Post.includes(:tags, :rich_text_content, featured_image_attachment: :blob).order(:id).map do |post|
+      Post.includes(:tags, :mailing_list_posts, :rich_text_content, featured_image_attachment: :blob).order(:id).map do |post|
         post.slice(:id, :title, :subtitle, :slug, :status, :visibility, :featured, :show_toc,
                    :meta_description, :category_id, :user_id).merge(
           published_at: post.published_at&.iso8601,
           created_at: post.created_at.iso8601,
           updated_at: post.updated_at.iso8601,
           tag_ids: post.tags.map(&:id).sort,
+          mailing_list_ids: post.mailing_list_posts.map(&:mailing_list_id).sort,
           featured_image: post.featured_image.attached? ? post.featured_image.filename.to_s : nil,
           content_html: post.content&.body&.to_html.to_s
         )
@@ -119,8 +121,14 @@ module Exports
       SubscriberLabel.order(:name).map { |label| label.slice(:id, :name, :color) }
     end
 
+    def mailing_lists
+      MailingList.order(:id).map do |list|
+        list.slice(:id, :name, :slug, :description, :frequency, :active, :subscribe_by_default)
+      end
+    end
+
     def subscribers
-      Subscriber.includes(:subscriber_labelings).order(:id).map do |subscriber|
+      Subscriber.includes(:subscriber_labelings, :mailing_list_subscriptions).order(:id).map do |subscriber|
         {
           id: subscriber.id,
           email: subscriber.email,
@@ -128,7 +136,8 @@ module Exports
           unsubscribed_at: subscriber.unsubscribed_at&.iso8601,
           email_frequency: subscriber.email_frequency,
           created_at: subscriber.created_at.iso8601,
-          label_ids: subscriber.subscriber_labelings.map(&:subscriber_label_id).sort
+          label_ids: subscriber.subscriber_labelings.map(&:subscriber_label_id).sort,
+          mailing_list_ids: subscriber.mailing_list_subscriptions.map(&:mailing_list_id).sort
         }
       end
     end

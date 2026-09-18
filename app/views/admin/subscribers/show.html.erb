@@ -20,6 +20,10 @@
       <dt class="text-sm font-medium text-gray-500"><%= t('admin.subscribers.show.email_frequency') %></dt>
       <dd class="mt-1 text-sm text-gray-900"><%= t("email_preferences.frequencies.#{@subscriber.email_frequency}.label") %></dd>
     </div>
+    <div class="rounded-lg bg-white p-4 shadow ring-1 ring-gray-200 sm:col-span-2">
+      <dt class="text-sm font-medium text-gray-500"><%= t('admin.subscribers.show.mailing_lists') %></dt>
+      <dd class="mt-1 text-sm text-gray-900"><%= @subscriber.mailing_lists.ordered.map(&:name).to_sentence.presence || t('admin.subscribers.show.no_mailing_lists') %></dd>
+    </div>
   </dl>
 
   <%# Labels management %>

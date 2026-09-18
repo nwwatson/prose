@@ -1,0 +1,21 @@
+main:
+  name: Newsletter
+  slug: newsletter
+  description: Every new post, as it's published.
+  frequency: Weekly
+  active: true
+  subscribe_by_default: true
+
+deep_dives:
+  name: Deep Dives
+  slug: deep-dives
+  description: Long-form technical essays.
+  frequency: Monthly
+  active: true
+  subscribe_by_default: false
+
+retired:
+  name: Retired List
+  slug: retired-list
+  active: false
+  subscribe_by_default: false

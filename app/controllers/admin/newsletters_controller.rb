@@ -4,7 +4,7 @@ module Admin
     uses_editor_layout "newsletter_editor"
 
     before_action :set_newsletter, only: [ :show, :edit, :update, :destroy, :send_newsletter, :schedule, :preview ]
-    before_action :set_segments, only: [ :new, :create, :edit, :update ]
+    before_action :set_audience_options, only: [ :new, :create, :edit, :update ]
 
     def index
       @newsletters = Newsletter.includes(:user)
@@ -92,12 +92,13 @@ module Admin
       @newsletter = Newsletter.find(params[:id])
     end
 
-    def set_segments
+    def set_audience_options
       @segments = Segment.order(:name)
+      @mailing_lists = MailingList.active.or(MailingList.where(id: @newsletter&.mailing_list_id)).ordered
     end
 
     def newsletter_params
-      params.require(:newsletter).permit(:title, :body, :template, :accent_color, :preheader_text, :segment_id)
+      params.require(:newsletter).permit(:title, :body, :template, :accent_color, :preheader_text, :segment_id, :mailing_list_id)
     end
 
     def resource_json(newsletter)

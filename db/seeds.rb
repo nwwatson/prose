@@ -21,11 +21,13 @@ Comment.delete_all
 Love.delete_all
 PostView.delete_all
 PostTag.delete_all
+MailingListPost.delete_all
 Post.delete_all
 ActionText::RichText.where(record_type: "Page").delete_all
 Page.delete_all
 Session.delete_all
 User.delete_all
+MailingListSubscription.delete_all
 Subscriber.delete_all
 Identity.delete_all
 Tag.delete_all
@@ -130,6 +132,21 @@ NavigationItem.delete_all
 puts "  Created #{NavigationItem.count} navigation items"
 
 # ---------------------------------------------------------------------------
+# Mailing lists (created before subscribers so signups join the default list)
+# ---------------------------------------------------------------------------
+main_list = MailingList.find_or_create_by!(slug: "newsletter") do |list|
+  list.name = "Newsletter"
+  list.description = "Every new post, as it's published."
+  list.subscribe_by_default = true
+end
+deep_dives_list = MailingList.find_or_create_by!(slug: "deep-dives") do |list|
+  list.name = "Deep Dives"
+  list.description = "Occasional long-form technical essays."
+  list.frequency = "Monthly"
+end
+puts "  Created #{MailingList.count} mailing lists"
+
+# ---------------------------------------------------------------------------
 # Subscribers (100)
 # ---------------------------------------------------------------------------
 first_names = %w[
@@ -157,6 +174,7 @@ subscribers = 100.times.map do |i|
   confirmed_at = i < 90 ? rand(1..180).days.ago : nil
 
   subscriber = Subscriber.create!(email: email, confirmed_at: confirmed_at)
+  subscriber.mailing_list_subscriptions.create!(mailing_list: deep_dives_list) if i.even?
   subscriber.identity.update!(handle: handle)
   subscriber_identities << subscriber.identity
   subscriber
@@ -317,7 +335,10 @@ posts = []
     status: :published,
     published_at: published_at,
     featured: i < 5,
-    content: content_html
+    content: content_html,
+    mailing_lists: i % 5 == 0 ? [ main_list, deep_dives_list ] : [ main_list ],
+    # Seeded posts count as already emailed, so seeding doesn't queue ~55 new-post notifications.
+    subscribers_notified_at: published_at
   )
 
   # Assign 1-4 random tags

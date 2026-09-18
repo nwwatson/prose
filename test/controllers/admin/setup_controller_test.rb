@@ -92,6 +92,7 @@ class Admin::SetupControllerTest < ActionDispatch::IntegrationTest
     Subscriber.update_all(source_post_id: nil)
     PostView.delete_all
     PostTag.delete_all
+    MailingListPost.delete_all
     Chat.delete_all
     PostVersion.delete_all
     Post.delete_all

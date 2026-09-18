@@ -57,6 +57,30 @@ class Admin::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Updated Title", posts(:draft_post).reload.title
   end
 
+  test "GET new pre-checks the default mailing lists" do
+    get new_admin_post_path
+
+    assert_select "input[type=checkbox][name='post[mailing_list_ids][]'][value=?][checked]", mailing_lists(:main).id.to_s
+    assert_select "input[type=checkbox][name='post[mailing_list_ids][]'][value=?]:not([checked])", mailing_lists(:deep_dives).id.to_s
+    assert_select "input[type=checkbox][name='post[mailing_list_ids][]'][value=?]", mailing_lists(:retired).id.to_s, count: 0
+  end
+
+  test "PATCH update saves the post's mailing lists" do
+    post_record = posts(:draft_post)
+
+    patch admin_post_path(post_record), params: { post: { mailing_list_ids: [ "", mailing_lists(:deep_dives).id ] } }
+
+    assert_equal [ mailing_lists(:deep_dives) ], post_record.reload.mailing_lists.to_a
+  end
+
+  test "PATCH update to published emails the post's subscribers" do
+    post_record = posts(:draft_post)
+
+    assert_enqueued_with(job: SendPostNotificationsJob, args: [ post_record.id ]) do
+      patch admin_post_path(post_record), params: { post: { status: "published" } }
+    end
+  end
+
   test "DELETE destroy removes post" do
     assert_difference "Post.count", -1 do
       delete admin_post_path(posts(:draft_post))
