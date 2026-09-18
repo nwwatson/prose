@@ -8,7 +8,7 @@ class ImportJob < ApplicationJob
     broadcast(import)
 
     stats = import.file.open do |file|
-      import.importer.new(io: file, user: import.user).call
+      import.importer.new(io: file, user: import.user, site_url: import.site_url).call
     end
     import.complete_with!(stats)
   rescue StandardError => error

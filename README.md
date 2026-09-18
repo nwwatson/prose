@@ -11,6 +11,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **Webhooks** — HMAC-signed outbound webhooks for post, subscriber, and comment events, with retries, a delivery log, and auto-disable on repeated failure
 - **Content Export** — Download your whole site as a Markdown zip (one file per post/page with YAML front matter, plus images) or a full JSON backup including subscribers; exports run in the background from **Admin → Import & Export**
 - **WordPress Import** — Upload a WordPress export (WXR `.xml`) to bring over posts, pages, categories, tags, and images; shortcodes and embeds are converted, and re-running an import skips anything already imported
+- **Ghost Import** — Upload a Ghost JSON export to bring over posts, pages, tags, featured posts, and member/paid visibility; Koenig cards and Mobiledoc content are converted, and images are downloaded when you provide your Ghost site URL
 - **Content Organization** — Categories, tags with searchable combo box and inline creation
 - **Reader Engagement** — Comments with threading and moderation, loves, social share buttons, subscriber magic-link auth, email notifications
 - **Social Embeds** — X/Twitter and YouTube via oEmbed

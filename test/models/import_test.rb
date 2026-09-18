@@ -14,7 +14,7 @@ class ImportTest < ActiveSupport::TestCase
   test "rejects non-xml files" do
     import = build_import(filename: "notes.txt", content_type: "text/plain")
     assert_not import.valid?
-    assert_includes import.errors[:file], I18n.t("activerecord.errors.models.import.attributes.file.invalid_type")
+    assert_includes import.errors[:file], I18n.t("activerecord.errors.models.import.attributes.file.invalid_wordpress_type")
   end
 
   test "rejects files over the size limit" do
@@ -31,9 +31,35 @@ class ImportTest < ActiveSupport::TestCase
     assert import.errors[:source].any?
   end
 
-  test "importer_for resolves wordpress and rejects unknown sources" do
+  test "importer_for resolves each source and rejects unknown ones" do
     assert_equal Imports::WordpressImporter, Import.importer_for(:wordpress)
-    assert_raises(ArgumentError) { Import.importer_for(:ghost) }
+    assert_equal Imports::GhostImporter, Import.importer_for(:ghost)
+    assert_raises(ArgumentError) { Import.importer_for(:substack) }
+  end
+
+  test "ghost imports require a json file" do
+    assert build_import(source: :ghost, filename: "ghost.json", content_type: "application/json").valid?
+
+    import = build_import(source: :ghost)
+    assert_not import.valid?
+    assert_includes import.errors[:file], I18n.t("activerecord.errors.models.import.attributes.file.invalid_ghost_type")
+  end
+
+  test "site_url is optional, normalized and must be http(s)" do
+    import = build_import(source: :ghost, filename: "ghost.json", content_type: "application/json")
+
+    import.site_url = "  https://blog.example.com/  "
+    assert import.valid?
+    assert_equal "https://blog.example.com", import.site_url
+
+    import.site_url = ""
+    assert import.valid?
+    assert_nil import.site_url
+
+    %w[javascript:alert(1) ftp://example.com not\ a\ url].each do |bad|
+      import.site_url = bad
+      assert_not import.valid?, "expected #{bad} to be invalid"
+    end
   end
 
   test "stat and warnings read from the stats json" do
@@ -58,8 +84,8 @@ class ImportTest < ActiveSupport::TestCase
 
   private
 
-  def build_import(filename: "wordpress.xml", content_type: "application/xml")
-    import = Import.new(user: users(:admin), source: :wordpress)
+  def build_import(source: :wordpress, filename: "wordpress.xml", content_type: "application/xml")
+    import = Import.new(user: users(:admin), source: source)
     import.file.attach(io: StringIO.new("<rss/>"), filename: filename, content_type: content_type)
     import
   end

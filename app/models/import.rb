@@ -1,21 +1,28 @@
 class Import < ApplicationRecord
   MAX_FILE_SIZE = 50.megabytes
-  ALLOWED_CONTENT_TYPES = %w[application/xml text/xml application/rss+xml].freeze
+  ACCEPTED_FILES = {
+    "wordpress" => { content_types: %w[application/xml text/xml application/rss+xml], extension: "xml" },
+    "ghost" => { content_types: %w[application/json], extension: "json" }
+  }.freeze
   MAX_WARNINGS = 50
 
-  enum :source, { wordpress: 0 }, prefix: :source, validate: true
+  enum :source, { wordpress: 0, ghost: 1 }, prefix: :source, validate: true
   enum :status, { pending: 0, processing: 1, completed: 2, failed: 3 }
 
   belongs_to :user
   has_one_attached :file
 
+  normalizes :site_url, with: ->(url) { url.strip.chomp("/").presence }
+
   validate :file_is_acceptable, on: :create
+  validate :site_url_is_http, if: :site_url?
 
   scope :recent, -> { order(created_at: :desc) }
 
   def self.importer_for(source)
     case source.to_s
     when "wordpress" then Imports::WordpressImporter
+    when "ghost" then Imports::GhostImporter
     else raise ArgumentError, "Unknown import source: #{source}"
     end
   end
@@ -53,10 +60,18 @@ class Import < ApplicationRecord
     end
 
     errors.add(:file, :too_large, count: MAX_FILE_SIZE / 1.megabyte) if file.blob.byte_size > MAX_FILE_SIZE
-    errors.add(:file, :invalid_type) unless xml_file?
+    errors.add(:file, :"invalid_#{source}_type") if ACCEPTED_FILES.key?(source) && !accepted_file_type?
   end
 
-  def xml_file?
-    ALLOWED_CONTENT_TYPES.include?(file.blob.content_type) || file.blob.filename.extension.casecmp?("xml")
+  def accepted_file_type?
+    accepted = ACCEPTED_FILES.fetch(source)
+    accepted[:content_types].include?(file.blob.content_type) || file.blob.filename.extension.casecmp?(accepted[:extension])
+  end
+
+  def site_url_is_http
+    uri = URI.parse(site_url)
+    errors.add(:site_url, :invalid) unless uri.is_a?(URI::HTTP) && uri.host.present?
+  rescue URI::InvalidURIError
+    errors.add(:site_url, :invalid)
   end
 end

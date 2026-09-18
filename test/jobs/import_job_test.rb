@@ -28,6 +28,17 @@ class ImportJobTest < ActiveJob::TestCase
     assert Post.exists?(slug: "hello-welcome")
   end
 
+  test "runs the ghost importer with the site url" do
+    import = create_import(file_fixture("ghost.json").read, source: :ghost, filename: "ghost.json", content_type: "application/json", site_url: "https://blog.example.com")
+
+    ImportJob.perform_now(import)
+
+    import.reload
+    assert import.completed?, import.error_message
+    assert_equal 5, import.stat(:posts_imported)
+    assert import.warnings.none? { |w| w.include?("No Ghost site URL") }
+  end
+
   test "marks the import failed for an invalid file" do
     import = create_import("<feed><entry/></feed>")
 
@@ -48,9 +59,9 @@ class ImportJobTest < ActiveJob::TestCase
 
   private
 
-  def create_import(xml)
-    import = Import.new(user: users(:admin), source: :wordpress)
-    import.file.attach(io: StringIO.new(xml), filename: "export.xml", content_type: "application/xml")
+  def create_import(body, source: :wordpress, filename: "export.xml", content_type: "application/xml", site_url: nil)
+    import = Import.new(user: users(:admin), source: source, site_url: site_url)
+    import.file.attach(io: StringIO.new(body), filename: filename, content_type: content_type)
     import.save!
     import
   end

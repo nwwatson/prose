@@ -38,6 +38,38 @@ class Admin::ImportsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to admin_imports_path
   end
 
+  test "GET index renders an upload form per source" do
+    sign_in_as(:admin)
+    get admin_imports_path
+
+    assert_select "form#wordpress_import_form input[name='import[source]'][value=wordpress]"
+    assert_select "form#ghost_import_form input[name='import[source]'][value=ghost]"
+    assert_select "form#ghost_import_form input[name='import[site_url]']"
+    assert_select "form#wordpress_import_form input[name='import[site_url]']", count: 0
+  end
+
+  test "POST create queues a ghost import with site url" do
+    sign_in_as(:admin)
+
+    assert_enqueued_with(job: ImportJob) do
+      post admin_imports_path, params: { import: { source: "ghost", site_url: "https://blog.example.com/", file: fixture_file_upload("ghost.json", "application/json") } }
+    end
+
+    import = Import.recent.first
+    assert import.source_ghost?
+    assert_equal "https://blog.example.com", import.site_url
+  end
+
+  test "POST create shows errors on the form for the submitted source" do
+    sign_in_as(:admin)
+
+    post admin_imports_path, params: { import: { source: "ghost", site_url: "javascript:alert(1)", file: fixture_file_upload("wordpress.xml", "application/xml") } }
+
+    assert_response :unprocessable_entity
+    assert_select "form#ghost_import_form .bg-red-50"
+    assert_select "form#wordpress_import_form .bg-red-50", count: 0
+  end
+
   test "POST create without a file re-renders with errors" do
     sign_in_as(:admin)
 

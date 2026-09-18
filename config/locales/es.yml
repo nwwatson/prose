@@ -6,7 +6,8 @@ es:
           attributes:
             file:
               too_large: "es demasiado grande (el máximo es %{count} MB)"
-              invalid_type: "debe ser un archivo XML de exportación de WordPress"
+              invalid_wordpress_type: "debe ser un archivo XML de exportación de WordPress"
+              invalid_ghost_type: "debe ser un archivo JSON de exportación de Ghost"
   errors:
     messages:
       hex_color: "debe ser un color hexadecimal válido (p. ej. #1a1a2e)"
@@ -545,9 +546,12 @@ es:
     imports:
       index:
         title: "Importar contenido"
-        wordpress_title: "WordPress"
         wordpress_description: "Sube el archivo XML de WordPress (Herramientas → Exportar → Todo el contenido). Se importan publicaciones, páginas, categorías, etiquetas e imágenes. Los elementos cuyo slug ya existe se omiten, así que es seguro volver a ejecutarlo."
-        file_label: "Archivo de exportación de WordPress (.xml)"
+        ghost_description: "Sube el archivo JSON de Ghost (Settings → Advanced → Import/Export → Export content). Se importan publicaciones, páginas, etiquetas, visibilidad e imágenes; la etiqueta principal de cada publicación se convierte en su categoría. Las publicaciones solo enviadas por correo se importan como borradores."
+        wordpress_file_label: "Archivo de exportación de WordPress (.xml)"
+        ghost_file_label: "Archivo de exportación de Ghost (.json)"
+        ghost_site_url_label: "URL del sitio Ghost (opcional)"
+        ghost_site_url_hint: "Necesaria para descargar las imágenes alojadas en tu sitio Ghost; las exportaciones solo contienen un marcador en lugar de tu dominio."
         file_hint: "Tamaño máximo %{size}."
         start_import: "Iniciar importación"
         recent_imports: "Importaciones recientes"
@@ -563,6 +567,7 @@ es:
         delete_confirm: "¿Eliminar este registro de importación? El contenido importado no se elimina."
       sources:
         wordpress: "WordPress"
+        ghost: "Ghost"
     exports:
       index:
         title: "Exportar contenido"
