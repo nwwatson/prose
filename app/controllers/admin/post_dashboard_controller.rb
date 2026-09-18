@@ -9,6 +9,7 @@ module Admin
       @engagement_rate = @engagement.engagement_rate
       @traffic_sources = @engagement.traffic_sources
       @views_by_day = @engagement.views_by_day
+      @fediverse_likes_count = @post.fediverse_likes.count
     end
   end
 end

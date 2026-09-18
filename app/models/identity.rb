@@ -6,6 +6,7 @@ class Identity < ApplicationRecord
   has_many :loves, dependent: :destroy
   has_one :user, dependent: :nullify
   has_one :subscriber, dependent: :nullify
+  has_one :fediverse_actor, dependent: :nullify
 
   validates :name, presence: true
 end

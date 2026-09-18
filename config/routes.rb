@@ -23,6 +23,18 @@ Rails.application.routes.draw do
   post "webhooks/sendgrid", to: "webhooks/sendgrid#create"
   post "webhooks/stripe", to: "webhooks/stripe#create"
 
+  # ActivityPub / fediverse federation (404 unless enabled in settings)
+  get ".well-known/webfinger", to: "activity_pub/webfinger#show", as: :webfinger
+  namespace :activity_pub, path: "activitypub" do
+    resource :actor, only: [ :show ]
+    resource :inbox, only: [ :create ]
+    get "outbox", to: "collections#outbox"
+    get "followers", to: "collections#followers"
+    get "following", to: "collections#following"
+  end
+  # Fediverse servers dereference a post's URL with an ActivityPub Accept header.
+  get "posts/:slug", to: "activity_pub/objects#show", constraints: ->(request) { ActivityPub::Negotiation.matches?(request) }
+
   # Public
   root "posts#index"
   resources :posts, only: [ :index, :show ], param: :slug do

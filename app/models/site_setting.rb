@@ -9,6 +9,7 @@ class SiteSetting < ApplicationRecord
   include Crawlers
   include PaymentConfiguration
   include MaskedSecrets
+  include ActivityPubConfiguration
 
   has_one_attached :default_og_image
 

@@ -7,6 +7,10 @@
       <span class="comment__author"><%= comment.identity.handle || comment.identity.name %></span>
       <span>&middot;</span>
       <time datetime="<%= comment.created_at.iso8601 %>"><%= time_ago_in_words(comment.created_at) %> <%= t('shared.ago') %></time>
+      <% if comment.federated? %>
+        <span>&middot;</span>
+        <span class="comment__federated-badge"><%= t('comments.via_fediverse') %></span>
+      <% end %>
       <% if comment.edited? %>
         <span>&middot;</span>
         <span class="comment__edited-badge"><%= t('comments.edited') %></span>

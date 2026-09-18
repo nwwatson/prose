@@ -149,6 +149,7 @@ es:
   comments:
     deleted: "[eliminado]"
     edited: "editado"
+    via_fediverse: "desde el fediverso"
     delete_confirm: "¿Eliminar este comentario?"
     form:
       write: "Escribir"
@@ -383,6 +384,7 @@ es:
         reject: "Rechazar"
         delete_confirm: "¿Eliminar este comentario?"
         no_comments: "Aún no hay comentarios."
+        fediverse: "Fediverso"
     payment_settings:
       edit:
         title: "Configuración de pagos"
@@ -654,6 +656,16 @@ es:
         search_engines_description: "Controla cómo los rastreadores de motores de búsqueda interactúan con tu sitio."
         block_crawlers: "Bloquear todos los rastreadores"
         block_crawlers_description: "Cuando está habilitado, robots.txt le dirá a todos los motores de búsqueda que no indexen tu sitio. Útil durante el desarrollo o para sitios privados."
+        fediverse: "Fediverso (ActivityPub)"
+        fediverse_description: "Permite que personas en Mastodon y otros servidores del fediverso sigan este sitio. Las publicaciones se entregan a los seguidores y sus respuestas llegan como comentarios pendientes de moderación. Requiere que APP_HOST sea el dominio permanente de tu sitio."
+        activitypub_enabled: "Activar federación"
+        activitypub_enabled_description: "Expone los endpoints de WebFinger y ActivityPub. Las publicaciones solo para miembros o de pago se comparten como un adelanto con un enlace, nunca completas."
+        activitypub_username: "Nombre de usuario en el fediverso"
+        activitypub_username_hint: "Letras minúsculas, números y guiones bajos. Los seguidores encuentran el sitio buscando este identificador."
+        activitypub_handle: "Tu identificador en el fediverso:"
+        activitypub_followers:
+          one: "1 seguidor"
+          other: "%{count} seguidores"
         save_settings: "Guardar configuración"
         language: "Idioma"
         locale: "Idioma"
@@ -742,6 +754,7 @@ es:
         unique_viewers: "Visitantes únicos"
         loves: "Me gusta"
         engagement_rate: "Tasa de interacción"
+        fediverse_likes: "Me gusta del fediverso"
         views_last_30_days: "Vistas (últimos 30 días)"
         no_view_data: "Aún no hay datos de vistas."
         traffic_sources: "Fuentes de tráfico"
@@ -810,6 +823,8 @@ es:
         title_change: "Título cambiado"
         content_diff: "Cambios en el contenido"
 
+  activity_pub:
+    read_more: "Lee la publicación completa en %{site}"
   mailer:
     footer:
       unsubscribe: "Cancelar suscripción"

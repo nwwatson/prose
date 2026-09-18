@@ -8,6 +8,7 @@
  *   .comment__meta             Author / date / edited meta row
  *   .comment__author           Author name
  *   .comment__edited-badge     "(edited)" indicator
+ *   .comment__federated-badge  "via the fediverse" indicator on ActivityPub replies
  *   .comment__body             Comment body text (combine with prose-comment)
  *   .comment__actions          Action buttons row
  *   .comment__action-btn       Edit action button
@@ -37,6 +38,10 @@
 
 .comment__edited-badge {
   @apply italic;
+}
+
+.comment__federated-badge {
+  @apply text-xs text-gray-400 dark:text-gray-500;
 }
 
 .comment__body {

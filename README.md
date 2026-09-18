@@ -9,6 +9,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 - **MCP Server** — [Model Context Protocol](https://modelcontextprotocol.io) endpoint for managing posts, categories, tags, and assets from Claude Desktop, Claude Code, or any MCP client
 - **REST API** — Versioned JSON API at `/api/v1/` for posts, categories, tags, site info, and assets, sharing the same bearer token as MCP
 - **Webhooks** — HMAC-signed outbound webhooks for post, subscriber, and comment events, with retries, a delivery log, and auto-disable on repeated failure
+- **Fediverse (ActivityPub)** — Opt-in federation: Mastodon and other fediverse users can follow the site as `@blog@yourdomain`, get new posts in their feeds, like them, and reply — replies arrive as comments held for moderation
 - **Content Export** — Download your whole site as a Markdown zip (one file per post/page with YAML front matter, plus images) or a full JSON backup including subscribers; exports run in the background from **Admin → Export**
 - **Content Organization** — Categories, tags with searchable combo box and inline creation
 - **Reader Engagement** — Comments with threading and moderation, loves, social share buttons, subscriber magic-link auth, email notifications
@@ -285,6 +286,14 @@ env:
 
 Manage passkeys at `/admin/passkeys` after signing in.
 
+### Optional: Fediverse (ActivityPub)
+
+Turn on **Admin → Settings → Fediverse** to let Mastodon, Threads, and other fediverse users follow your site. Pick a username (default `blog`); people follow `@blog@yourdomain.com`. The site serves WebFinger at `/.well-known/webfinger` and an ActivityPub actor, inbox, and outbox under `/activitypub/`.
+
+- Publishing a post delivers it to followers; editing or unpublishing it sends an update or a delete. Members-only and paid posts are shared only as a teaser and a link.
+- Fediverse likes appear on each post's admin dashboard. Replies become comments held for moderation at `/admin/comments`, labeled "Fediverse".
+- **`APP_HOST` must be set to your permanent public domain, and the site must be served over HTTPS**, before you enable federation. Remote servers store the actor and post URLs built from it, so changing the domain later breaks existing follows.
+
 ### Environment Variables Reference
 
 | Variable | Required | Default | Description |
@@ -293,7 +302,7 @@ Manage passkeys at `/admin/passkeys` after signing in.
 | `ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY` | Yes | — | Encrypts sensitive model attributes (AI API keys) |
 | `ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY` | Yes | — | Deterministic encryption for queryable fields |
 | `ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT` | Yes | — | Salt for encryption key derivation |
-| `APP_HOST` | No | `example.com` | Your domain name (enables host authorization) |
+| `APP_HOST` | No | `example.com` | Your domain name (enables host authorization; required for fediverse federation) |
 | `RAILS_ASSUME_SSL` | No | `true` | Set to `false` if not using SSL |
 | `SOLID_QUEUE_IN_PUMA` | No | `true` | Run background jobs in the web process |
 | `ACTIVE_STORAGE_SERVICE` | No | `local` | Storage backend: `local` or `amazon` |

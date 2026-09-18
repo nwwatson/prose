@@ -152,6 +152,7 @@ en:
   comments:
     deleted: "[deleted]"
     edited: "edited"
+    via_fediverse: "via the fediverse"
     delete_confirm: "Delete this comment?"
     form:
       write: "Write"
@@ -387,6 +388,7 @@ en:
         reject: "Reject"
         delete_confirm: "Delete this comment?"
         no_comments: "No comments yet."
+        fediverse: "Fediverse"
     payment_settings:
       edit:
         title: "Payment Settings"
@@ -658,6 +660,16 @@ en:
         search_engines_description: "Control how search engine crawlers interact with your site."
         block_crawlers: "Block all crawlers"
         block_crawlers_description: "When enabled, robots.txt will tell all search engines not to index your site. Useful during development or for private sites."
+        fediverse: "Fediverse (ActivityPub)"
+        fediverse_description: "Let people on Mastodon and other fediverse servers follow this site. Published posts are delivered to followers, and their replies arrive as comments held for moderation. Requires APP_HOST to be set to your site's permanent domain."
+        activitypub_enabled: "Enable federation"
+        activitypub_enabled_description: "Serves WebFinger and ActivityPub endpoints. Members-only and paid posts are shared as a teaser with a link, never in full."
+        activitypub_username: "Fediverse username"
+        activitypub_username_hint: "Lowercase letters, numbers, and underscores. Followers find the site by searching for this handle."
+        activitypub_handle: "Your fediverse handle:"
+        activitypub_followers:
+          one: "1 follower"
+          other: "%{count} followers"
         save_settings: "Save settings"
         language: "Language"
         locale: "Language"
@@ -746,6 +758,7 @@ en:
         unique_viewers: "Unique Viewers"
         loves: "Loves"
         engagement_rate: "Engagement Rate"
+        fediverse_likes: "Fediverse Likes"
         views_last_30_days: "Views (Last 30 Days)"
         no_view_data: "No view data yet."
         traffic_sources: "Traffic Sources"
@@ -815,6 +828,8 @@ en:
         content_diff: "Content changes"
 
   # Mailers
+  activity_pub:
+    read_more: "Read the full post on %{site}"
   mailer:
     footer:
       unsubscribe: "Unsubscribe"

@@ -159,4 +159,12 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".share-buttons [aria-label]", count: 6
     assert_no_match %r{<b>\?</b>}, response.body
   end
+
+  test "approved fediverse replies are labeled on the post" do
+    comments(:top_level).update_columns(activitypub_uri: "https://remote.example/statuses/1")
+
+    get post_path(slug: posts(:published_post).slug)
+
+    assert_select ".comment__federated-badge", text: I18n.t("comments.via_fediverse")
+  end
 end

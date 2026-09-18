@@ -4,6 +4,9 @@
   <%= meta_tags_for_post(@post) %>
   <%= json_ld_for_post(@post) %>
   <%= json_ld_breadcrumb_list(@post) %>
+  <% if site_setting.activitypub_enabled? %>
+    <%= tag.link rel: "alternate", type: "application/activity+json", href: ActivityPub::Urls.post_url(@post) %>
+  <% end %>
 <% end %>
 
 <article>

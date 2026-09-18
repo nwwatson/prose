@@ -10,6 +10,12 @@ class Admin::CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET index marks fediverse replies" do
+    comments(:pending_comment).update_columns(activitypub_uri: "https://remote.example/statuses/1")
+    get admin_comments_path
+    assert_select "span", text: I18n.t("admin.comments.index.fediverse")
+  end
+
   test "GET index filters by pending" do
     get admin_comments_path(filter: "pending")
     assert_response :success

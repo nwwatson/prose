@@ -19,6 +19,9 @@
             <div class="flex-1 min-w-0">
               <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                 <span class="font-medium text-gray-900"><%= comment.identity.handle || comment.identity.name %></span>
+                <% if comment.federated? %>
+                  <%= status_badge t('admin.comments.index.fediverse'), color_class: "bg-violet-100 text-violet-800", size: :sm %>
+                <% end %>
                 <span class="text-gray-500"><%= t('shared.on') %></span>
                 <span class="font-medium text-gray-900 truncate"><%= comment.post.title %></span>
                 <span class="text-gray-500">&middot;</span>

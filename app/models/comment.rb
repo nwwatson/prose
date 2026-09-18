@@ -18,6 +18,11 @@ class Comment < ApplicationRecord
 
   after_create_commit :emit_created_webhook
 
+  # Replies received from the fediverse carry the remote Note's id.
+  def federated?
+    activitypub_uri.present?
+  end
+
   def rendered_body
     MarkdownRenderer.to_html(body)
   end

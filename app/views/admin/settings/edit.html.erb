@@ -247,6 +247,33 @@
       </div>
     </fieldset>
 
+    <%# Fediverse (ActivityPub) %>
+    <fieldset class="border-t border-gray-200 pt-6">
+      <legend class="text-lg font-semibold text-gray-900"><%= t('admin.settings.edit.fediverse') %></legend>
+      <p class="mt-1 text-sm text-gray-600"><%= t('admin.settings.edit.fediverse_description') %></p>
+
+      <div class="mt-4 space-y-4">
+        <%= render "shared/toggle", form: f, field: :activitypub_enabled,
+              label: t('admin.settings.edit.activitypub_enabled'),
+              description: t('admin.settings.edit.activitypub_enabled_description') %>
+
+        <div>
+          <%= f.label :activitypub_username, t('admin.settings.edit.activitypub_username'), class: "block text-sm font-medium text-gray-900" %>
+          <div class="mt-2">
+            <%= f.text_field :activitypub_username, autocomplete: "off", class: admin_input_classes %>
+          </div>
+          <p class="mt-1 text-xs text-gray-500"><%= t('admin.settings.edit.activitypub_username_hint') %></p>
+        </div>
+
+        <% if @site_setting.activitypub_enabled? && @site_setting.persisted? && !@site_setting.activitypub_enabled_changed? %>
+          <div class="rounded-md bg-gray-50 p-4 text-sm text-gray-700">
+            <p><%= t('admin.settings.edit.activitypub_handle') %> <code class="font-mono text-gray-900"><%= @site_setting.activitypub_handle %></code></p>
+            <p class="mt-1"><%= t('admin.settings.edit.activitypub_followers', count: FediverseActor.followers.count) %></p>
+          </div>
+        <% end %>
+      </div>
+    </fieldset>
+
     <%# Payment Configuration %>
     <fieldset class="border-t border-gray-200 pt-6">
       <legend class="text-lg font-semibold text-gray-900"><%= t('admin.settings.edit.payment_configuration') %></legend>

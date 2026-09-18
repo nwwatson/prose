@@ -148,4 +148,24 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
   ensure
     SiteSetting.current.update!(stripe_secret_key: nil)
   end
+
+  test "PATCH update enables fediverse federation and shows the handle" do
+    sign_in_as(:admin)
+    patch admin_settings_path, params: { site_setting: { activitypub_enabled: "1", activitypub_username: "Journal" } }
+    assert_redirected_to edit_admin_settings_path
+
+    setting = SiteSetting.current
+    assert setting.activitypub_enabled?
+    assert_equal "journal", setting.activitypub_username
+    assert setting.activitypub_private_key.present?
+
+    get edit_admin_settings_path
+    assert_match setting.activitypub_handle, response.body
+  end
+
+  test "PATCH update rejects an invalid fediverse username" do
+    sign_in_as(:admin)
+    patch admin_settings_path, params: { site_setting: { activitypub_username: "not valid" } }
+    assert_response :unprocessable_entity
+  end
 end

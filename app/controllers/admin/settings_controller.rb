@@ -14,7 +14,8 @@ module Admin
         :claude_api_key, :gemini_api_key, :openai_api_key, :ai_model, :ai_max_tokens, :image_model,
         :stripe_secret_key, :stripe_publishable_key, :stripe_webhook_secret, :payments_currency,
         :locale,
-        :block_crawlers
+        :block_crawlers,
+        :activitypub_enabled, :activitypub_username
       )
     end
 
