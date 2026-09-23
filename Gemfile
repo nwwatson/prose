@@ -69,7 +69,7 @@ gem "commonmarker", "~> 2.3"
 gem "reverse_markdown", "~> 3.0"
 
 # Zip archives for Markdown content export [https://github.com/rubyzip/rubyzip]
-gem "rubyzip", "~> 3.0", require: "zip"
+gem "rubyzip", "~> 3.7", require: "zip"
 
 # Plain-text diffs for post version history [https://github.com/samg/diffy]
 gem "diffy"
