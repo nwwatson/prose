@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.1.2"
+gem "rails", "~> 8.1.4"
 # json 3.x drops JSON.parse's legacy positional options arg, which breaks
 # ActiveSupport::JSON.decode (used by signed/encrypted cookies) on this Rails version.
 gem "json", "< 3.0"
