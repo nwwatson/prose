@@ -1,7 +1,7 @@
 <tr id="membership_tier_<%= tier.id %>_row">
   <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= tier.name %></td>
   <td class="px-6 py-4 text-sm text-gray-500"><%= tier.formatted_price %></td>
-  <td class="px-6 py-4 text-sm text-gray-500"><%= tier.interval.capitalize %></td>
+  <td class="px-6 py-4 text-sm text-gray-500"><%= interval_label(tier.interval) %></td>
   <td class="px-6 py-4 text-sm">
     <div class="flex items-center gap-2">
       <%= status_badge(tier.active? ? t('shared.active') : t('admin.membership_tiers.index.inactive'),

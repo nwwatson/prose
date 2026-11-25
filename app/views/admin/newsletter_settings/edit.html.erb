@@ -1,31 +1,36 @@
-<% content_for(:title, "Newsletter Settings — #{site_name}") %>
+<% content_for(:title, page_title(t('admin.newsletter_settings.edit.title'))) %>
 
 <div class="max-w-4xl">
-  <h1 class="text-2xl font-bold text-gray-900">Newsletter Settings</h1>
-  <p class="mt-1 text-sm text-gray-600">Configure email branding and delivery for your newsletters.</p>
+  <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.newsletter_settings.edit.title') %></h1>
+  <p class="mt-1 text-sm text-gray-600"><%= t('admin.newsletter_settings.edit.subtitle') %></p>
 
   <%= form_with model: @site_setting, url: admin_newsletter_settings_path, class: "mt-8 space-y-6" do |f| %>
-    <%= render "admin/shared/form_errors", record: @site_setting, heading: "#{pluralize(@site_setting.errors.count, "error")} prevented settings from being saved:", wrapper_class: "" %>
+    <%= render "admin/shared/form_errors", record: @site_setting, heading: t('admin.newsletter_settings.edit.errors_prevented', count: @site_setting.errors.count), wrapper_class: "" %>
 
     <%# Email Branding %>
     <% fonts_json = SiteSetting::EmailBranding::EMAIL_FONT_FAMILIES.transform_values { |v| v[:stack] }.to_json %>
-    <fieldset data-controller="email-branding-preview" data-email-branding-preview-fonts-value="<%= fonts_json %>" data-action="color-pair:change->email-branding-preview#update">
-      <legend class="text-lg font-semibold text-gray-900">Email Branding</legend>
-      <p class="mt-1 text-sm text-gray-600">Customize the look of your newsletter emails. These are site-wide defaults that can be overridden per newsletter.</p>
+    <fieldset data-controller="email-branding-preview" data-email-branding-preview-fonts-value="<%= fonts_json %>"
+              data-email-branding-preview-template-fallback-value="<%= email_template_name("minimal") %>"
+              data-email-branding-preview-font-fallback-value="<%= email_font_name("system") %>"
+              data-email-branding-preview-preheader-fallback-value="<%= t('admin.newsletter_settings.edit.preheader_placeholder') %>"
+              data-email-branding-preview-footer-fallback-value="<%= t('admin.newsletter_settings.edit.custom_footer') %>"
+              data-action="color-pair:change->email-branding-preview#update">
+      <legend class="text-lg font-semibold text-gray-900"><%= t('admin.newsletter_settings.edit.email_branding') %></legend>
+      <p class="mt-1 text-sm text-gray-600"><%= t('admin.newsletter_settings.edit.email_branding_description') %></p>
 
       <div class="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2">
         <div class="space-y-6">
           <%# Default template %>
           <div>
-            <%= f.label :email_default_template, "Default template", class: "block text-sm font-medium text-gray-900" %>
+            <%= f.label :email_default_template, t('admin.newsletter_settings.edit.default_template'), class: "block text-sm font-medium text-gray-900" %>
             <%= render "shared/custom_select", form: f, field: :email_default_template,
-                  options: SiteSetting::EmailBranding::EMAIL_TEMPLATES.map { |k, v| [v[:name], k] },
+                  options: email_template_options,
                   data: { email_branding_preview_target: "template", action: "change->email-branding-preview#update" } %>
           </div>
 
           <%# Header logo %>
           <div>
-            <%= f.label :email_header_logo, "Header logo", class: "block text-sm font-medium text-gray-900" %>
+            <%= f.label :email_header_logo, t('admin.newsletter_settings.edit.header_logo'), class: "block text-sm font-medium text-gray-900" %>
             <div class="mt-2">
               <% if @site_setting.email_header_logo.attached? %>
                 <div class="mb-3">
@@ -34,17 +39,17 @@
               <% end %>
               <%= f.file_field :email_header_logo, accept: "image/*", class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200" %>
             </div>
-            <p class="mt-1 text-xs text-gray-500">Displayed in the Branded template header. Recommended max height: 48px.</p>
+            <p class="mt-1 text-xs text-gray-500"><%= t('admin.newsletter_settings.edit.header_logo_help') %></p>
           </div>
 
           <hr class="border-gray-200">
 
           <%# Colors %>
           <div>
-            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Colors</h3>
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500"><%= t('admin.newsletter_settings.edit.colors') %></h3>
             <div class="mt-3 space-y-4">
               <div>
-                <%= f.label :email_accent_color, "Accent color", class: "block text-sm font-medium text-gray-900" %>
+                <%= f.label :email_accent_color, t('admin.newsletter_settings.edit.accent_color'), class: "block text-sm font-medium text-gray-900" %>
                 <div class="mt-1 flex items-center gap-2" data-controller="color-pair">
                   <%= f.color_field :email_accent_color, data: { email_branding_preview_target: "accentColor", color_pair_target: "color", action: "input->color-pair#fromColor" }, class: "h-8 w-8 cursor-pointer rounded border border-gray-300 p-0.5" %>
                   <%= f.text_field :email_accent_color, data: { color_pair_target: "text", action: "input->color-pair#fromText" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm" %>
@@ -52,7 +57,7 @@
               </div>
 
               <div>
-                <%= f.label :email_background_color, "Background color", class: "block text-sm font-medium text-gray-900" %>
+                <%= f.label :email_background_color, t('admin.newsletter_settings.edit.background_color'), class: "block text-sm font-medium text-gray-900" %>
                 <div class="mt-1 flex items-center gap-2" data-controller="color-pair">
                   <%= f.color_field :email_background_color, data: { email_branding_preview_target: "backgroundColor", color_pair_target: "color", action: "input->color-pair#fromColor" }, class: "h-8 w-8 cursor-pointer rounded border border-gray-300 p-0.5" %>
                   <%= f.text_field :email_background_color, data: { color_pair_target: "text", action: "input->color-pair#fromText" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm" %>
@@ -60,7 +65,7 @@
               </div>
 
               <div>
-                <%= f.label :email_body_text_color, "Body text color", class: "block text-sm font-medium text-gray-900" %>
+                <%= f.label :email_body_text_color, t('admin.newsletter_settings.edit.body_text_color'), class: "block text-sm font-medium text-gray-900" %>
                 <div class="mt-1 flex items-center gap-2" data-controller="color-pair">
                   <%= f.color_field :email_body_text_color, data: { email_branding_preview_target: "textColor", color_pair_target: "color", action: "input->color-pair#fromColor" }, class: "h-8 w-8 cursor-pointer rounded border border-gray-300 p-0.5" %>
                   <%= f.text_field :email_body_text_color, data: { color_pair_target: "text", action: "input->color-pair#fromText" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm" %>
@@ -68,7 +73,7 @@
               </div>
 
               <div>
-                <%= f.label :email_heading_color, "Heading color", class: "block text-sm font-medium text-gray-900" %>
+                <%= f.label :email_heading_color, t('admin.newsletter_settings.edit.heading_color'), class: "block text-sm font-medium text-gray-900" %>
                 <div class="mt-1 flex items-center gap-2" data-controller="color-pair">
                   <%= f.color_field :email_heading_color, data: { email_branding_preview_target: "headingColor", color_pair_target: "color", action: "input->color-pair#fromColor" }, class: "h-8 w-8 cursor-pointer rounded border border-gray-300 p-0.5" %>
                   <%= f.text_field :email_heading_color, data: { color_pair_target: "text", action: "input->color-pair#fromText" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm" %>
@@ -81,42 +86,42 @@
 
           <%# Font family %>
           <div>
-            <%= f.label :email_font_family, "Font family", class: "block text-sm font-medium text-gray-900" %>
+            <%= f.label :email_font_family, t('admin.newsletter_settings.edit.font_family'), class: "block text-sm font-medium text-gray-900" %>
             <%= render "shared/custom_select", form: f, field: :email_font_family,
-                  options: SiteSetting::EmailBranding::EMAIL_FONT_FAMILIES.map { |k, v| [v[:name], k] },
+                  options: email_font_options,
                   data: { email_branding_preview_target: "fontFamily", action: "change->email-branding-preview#update" } %>
           </div>
 
           <%# Preheader text %>
           <div>
-            <%= f.label :email_preheader_text, "Default preheader text", class: "block text-sm font-medium text-gray-900" %>
+            <%= f.label :email_preheader_text, t('admin.newsletter_settings.edit.default_preheader'), class: "block text-sm font-medium text-gray-900" %>
             <div class="mt-2">
-              <%= f.text_field :email_preheader_text, placeholder: "Preview text shown in inbox...", maxlength: 150,
+              <%= f.text_field :email_preheader_text, placeholder: t('admin.newsletter_settings.edit.preheader_placeholder'), maxlength: 150,
                     data: { email_branding_preview_target: "preheader", action: "input->email-branding-preview#update" },
                     class: admin_input_classes %>
             </div>
-            <p class="mt-1 text-xs text-gray-500">Short text shown in email clients before opening the message.</p>
+            <p class="mt-1 text-xs text-gray-500"><%= t('admin.newsletter_settings.edit.preheader_help') %></p>
           </div>
 
           <%# Footer text %>
           <div>
-            <%= f.label :email_footer_text, "Custom footer text", class: "block text-sm font-medium text-gray-900" %>
+            <%= f.label :email_footer_text, t('admin.newsletter_settings.edit.custom_footer'), class: "block text-sm font-medium text-gray-900" %>
             <div class="mt-2">
-              <%= f.text_area :email_footer_text, rows: 2, placeholder: "e.g. 123 Main St, City, State 12345",
+              <%= f.text_area :email_footer_text, rows: 2, placeholder: t('admin.newsletter_settings.edit.footer_placeholder'),
                     data: { email_branding_preview_target: "footer", action: "input->email-branding-preview#update" },
                     class: admin_input_classes %>
             </div>
-            <p class="mt-1 text-xs text-gray-500">Appears in the footer of all newsletter emails.</p>
+            <p class="mt-1 text-xs text-gray-500"><%= t('admin.newsletter_settings.edit.footer_help') %></p>
           </div>
 
           <hr class="border-gray-200">
 
           <%# Social links %>
           <div>
-            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Social Links</h3>
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500"><%= t('admin.newsletter_settings.edit.social_links') %></h3>
             <div class="mt-3 space-y-4">
               <div>
-                <%= f.label :email_social_twitter, "Twitter / X", class: "block text-sm font-medium text-gray-900" %>
+                <%= f.label :email_social_twitter, t('admin.newsletter_settings.edit.twitter'), class: "block text-sm font-medium text-gray-900" %>
                 <div class="mt-1">
                   <%= f.url_field :email_social_twitter, placeholder: "https://x.com/yourhandle",
                         data: { email_branding_preview_target: "socialTwitter", action: "input->email-branding-preview#update" },
@@ -125,7 +130,7 @@
               </div>
 
               <div>
-                <%= f.label :email_social_github, "GitHub", class: "block text-sm font-medium text-gray-900" %>
+                <%= f.label :email_social_github, t('admin.newsletter_settings.edit.github'), class: "block text-sm font-medium text-gray-900" %>
                 <div class="mt-1">
                   <%= f.url_field :email_social_github, placeholder: "https://github.com/yourhandle",
                         data: { email_branding_preview_target: "socialGithub", action: "input->email-branding-preview#update" },
@@ -134,7 +139,7 @@
               </div>
 
               <div>
-                <%= f.label :email_social_linkedin, "LinkedIn", class: "block text-sm font-medium text-gray-900" %>
+                <%= f.label :email_social_linkedin, t('admin.newsletter_settings.edit.linkedin'), class: "block text-sm font-medium text-gray-900" %>
                 <div class="mt-1">
                   <%= f.url_field :email_social_linkedin, placeholder: "https://linkedin.com/in/yourprofile",
                         data: { email_branding_preview_target: "socialLinkedin", action: "input->email-branding-preview#update" },
@@ -143,7 +148,7 @@
               </div>
 
               <div>
-                <%= f.label :email_social_website, "Website", class: "block text-sm font-medium text-gray-900" %>
+                <%= f.label :email_social_website, t('admin.newsletter_settings.edit.website'), class: "block text-sm font-medium text-gray-900" %>
                 <div class="mt-1">
                   <%= f.url_field :email_social_website, placeholder: "https://yoursite.com",
                         data: { email_branding_preview_target: "socialWebsite", action: "input->email-branding-preview#update" },
@@ -159,18 +164,18 @@
           <div class="rounded-md border border-gray-200 overflow-hidden" data-email-branding-preview-target="preview">
             <%# Preheader %>
             <div style="padding: 8px 16px; background-color: #f9fafb; border-bottom: 1px solid #e5e7eb;">
-              <p class="text-xs text-gray-400 mb-0.5">Preheader</p>
-              <p style="font-size: 12px; line-height: 1.4; color: #6b7280; margin: 0; opacity: <%= @site_setting.email_preheader_text.present? ? '1' : '0.5' %>;" data-email-branding-preview-target="previewPreheader"><%= @site_setting.email_preheader_text.presence || "Preview text shown in inbox..." %></p>
+              <p class="text-xs text-gray-400 mb-0.5"><%= t('admin.newsletter_settings.edit.preheader_preview') %></p>
+              <p style="font-size: 12px; line-height: 1.4; color: #6b7280; margin: 0; opacity: <%= @site_setting.email_preheader_text.present? ? '1' : '0.5' %>;" data-email-branding-preview-target="previewPreheader"><%= @site_setting.email_preheader_text.presence || t('admin.newsletter_settings.edit.preheader_placeholder') %></p>
             </div>
 
             <%# Template badge %>
             <div style="padding: 6px 16px; background-color: #f9fafb; border-bottom: 1px solid #e5e7eb;">
               <span class="inline-flex items-center gap-1 text-xs text-gray-500">
-                Template: <strong data-email-branding-preview-target="previewTemplate"><%= SiteSetting::EmailBranding::EMAIL_TEMPLATES.dig(@site_setting.email_default_template.presence || "minimal", :name) || "Minimal" %></strong>
+                <%= t('admin.newsletter_settings.edit.template_label') %> <strong data-email-branding-preview-target="previewTemplate"><%= email_template_name(@site_setting.email_default_template.presence || "minimal") %></strong>
               </span>
               <span class="mx-2 text-gray-300">|</span>
               <span class="inline-flex items-center gap-1 text-xs text-gray-500">
-                Font: <strong data-email-branding-preview-target="previewFont"><%= SiteSetting::EmailBranding::EMAIL_FONT_FAMILIES.dig(@site_setting.email_font_family.presence || "system", :name) || "System Default" %></strong>
+                <%= t('admin.newsletter_settings.edit.font_label') %> <strong data-email-branding-preview-target="previewFont"><%= email_font_name(@site_setting.email_font_family.presence || "system") %></strong>
               </span>
             </div>
 
@@ -178,8 +183,8 @@
             <div style="background-color: <%= @site_setting.email_background_color %>; padding: 16px;" data-email-branding-preview-target="previewBg">
               <div style="background-color: <%= @site_setting.email_accent_color %>; height: 6px; border-radius: 4px 4px 0 0;" data-email-branding-preview-target="previewAccent"></div>
               <div style="background-color: #ffffff; padding: 16px; border-radius: 0 0 4px 4px;">
-                <h3 style="color: <%= @site_setting.email_heading_color %>; font-size: 16px; font-weight: 700; margin: 0 0 8px; font-family: <%= @site_setting.email_font_stack %>;" data-email-branding-preview-target="previewHeading">Newsletter Heading</h3>
-                <p style="color: <%= @site_setting.email_body_text_color %>; font-size: 13px; line-height: 1.5; margin: 0; font-family: <%= @site_setting.email_font_stack %>;" data-email-branding-preview-target="previewBody">This is how your newsletter body text will look with the selected colors and font.</p>
+                <h3 style="color: <%= @site_setting.email_heading_color %>; font-size: 16px; font-weight: 700; margin: 0 0 8px; font-family: <%= @site_setting.email_font_stack %>;" data-email-branding-preview-target="previewHeading"><%= t('admin.newsletter_settings.edit.newsletter_heading_preview') %></h3>
+                <p style="color: <%= @site_setting.email_body_text_color %>; font-size: 13px; line-height: 1.5; margin: 0; font-family: <%= @site_setting.email_font_stack %>;" data-email-branding-preview-target="previewBody"><%= t('admin.newsletter_settings.edit.newsletter_body_preview') %></p>
               </div>
             </div>
 
@@ -203,7 +208,7 @@
               </div>
 
               <%# Footer text %>
-              <p style="font-size: 11px; line-height: 1.4; color: #9ca3af; margin: 0; text-align: center; opacity: <%= @site_setting.email_footer_text.present? ? '1' : '0.5' %>;" data-email-branding-preview-target="previewFooter"><%= @site_setting.email_footer_text.presence || "Custom footer text" %></p>
+              <p style="font-size: 11px; line-height: 1.4; color: #9ca3af; margin: 0; text-align: center; opacity: <%= @site_setting.email_footer_text.present? ? '1' : '0.5' %>;" data-email-branding-preview-target="previewFooter"><%= @site_setting.email_footer_text.presence || t('admin.newsletter_settings.edit.custom_footer') %></p>
             </div>
           </div>
         </div>
@@ -212,18 +217,18 @@
 
     <%# Email Service Configuration %>
     <fieldset class="border-t border-gray-200 pt-6">
-      <legend class="text-lg font-semibold text-gray-900">Email Service</legend>
-      <p class="mt-1 text-sm text-gray-600">Configure how newsletters are delivered. SMTP uses your default mail settings. SendGrid provides delivery tracking and analytics.</p>
+      <legend class="text-lg font-semibold text-gray-900"><%= t('admin.newsletter_settings.edit.email_service') %></legend>
+      <p class="mt-1 text-sm text-gray-600"><%= t('admin.newsletter_settings.edit.email_service_description') %></p>
 
       <div class="mt-4 space-y-4">
         <div>
-          <%= f.label :email_provider, "Email Provider", class: "block text-sm font-medium text-gray-900" %>
+          <%= f.label :email_provider, t('admin.newsletter_settings.edit.email_provider'), class: "block text-sm font-medium text-gray-900" %>
           <%= render "shared/custom_select", form: f, field: :email_provider,
-                options: SiteSetting::EmailConfiguration::EMAIL_PROVIDERS.map { |k, v| [v, k] } %>
+                options: email_provider_options %>
         </div>
 
         <div>
-          <%= f.label :sendgrid_api_key, "SendGrid API Key", class: "block text-sm font-medium text-gray-900" %>
+          <%= f.label :sendgrid_api_key, t('admin.newsletter_settings.edit.sendgrid_api_key'), class: "block text-sm font-medium text-gray-900" %>
           <div class="mt-2">
             <%= f.password_field :sendgrid_api_key,
                   value: @site_setting.masked_value_for(:sendgrid_api_key),
@@ -231,12 +236,12 @@
                   autocomplete: "off",
                   class: admin_input_classes %>
           </div>
-          <p class="mt-1 text-xs text-gray-500">Required when using SendGrid. Get your API key from <strong>Settings &rarr; API Keys</strong> in your SendGrid dashboard.</p>
+          <p class="mt-1 text-xs text-gray-500"><%= t('admin.newsletter_settings.edit.sendgrid_help_html') %></p>
         </div>
 
         <div class="rounded-md bg-blue-50 p-4">
           <p class="text-sm text-blue-800">
-            <strong>Webhook URL:</strong> To enable open/click tracking, configure the SendGrid Event Webhook to POST to:
+            <strong><%= t('admin.newsletter_settings.edit.webhook_url') %></strong> <%= t('admin.newsletter_settings.edit.webhook_description') %>
             <code class="ml-1 rounded bg-blue-100 px-1.5 py-0.5 text-xs font-mono"><%= request.base_url %>/webhooks/sendgrid</code>
           </p>
         </div>
@@ -244,7 +249,7 @@
     </fieldset>
 
     <div class="flex justify-end border-t border-gray-200 pt-6">
-      <%= f.submit "Save settings", class: "#{admin_button_classes(variant: :primary)} cursor-pointer" %>
+      <%= f.submit t('admin.newsletter_settings.edit.save_settings'), class: "#{admin_button_classes(variant: :primary)} cursor-pointer" %>
     </div>
   <% end %>
 </div>

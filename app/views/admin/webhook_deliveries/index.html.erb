@@ -24,7 +24,7 @@
             <tr>
               <td class="px-4 py-3 text-sm font-medium text-gray-900"><%= delivery.event %></td>
               <td class="px-4 py-3 text-sm text-gray-500"><%= delivery.response_code || t('admin.webhook_deliveries.index.no_response') %></td>
-              <td class="px-4 py-3 text-sm text-gray-500"><%= time_ago_in_words(delivery.attempted_at) %> <%= t('shared.ago') %></td>
+              <td class="px-4 py-3 text-sm text-gray-500"><%= time_ago(delivery.attempted_at) %></td>
               <td class="px-4 py-3 text-sm">
                 <% if delivery.success? %>
                   <%= status_badge(t('admin.webhook_deliveries.index.success'), color_class: "bg-green-100 text-green-800", size: :sm) %>

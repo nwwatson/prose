@@ -8,7 +8,7 @@ class SubscriptionsController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("subscription_form", partial: "subscriptions/form", locals: { error: "Please enter a valid email address." }) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("subscription_form", partial: "subscriptions/form", locals: { error: t("flash.subscriptions.invalid_email") }) }
       format.html { redirect_to root_path, alert: t("flash.subscriptions.invalid_email") }
     end
   end

@@ -16,7 +16,7 @@
                 v<%= version.version_number %> — <%= truncate(version.title, length: 40) %>
               </p>
               <p class="mt-0.5 text-xs text-gray-500">
-                <%= time_ago_in_words(version.created_at) %> <%= t("shared.ago") %>
+                <%= time_ago(version.created_at) %>
                 · <%= version.user.display_name %>
               </p>
             </div>

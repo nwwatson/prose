@@ -6,7 +6,7 @@
           v<%= @version.version_number %>
         </h3>
         <p class="mt-0.5 text-xs text-gray-500">
-          <%= time_ago_in_words(@version.created_at) %> <%= t("shared.ago") %>
+          <%= time_ago(@version.created_at) %>
           · <%= @version.user.display_name %>
         </p>
       </div>

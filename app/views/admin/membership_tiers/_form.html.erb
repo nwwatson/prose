@@ -28,7 +28,7 @@
       <div>
         <%= f.label :interval, class: "block text-sm font-medium text-gray-900" %>
         <div class="mt-2">
-          <%= f.select :interval, MembershipTier.intervals.keys.map { |i| [i.capitalize, i] }, {}, class: admin_input_classes %>
+          <%= f.select :interval, MembershipTier.intervals.keys.map { |i| [interval_label(i), i] }, {}, class: admin_input_classes %>
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@
         <p class="mt-0.5 truncate text-sm text-gray-500"><%= post.subtitle %></p>
       <% end %>
     </div>
-    <%= status_badge(post.status.capitalize, color_class: "flex-shrink-0 #{post_status_color(post.status)}") %>
+    <%= status_badge(status_label(post), color_class: "flex-shrink-0 #{post_status_color(post.status)}") %>
   </div>
   <div class="mt-2 flex items-center gap-3 text-xs text-gray-500">
     <span><%= post.user.display_name %></span>

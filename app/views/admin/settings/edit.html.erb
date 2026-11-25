@@ -1,4 +1,4 @@
-<% content_for(:title, "Settings — #{site_name}") %>
+<% content_for(:title, page_title(t('layouts.admin.settings'))) %>
 
 <div class="max-w-4xl">
   <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.settings.edit.title') %></h1>
@@ -13,7 +13,7 @@
   <% end %>
 
   <%= form_with model: @site_setting, url: admin_settings_path, class: "mt-8 space-y-6" do |f| %>
-    <%= render "admin/shared/form_errors", record: @site_setting, heading: t('admin.settings.edit.errors_prevented_html', count: pluralize(@site_setting.errors.count, "error")), wrapper_class: "" %>
+    <%= render "admin/shared/form_errors", record: @site_setting, heading: t('admin.settings.edit.errors_prevented', count: @site_setting.errors.count), wrapper_class: "" %>
 
     <div>
       <%= f.label :site_name, class: "block text-sm font-medium text-gray-900" %>
@@ -183,7 +183,7 @@
                       options: SiteSetting::Typography::GOOGLE_FONTS,
                       data: { typography_preview_target: "headingFont", action: "typography-preview#update" } %>
               </div>
-              <%= render "shared/range_slider", form: f, field: :heading_font_size, label: "Font size",
+              <%= render "shared/range_slider", form: f, field: :heading_font_size, label: t('admin.settings.edit.font_size'),
                     min: 0.75, max: 6, step: 0.125, suffix: "rem",
                     data: { typography_preview_target: "headingSize", action: "input->typography-preview#update" } %>
             </div>
@@ -201,7 +201,7 @@
                       options: SiteSetting::Typography::GOOGLE_FONTS,
                       data: { typography_preview_target: "subtitleFont", action: "typography-preview#update" } %>
               </div>
-              <%= render "shared/range_slider", form: f, field: :subtitle_font_size, label: "Font size",
+              <%= render "shared/range_slider", form: f, field: :subtitle_font_size, label: t('admin.settings.edit.font_size'),
                     min: 0.75, max: 6, step: 0.125, suffix: "rem",
                     data: { typography_preview_target: "subtitleSize", action: "input->typography-preview#update" } %>
             </div>
@@ -219,7 +219,7 @@
                       options: SiteSetting::Typography::GOOGLE_FONTS,
                       data: { typography_preview_target: "bodyFont", action: "typography-preview#update" } %>
               </div>
-              <%= render "shared/range_slider", form: f, field: :body_font_size, label: "Font size",
+              <%= render "shared/range_slider", form: f, field: :body_font_size, label: t('admin.settings.edit.font_size'),
                     min: 0.75, max: 6, step: 0.125, suffix: "rem",
                     data: { typography_preview_target: "bodySize", action: "input->typography-preview#update" } %>
             </div>

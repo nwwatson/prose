@@ -1,4 +1,6 @@
-<div id="handle_form" data-controller="handle-check">
+<div id="handle_form" data-controller="handle-check"
+     data-handle-check-available-value="<%= t('handles.availability.available') %>"
+     data-handle-check-taken-value="<%= t('handles.availability.taken') %>">
   <%= form_with url: handle_path, method: :patch, class: "flex items-center gap-2" do |f| %>
     <div class="flex-1">
       <%= f.text_field :handle, value: identity.handle, placeholder: t('handles.form.choose_handle'),

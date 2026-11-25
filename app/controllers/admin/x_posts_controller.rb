@@ -9,7 +9,7 @@ module Admin
     end
 
     def embed_error_message
-      "Could not process X post URL"
+      t("flash.admin.x_posts.could_not_process")
     end
   end
 end

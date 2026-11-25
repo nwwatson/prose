@@ -9,7 +9,7 @@
         <span class="text-gray-500"><%= t('shared.on') %></span>
         <span class="font-medium text-gray-900 truncate"><%= comment.post.title %></span>
         <span class="text-gray-500">&middot;</span>
-        <time class="text-gray-500"><%= time_ago_in_words(comment.created_at) %> <%= t('shared.ago') %></time>
+        <time class="text-gray-500"><%= time_ago(comment.created_at) %></time>
       </div>
       <div class="mt-2 text-gray-700 prose-comment"><%= sanitize_markdown(comment.rendered_body) %></div>
     </div>

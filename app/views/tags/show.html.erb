@@ -2,8 +2,8 @@
 
 <% content_for(:head) do %>
   <%= seo_head_tags(
-        title: "Tagged: #{@tag.name} — #{site_name}",
-        description: "Posts tagged with #{@tag.name}",
+        title: page_title(t('tags.show.tagged', name: @tag.name)),
+        description: t('tags.show.description', name: @tag.name),
         url: tag_url(slug: @tag.slug)
       ) %>
 <% end %>

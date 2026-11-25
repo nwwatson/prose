@@ -17,9 +17,9 @@ module Ai
     def require_image_ai_configured
       settings = SiteSetting.current
       unless settings.image_ai_configured?
-        provider = settings.image_model_provider&.to_s&.titleize || "image"
+        provider = settings.image_model_provider&.to_s&.titleize || t("flash.ai.configurable.image_provider")
         redirect_to edit_admin_settings_path,
-          alert: "Add your Anthropic and #{provider} API keys in Settings to enable image generation."
+          alert: t("flash.ai.configurable.add_image_api_keys", provider: provider)
       end
     end
   end

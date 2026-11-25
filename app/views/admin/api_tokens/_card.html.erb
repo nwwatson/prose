@@ -14,7 +14,7 @@
     <% if current_user.admin? %>
       <span><%= token.user.display_name %></span>
     <% end %>
-    <span><%= t('admin.api_tokens.index.last_used') %>: <%= token.last_used_at ? time_ago_in_words(token.last_used_at) + " " + t('shared.ago') : t('shared.never') %></span>
+    <span><%= t('admin.api_tokens.index.last_used') %>: <%= time_ago(token.last_used_at) %></span>
     <span><%= l(token.created_at.to_date, format: :short) %></span>
   </div>
   <% unless token.revoked? %>

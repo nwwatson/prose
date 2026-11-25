@@ -20,6 +20,42 @@ es:
       with_time: "%-d %b %Y a las %-I:%M %p"
     am: "a. m."
     pm: "p. m."
+  datetime:
+    distance_in_words:
+      half_a_minute: "medio minuto"
+      less_than_x_seconds:
+        one: "menos de 1 segundo"
+        other: "menos de %{count} segundos"
+      x_seconds:
+        one: "1 segundo"
+        other: "%{count} segundos"
+      less_than_x_minutes:
+        one: "menos de un minuto"
+        other: "menos de %{count} minutos"
+      x_minutes:
+        one: "1 minuto"
+        other: "%{count} minutos"
+      about_x_hours:
+        one: "alrededor de 1 hora"
+        other: "alrededor de %{count} horas"
+      x_days:
+        one: "1 día"
+        other: "%{count} días"
+      about_x_months:
+        one: "alrededor de 1 mes"
+        other: "alrededor de %{count} meses"
+      x_months:
+        one: "1 mes"
+        other: "%{count} meses"
+      about_x_years:
+        one: "alrededor de 1 año"
+        other: "alrededor de %{count} años"
+      over_x_years:
+        one: "más de 1 año"
+        other: "más de %{count} años"
+      almost_x_years:
+        one: "casi 1 año"
+        other: "casi %{count} años"
   shared:
     pagination: "Paginación"
     previous: "Anterior"
@@ -40,7 +76,6 @@ es:
     actions: "Acciones"
     loading: "Cargando..."
     never: "Nunca"
-    ago: "hace"
     by: "Por"
     on: "en"
     or: "o"
@@ -58,6 +93,7 @@ es:
     are_you_sure: "¿Estás seguro?"
     no_category: "Sin categoría"
     not_set: "No establecido"
+    time_ago: "hace %{time}"
 
   layouts:
     application:
@@ -67,6 +103,7 @@ es:
       toggle_dark_mode: "Alternar modo oscuro"
       reading_list: "Lista de lectura"
       copyright_html: "&copy; %{year} %{site_name}. Todos los derechos reservados."
+      rss_feed: "Canal RSS de %{site_name}"
     editor:
       keep_editing: "Seguir editando"
       discard: "Descartar"
@@ -74,14 +111,17 @@ es:
       posts: "Publicaciones"
       discard_post: "¿Descartar publicación?"
       discard_post_message: "Esta publicación aún no se ha guardado. ¿Estás seguro de que quieres descartarla?"
+      title: "Editor"
     admin_page_editor:
       pages: "Páginas"
       discard_page: "¿Descartar página?"
       discard_page_message: "Esta página aún no se ha guardado. ¿Estás seguro de que quieres descartarla?"
+      title: "Editor de páginas"
     newsletter_editor:
       newsletters: "Boletines"
       discard_newsletter: "¿Descartar boletín?"
       discard_newsletter_message: "Este boletín aún no se ha guardado. ¿Estás seguro de que quieres descartarlo?"
+      title: "Editor de boletines"
     admin:
       content: "Contenido"
       all_posts: "Todas las publicaciones"
@@ -108,6 +148,7 @@ es:
       webhooks: "Webhooks"
       exports: "Exportar"
       navigation: "Navegación"
+      title: "Administración"
 
   posts:
     index:
@@ -127,9 +168,11 @@ es:
         copy_link: "Copiar enlace"
         copied: "¡Copiado!"
         native_share: "Compartir"
+      breadcrumb: "ruta de navegación"
     post_navigation:
       previous_post: "Publicación anterior"
       next_post: "Siguiente publicación"
+      label: "Navegación entre publicaciones"
     related_posts:
       you_might_also_like: "También te puede gustar"
     post_page:
@@ -142,6 +185,9 @@ es:
       paid_heading: "Esta publicación es para miembros de pago"
       paid_description: "Conviértete en miembro de pago de %{site_name} para acceder a este y todo el contenido premium."
       upgrade_cta: "Ver opciones de membresía"
+    table_of_contents:
+      title: "Tabla de contenidos"
+      label: "Tabla de contenidos"
 
   reading_list:
     show:
@@ -183,6 +229,12 @@ es:
       comment: "Comentar"
       subscribe_to_join: "Suscríbete para unirte a la conversación."
       notify_on_reply: "Notificarme de respuestas"
+      markdown:
+        bold: "negrita"
+        italic: "cursiva"
+        code: "código"
+        link: "enlace"
+        quote: "cita"
 
   authors:
     index:
@@ -190,6 +242,9 @@ es:
       meet_the_authors: "Conoce a los autores de %{site_name}"
       meet_the_people: "Conoce a las personas detrás de %{site_name}."
       website: "Sitio web"
+      post_count:
+        one: "1 publicación"
+        other: "%{count} publicaciones"
     show:
       posts_by: "Publicaciones de %{name} en %{site_name}"
       posts_published:
@@ -202,6 +257,7 @@ es:
   tags:
     show:
       tagged: "Etiquetado: %{name}"
+      description: "Publicaciones etiquetadas con %{name}"
 
   pages:
     about:
@@ -251,9 +307,13 @@ es:
   handles:
     form:
       choose_handle: "Elige un nombre de usuario"
+    availability:
+      available: "Disponible"
+      taken: "No disponible"
 
   tag_select:
     search_placeholder: "Buscar o crear etiquetas..."
+    create_html: "Crear \"%{label}\""
 
   admin:
     sessions:
@@ -264,6 +324,7 @@ es:
       new:
         create_account_message: "Crea tu cuenta de administrador para comenzar."
         create_account: "Crear cuenta"
+        title: "Configuración inicial"
     dashboard:
       show:
         title: "Panel de control"
@@ -308,9 +369,11 @@ es:
         no_posts: "No hay publicaciones"
         get_started: "Comienza creando una nueva publicación."
       form:
-        errors_prevented_html: "%{count} impidieron que esta publicación se guardara:"
         title_placeholder: "Título de la publicación"
         subtitle_placeholder: "Agregar un subtítulo..."
+        errors_prevented:
+          one: "1 error impidió que esta publicación se guardara:"
+          other: "%{count} errores impidieron que esta publicación se guardara:"
       settings_fields:
         publish_at: "Publicar en"
         schedule_help: "Establece cuándo se debe publicar esta publicación."
@@ -333,6 +396,8 @@ es:
         meta_description_help: "Máx. 160 caracteres. Si está en blanco, se usa el subtítulo o un extracto del contenido."
         delete_post: "Eliminar publicación"
         delete_post_confirm: "¿Estás seguro de que quieres eliminar esta publicación?"
+        table_of_contents: "Tabla de contenidos"
+        or: "o"
       editor_panel:
         title: "Panel del editor"
         new_ai_conversation: "Nueva conversación con IA"
@@ -352,6 +417,8 @@ es:
         suggesting_prompt: "Sugiriendo un prompt..."
       preview:
         preview: "Vista previa"
+      edit:
+        title: "Editar publicación"
     categories:
       index:
         title: "Categorías"
@@ -361,6 +428,9 @@ es:
         posts: "Publicaciones"
         no_categories: "No hay categorías"
         get_started: "Comienza creando una nueva categoría."
+        post_count:
+          one: "1 publicación"
+          other: "%{count} publicaciones"
       new:
         title: "Nueva categoría"
       edit:
@@ -434,6 +504,9 @@ es:
         subscribers: "Suscriptores"
         no_labels: "No hay etiquetas"
         get_started: "Crea etiquetas para organizar tus suscriptores."
+        subscriber_count:
+          one: "1 suscriptor"
+          other: "%{count} suscriptores"
       new:
         title: "Nueva etiqueta"
       edit:
@@ -513,6 +586,9 @@ es:
       form:
         price_cents: "Precio (centavos)"
         price_help: "Precio en la unidad más pequeña de la moneda (ej., 1000 = $10.00)."
+      intervals:
+        month: "Mensual"
+        year: "Anual"
     memberships:
       index:
         title: "Miembros"
@@ -694,8 +770,10 @@ es:
         no_newsletters: "No hay boletines"
         get_started: "Comienza creando un nuevo boletín."
       form:
-        errors_prevented_html: "%{count} impidieron que este boletín se guardara:"
         title_placeholder: "Asunto del boletín"
+        errors_prevented:
+          one: "1 error impidió que este boletín se guardara:"
+          other: "%{count} errores impidieron que este boletín se guardara:"
       editor_panel:
         title: "Configuración del boletín"
         template: "Plantilla"
@@ -727,13 +805,29 @@ es:
         save_first: "Guarda el boletín primero para habilitar las opciones de envío y programación."
         delete_newsletter: "Eliminar boletín"
         delete_confirm: "¿Estás seguro de que quieres eliminar este boletín?"
+      show:
+        sent_ago: "Enviado %{time}"
+        by: "por %{name}"
+        back: "Volver a boletines"
+        recipients: "Destinatarios"
+        opens: "Aperturas"
+        clicks: "Clics"
+        bounces: "Rebotes"
+        content_preview: "Vista previa del contenido"
+        delivery_log: "Registro de envíos"
+        subscriber: "Suscriptor"
+        sent: "Enviado"
+        opened: "Abierto"
+        clicked: "Clic"
+        bounced: "Rebotado"
+      edit:
+        title: "Editar boletín"
     settings:
       edit:
         title: "Configuración del sitio"
         export_content: "Exportar tu contenido (Markdown o JSON) →"
         manage_navigation: "Gestionar enlaces del encabezado, pie de página y redes sociales →"
         subtitle: "Configura el nombre, descripción e imagen de compartir social predeterminada de tu sitio."
-        errors_prevented_html: "%{count} impidieron que la configuración se guardara:"
         description_placeholder: "Una breve descripción de tu sitio"
         default_og_image: "Imagen de compartir social predeterminada"
         og_image_help: "Se usa como imagen predeterminada para compartir en redes sociales (og:image) cuando una publicación no tiene imagen destacada."
@@ -807,11 +901,13 @@ es:
         language: "Idioma"
         locale: "Idioma"
         locale_description: "Elige el idioma de la interfaz de usuario de tu sitio."
+        errors_prevented:
+          one: "1 error impidió que la configuración se guardara:"
+          other: "%{count} errores impidieron que la configuración se guardara:"
     newsletter_settings:
       edit:
         title: "Configuración del boletín"
         subtitle: "Configura la marca del correo electrónico y la entrega de tus boletines."
-        errors_prevented_html: "%{count} impidieron que la configuración se guardara:"
         email_branding: "Marca de correo electrónico"
         email_branding_description: "Personaliza el aspecto de tus correos de boletín. Estos son los valores predeterminados del sitio que se pueden anular por boletín."
         default_template: "Plantilla predeterminada"
@@ -846,6 +942,10 @@ es:
         webhook_url: "URL del webhook:"
         webhook_description: "Para habilitar el seguimiento de aperturas y clics, configura el Event Webhook de SendGrid para hacer POST a:"
         save_settings: "Guardar configuración"
+        errors_prevented:
+          one: "1 error impidió que la configuración se guardara:"
+          other: "%{count} errores impidieron que la configuración se guardara:"
+        preheader_placeholder: "Texto de vista previa en la bandeja de entrada..."
     growth:
       show:
         title: "Crecimiento de suscriptores"
@@ -899,6 +999,7 @@ es:
         no_traffic_data: "Aún no hay datos de tráfico."
         comments: "Comentarios (%{count})"
         no_comments: "Aún no hay comentarios."
+        page_title: "Estadísticas de %{title}"
     pages:
       index:
         title: "Páginas"
@@ -910,7 +1011,9 @@ es:
         get_started: "Crea tu primera página para comenzar."
       form:
         title_placeholder: "Título de la página"
-        errors_prevented_html: "%{count} impidieron que esta página se guardara:"
+        errors_prevented:
+          one: "1 error impidió que esta página se guardara:"
+          other: "%{count} errores impidieron que esta página se guardara:"
       editor_panel:
         title: "Configuración de página"
       settings_fields:
@@ -923,11 +1026,14 @@ es:
         meta_description_help: "Hasta 160 caracteres. Usado por motores de búsqueda."
         delete_page: "Eliminar página"
         delete_page_confirm: "¿Estás seguro de que quieres eliminar esta página? Esta acción no se puede deshacer."
+      new:
+        title: "Nueva página"
+      edit:
+        title: "Editar página"
     profiles:
       edit:
         title: "Perfil de autor"
         subtitle: "Administra tu perfil público de autor. Esta información aparece en tu página de autor y publicaciones."
-        errors_prevented_html: "%{count} impidieron que tu perfil se guardara:"
         avatar_help: "Se recomienda una imagen cuadrada. Se recortará en forma circular."
         display_name: "Nombre para mostrar"
         handle_help: "Solo letras, números y guiones bajos. Se usa en la URL de tu página de autor."
@@ -940,11 +1046,27 @@ es:
         github_handle: "Usuario de GitHub"
         save_profile: "Guardar perfil"
         view_public_profile: "Ver perfil público"
+        errors_prevented:
+          one: "1 error impidió que tu perfil se guardara:"
+          other: "%{count} errores impidieron que tu perfil se guardara:"
+        twitter_placeholder: "usuario"
+        github_placeholder: "usuario"
+        handle_placeholder: "tu_alias"
     ai:
       featured_image_preview:
         generated_image: "Imagen destacada generada"
         save_as_featured: "Guardar como imagen destacada"
         regenerate: "Regenerar"
+      featured_image_loading:
+        generating: "Generando imagen..."
+        wait: "Esto puede tardar un momento."
+      featured_image_error:
+        heading: "Error al generar la imagen: %{error}"
+        try_again: "Reintentar"
+      image_prompt_form:
+        heading: "Descripción de imagen sugerida por la IA"
+        generate: "Generar imagen"
+        suggest_new: "Sugerir otra descripción"
     post_versions:
       index:
         save_version: "Guardar versión"
@@ -956,6 +1078,44 @@ es:
         back: "Volver"
         title_change: "Título cambiado"
         content_diff: "Cambios en el contenido"
+    statuses:
+      post:
+        draft: "Borrador"
+        scheduled: "Programado"
+        published: "Publicado"
+      page:
+        draft: "Borrador"
+        published: "Publicada"
+      newsletter:
+        draft: "Borrador"
+        scheduled: "Programado"
+        sending: "Enviando"
+        sent: "Enviado"
+      membership:
+        active: "Activa"
+        past_due: "Pago atrasado"
+        canceled: "Cancelada"
+        incomplete: "Incompleta"
+        trialing: "En prueba"
+    email_options:
+      templates:
+        minimal:
+          name: "Minimalista"
+          description: "Diseño limpio centrado en el texto"
+        branded:
+          name: "De marca"
+          description: "Encabezado con logotipo y barra de color de acento"
+        editorial:
+          name: "Editorial"
+          description: "Estilo revista con un área de título amplia"
+      fonts:
+        system: "Predeterminada del sistema"
+        georgia: "Georgia"
+        helvetica: "Helvetica"
+        verdana: "Verdana"
+      providers:
+        smtp: "SMTP (predeterminado)"
+        sendgrid: "SendGrid"
 
   activity_pub:
     read_more: "Lee la publicación completa en %{site}"
@@ -985,6 +1145,7 @@ es:
       click_to_sign_in: "Haz clic en el enlace de abajo para iniciar sesión:"
       sign_in: "Iniciar sesión"
       link_expiry: "Este enlace expirará en 15 minutos."
+      subject: "Iniciar sesión en %{site_name}"
   digest_mailer:
     digest:
       subject:
@@ -1013,6 +1174,8 @@ es:
     ai:
       configurable:
         add_api_keys: "Agrega tus claves de API en Configuración para habilitar las funciones de IA."
+        add_image_api_keys: "Añade tus claves de API de Anthropic y %{provider} en Configuración para habilitar la generación de imágenes."
+        image_provider: "imágenes"
     memberships:
       sign_in_required: "Por favor inicia sesión para suscribirte a una membresía."
       no_subscription: "No se encontró suscripción activa."
@@ -1058,6 +1221,7 @@ es:
       sessions:
         signed_in: "Inicio de sesión exitoso."
         signed_out: "Sesión cerrada exitosamente."
+        invalid_credentials: "Correo o contraseña no válidos."
       newsletters:
         created: "Boletín creado."
         updated: "Boletín actualizado."
@@ -1126,3 +1290,13 @@ es:
         welcome: "¡Bienvenido a %{site_name}! Tu cuenta de administrador ha sido creada."
       ai:
         generating_image: "Generando imagen destacada..."
+        error: "Error de IA: %{message}"
+      profiles:
+        updated: "Perfil actualizado."
+      x_posts:
+        could_not_process: "No se pudo procesar la URL de la publicación de X"
+      youtube_videos:
+        could_not_process: "No se pudo procesar la URL de YouTube"
+    handles:
+      updated: "Alias actualizado."
+      could_not_update: "No se pudo actualizar el alias."

@@ -68,7 +68,7 @@
         data-action="click->tag-select#createTag"
         role="option"
         class="relative cursor-pointer select-none py-2 pl-3 pr-9 text-blue-600 hover:bg-blue-50 hidden">
-      <span class="block truncate">Create "<span data-tag-select-target="createLabel"></span>"</span>
+      <span class="block truncate"><%= t('tag_select.create_html', label: tag.span(data: { tag_select_target: "createLabel" })) %></span>
     </li>
   </ul>
 

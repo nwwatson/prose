@@ -4,7 +4,7 @@
     <div>
       <%= f.label :status, class: "block text-sm font-medium text-gray-900" %>
       <%= render "shared/custom_select", form: f, field: :status,
-            options: Page.statuses.keys.map { |s| [s.capitalize, s] },
+            options: Page.statuses.keys.map { |s| [status_label(page, s), s] },
             form_attr: "page_form" %>
     </div>
 

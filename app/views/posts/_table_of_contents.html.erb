@@ -1,7 +1,7 @@
 <%# locals: (headings:) %>
-<nav class="toc" aria-label="Table of contents">
+<nav class="toc" aria-label="<%= t('posts.table_of_contents.label') %>">
   <h2 class="toc__heading">
-    Table of Contents
+    <%= t('posts.table_of_contents.title') %>
   </h2>
   <ol class="toc__list">
     <% headings.each do |heading| %>
