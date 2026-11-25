@@ -185,7 +185,7 @@ CREATE INDEX "index_memberships_on_membership_tier_id" ON "memberships" ("member
 CREATE UNIQUE INDEX "index_memberships_on_stripe_subscription_id" ON "memberships" ("stripe_subscription_id") /*application='Prose'*/;
 CREATE INDEX "index_memberships_on_stripe_customer_id" ON "memberships" ("stripe_customer_id") /*application='Prose'*/;
 CREATE INDEX "index_memberships_on_status" ON "memberships" ("status") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "subtitle" varchar, "slug" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "published_at" datetime(6), "featured" boolean DEFAULT FALSE NOT NULL, "reading_time_minutes" integer DEFAULT 0, "category_id" integer, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "loves_count" integer DEFAULT 0 NOT NULL, "meta_description" text, "body_plain" text, "show_toc" boolean DEFAULT FALSE NOT NULL, "visibility" integer DEFAULT 0 NOT NULL, "subscribers_notified_at" datetime(6) /*application=\x27Prose\x27*/, CONSTRAINT "fk_rails_9b1b26f040"
+CREATE TABLE IF NOT EXISTS "posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "subtitle" varchar, "slug" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "published_at" datetime(6), "featured" boolean DEFAULT FALSE NOT NULL, "reading_time_minutes" integer DEFAULT 0, "category_id" integer, "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "loves_count" integer DEFAULT 0 NOT NULL, "meta_description" text, "body_plain" text, "show_toc" boolean DEFAULT FALSE NOT NULL, "visibility" integer DEFAULT 0 NOT NULL, "subscribers_notified_at" datetime(6) /*application=\x27Prose\x27*/, "revised_at" datetime(6) /*application=\x27Prose\x27*/, CONSTRAINT "fk_rails_9b1b26f040"
 FOREIGN KEY ("category_id")
   REFERENCES "categories" ("id")
 , CONSTRAINT "fk_rails_5b5ddfd518"
@@ -326,6 +326,7 @@ CREATE INDEX "index_ruby_llm_usages_on_status" ON "ruby_llm_usages" ("status") /
 CREATE INDEX "index_ruby_llm_usages_on_owner" ON "ruby_llm_usages" ("owner_type", "owner_id") /*application='Prose'*/;
 CREATE INDEX "index_ruby_llm_usages_on_workflow_id" ON "ruby_llm_usages" ("workflow_id") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20261125200000'),
 ('20261125170000'),
 ('20261125160424'),
 ('20261125160420'),

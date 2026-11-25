@@ -2,6 +2,7 @@ class Post < ApplicationRecord
   include Sluggable
   include Publishable
   include Searchable
+  include Revisable
   include Discoverable
   include Versionable
   include Accessible

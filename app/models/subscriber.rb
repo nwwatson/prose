@@ -31,7 +31,7 @@ class Subscriber < ApplicationRecord
       SubscriberMailer.magic_link(subscriber).deliver_later
     end
 
-    WebhookDispatcher.deliver("subscriber.created", Webhooks::SubscriberSerializer.call(subscriber)) if new_subscriber
+    WebhookDispatcher.deliver("subscriber.created") { Webhooks::SubscriberSerializer.call(subscriber) } if new_subscriber
 
     subscriber
   end
@@ -52,7 +52,7 @@ class Subscriber < ApplicationRecord
     return if unsubscribed?
 
     update!(unsubscribed_at: Time.current)
-    WebhookDispatcher.deliver("subscriber.deleted", Webhooks::SubscriberSerializer.call(self))
+    WebhookDispatcher.deliver("subscriber.deleted") { Webhooks::SubscriberSerializer.call(self) }
   end
 
   def resubscribe!

@@ -29,12 +29,14 @@ class FederatePostJobTest < ActiveJob::TestCase
   end
 
   test "a superseded update is skipped" do
-    FederatePostJob.perform_now("update", @post.id, ActivityPub::Urls.post_url(@post), (@post.updated_at - 1.minute).to_f)
+    @post.update_column(:revised_at, Time.current)
+    FederatePostJob.perform_now("update", @post.id, ActivityPub::Urls.post_url(@post), 1.minute.ago.to_f)
     assert_no_enqueued_jobs only: DeliverActivityJob
   end
 
   test "the latest update is delivered" do
-    FederatePostJob.perform_now("update", @post.id, ActivityPub::Urls.post_url(@post), @post.updated_at.to_f)
+    @post.update_column(:revised_at, Time.current)
+    FederatePostJob.perform_now("update", @post.id, ActivityPub::Urls.post_url(@post), @post.revised_at.to_f)
     assert_equal "Update", JSON.parse(enqueued_jobs.last[:args].last)["type"]
   end
 
