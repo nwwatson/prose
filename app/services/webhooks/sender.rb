@@ -11,9 +11,9 @@ module Webhooks
 
     Response = Struct.new(:code, :body)
 
-    OPEN_TIMEOUT = 5
-    READ_TIMEOUT = 10
-    WRITE_TIMEOUT = 10
+    # Only the status code matters to a delivery, so the receiver's body is read
+    # just this far and the rest is dropped (the connection is closed).
+    MAX_RESPONSE_BYTES = 64.kilobytes
 
     # Receivers verify a delivery by recomputing
     #   HMAC-SHA256(secret, "#{X-Prose-Timestamp}.#{raw_body}")
@@ -39,17 +39,9 @@ module Webhooks
       uri = URI(@url)
       raise DeliveryError, "Webhook URL must be http or https" unless uri.is_a?(URI::HTTP)
 
-      http = Net::HTTP.new(uri.hostname, uri.port)
-      # Connect to the vetted IP so a DNS rebind between check and connect can't
-      # redirect the request to an internal address. Redirects are not followed.
-      http.ipaddr = UrlGuard.resolve!(uri.hostname)
-      http.use_ssl = uri.scheme == "https"
-      http.open_timeout = OPEN_TIMEOUT
-      http.read_timeout = READ_TIMEOUT
-      http.write_timeout = WRITE_TIMEOUT
-
-      response = http.request(build_request(uri))
-      code = response.code.to_i
+      # Guarded, IP-pinned, never follows redirects (see Outbound::Connection).
+      response = Outbound::Connection.request(uri, build_request(uri), max_bytes: MAX_RESPONSE_BYTES, truncate: true)
+      code = response.code
 
       unless code.between?(200, 299)
         raise DeliveryError.new("Webhook endpoint returned #{code}", response_code: code)

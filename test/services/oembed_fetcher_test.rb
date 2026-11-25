@@ -1,4 +1,5 @@
 require "test_helper"
+require "socket"
 
 class OembedFetcherTest < ActiveSupport::TestCase
   FakeResponse = Struct.new(:body)
@@ -25,6 +26,29 @@ class OembedFetcherTest < ActiveSupport::TestCase
     end
 
     assert_equal({}, result)
+  end
+
+  test "sets short open and read timeouts" do
+    with_fake_http(FakeResponse.new("{}")) do |http|
+      OembedFetcher.fetch("https://www.youtube.com/oembed?url=foo&format=json")
+
+      assert_equal 5, http.open_timeout
+      assert_equal 10, http.read_timeout
+    end
+  end
+
+  test "returns an empty hash within the timeout when the provider stalls" do
+    # Accepts the connection but never answers, so the TLS handshake hangs.
+    server = TCPServer.new("127.0.0.1", 0)
+    with_const(OembedFetcher, :OPEN_TIMEOUT, 0.2) do
+      started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      result = assert_logs_warning { OembedFetcher.fetch("https://127.0.0.1:#{server.addr[1]}/oembed") }
+
+      assert_equal({}, result)
+      assert_operator Process.clock_gettime(Process::CLOCK_MONOTONIC) - started, :<, 2
+    end
+  ensure
+    server&.close
   end
 
   private

@@ -2,7 +2,22 @@ require "test_helper"
 
 module Webhooks
   class SenderTest < ActiveSupport::TestCase
-    FakeResponse = Struct.new(:code, :body)
+    class FakeResponse
+      attr_reader :code, :chunks_read
+
+      def initialize(code, *chunks)
+        @code = code
+        @chunks = chunks
+        @chunks_read = 0
+      end
+
+      def read_body
+        @chunks.each do |chunk|
+          @chunks_read += 1
+          yield chunk
+        end
+      end
+    end
 
     test "returns a response on success" do
       with_fake_http(FakeResponse.new("200", "ok")) do
@@ -53,6 +68,23 @@ module Webhooks
           Webhooks::Sender.post("https://example.com/hook", body: "{}", secret: "s3cret")
         end
         assert_equal 302, error.response_code
+      end
+    end
+
+    test "reads no more than the cap from a large response and still succeeds" do
+      cap = Webhooks::Sender::MAX_RESPONSE_BYTES
+      fake = FakeResponse.new("200", "a" * cap, "b", "c" * cap)
+      with_fake_http(fake) do
+        response = Webhooks::Sender.post("https://example.com/hook", body: "{}", secret: "s3cret")
+        assert_equal 200, response.code
+        assert_equal cap, response.body.bytesize
+      end
+      assert_equal 2, fake.chunks_read, "expected reading to stop once the cap was passed"
+    end
+
+    test "rejects non-http URLs" do
+      assert_raises(Webhooks::Sender::DeliveryError) do
+        Webhooks::Sender.post("file:///etc/passwd", body: "{}", secret: "s3cret")
       end
     end
 

@@ -74,7 +74,7 @@ class Webhook < ApplicationRecord
     uri = URI.parse(url)
     if !uri.is_a?(URI::HTTP) || uri.host.blank?
       errors.add(:url, "must be a valid http:// or https:// URL")
-    elsif Webhooks::UrlGuard.blocked_host?(uri.hostname)
+    elsif Outbound::UrlGuard.blocked_host?(uri.hostname)
       errors.add(:url, "must not point to a local, private, or reserved network address")
     end
   rescue URI::InvalidURIError
