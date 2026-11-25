@@ -31,6 +31,17 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_not_nil token.last_used_at
   end
 
+  test "repeated requests within a minute do not write the token again" do
+    post "/mcp", params: mcp_request("initialize"), headers: mcp_headers(ADMIN_API_TOKEN)
+
+    writes = capture_writes("api_tokens") do
+      post "/mcp", params: mcp_request("initialize"), headers: mcp_headers(ADMIN_API_TOKEN)
+    end
+
+    assert_response :success
+    assert_empty writes
+  end
+
   # --- Streamable HTTP transport (what Claude Desktop/Code clients rely on) ---
 
   test "acknowledges notifications with 202 and an empty body" do

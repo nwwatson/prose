@@ -46,6 +46,17 @@ module ActiveSupport
       with_const(ReadingListItem, :MAX_ITEMS, limit, &block)
     end
 
+    # The INSERT, UPDATE and DELETE statements the block runs against `table`.
+    def capture_writes(table)
+      writes = []
+      recorder = ->(*, payload) do
+        writes << payload[:sql] if payload[:sql].match?(/\A\s*(INSERT( OR \w+)? INTO|UPDATE|DELETE FROM)\s+"?#{table}"?\b/i)
+      end
+
+      ActiveSupport::Notifications.subscribed(recorder, "sql.active_record") { yield }
+      writes
+    end
+
     def assert_query_count(expected, table:)
       count = 0
       counter = ->(*, payload) do

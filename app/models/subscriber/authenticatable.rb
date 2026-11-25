@@ -3,11 +3,17 @@ module Subscriber::Authenticatable
 
   TOKEN_EXPIRY = 15.minutes
 
-  def generate_auth_token!
-    update!(
+  # Sets a fresh sign-in token without saving, so a new subscriber is written once.
+  def assign_auth_token
+    assign_attributes(
       auth_token: SecureRandom.urlsafe_base64(32),
       auth_token_sent_at: Time.current
     )
+  end
+
+  def generate_auth_token!
+    assign_auth_token
+    save!
     auth_token
   end
 

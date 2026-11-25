@@ -41,8 +41,8 @@ class Subscriber < ApplicationRecord
 
     if new_subscriber
       subscriber.source_post_id = source_post_id if source_post_id.present?
+      subscriber.assign_auth_token
       subscriber.save!
-      subscriber.generate_auth_token!
       SubscriberMailer.confirmation(subscriber).deliver_later
     else
       subscriber.generate_auth_token!
