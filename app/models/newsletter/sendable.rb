@@ -13,7 +13,9 @@ module Newsletter::Sendable
     SendNewsletterJob.perform_later(id)
   end
 
-  def mark_sent!(count)
+  # Defaults to the deliveries recorded across every run of the send, so a
+  # send that resumed after a failure still counts everyone it reached.
+  def mark_sent!(count = newsletter_deliveries.count)
     update!(status: :sent, recipients_count: count)
   end
 
