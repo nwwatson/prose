@@ -11,7 +11,7 @@ class Page < ApplicationRecord
   validates :title, presence: true
   validates :meta_description, length: { maximum: 160 }, allow_blank: true
 
-  slugged_from :title, message: "must be URL-safe (lowercase letters, numbers, hyphens)", to_param: true
+  slugged_from :title, message: :url_safe_slug, to_param: true
 
   RESERVED_SLUGS = %w[
     admin posts authors categories tags subscriptions feed sitemap robots up mcp
@@ -19,7 +19,7 @@ class Page < ApplicationRecord
     reading-list email-preferences
   ].freeze
 
-  validates :slug, exclusion: { in: RESERVED_SLUGS, message: "is reserved" }
+  validates :slug, exclusion: { in: RESERVED_SLUGS }
 
   def seo_description
     @seo_description ||= meta_description.presence || content&.to_plain_text&.truncate(155)

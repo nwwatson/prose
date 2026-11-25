@@ -42,7 +42,7 @@ class Comment < ApplicationRecord
 
   def max_one_level_nesting
     if parent_comment&.parent_comment_id.present?
-      errors.add(:parent_comment, "can only reply to top-level comments")
+      errors.add(:parent_comment, :top_level_only)
     end
   end
 end

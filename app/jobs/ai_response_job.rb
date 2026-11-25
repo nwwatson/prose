@@ -46,7 +46,7 @@ class AiResponseJob < ApplicationJob
     Turbo::StreamsChannel.broadcast_replace_to(
       "chat_#{chat_record.id}",
       target: "ai-streaming-message-#{chat_record.id}",
-      html: "<div class=\"rounded-lg bg-red-50 p-3 text-sm text-red-700\">AI error: #{ERB::Util.html_escape(e.message)}</div>"
+      html: "<div class=\"rounded-lg bg-red-50 p-3 text-sm text-red-700\">#{ERB::Util.html_escape(I18n.t("flash.admin.ai.error", message: e.message))}</div>"
     )
   end
 

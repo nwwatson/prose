@@ -30,7 +30,7 @@ class Post < ApplicationRecord
   validates :title, presence: true
   validates :meta_description, length: { maximum: 160 }, allow_blank: true
 
-  slugged_from :title, message: "must be URL-safe (lowercase letters, numbers, hyphens)", to_param: true
+  slugged_from :title, message: :url_safe_slug, to_param: true
 
   def threaded_comments
     comments.approved.top_level.includes(:identity, approved_replies: :identity)
