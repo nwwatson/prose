@@ -64,6 +64,17 @@ class Admin::SegmentsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Updated Segment", segment.reload.name
   end
 
+  test "PATCH update with every label unchecked clears the label criteria" do
+    segment = segments(:vip_segment)
+
+    get edit_admin_segment_path(segment)
+    assert_select "input[type=hidden][name='segment[label_ids][]']"
+
+    patch admin_segment_path(segment), params: { segment: { label_ids: [ "" ], label_mode: "any_of" } }
+
+    assert_equal({}, segment.reload.filter_criteria)
+  end
+
   test "DELETE destroy removes segment" do
     assert_difference "Segment.count", -1 do
       delete admin_segment_path(segments(:recent_segment))

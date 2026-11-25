@@ -8,9 +8,6 @@ class Admin::XPostsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to "/admin/session/new"
   end
 
-  # The success path is exercised without a JSON Accept header: with one (which
-  # the editor's paste_embed controller sends via requestJSON), render_to_string
-  # looks for a .json partial and raises ActionView::MissingTemplate. See #300's PR.
   test "create returns the attachment sgid and rendered embed" do
     sign_in_as(:writer)
 
@@ -26,6 +23,28 @@ class Admin::XPostsControllerTest < ActionDispatch::IntegrationTest
     assert_equal x_post.attachable_sgid, json["sgid"]
     assert_includes json["html"], "x-post-embed"
     assert_includes json["html"], "hello"
+  end
+
+  test "create renders the embed for the editor's JSON request" do
+    sign_in_as(:writer)
+
+    stub_oembed_fetch(OEMBED) do
+      post "/admin/x_posts", params: { url: "https://x.com/jane/status/3" }, headers: { "Accept" => "application/json" }, as: :json
+    end
+
+    assert_response :success
+    assert_includes response.parsed_body["html"], "x-post-embed"
+  end
+
+  test "create rejects a missing url" do
+    sign_in_as(:admin)
+
+    assert_no_difference "XPost.count" do
+      post "/admin/x_posts", as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_equal "Could not process X post URL", response.parsed_body["error"]
   end
 
   test "create reuses an existing post for the same url" do

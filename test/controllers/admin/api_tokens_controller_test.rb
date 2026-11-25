@@ -56,6 +56,20 @@ class Admin::ApiTokensControllerTest < ActionDispatch::IntegrationTest
     assert_not_includes response.body, raw_token
   end
 
+  test "create with a blank name re-renders the list with an error" do
+    sign_in_as(:writer)
+
+    assert_no_difference "ApiToken.count" do
+      post "/admin/api_tokens", params: { name: "" }
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes CGI.unescapeHTML(response.body), "Name can't be blank"
+    assert_includes response.body, api_tokens(:writer_token).name
+    assert_not_includes response.body, api_tokens(:admin_token).name
+    assert_nil flash[:raw_token]
+  end
+
   test "admin can revoke another user's token" do
     sign_in_as(:admin)
     token = api_tokens(:writer_token)

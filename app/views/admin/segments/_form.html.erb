@@ -22,7 +22,8 @@
 
     <h3 class="text-sm font-semibold text-gray-900"><%= t('admin.segments.form.filter_criteria') %></h3>
 
-    <%# Labels filter %>
+    <%# Labels filter. The blank value is submitted even when nothing is checked, so unchecking every label clears them. %>
+    <input type="hidden" name="segment[label_ids][]" value="">
     <% if labels.any? %>
       <div>
         <p class="text-sm font-medium text-gray-900 mb-2"><%= t('admin.segments.form.labels') %></p>
