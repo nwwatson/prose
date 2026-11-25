@@ -48,6 +48,42 @@ class Segment::CriteriaBuilderTest < ActiveSupport::TestCase
     assert_equal "inactive", segment.engagement
   end
 
+  test "saving without form values keeps the stored criteria" do
+    segment = segments(:vip_segment)
+    stored = segment.filter_criteria
+
+    segment.update!(name: "New name")
+
+    assert_equal stored, segment.reload.filter_criteria
+  end
+
+  test "criteria assigned directly are saved as given" do
+    segment = Segment.create!(name: "Direct", filter_criteria: { engagement: "inactive" })
+
+    assert_equal({ "engagement" => "inactive" }, segment.reload.filter_criteria)
+  end
+
+  test "assigning one form value keeps the other stored criteria" do
+    segment = segments(:vip_segment)
+
+    segment.update!(engagement: "active")
+    assert_equal [ subscriber_labels(:vip).id ], segment.reload.label_ids
+    assert_equal "active", segment.engagement
+
+    segment.update!(label_mode: "none_of")
+    assert_equal [ subscriber_labels(:vip).id ], segment.reload.label_ids
+    assert_equal "none_of", segment.label_mode
+    assert_equal "active", segment.engagement
+  end
+
+  test "a later save does not reapply form values already saved" do
+    segment = Segment.create!(name: "Once", engagement: "active")
+
+    segment.update!(filter_criteria: { engagement: "inactive" })
+
+    assert_equal({ "engagement" => "inactive" }, segment.reload.filter_criteria)
+  end
+
   test "label_mode defaults to any_of" do
     assert_equal "any_of", Segment.new.label_mode
   end
