@@ -39,24 +39,10 @@ module ActivityPub
       end
     end
 
-    # Attachments are rewritten to plain HTML the way the Markdown exporter does
-    # it: remote servers can't run our embed partials or Stimulus controllers.
     def full_html(post)
       return "" if post.content.blank?
 
-      helpers = ActionController::Base.helpers
-      post.content.body.render_attachments do |attachment|
-        attachable = attachment.attachable
-        case attachable
-        when ActiveStorage::Blob
-          src = Urls.blob_url(attachable)
-          attachable.image? ? helpers.tag.img(src: src, alt: attachment.caption.presence || attachable.filename.to_s) : helpers.link_to(attachable.filename.to_s, src)
-        when XPost, YoutubeVideo
-          helpers.link_to(attachable.url, attachable.url)
-        else
-          ERB::Util.html_escape(attachment.to_plain_text)
-        end
-      end.to_html
+      RichTextFlattener.call(post.content.body, wrap: false) { |blob| Urls.blob_url(blob) }
     end
 
     def absolutize(html)

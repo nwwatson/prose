@@ -8,8 +8,6 @@ module Exports
   #   pages/<slug>.md
   #   images/<blob id>-<filename>
   class MarkdownExporter
-    include ActionView::Helpers::TagHelper
-
     IMAGES_DIR = "images".freeze
 
     def self.call
@@ -82,27 +80,9 @@ module Exports
     def markdown_for(rich_text)
       return "" if rich_text.blank? || rich_text.body.blank?
 
-      html = rich_text.body.render_attachments { |attachment| attachment_html(attachment) }.to_html
+      # Markdown files live one directory below the archive root, hence "../".
+      html = RichTextFlattener.call(rich_text.body, wrap: true) { |blob| "../#{register_blob(blob)}" }
       ReverseMarkdown.convert(html, unknown_tags: :bypass, github_flavored: true).strip + "\n"
-    end
-
-    # Markdown files live one directory below the archive root, hence "../".
-    def attachment_html(attachment)
-      attachable = attachment.attachable
-
-      case attachable
-      when ActiveStorage::Blob
-        if attachable.image?
-          tag.p(tag.img(src: "../#{register_blob(attachable)}", alt: attachment.caption.presence || attachable.filename.to_s))
-        else
-          tag.p(tag.a(attachable.filename.to_s, href: "../#{register_blob(attachable)}"))
-        end
-      when XPost, YoutubeVideo
-        tag.p(tag.a(attachable.url, href: attachable.url))
-      else
-        text = attachment.to_plain_text
-        text.present? ? tag.p(text) : ""
-      end
     end
 
     # Filenames are slugified: a space in a Markdown link target breaks the link.

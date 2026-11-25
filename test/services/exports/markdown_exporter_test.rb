@@ -43,6 +43,15 @@ class Exports::MarkdownExporterTest < ActiveSupport::TestCase
     assert_not_includes body, "action-text-attachment"
   end
 
+  test "a YouTube embed becomes a link" do
+    video = YouTubeVideo.create!(url: "https://www.youtube.com/watch?v=abc123", video_id: "abc123")
+    @post.update!(content: "<p>Watch</p>#{ActionText::Attachment.from_attachable(video).to_html}")
+
+    _front_matter, body = split_document(read_zip.fetch("posts/#{@post.slug}.md"))
+
+    assert_includes body, "(#{video.url})"
+  end
+
   test "bundles featured and inline images" do
     entries = read_zip
 
