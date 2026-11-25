@@ -74,45 +74,7 @@ FOREIGN KEY ("identity_id")
 CREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email") /*application='Prose'*/;
 CREATE INDEX "index_users_on_identity_id" ON "users" ("identity_id") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "site_settings" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "site_name" varchar DEFAULT 'Prose' NOT NULL, "site_description" text DEFAULT '', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "heading_font" varchar DEFAULT 'Playfair Display' /*application='Prose'*/, "subtitle_font" varchar DEFAULT 'Source Serif 4' /*application='Prose'*/, "body_font" varchar DEFAULT 'Source Serif 4' /*application='Prose'*/, "heading_font_size" decimal(4,2) DEFAULT 2.25 /*application='Prose'*/, "subtitle_font_size" decimal(4,2) DEFAULT 1.25 /*application='Prose'*/, "body_font_size" decimal(4,2) DEFAULT 1.13 /*application='Prose'*/, "claude_api_key" varchar /*application='Prose'*/, "gemini_api_key" varchar /*application='Prose'*/, "ai_model" varchar DEFAULT 'claude-sonnet-4-5-20250929' /*application='Prose'*/, "ai_max_tokens" integer DEFAULT 4096 /*application='Prose'*/, "openai_api_key" varchar /*application='Prose'*/, "image_model" varchar DEFAULT 'imagen-4.0-generate-001' /*application='Prose'*/, "background_color" varchar DEFAULT 'cream' /*application='Prose'*/, "dark_theme" varchar DEFAULT 'midnight' /*application='Prose'*/, "dark_bg_color" varchar DEFAULT '#1a1a2e' /*application='Prose'*/, "dark_text_color" varchar DEFAULT '#e0def4' /*application='Prose'*/, "dark_accent_color" varchar DEFAULT '#7ba4cc' /*application='Prose'*/, "email_provider" varchar DEFAULT 'smtp' /*application='Prose'*/, "sendgrid_api_key" varchar /*application='Prose'*/, "email_accent_color" varchar DEFAULT '#18181b' /*application='Prose'*/, "email_background_color" varchar DEFAULT '#f4f4f5' /*application='Prose'*/, "email_body_text_color" varchar DEFAULT '#3f3f46' /*application='Prose'*/, "email_heading_color" varchar DEFAULT '#18181b' /*application='Prose'*/, "email_font_family" varchar DEFAULT 'system' /*application='Prose'*/, "email_footer_text" text DEFAULT '' /*application='Prose'*/, "email_preheader_text" varchar DEFAULT '' /*application='Prose'*/, "email_social_twitter" varchar /*application='Prose'*/, "email_social_github" varchar /*application='Prose'*/, "email_social_linkedin" varchar /*application='Prose'*/, "email_social_website" varchar /*application='Prose'*/, "email_default_template" varchar DEFAULT 'minimal' /*application='Prose'*/, "locale" varchar DEFAULT 'en' NOT NULL /*application='Prose'*/, "block_crawlers" boolean DEFAULT FALSE NOT NULL /*application='Prose'*/, "theme_mode" varchar DEFAULT 'visitor_choice' NOT NULL /*application='Prose'*/, "stripe_secret_key" varchar /*application='Prose'*/, "stripe_publishable_key" varchar /*application='Prose'*/, "stripe_webhook_secret" varchar /*application='Prose'*/, "payments_currency" varchar DEFAULT 'usd' /*application='Prose'*/, "activitypub_enabled" boolean DEFAULT FALSE NOT NULL /*application='Prose'*/, "activitypub_username" varchar DEFAULT 'blog' NOT NULL /*application='Prose'*/, "activitypub_private_key" text /*application='Prose'*/, "activitypub_public_key" text /*application='Prose'*/);
-CREATE TABLE IF NOT EXISTS "models" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "model_id" varchar NOT NULL, "name" varchar NOT NULL, "provider" varchar NOT NULL, "family" varchar, "model_created_at" datetime(6), "context_window" integer, "max_output_tokens" integer, "knowledge_cutoff" date, "modalities" json DEFAULT '{}', "capabilities" json DEFAULT '[]', "pricing" json DEFAULT '{}', "metadata" json DEFAULT '{}', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
-CREATE UNIQUE INDEX "index_models_on_provider_and_model_id" ON "models" ("provider", "model_id") /*application='Prose'*/;
-CREATE INDEX "index_models_on_provider" ON "models" ("provider") /*application='Prose'*/;
-CREATE INDEX "index_models_on_family" ON "models" ("family") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "tool_calls" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "tool_call_id" varchar NOT NULL, "name" varchar NOT NULL, "thought_signature" varchar, "arguments" json DEFAULT '{}', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "message_id" integer NOT NULL, CONSTRAINT "fk_rails_9c8daee481"
-FOREIGN KEY ("message_id")
-  REFERENCES "messages" ("id")
-);
-CREATE UNIQUE INDEX "index_tool_calls_on_tool_call_id" ON "tool_calls" ("tool_call_id") /*application='Prose'*/;
-CREATE INDEX "index_tool_calls_on_name" ON "tool_calls" ("name") /*application='Prose'*/;
-CREATE INDEX "index_tool_calls_on_message_id" ON "tool_calls" ("message_id") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "messages" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "role" varchar NOT NULL, "content" text, "content_raw" json, "thinking_text" text, "thinking_signature" text, "thinking_tokens" integer, "input_tokens" integer, "output_tokens" integer, "cached_tokens" integer, "cache_creation_tokens" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "chat_id" integer NOT NULL, "model_id" integer, "tool_call_id" integer, CONSTRAINT "fk_rails_c02b47ad97"
-FOREIGN KEY ("model_id")
-  REFERENCES "models" ("id")
-, CONSTRAINT "fk_rails_0f670de7ba"
-FOREIGN KEY ("chat_id")
-  REFERENCES "chats" ("id")
-, CONSTRAINT "fk_rails_552873cb52"
-FOREIGN KEY ("tool_call_id")
-  REFERENCES "tool_calls" ("id")
-);
-CREATE INDEX "index_messages_on_role" ON "messages" ("role") /*application='Prose'*/;
-CREATE INDEX "index_messages_on_chat_id" ON "messages" ("chat_id") /*application='Prose'*/;
-CREATE INDEX "index_messages_on_model_id" ON "messages" ("model_id") /*application='Prose'*/;
-CREATE INDEX "index_messages_on_tool_call_id" ON "messages" ("tool_call_id") /*application='Prose'*/;
-CREATE TABLE IF NOT EXISTS "chats" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "model_id" integer, "post_id" integer, "user_id" integer, "conversation_type" varchar DEFAULT 'chat' NOT NULL /*application='Prose'*/, CONSTRAINT "fk_rails_b19b85f418"
-FOREIGN KEY ("post_id")
-  REFERENCES "posts" ("id")
-, CONSTRAINT "fk_rails_1835d93df1"
-FOREIGN KEY ("model_id")
-  REFERENCES "models" ("id")
-, CONSTRAINT "fk_rails_e555f43151"
-FOREIGN KEY ("user_id")
-  REFERENCES "users" ("id")
-);
-CREATE INDEX "index_chats_on_model_id" ON "chats" ("model_id") /*application='Prose'*/;
-CREATE INDEX "index_chats_on_post_id" ON "chats" ("post_id") /*application='Prose'*/;
-CREATE INDEX "index_chats_on_user_id" ON "chats" ("user_id") /*application='Prose'*/;
-CREATE INDEX "index_chats_on_post_id_and_user_id_and_conversation_type" ON "chats" ("post_id", "user_id", "conversation_type") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "ruby_llm_models" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "model_id" varchar NOT NULL, "name" varchar NOT NULL, "provider" varchar NOT NULL, "family" varchar, "model_created_at" datetime(6), "context_window" integer, "max_output_tokens" integer, "knowledge_cutoff" date, "modalities" json DEFAULT '{}', "capabilities" json DEFAULT '[]', "pricing" json DEFAULT '{}', "metadata" json DEFAULT '{}', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "unlisted_at" datetime(6) /*application='Prose'*/);
 CREATE TABLE IF NOT EXISTS "x_posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "url" varchar NOT NULL, "embed_html" text, "author_name" varchar, "author_username" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
 CREATE UNIQUE INDEX "index_x_posts_on_url" ON "x_posts" ("url") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "youtube_videos" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "url" varchar NOT NULL, "video_id" varchar NOT NULL, "title" varchar, "author_name" varchar, "thumbnail_url" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
@@ -315,7 +277,61 @@ FOREIGN KEY ("post_id")
 );
 CREATE INDEX "index_mailing_list_posts_on_mailing_list_id" ON "mailing_list_posts" ("mailing_list_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_mailing_list_posts_on_post_id_and_mailing_list_id" ON "mailing_list_posts" ("post_id", "mailing_list_id") /*application='Prose'*/;
+CREATE INDEX "index_ruby_llm_models_on_family" ON "ruby_llm_models" ("family") /*application='Prose'*/;
+CREATE INDEX "index_ruby_llm_models_on_provider" ON "ruby_llm_models" ("provider") /*application='Prose'*/;
+CREATE UNIQUE INDEX "index_ruby_llm_models_on_provider_and_model_id" ON "ruby_llm_models" ("provider", "model_id") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "ruby_llm_batches" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "provider_batch_id" varchar NOT NULL, "provider" varchar NOT NULL, "status" varchar NOT NULL, "raw_status" varchar, "completed" boolean DEFAULT FALSE NOT NULL, "chat_type" varchar, "batch_protocol" varchar, "chat_ids" json DEFAULT '[]', "request_counts" json, "reported_cost" json, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
+CREATE UNIQUE INDEX "index_ruby_llm_batches_on_provider_and_provider_batch_id" ON "ruby_llm_batches" ("provider", "provider_batch_id") /*application='Prose'*/;
+CREATE INDEX "index_ruby_llm_batches_on_status" ON "ruby_llm_batches" ("status") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "chats" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "ruby_llm_model_id" integer, "post_id" integer, "user_id" integer, "conversation_type" varchar DEFAULT 'chat' NOT NULL, "cancelled" boolean DEFAULT FALSE NOT NULL, "claim_token" varchar /*application='Prose'*/, "claimed_until" datetime(6) /*application='Prose'*/, CONSTRAINT "fk_rails_b19b85f418"
+FOREIGN KEY ("post_id")
+  REFERENCES "posts" ("id")
+, CONSTRAINT "fk_rails_d8a12df187"
+FOREIGN KEY ("ruby_llm_model_id")
+  REFERENCES "ruby_llm_models" ("id")
+, CONSTRAINT "fk_rails_e555f43151"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+);
+CREATE INDEX "index_chats_on_post_id" ON "chats" ("post_id") /*application='Prose'*/;
+CREATE INDEX "index_chats_on_user_id" ON "chats" ("user_id") /*application='Prose'*/;
+CREATE INDEX "index_chats_on_post_id_and_user_id_and_conversation_type" ON "chats" ("post_id", "user_id", "conversation_type") /*application='Prose'*/;
+CREATE INDEX "index_chats_on_ruby_llm_model_id" ON "chats" ("ruby_llm_model_id") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "ruby_llm_tool_calls" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "tool_call_id" varchar NOT NULL, "name" varchar NOT NULL, "thought_signature" text, "arguments" json DEFAULT '{}', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "message_id" integer NOT NULL, "message_type" varchar NOT NULL, "result_type" varchar, "result_id" integer, "approval" varchar, "remote" boolean DEFAULT FALSE NOT NULL, "mcp_state" json /*application='Prose'*/, "mcp_result" json /*application='Prose'*/, "provider_call_id" varchar /*application='Prose'*/, "namespace" varchar /*application='Prose'*/, "claimed_until" datetime(6) /*application='Prose'*/);
+CREATE INDEX "index_ruby_llm_tool_calls_on_name" ON "ruby_llm_tool_calls" ("name") /*application='Prose'*/;
+CREATE UNIQUE INDEX "index_ruby_llm_tool_calls_on_tool_call_id" ON "ruby_llm_tool_calls" ("tool_call_id") /*application='Prose'*/;
+CREATE INDEX "index_ruby_llm_tool_calls_on_message_type_and_message_id" ON "ruby_llm_tool_calls" ("message_type", "message_id") /*application='Prose'*/;
+CREATE INDEX "index_ruby_llm_tool_calls_on_result_type_and_result_id" ON "ruby_llm_tool_calls" ("result_type", "result_id") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "messages" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "role" varchar NOT NULL, "content" text, "thinking_text" text, "thinking_signature" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "chat_id" integer NOT NULL, "cache_until_here" boolean DEFAULT FALSE NOT NULL, "finish_reason" varchar, "citations" json, "server_tool_calls" json, "raw_content" json, "raw_reasoning" json, "cache_ttl" varchar /*application='Prose'*/, "phase" varchar /*application='Prose'*/, "continuation" text /*application='Prose'*/, CONSTRAINT "fk_rails_0f670de7ba"
+FOREIGN KEY ("chat_id")
+  REFERENCES "chats" ("id")
+);
+CREATE INDEX "index_messages_on_chat_id" ON "messages" ("chat_id") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "ruby_llm_mcp_credentials" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "owner_type" varchar, "owner_id" bigint, "key" varchar NOT NULL, "data" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
+CREATE INDEX "index_ruby_llm_mcp_credentials_on_owner" ON "ruby_llm_mcp_credentials" ("owner_type", "owner_id") /*application='Prose'*/;
+CREATE UNIQUE INDEX "index_ruby_llm_mcp_credentials_on_key" ON "ruby_llm_mcp_credentials" ("key") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "ruby_llm_provider_files" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "blob_key" varchar NOT NULL, "provider" varchar NOT NULL, "account" varchar NOT NULL, "file_id" text NOT NULL, "expires_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
+CREATE UNIQUE INDEX "index_ruby_llm_provider_files_uniqueness" ON "ruby_llm_provider_files" ("blob_key", "provider", "account") /*application='Prose'*/;
+CREATE INDEX "index_chats_on_claimed_until" ON "chats" ("claimed_until") WHERE claim_token IS NOT NULL /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "ruby_llm_queued_messages" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "chat_type" varchar NOT NULL, "chat_id" bigint NOT NULL, "sender_type" varchar, "sender_id" bigint, "content" text, "steer" boolean DEFAULT TRUE NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
+CREATE INDEX "index_ruby_llm_queued_messages_on_chat_type_and_chat_id" ON "ruby_llm_queued_messages" ("chat_type", "chat_id") /*application='Prose'*/;
+CREATE INDEX "index_ruby_llm_queued_messages_on_sender_type_and_sender_id" ON "ruby_llm_queued_messages" ("sender_type", "sender_id") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "ruby_llm_chat_files" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "chat_type" varchar NOT NULL, "chat_id" bigint NOT NULL, "owner_type" varchar, "owner_id" bigint, "path" varchar NOT NULL, "content_type" varchar, "byte_size" bigint, "digest" varchar, "text" text, "read_digest" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
+CREATE INDEX "index_ruby_llm_chat_files_on_chat_type_and_chat_id_and_path" ON "ruby_llm_chat_files" ("chat_type", "chat_id", "path") /*application='Prose'*/;
+CREATE INDEX "index_ruby_llm_chat_files_on_owner_type_and_owner_id" ON "ruby_llm_chat_files" ("owner_type", "owner_id") /*application='Prose'*/;
+CREATE TABLE IF NOT EXISTS "ruby_llm_usages" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "chat_type" varchar, "chat_id" integer, "message_type" varchar, "message_id" integer, "operation" varchar NOT NULL, "provider" varchar NOT NULL, "model" varchar NOT NULL, "status" varchar NOT NULL, "input_tokens" integer, "output_tokens" integer, "cache_read_tokens" integer, "cache_write_tokens" integer, "thinking_tokens" integer, "input_cost" decimal(16,10), "output_cost" decimal(16,10), "cache_read_cost" decimal(16,10), "cache_write_cost" decimal(16,10), "thinking_cost" decimal(16,10), "total_cost" decimal(16,10), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "server_tool_use" json, "owner_type" varchar, "owner_id" bigint, "workflow_id" varchar, "workflow_name" varchar, "workflow_step_id" varchar, "workflow_step_name" varchar, "characters" integer, "audio_seconds" decimal(16,6), "search_units" integer, "characters_cost" decimal(16,10), "audio_seconds_cost" decimal(16,10), "search_units_cost" decimal(16,10), CONSTRAINT chk_rails_f50895962a CHECK (status IN ('pending', 'succeeded', 'failed', 'cancelled')), CONSTRAINT chk_rails_e83ed8b63c CHECK (operation IN ('chat', 'embedding', 'moderation', 'image', 'speech', 'transcription', 'ocr', 'rerank', 'judgment', 'video', 'research', 'code_execution')));
+CREATE INDEX "index_ruby_llm_usages_on_chat_type_and_chat_id" ON "ruby_llm_usages" ("chat_type", "chat_id") /*application='Prose'*/;
+CREATE INDEX "index_ruby_llm_usages_on_message_type_and_message_id" ON "ruby_llm_usages" ("message_type", "message_id") /*application='Prose'*/;
+CREATE INDEX "index_ruby_llm_usages_on_status" ON "ruby_llm_usages" ("status") /*application='Prose'*/;
+CREATE INDEX "index_ruby_llm_usages_on_owner" ON "ruby_llm_usages" ("owner_type", "owner_id") /*application='Prose'*/;
+CREATE INDEX "index_ruby_llm_usages_on_workflow_id" ON "ruby_llm_usages" ("workflow_id") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20261125160424'),
+('20261125160420'),
+('20261125160410'),
+('20261125160324'),
+('20261125160323'),
+('20261125160322'),
 ('20260918130000'),
 ('20260918120002'),
 ('20260918120001'),

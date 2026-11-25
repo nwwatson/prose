@@ -15,9 +15,13 @@ module Ai
       RubyLLM.chat(model: settings.ai_model_name)
     end
 
+    # The image model ids are ours (SiteSetting::AiConfiguration::IMAGE_MODELS), so
+    # send them straight to their provider. RubyLLM's registry no longer lists all
+    # of them, and resolves some ids to another provider when none is given.
     def paint(prompt, settings = SiteSetting.current)
       configure!(settings)
-      RubyLLM.paint(prompt, model: settings.image_model_name_for_image)
+      RubyLLM.paint(prompt, model: settings.image_model_name_for_image,
+                            provider: settings.image_model_provider, assume_model_exists: true)
     end
   end
 end

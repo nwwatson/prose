@@ -3,6 +3,8 @@
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
+  # Keep the stored AI model registry in step with the installed ruby_llm gem
+  ./bin/rails ruby_llm:load_models
 fi
 
 exec "${@}"
