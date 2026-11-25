@@ -100,7 +100,7 @@
       <%= f.submit t('admin.profiles.edit.save_profile'), class: "rounded-md bg-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-pointer" %>
 
       <% if @identity.handle.present? %>
-        <%= link_to t('admin.profiles.edit.view_public_profile'), author_path(@identity, handle: @identity.handle),
+        <%= link_to t('admin.profiles.edit.view_public_profile'), author_path(handle: @identity.handle),
               class: "text-sm text-gray-600 hover:text-gray-900", target: "_blank" %>
       <% end %>
     </div>

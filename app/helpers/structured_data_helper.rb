@@ -32,7 +32,7 @@ module StructuredDataHelper
       "@context": "https://schema.org",
       "@type": "Person",
       name: identity.name,
-      url: author_url(identity, handle: identity.handle)
+      url: author_url(handle: identity.handle)
     }
     data[:description] = strip_tags(identity.bio_html).truncate(160) if identity.bio.present?
     data[:sameAs] = [ identity.website_url, identity.twitter_url, identity.github_url ].compact if identity.has_social_links?
@@ -58,7 +58,7 @@ module StructuredDataHelper
 
   def author_json_ld(identity)
     data = { "@type": "Person", name: identity.name }
-    data[:url] = author_url(identity, handle: identity.handle) if identity.handle.present?
+    data[:url] = author_url(handle: identity.handle) if identity.handle.present?
     data
   end
 end

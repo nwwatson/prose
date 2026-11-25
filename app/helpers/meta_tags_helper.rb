@@ -74,7 +74,7 @@ module MetaTagsHelper
 
   def article_meta_tags(post)
     identity = post.user.identity
-    author = identity.handle.present? ? author_url(identity, handle: identity.handle) : post.user.display_name
+    author = identity.handle.present? ? author_url(handle: identity.handle) : post.user.display_name
 
     tags = [
       tag.meta(property: "article:published_time", content: post.published_at&.iso8601),
