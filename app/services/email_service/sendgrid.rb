@@ -40,17 +40,24 @@ class EmailService::Sendgrid < EmailService::Base
       mail.add_header(SendGrid::Header.new(key: key.to_s, value: value.to_s))
     end
 
-    sg = SendGrid::API.new(api_key: @api_key)
-    response = sg.client.mail._("send").post(request_body: mail.to_json)
+    response = client.mail._("send").post(request_body: mail.to_json)
 
     unless response.status_code.to_i.between?(200, 299)
-      Rails.logger.error("[SendGrid] Failed to send email to #{to}: #{response.status_code} #{response.body}")
+      raise EmailService::DeliveryError.new(
+        "SendGrid rejected the message: #{response.status_code} #{response.body}",
+        status_code: response.status_code.to_i
+      )
     end
 
     response
   end
 
   private
+
+  # One HTTP client per adapter instance, reused for every recipient of a send.
+  def client
+    @client ||= SendGrid::API.new(api_key: @api_key).client
+  end
 
   def extract_headers(message)
     headers = {}
