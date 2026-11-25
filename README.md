@@ -333,6 +333,17 @@ Turn on **Admin → Settings → Fediverse** to let Mastodon, Threads, and other
 kamal deploy   # Build, push, and deploy the latest code
 ```
 
+The container migrates the database and reloads the AI model registry when it boots.
+If you deploy without Docker, run both after updating:
+
+```bash
+bin/rails db:migrate
+bin/rails ruby_llm:load_models
+```
+
+Upgrading to RubyLLM 2 changes the AI tables irreversibly, so back up your
+database first. Rolling back needs both the previous release and that backup.
+
 ### Useful Kamal Commands
 
 ```bash

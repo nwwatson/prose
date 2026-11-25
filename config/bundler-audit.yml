@@ -3,11 +3,3 @@
 
 ignore:
   - CVE-THAT-DOES-NOT-APPLY
-  # ruby_llm ReDoS advisories: GHSA-42r3-x6vx-x49x (Utils.underscore),
-  # GHSA-5m38-526f-3498 (think-tag parsing) and GHSA-57hg-jgw4-wcqw (Mistral
-  # capability matching). The reasoning for ignoring them is that they only affect
-  # Ruby 3.1.x and Prose runs Ruby 3.4.13. The only patched releases are 2.x —
-  # remove these entries once we've upgraded ruby_llm to 2.x.
-  - CVE-2026-67991
-  - CVE-2026-67987
-  - CVE-2026-67989

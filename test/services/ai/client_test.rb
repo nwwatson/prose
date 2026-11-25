@@ -33,8 +33,8 @@ class Ai::ClientTest < ActiveSupport::TestCase
     captured = nil
     original_paint = RubyLLM.method(:paint)
 
-    RubyLLM.define_singleton_method(:paint) do |prompt, model:|
-      captured = [ prompt, model ]
+    RubyLLM.define_singleton_method(:paint) do |prompt, **options|
+      captured = [ prompt, options ]
       image
     end
 
@@ -44,7 +44,8 @@ class Ai::ClientTest < ActiveSupport::TestCase
       RubyLLM.define_singleton_method(:paint, original_paint)
     end
 
-    assert_equal [ "a sunset", settings.image_model_name_for_image ], captured
+    expected = { model: settings.image_model_name_for_image, provider: settings.image_model_provider, assume_model_exists: true }
+    assert_equal [ "a sunset", expected ], captured
     assert_same image, result
     assert_equal "openai-key", RubyLLM.config.openai_api_key
   end

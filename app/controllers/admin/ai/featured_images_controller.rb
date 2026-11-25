@@ -16,7 +16,7 @@ module Admin
           }
           format.html { redirect_to edit_admin_post_path(@post) }
         end
-      rescue RubyLLM::Error => e
+      rescue RubyLLM::Error, RubyLLM::ModelNotFoundError => e
         respond_to do |format|
           format.turbo_stream {
             render turbo_stream: turbo_stream.replace(

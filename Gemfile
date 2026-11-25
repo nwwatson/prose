@@ -57,7 +57,7 @@ gem "ruby-vips", "~> 2.0", require: false
 gem "lexxy", "~> 0.9.32"
 
 # Unified LLM interface for Claude, Gemini, and more [https://github.com/crmne/ruby_llm]
-gem "ruby_llm"
+gem "ruby_llm", "~> 2.2"
 
 # Model Context Protocol server for Claude Desktop integration [https://github.com/modelcontextprotocol/ruby-sdk]
 gem "mcp", "~> 1.5"

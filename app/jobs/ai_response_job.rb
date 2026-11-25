@@ -46,7 +46,7 @@ class AiResponseJob < ApplicationJob
       partial: "admin/ai/messages/message",
       locals: { message: assistant_message }
     )
-  rescue RubyLLM::Error => e
+  rescue RubyLLM::Error, RubyLLM::ModelNotFoundError => e
     Turbo::StreamsChannel.broadcast_replace_to(
       "chat_#{chat_record.id}",
       target: "ai-streaming-message-#{chat_record.id}",
