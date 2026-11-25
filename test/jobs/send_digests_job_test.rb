@@ -2,6 +2,7 @@ require "test_helper"
 
 class SendDigestsJobTest < ActiveJob::TestCase
   include ActionMailer::TestHelper
+  include BulkEnqueueHelper
 
   setup do
     Subscriber.update_all(email_frequency: Subscriber.email_frequencies[:immediate], last_digest_at: nil)
@@ -113,6 +114,23 @@ class SendDigestsJobTest < ActiveJob::TestCase
     assert_no_enqueued_emails do
       SendDigestsJob.perform_now("weekly")
     end
+    assert_nil @weekly.reload.last_digest_at
+  end
+
+  test "bulk-enqueues a batch's digests once" do
+    subscribers(:with_token).update_columns(email_frequency: Subscriber.email_frequencies[:weekly])
+
+    batches = capture_bulk_enqueues { SendDigestsJob.perform_now("weekly") }
+
+    assert_equal [ 2 ], batches.map(&:size)
+    assert_enqueued_emails 2
+  end
+
+  test "leaves the cursor alone when the bulk enqueue fails" do
+    with_singleton_stub(ActionMailer, :deliver_all_later, ->(*) { raise ActiveJob::EnqueueError, "queue unavailable" }) do
+      assert_raises(ActiveJob::EnqueueError) { SendDigestsJob.perform_now("weekly") }
+    end
+
     assert_nil @weekly.reload.last_digest_at
   end
 

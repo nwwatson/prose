@@ -3,6 +3,10 @@
 class FederatePostJob < ApplicationJob
   queue_as :default
 
+  # Every delivery job carries its own copy of the activity, so followers are
+  # enqueued in slices to bound the size of each insert.
+  BATCH_SIZE = 500
+
   # `revision` (the post's `revised_at`) is set for coalesced "update" jobs: if
   # the post has been revised again since this job was enqueued, a newer job
   # will send the latest version.
@@ -13,7 +17,9 @@ class FederatePostJob < ApplicationJob
     return unless activity
 
     body = activity.to_json
-    FediverseActor.follower_inboxes.each { |inbox| DeliverActivityJob.perform_later(inbox, body) }
+    FediverseActor.follower_inboxes.each_slice(BATCH_SIZE) do |inboxes|
+      ActiveJob.perform_all_later(inboxes.map { |inbox| DeliverActivityJob.new(inbox, body) })
+    end
   end
 
   private

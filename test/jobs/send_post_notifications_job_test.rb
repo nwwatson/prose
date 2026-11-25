@@ -1,6 +1,8 @@
 require "test_helper"
 
 class SendPostNotificationsJobTest < ActiveJob::TestCase
+  include BulkEnqueueHelper
+
   test "enqueues email for each confirmed subscriber" do
     post = posts(:published_post)
     confirmed_count = Subscriber.confirmed.count
@@ -20,6 +22,19 @@ class SendPostNotificationsJobTest < ActiveJob::TestCase
       SendPostNotificationsJob.perform_now(post.id)
     end
     assert_equal Subscriber.confirmed.count - 2, immediate_count
+  end
+
+  test "bulk-enqueues one batch of emails at a time" do
+    post = posts(:published_post)
+    recipients = post.notification_recipients.email_immediate.count
+    assert_operator recipients, :>, 1
+
+    batches = with_const(SendPostNotificationsJob, :BATCH_SIZE, 1) do
+      capture_bulk_enqueues { SendPostNotificationsJob.perform_now(post.id) }
+    end
+
+    assert_equal [ 1 ] * recipients, batches.map(&:size)
+    assert_enqueued_jobs recipients, only: ActionMailer::MailDeliveryJob
   end
 
   test "does not enqueue email for unconfirmed subscribers" do

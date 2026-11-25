@@ -24,18 +24,20 @@ class SendDigestsJob < ApplicationJob
     Subscriber.confirmed.where(email_frequency: frequency).in_batches do |batch|
       list_ids_by_subscriber = active_list_ids_by_subscriber(batch)
 
-      sent_ids = batch.filter_map do |subscriber|
+      digests = batch.filter_map do |subscriber|
         list_ids = list_ids_by_subscriber.fetch(subscriber.id, [])
         next if list_ids.empty?
 
         post_ids = post_ids_for[[ subscriber.digest_window_start(now), list_ids ]]
         next if post_ids.empty?
 
-        DigestMailer.digest(subscriber, post_ids.first(POST_LIMIT), post_ids.size).deliver_later
-        subscriber.id
+        [ subscriber.id, DigestMailer.digest(subscriber, post_ids.first(POST_LIMIT), post_ids.size) ]
       end
+      next if digests.empty?
 
-      Subscriber.where(id: sent_ids).update_all(last_digest_at: now) if sent_ids.any?
+      sent_ids, emails = digests.transpose
+      ActionMailer.deliver_all_later(emails)
+      Subscriber.where(id: sent_ids).update_all(last_digest_at: now)
     end
   end
 
