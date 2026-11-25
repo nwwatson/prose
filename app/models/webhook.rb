@@ -8,7 +8,7 @@ class Webhook < ApplicationRecord
   MAX_CONSECUTIVE_FAILURES = 5
   DELIVERY_LOG_LIMIT = 100
 
-  has_many :webhook_deliveries, dependent: :destroy
+  has_many :webhook_deliveries, dependent: :delete_all
 
   encrypts :signing_secret, deterministic: false
 

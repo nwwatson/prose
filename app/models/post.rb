@@ -14,12 +14,12 @@ class Post < ApplicationRecord
 
   belongs_to :user
   belongs_to :category, optional: true
-  has_many :post_tags, dependent: :destroy
+  has_many :post_tags, dependent: :delete_all
   has_many :tags, through: :post_tags
   has_many :loves, dependent: :destroy
-  has_many :reading_list_items, dependent: :destroy
+  has_many :reading_list_items, dependent: :delete_all
   has_many :comments, dependent: :destroy
-  has_many :post_views, dependent: :destroy
+  has_many :post_views, dependent: :delete_all
   has_many :attributed_subscribers, class_name: "Subscriber", foreign_key: :source_post_id, dependent: :nullify
   has_many :chats, dependent: :destroy
   has_rich_text :content

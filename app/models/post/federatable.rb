@@ -6,7 +6,7 @@ module Post::Federatable
   extend ActiveSupport::Concern
 
   included do
-    has_many :fediverse_likes, dependent: :destroy
+    has_many :fediverse_likes, dependent: :delete_all
 
     # Transitions come from Post::Publishable, shared with Post::Webhookable
     # and Post::Notifiable, so a post created already published sends a Create.

@@ -54,6 +54,6 @@ class Identity::ReadingListableTest < ActiveSupport::TestCase
   end
 
   test "reading list items are destroyed with the identity" do
-    assert_equal :destroy, Identity.reflect_on_association(:reading_list_items).options[:dependent]
+    assert_equal :delete_all, Identity.reflect_on_association(:reading_list_items).options[:dependent]
   end
 end

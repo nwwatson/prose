@@ -32,14 +32,12 @@ FOREIGN KEY ("post_id")
 FOREIGN KEY ("tag_id")
   REFERENCES "tags" ("id")
 );
-CREATE INDEX "index_post_tags_on_post_id" ON "post_tags" ("post_id") /*application='Prose'*/;
 CREATE INDEX "index_post_tags_on_tag_id" ON "post_tags" ("tag_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_post_tags_on_post_id_and_tag_id" ON "post_tags" ("post_id", "tag_id") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "post_views" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "post_id" integer NOT NULL, "ip_hash" varchar, "user_agent" varchar, "referrer" varchar, "source" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "referrer_domain" varchar /*application='Prose'*/, "utm_source" varchar /*application='Prose'*/, "utm_medium" varchar /*application='Prose'*/, "utm_campaign" varchar /*application='Prose'*/, CONSTRAINT "fk_rails_f2f2d28c2c"
 FOREIGN KEY ("post_id")
   REFERENCES "posts" ("id")
 );
-CREATE INDEX "index_post_views_on_post_id" ON "post_views" ("post_id") /*application='Prose'*/;
 CREATE INDEX "index_post_views_on_created_at" ON "post_views" ("created_at") /*application='Prose'*/;
 CREATE INDEX "index_post_views_on_post_id_and_created_at" ON "post_views" ("post_id", "created_at") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "identities" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "handle" varchar, "settings" json DEFAULT '{}', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "bio" text /*application='Prose'*/, "website_url" varchar /*application='Prose'*/, "twitter_handle" varchar /*application='Prose'*/, "github_handle" varchar /*application='Prose'*/);
@@ -64,7 +62,6 @@ FOREIGN KEY ("identity_id")
 FOREIGN KEY ("post_id")
   REFERENCES "posts" ("id")
 );
-CREATE INDEX "index_loves_on_post_id" ON "loves" ("post_id") /*application='Prose'*/;
 CREATE INDEX "index_loves_on_identity_id" ON "loves" ("identity_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_loves_on_post_id_and_identity_id" ON "loves" ("post_id", "identity_id") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "password_digest" varchar NOT NULL, "role" integer DEFAULT 1 NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "identity_id" integer NOT NULL, CONSTRAINT "fk_rails_2f296ee649"
@@ -112,7 +109,6 @@ FOREIGN KEY ("newsletter_id")
 FOREIGN KEY ("subscriber_id")
   REFERENCES "subscribers" ("id")
 );
-CREATE INDEX "index_newsletter_deliveries_on_newsletter_id" ON "newsletter_deliveries" ("newsletter_id") /*application='Prose'*/;
 CREATE INDEX "index_newsletter_deliveries_on_subscriber_id" ON "newsletter_deliveries" ("subscriber_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_newsletter_deliveries_on_newsletter_id_and_subscriber_id" ON "newsletter_deliveries" ("newsletter_id", "subscriber_id") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "pages" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "slug" varchar NOT NULL, "status" integer DEFAULT 0 NOT NULL, "meta_description" text, "published_at" datetime(6), "user_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_84a58494eb"
@@ -140,7 +136,6 @@ FOREIGN KEY ("subscriber_id")
 FOREIGN KEY ("subscriber_label_id")
   REFERENCES "subscriber_labels" ("id")
 );
-CREATE INDEX "index_subscriber_labelings_on_subscriber_id" ON "subscriber_labelings" ("subscriber_id") /*application='Prose'*/;
 CREATE INDEX "index_subscriber_labelings_on_subscriber_label_id" ON "subscriber_labelings" ("subscriber_label_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "idx_subscriber_labelings_uniqueness" ON "subscriber_labelings" ("subscriber_id", "subscriber_label_id") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "segments" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "description" text, "filter_criteria" json DEFAULT '{}' NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
@@ -166,7 +161,6 @@ FOREIGN KEY ("post_id")
 FOREIGN KEY ("user_id")
   REFERENCES "users" ("id")
 );
-CREATE INDEX "index_post_versions_on_post_id" ON "post_versions" ("post_id") /*application='Prose'*/;
 CREATE INDEX "index_post_versions_on_user_id" ON "post_versions" ("user_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_post_versions_on_post_id_and_version_number" ON "post_versions" ("post_id", "version_number") /*application='Prose'*/;
 CREATE TABLE IF NOT EXISTS "membership_tiers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "description" text, "price_cents" integer NOT NULL, "currency" varchar DEFAULT 'usd' NOT NULL, "interval" integer DEFAULT 0 NOT NULL, "stripe_price_id" varchar, "stripe_product_id" varchar, "active" boolean DEFAULT TRUE NOT NULL, "position" integer DEFAULT 0 NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL);
@@ -195,7 +189,6 @@ FOREIGN KEY ("user_id")
 CREATE INDEX "index_posts_on_category_id" ON "posts" ("category_id") /*application='Prose'*/;
 CREATE INDEX "index_posts_on_user_id" ON "posts" ("user_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_posts_on_slug" ON "posts" ("slug") /*application='Prose'*/;
-CREATE INDEX "index_posts_on_status" ON "posts" ("status") /*application='Prose'*/;
 CREATE INDEX "index_posts_on_published_at" ON "posts" ("published_at") /*application='Prose'*/;
 CREATE TRIGGER posts_fts_insert AFTER INSERT ON posts BEGIN
   INSERT INTO posts_fts(rowid, title, subtitle, body_plain)
@@ -219,7 +212,6 @@ CREATE TABLE IF NOT EXISTS "webhook_deliveries" ("id" integer PRIMARY KEY AUTOIN
 FOREIGN KEY ("webhook_id")
   REFERENCES "webhooks" ("id")
 );
-CREATE INDEX "index_webhook_deliveries_on_webhook_id" ON "webhook_deliveries" ("webhook_id") /*application='Prose'*/;
 CREATE INDEX "index_webhook_deliveries_on_webhook_id_and_attempted_at" ON "webhook_deliveries" ("webhook_id", "attempted_at") /*application='Prose'*/;
 CREATE TABLE "exports" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "format" integer DEFAULT 0 NOT NULL, "status" integer DEFAULT 0 NOT NULL, "error_message" text, "completed_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_26b155474a"
 FOREIGN KEY ("user_id")
@@ -242,7 +234,6 @@ FOREIGN KEY ("post_id")
 FOREIGN KEY ("fediverse_actor_id")
   REFERENCES "fediverse_actors" ("id")
 );
-CREATE INDEX "index_fediverse_likes_on_post_id" ON "fediverse_likes" ("post_id") /*application='Prose'*/;
 CREATE INDEX "index_fediverse_likes_on_fediverse_actor_id" ON "fediverse_likes" ("fediverse_actor_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_fediverse_likes_on_post_id_and_fediverse_actor_id" ON "fediverse_likes" ("post_id", "fediverse_actor_id") /*application='Prose'*/;
 CREATE UNIQUE INDEX "index_comments_on_activitypub_uri" ON "comments" ("activitypub_uri") /*application='Prose'*/;
@@ -293,7 +284,6 @@ FOREIGN KEY ("ruby_llm_model_id")
 FOREIGN KEY ("user_id")
   REFERENCES "users" ("id")
 );
-CREATE INDEX "index_chats_on_post_id" ON "chats" ("post_id") /*application='Prose'*/;
 CREATE INDEX "index_chats_on_user_id" ON "chats" ("user_id") /*application='Prose'*/;
 CREATE INDEX "index_chats_on_post_id_and_user_id_and_conversation_type" ON "chats" ("post_id", "user_id", "conversation_type") /*application='Prose'*/;
 CREATE INDEX "index_chats_on_ruby_llm_model_id" ON "chats" ("ruby_llm_model_id") /*application='Prose'*/;
@@ -326,6 +316,7 @@ CREATE INDEX "index_ruby_llm_usages_on_status" ON "ruby_llm_usages" ("status") /
 CREATE INDEX "index_ruby_llm_usages_on_owner" ON "ruby_llm_usages" ("owner_type", "owner_id") /*application='Prose'*/;
 CREATE INDEX "index_ruby_llm_usages_on_workflow_id" ON "ruby_llm_usages" ("workflow_id") /*application='Prose'*/;
 INSERT INTO "schema_migrations" (version) VALUES
+('20261126000000'),
 ('20261125200000'),
 ('20261125170000'),
 ('20261125160424'),

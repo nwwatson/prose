@@ -4,7 +4,7 @@ module Post::Versionable
   VERSION_COOLDOWN = 5.minutes
 
   included do
-    has_many :post_versions, dependent: :destroy
+    has_many :post_versions, dependent: :delete_all
   end
 
   def create_version!(user:)

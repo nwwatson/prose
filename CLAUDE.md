@@ -114,6 +114,8 @@ app/models/site_setting/payment_configuration.rb # module SiteSetting::PaymentCo
 
 Keep model files under 200 lines — extract behavior into concerns when they grow.
 
+`has_many` associations whose children have no callbacks, attachments or dependents of their own use `dependent: :delete_all` (`post_tags`, `post_views`, `post_versions`, `reading_list_items`, `fediverse_likes`, `newsletter_deliveries`, `subscriber_labelings`, `webhook_deliveries`), so destroying a parent issues one DELETE per table instead of one per row while holding SQLite's writer. Giving one of those child models a destroy callback, attachment or dependent means switching its parents back to `:destroy`. Don't add a single-column index that a composite index on the same table already starts with.
+
 ### Controller Pattern
 Skinny controllers that delegate to models/services. Controllers handle only HTTP concerns.
 

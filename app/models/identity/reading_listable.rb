@@ -2,7 +2,7 @@ module Identity::ReadingListable
   extend ActiveSupport::Concern
 
   included do
-    has_many :reading_list_items, dependent: :destroy
+    has_many :reading_list_items, dependent: :delete_all
   end
 
   # Live posts only, most recently saved first.

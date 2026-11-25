@@ -5,7 +5,7 @@ class FediverseActor < ApplicationRecord
   STALE_AFTER = 1.day
 
   belongs_to :identity, optional: true
-  has_many :fediverse_likes, dependent: :destroy
+  has_many :fediverse_likes, dependent: :delete_all
 
   validates :uri, presence: true, uniqueness: true
 
