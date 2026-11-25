@@ -241,6 +241,9 @@ es:
       no_more_newsletters: "Ya no recibirás boletines de nuestra parte."
       return_to_site: "Volver al sitio"
 
+  feeds:
+    read_more: "Lee la publicación completa en %{site}"
+
   handles:
     form:
       choose_handle: "Elige un nombre de usuario"

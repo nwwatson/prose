@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Prose is a Ruby on Rails 8.1 application (Ruby 3.4.4) using the "Solid" stack — SQLite3 for all persistence with Solid Queue, Solid Cache, and Solid Cable for jobs, caching, and WebSockets respectively. No external services (Redis, etc.) are required.
+Prose is a Ruby on Rails 8.1 application (Ruby 3.4.13) using the "Solid" stack — SQLite3 for all persistence with Solid Queue, Solid Cache, and Solid Cable for jobs, caching, and WebSockets respectively. No external services (Redis, etc.) are required.
 
 Frontend uses Hotwire (Turbo + Stimulus), Tailwind CSS, Propshaft asset pipeline, and ImportMap for JavaScript modules.
 
@@ -163,6 +163,9 @@ Uses the `admin_editor` layout. Autosave triggers on a 3-second debounce, serial
 
 ### Post Versioning
 `PostVersion` stores full snapshots (title, subtitle, content HTML, body plain text) on each save. Auto-versioning triggers on update with a 5-minute cooldown (`Post::Versionable`). Manual "Save version" button in the editor drawer's Versions tab. Diff view uses the `diffy` gem for plain-text comparison. "Restore" replaces the post's current content. Max 50 versions per post, pruned inline on version creation. Admin CRUD at `/admin/posts/:id/post_versions`.
+
+### RSS Feed
+`/feed` is anonymous, so `feeds/index.xml.builder` puts the full body in `content:encoded` only for `visibility_public?` posts; members-only and paid posts get `seo_description` plus a "read the full post" link, matching `ActivityPub::ArticleSerializer`. Never emit `post.content` to an unauthenticated surface without that check.
 
 ### SEO Head Tags
 `MetaTagsHelper#seo_head_tags(title:, description:, url:, type:, image:, extra_tags:, json_ld:)` emits a page's whole SEO `<head>` sequence — description meta, Open Graph group, `extra_tags`, Twitter card group, canonical link, optional JSON-LD — in that fixed order. Every public page view calls it once instead of chaining `meta_description_tag` / `open_graph_tags` / `twitter_card_tags` / `canonical_tag` / `json_ld_tag`; `meta_tags_for_post` is a thin wrapper that passes the post's `article:*` metadata through `extra_tags` (which is why the slot sits between the OG and Twitter groups). The image is resolved once per call and shared by both the OG and Twitter groups.
