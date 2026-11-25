@@ -11,7 +11,11 @@ module Subscriber::ListSubscribable
     has_many :mailing_list_subscriptions, dependent: :delete_all
     has_many :mailing_lists, through: :mailing_list_subscriptions
 
-    scope :subscribed_to, ->(lists) { where(id: MailingListSubscription.where(mailing_list_id: lists.select(:id)).select(:subscriber_id)) }
+    # `lists` is one MailingList or a MailingList relation.
+    scope :subscribed_to, ->(lists) {
+      list_ids = lists.is_a?(MailingList) ? lists.id : lists.select(:id)
+      where(id: MailingListSubscription.where(mailing_list_id: list_ids).select(:subscriber_id))
+    }
 
     after_create :subscribe_to_default_lists
     after_save :sync_selected_mailing_lists, unless: -> { @selected_mailing_list_ids.nil? }

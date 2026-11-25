@@ -1,4 +1,6 @@
 class Export < ApplicationRecord
+  include Prunable
+
   RETENTION_LIMIT = 10
 
   enum :format, { markdown: 0, json: 1 }, prefix: :format, validate: true
@@ -52,6 +54,6 @@ class Export < ApplicationRecord
 
   def prune_old_exports
     # Destroying purges the attached file (has_one_attached defaults to purge_later).
-    self.class.where.not(id: self.class.recent.limit(RETENTION_LIMIT).select(:id)).destroy_all
+    prune_to_newest(self.class.recent, keep: RETENTION_LIMIT, destroy: true)
   end
 end

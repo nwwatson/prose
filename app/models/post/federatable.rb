@@ -8,7 +8,7 @@ module Post::Federatable
   included do
     has_many :fediverse_likes, dependent: :delete_all
 
-    # Transitions come from Post::Publishable, shared with Post::Webhookable
+    # Transitions come from Post::StatusTransitions, shared with Post::Webhookable
     # and Post::Notifiable, so a post created already published sends a Create.
     after_commit :federate_status_change, on: [ :create, :update ], if: -> { saved_change_to_status? && federation_enabled? }
     after_commit :federate_update, on: [ :create, :update ], if: -> { edited_while_published? && federation_enabled? }

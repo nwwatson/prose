@@ -96,7 +96,11 @@ class WebhookTest < ActiveSupport::TestCase
     webhook.webhook_deliveries.create!(event: "subscriber.created", attempted_at: 1.day.ago)
     webhook.webhook_deliveries.create!(event: "subscriber.created", attempted_at: 2.days.ago)
 
+    other = webhooks(:post_events_webhook).webhook_deliveries.create!(event: "post.published", attempted_at: 3.days.ago)
+
     webhook.prune_deliveries!(keep: 1)
+
+    assert WebhookDelivery.exists?(other.id)
 
     assert_equal [ newest ], webhook.webhook_deliveries.reload.to_a
   end

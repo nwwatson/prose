@@ -5,15 +5,11 @@ class Category < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
-  slugged_from :name, uniquify: false
+  slugged_from :name, uniquify: false, to_param: true
 
   scope :ordered, -> { order(:position) }
 
   def self.post_counts
     Post.where.not(category_id: nil).group(:category_id).count
-  end
-
-  def to_param
-    slug
   end
 end

@@ -86,5 +86,7 @@ class Post::VersionableTest < ActiveSupport::TestCase
     assert_equal PostVersion::MAX_VERSIONS_PER_POST + 5, post.post_versions.count
     post.create_version!(user: @user)
     assert_equal PostVersion::MAX_VERSIONS_PER_POST, post.post_versions.count
+    assert_equal (7..56).to_a, post.post_versions.order(:version_number).pluck(:version_number)
+    assert_equal 2, posts(:published_post).post_versions.count
   end
 end

@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Post::PublishableTransitionsTest < ActiveSupport::TestCase
+class Post::StatusTransitionsTest < ActiveSupport::TestCase
   def predicates(post)
     {
       became_published: post.became_published?,
