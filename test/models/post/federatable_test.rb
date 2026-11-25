@@ -53,4 +53,41 @@ class Post::FederatableTest < ActiveSupport::TestCase
     SiteSetting.current.update!(activitypub_enabled: false)
     assert_no_enqueued_jobs(only: FederatePostJob) { posts(:draft_post).publish! }
   end
+
+  def federated_actions
+    enqueued_jobs.select { |job| job[:job] == FederatePostJob }.map { |job| job[:args].first }
+  end
+
+  test "creating a post as published federates one Create" do
+    post = Post.create!(title: "Born published", user: users(:admin), status: :published, published_at: Time.current)
+
+    assert_equal [ "create" ], federated_actions
+    assert_enqueued_with(job: FederatePostJob, args: [ "create", post.id, ActivityPub::Urls.post_url(post) ])
+  end
+
+  test "creating a draft or scheduled post doesn't federate" do
+    Post.create!(title: "Just a draft", user: users(:admin))
+    Post.create!(title: "Later", user: users(:admin), status: :scheduled, published_at: 1.day.from_now)
+
+    assert_empty federated_actions
+  end
+
+  test "published to scheduled federates a Delete" do
+    posts(:published_post).schedule!(1.day.from_now)
+
+    assert_equal [ "delete" ], federated_actions
+  end
+
+  test "a scheduled post reverted to draft doesn't federate" do
+    posts(:scheduled_post).revert_to_draft!
+
+    assert_empty federated_actions
+  end
+
+  test "scheduled to published via PublishScheduledPostsJob federates a Create" do
+    travel 2.days
+    PublishScheduledPostsJob.perform_now
+
+    assert_equal [ "create" ], federated_actions
+  end
 end

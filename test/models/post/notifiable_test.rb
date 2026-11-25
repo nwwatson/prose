@@ -64,4 +64,28 @@ class Post::NotifiableTest < ActiveSupport::TestCase
     post.update!(mailing_lists: [ mailing_lists(:retired) ])
     assert_empty post.notification_recipients
   end
+
+  test "published to draft or scheduled doesn't notify" do
+    assert_no_enqueued_jobs only: SendPostNotificationsJob do
+      posts(:published_post).revert_to_draft!
+      posts(:design_post).schedule!(1.day.from_now)
+    end
+  end
+
+  test "scheduled to published via PublishScheduledPostsJob notifies once" do
+    travel 2.days
+
+    assert_enqueued_with(job: SendPostNotificationsJob, args: [ posts(:scheduled_post).id ]) do
+      PublishScheduledPostsJob.perform_now
+    end
+    assert_no_enqueued_jobs(only: SendPostNotificationsJob) { PublishScheduledPostsJob.perform_now }
+  end
+
+  test "republishing a post created as published doesn't email twice" do
+    post = build_post(status: :published, published_at: Time.current)
+    post.save!
+    post.revert_to_draft!
+
+    assert_no_enqueued_jobs(only: SendPostNotificationsJob) { post.publish! }
+  end
 end

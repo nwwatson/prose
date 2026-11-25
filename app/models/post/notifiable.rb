@@ -42,7 +42,7 @@ module Post::Notifiable
   end
 
   def notify_subscribers?
-    saved_change_to_status? && published? && subscribers_notified_at.nil?
+    became_published? && subscribers_notified_at.nil?
   end
 
   def notify_subscribers
