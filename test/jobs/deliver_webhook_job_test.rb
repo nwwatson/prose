@@ -1,18 +1,15 @@
 require "test_helper"
 
 class DeliverWebhookJobTest < ActiveJob::TestCase
-  def with_sender_post(outcome)
-    original = Webhooks::Sender.method(:post)
-    Webhooks::Sender.define_singleton_method(:post) do |*_args, **_kwargs|
+  def with_sender_post(outcome, &block)
+    fake_post = ->(*_args, **_kwargs) do
       case outcome
       when Exception then raise outcome
       when Proc then outcome.call
       else outcome
       end
     end
-    yield
-  ensure
-    Webhooks::Sender.define_singleton_method(:post, original)
+    with_singleton_stub(Webhooks::Sender, :post, fake_post, &block)
   end
 
   test "records a successful delivery and resets consecutive_failures" do
@@ -84,12 +81,12 @@ class DeliverWebhookJobTest < ActiveJob::TestCase
     webhook = webhooks(:subscriber_events_webhook)
     received = nil
 
-    with_sender_post(->(*) { Webhooks::Sender::Response.new(200, "ok") }) do
-      original = Webhooks::Sender.method(:post)
-      Webhooks::Sender.define_singleton_method(:post) do |*args, **kwargs|
-        received = kwargs
-        original.call(*args, **kwargs)
-      end
+    fake_post = ->(*_args, **kwargs) do
+      received = kwargs
+      Webhooks::Sender::Response.new(200, "ok")
+    end
+
+    with_singleton_stub(Webhooks::Sender, :post, fake_post) do
       job = DeliverWebhookJob.new(webhook.id, "subscriber.created", { id: 1 })
       job.perform_now
       assert_equal "subscriber.created", received[:event]

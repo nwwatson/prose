@@ -13,7 +13,7 @@ class ApiTokenTest < ActiveSupport::TestCase
   end
 
   test "find_by_raw_token returns active token" do
-    raw_token = "prose_admin_test_token_1234567890abcdef"
+    raw_token = ApiHelper::ADMIN_API_TOKEN
     token = ApiToken.find_by_raw_token(raw_token)
 
     assert_not_nil token
@@ -21,7 +21,7 @@ class ApiTokenTest < ActiveSupport::TestCase
   end
 
   test "find_by_raw_token returns nil for revoked token" do
-    raw_token = "prose_revoked_test_token_1234567890abcdef"
+    raw_token = ApiHelper::REVOKED_API_TOKEN
     token = ApiToken.find_by_raw_token(raw_token)
 
     assert_nil token

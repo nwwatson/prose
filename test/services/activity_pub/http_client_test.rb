@@ -17,27 +17,6 @@ module ActivityPub
       end
     end
 
-    class FakeHTTP
-      attr_accessor :use_ssl, :open_timeout, :read_timeout, :write_timeout, :ipaddr
-      attr_reader :last_request
-
-      def initialize(response)
-        @response = response
-      end
-
-      def request(request)
-        @last_request = request
-        yield @response
-      end
-    end
-
-    def with_fake_http(response, resolved_ip: "93.184.216.34")
-      fake = FakeHTTP.new(response)
-      with_singleton_stub(Net::HTTP, :new, ->(*) { fake }) do
-        with_singleton_stub(Webhooks::UrlGuard, :resolve, ->(_host) { [ resolved_ip ] }) { yield fake }
-      end
-    end
-
     setup { enable_federation! }
 
     test "post sends a signed ActivityPub request pinned to the vetted IP" do

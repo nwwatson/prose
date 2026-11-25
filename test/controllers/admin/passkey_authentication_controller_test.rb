@@ -29,10 +29,7 @@ class Admin::PasskeyAuthenticationControllerTest < ActionDispatch::IntegrationTe
     fake_credential.define_singleton_method(:sign_count) { 6 }
     fake_credential.define_singleton_method(:verify) { |*_args, **_kwargs| true }
 
-    original_from_get = WebAuthn::Credential.method(:from_get)
-    WebAuthn::Credential.define_singleton_method(:from_get) { |*_args, **_kwargs| fake_credential }
-
-    begin
+    with_singleton_stub(WebAuthn::Credential, :from_get, ->(*_args, **_kwargs) { fake_credential }) do
       post admin_passkey_authentication_verify_path, params: {
         credential: {
           id: passkey.credential_id,
@@ -50,8 +47,6 @@ class Admin::PasskeyAuthenticationControllerTest < ActionDispatch::IntegrationTe
       assert_response :success
       json = JSON.parse(response.body)
       assert_equal admin_root_path, json["redirect_url"]
-    ensure
-      WebAuthn::Credential.define_singleton_method(:from_get, original_from_get)
     end
   end
 end

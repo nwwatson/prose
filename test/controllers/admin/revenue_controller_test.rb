@@ -2,11 +2,7 @@ require "test_helper"
 
 class Admin::RevenueControllerTest < ActionDispatch::IntegrationTest
   setup do
-    SiteSetting.current.update!(stripe_secret_key: "sk_test", stripe_publishable_key: "pk_test")
-  end
-
-  teardown do
-    SiteSetting.current.update!(stripe_secret_key: nil, stripe_publishable_key: nil)
+    configure_stripe!
   end
 
   test "GET show requires authentication" do
@@ -28,7 +24,7 @@ class Admin::RevenueControllerTest < ActionDispatch::IntegrationTest
 
   test "GET show redirects with an alert when payments are not configured" do
     sign_in_as(:admin)
-    SiteSetting.current.update!(stripe_secret_key: nil, stripe_publishable_key: nil)
+    unconfigure_stripe!
 
     get admin_revenue_path
 

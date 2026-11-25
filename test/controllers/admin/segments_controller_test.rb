@@ -13,16 +13,12 @@ class Admin::SegmentsControllerTest < ActionDispatch::IntegrationTest
   test "GET index resolves each segment's subscriber count at most once" do
     resolve_count = 0
     original_resolve = Segment.instance_method(:resolve)
-    Segment.define_method(:resolve) do
+    counting_resolve = -> do
       resolve_count += 1
-      original_resolve.bind(self).call
+      original_resolve.bind_call(self)
     end
 
-    begin
-      get admin_segments_path
-    ensure
-      Segment.define_method(:resolve, original_resolve)
-    end
+    with_instance_stub(Segment, :resolve, counting_resolve) { get admin_segments_path }
 
     assert_response :success
     assert_equal Segment.count, resolve_count

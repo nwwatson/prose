@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Admin::ProfileControllerTest < ActionDispatch::IntegrationTest
+class Admin::ProfilesControllerTest < ActionDispatch::IntegrationTest
   test "GET edit requires authentication" do
     get edit_admin_profile_path
     assert_redirected_to new_admin_session_path

@@ -1,12 +1,6 @@
 require "test_helper"
 
 class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
-  VALID_TOKEN = "prose_admin_test_token_1234567890abcdef"
-
-  def auth_header
-    { "Authorization" => "Bearer #{VALID_TOKEN}" }
-  end
-
   # --- Auth ---
 
   test "rejects requests without a token" do
@@ -15,14 +9,14 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "rejects requests with a revoked token" do
-    get "/api/v1/posts", headers: { "Authorization" => "Bearer prose_revoked_test_token_1234567890abcdef" }
+    get "/api/v1/posts", headers: api_auth_header(REVOKED_API_TOKEN)
     assert_response :unauthorized
   end
 
   # --- Index ---
 
   test "lists posts" do
-    get "/api/v1/posts", headers: auth_header
+    get "/api/v1/posts", headers: api_auth_header
     assert_response :success
 
     body = JSON.parse(response.body)
@@ -31,7 +25,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "filters posts by status" do
-    get "/api/v1/posts", params: { status: "draft" }, headers: auth_header
+    get "/api/v1/posts", params: { status: "draft" }, headers: api_auth_header
     assert_response :success
 
     body = JSON.parse(response.body)
@@ -39,7 +33,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "filters posts by category" do
-    get "/api/v1/posts", params: { category: "Technology" }, headers: auth_header
+    get "/api/v1/posts", params: { category: "Technology" }, headers: api_auth_header
     assert_response :success
 
     body = JSON.parse(response.body)
@@ -47,7 +41,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "paginates and sets Link header on further pages" do
-    get "/api/v1/posts", params: { per_page: 1 }, headers: auth_header
+    get "/api/v1/posts", params: { per_page: 1 }, headers: api_auth_header
     assert_response :success
 
     body = JSON.parse(response.body)
@@ -58,7 +52,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   # --- Show ---
 
   test "shows a post by slug" do
-    get "/api/v1/posts/#{posts(:published_post).slug}", headers: auth_header
+    get "/api/v1/posts/#{posts(:published_post).slug}", headers: api_auth_header
     assert_response :success
 
     body = JSON.parse(response.body)
@@ -67,12 +61,12 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "shows a post by numeric id" do
-    get "/api/v1/posts/#{posts(:published_post).id}", headers: auth_header
+    get "/api/v1/posts/#{posts(:published_post).id}", headers: api_auth_header
     assert_response :success
   end
 
   test "returns 404 for a missing post" do
-    get "/api/v1/posts/does-not-exist", headers: auth_header
+    get "/api/v1/posts/does-not-exist", headers: api_auth_header
     assert_response :not_found
   end
 
@@ -82,7 +76,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_difference "Post.count", 1 do
       post "/api/v1/posts",
         params: { title: "New Post", content: "# Hello", category: "Technology", tags: %w[Ruby Rails] },
-        headers: auth_header
+        headers: api_auth_header
     end
 
     assert_response :created
@@ -95,7 +89,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "rejects an invalid post" do
     assert_no_difference "Post.count" do
-      post "/api/v1/posts", params: { title: "" }, headers: auth_header
+      post "/api/v1/posts", params: { title: "" }, headers: api_auth_header
     end
 
     assert_response :unprocessable_entity
@@ -107,7 +101,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   test "updates only provided fields" do
     post_record = posts(:draft_post)
 
-    patch "/api/v1/posts/#{post_record.slug}", params: { subtitle: "Updated subtitle" }, headers: auth_header
+    patch "/api/v1/posts/#{post_record.slug}", params: { subtitle: "Updated subtitle" }, headers: api_auth_header
     assert_response :success
 
     post_record.reload
@@ -118,7 +112,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   test "updates only the content" do
     post_record = posts(:draft_post)
 
-    patch "/api/v1/posts/#{post_record.slug}", params: { content: "## Fresh content" }, headers: auth_header
+    patch "/api/v1/posts/#{post_record.slug}", params: { content: "## Fresh content" }, headers: api_auth_header
     assert_response :success
 
     assert_includes post_record.reload.content.to_s, "<h2>"
@@ -128,32 +122,32 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   test "rejects an unknown category on update" do
     post_record = posts(:draft_post)
 
-    patch "/api/v1/posts/#{post_record.slug}", params: { category: "Nope" }, headers: auth_header
+    patch "/api/v1/posts/#{post_record.slug}", params: { category: "Nope" }, headers: api_auth_header
     assert_response :unprocessable_entity
   end
 
   test "returns 400 when schedule is missing published_at" do
-    post "/api/v1/posts/#{posts(:draft_post).slug}/schedule", headers: auth_header
+    post "/api/v1/posts/#{posts(:draft_post).slug}/schedule", headers: api_auth_header
     assert_response :bad_request
     assert JSON.parse(response.body)["error"].present?
   end
 
   test "returns no posts for an unknown category filter" do
-    get "/api/v1/posts", params: { category: "does-not-exist" }, headers: auth_header
+    get "/api/v1/posts", params: { category: "does-not-exist" }, headers: api_auth_header
     assert_response :success
     assert_empty JSON.parse(response.body)["posts"]
     assert_equal "0", response.headers["X-Total-Count"]
   end
 
   test "returns no posts for an unknown tag filter" do
-    get "/api/v1/posts", params: { tag: "does-not-exist" }, headers: auth_header
+    get "/api/v1/posts", params: { tag: "does-not-exist" }, headers: api_auth_header
     assert_response :success
     assert_empty JSON.parse(response.body)["posts"]
   end
 
   test "rejects an unknown category on create" do
     assert_no_difference "Post.count" do
-      post "/api/v1/posts", params: { title: "Orphan", category: "Nope" }, headers: auth_header
+      post "/api/v1/posts", params: { title: "Orphan", category: "Nope" }, headers: api_auth_header
     end
     assert_response :unprocessable_entity
   end
@@ -173,7 +167,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
     post_record = posts(:draft_post)
 
     assert_difference "Post.count", -1 do
-      delete "/api/v1/posts/#{post_record.slug}", headers: auth_header
+      delete "/api/v1/posts/#{post_record.slug}", headers: api_auth_header
     end
 
     assert_response :no_content
@@ -184,7 +178,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   test "publishes a draft post" do
     post_record = posts(:draft_post)
 
-    post "/api/v1/posts/#{post_record.slug}/publish", headers: auth_header
+    post "/api/v1/posts/#{post_record.slug}/publish", headers: api_auth_header
     assert_response :success
 
     post_record.reload
@@ -195,7 +189,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
     post_record = posts(:draft_post)
     time = 2.days.from_now.iso8601
 
-    post "/api/v1/posts/#{post_record.slug}/schedule", params: { published_at: time }, headers: auth_header
+    post "/api/v1/posts/#{post_record.slug}/schedule", params: { published_at: time }, headers: api_auth_header
     assert_response :success
 
     post_record.reload
@@ -205,14 +199,14 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
   test "rejects an invalid schedule datetime" do
     post_record = posts(:draft_post)
 
-    post "/api/v1/posts/#{post_record.slug}/schedule", params: { published_at: "not-a-date" }, headers: auth_header
+    post "/api/v1/posts/#{post_record.slug}/schedule", params: { published_at: "not-a-date" }, headers: api_auth_header
     assert_response :unprocessable_entity
   end
 
   test "unpublishes a published post" do
     post_record = posts(:published_post)
 
-    post "/api/v1/posts/#{post_record.slug}/unpublish", headers: auth_header
+    post "/api/v1/posts/#{post_record.slug}/unpublish", headers: api_auth_header
     assert_response :success
 
     post_record.reload

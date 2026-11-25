@@ -119,16 +119,4 @@ class SendDigestsJobTest < ActiveJob::TestCase
   test "rejects an unknown frequency" do
     assert_raises(ArgumentError) { SendDigestsJob.perform_now("immediate") }
   end
-
-  private
-
-  def with_const(klass, name, value)
-    original = klass.const_get(name)
-    klass.send(:remove_const, name)
-    klass.const_set(name, value)
-    yield
-  ensure
-    klass.send(:remove_const, name)
-    klass.const_set(name, original)
-  end
 end

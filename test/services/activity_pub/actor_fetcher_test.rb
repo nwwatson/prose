@@ -13,7 +13,7 @@ module ActivityPub
         "url" => "https://remote.example/@alice",
         "inbox" => "#{REMOTE_ACTOR_URI}/inbox",
         "endpoints" => { "sharedInbox" => "https://remote.example/inbox" },
-        "publicKey" => { "id" => REMOTE_KEY_ID, "owner" => REMOTE_ACTOR_URI, "publicKeyPem" => REMOTE_KEY.public_to_pem }
+        "publicKey" => { "id" => REMOTE_KEY_ID, "owner" => REMOTE_ACTOR_URI, "publicKeyPem" => remote_key.public_to_pem }
       }.merge(overrides)
     end
 
@@ -28,7 +28,7 @@ module ActivityPub
 
         assert_equal REMOTE_ACTOR_URI, actor.uri
         assert_equal "https://remote.example/inbox", actor.shared_inbox_url
-        assert_equal REMOTE_KEY.public_to_pem, actor.public_key_pem
+        assert_equal remote_key.public_to_pem, actor.public_key_pem
         assert_equal "Alice", actor.name
         assert_equal [ REMOTE_ACTOR_URI ], requested
 
@@ -50,7 +50,7 @@ module ActivityPub
     end
 
     test "ignores a public key owned by someone else" do
-      key = { "id" => REMOTE_KEY_ID, "owner" => "https://evil.example/actor", "publicKeyPem" => REMOTE_KEY.public_to_pem }
+      key = { "id" => REMOTE_KEY_ID, "owner" => "https://evil.example/actor", "publicKeyPem" => remote_key.public_to_pem }
       with_document(actor_document("publicKey" => key)) do
         assert_raises(HttpClient::Error) { ActorFetcher.for_key_id(REMOTE_KEY_ID) }
       end

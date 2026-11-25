@@ -1,12 +1,6 @@
 require "test_helper"
 
 class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
-  VALID_TOKEN = "prose_admin_test_token_1234567890abcdef"
-  WRITER_TOKEN = "prose_writer_test_token_1234567890abcdef"
-  REVOKED_TOKEN = "prose_revoked_test_token_1234567890abcdef"
-  # What Streamable HTTP clients (Claude Desktop via mcp-remote, Claude Code) send.
-  MCP_HEADERS = { "Content-Type" => "application/json", "Accept" => "application/json, text/event-stream" }.freeze
-
   # --- Auth tests ---
 
   test "rejects request without Authorization header" do
@@ -17,12 +11,12 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "rejects invalid token" do
-    post "/mcp", params: mcp_request("initialize"), headers: auth_header("prose_invalid")
+    post "/mcp", params: mcp_request("initialize"), headers: mcp_headers("prose_invalid")
     assert_response :unauthorized
   end
 
   test "rejects revoked token" do
-    post "/mcp", params: mcp_request("initialize"), headers: auth_header(REVOKED_TOKEN)
+    post "/mcp", params: mcp_request("initialize"), headers: mcp_headers(REVOKED_API_TOKEN)
     assert_response :unauthorized
   end
 
@@ -30,7 +24,7 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
     token = api_tokens(:admin_token)
     assert_nil token.last_used_at
 
-    post "/mcp", params: mcp_request("initialize"), headers: auth_header(VALID_TOKEN)
+    post "/mcp", params: mcp_request("initialize"), headers: mcp_headers(ADMIN_API_TOKEN)
     assert_response :success
 
     token.reload
@@ -42,7 +36,7 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
   test "acknowledges notifications with 202 and an empty body" do
     post "/mcp",
       params: { jsonrpc: "2.0", method: "notifications/initialized" }.to_json,
-      headers: auth_header(VALID_TOKEN).merge("MCP-Protocol-Version" => "2025-11-25")
+      headers: mcp_headers(ADMIN_API_TOKEN).merge("MCP-Protocol-Version" => "2025-11-25")
 
     assert_response :accepted
     assert_empty response.body
@@ -51,20 +45,20 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
   test "negotiates the client's protocol version on initialize" do
     post "/mcp", params: mcp_request("initialize", {
       protocolVersion: "2025-11-25", capabilities: {}, clientInfo: { name: "claude-ai", version: "1.0" }
-    }), headers: auth_header(VALID_TOKEN)
+    }), headers: mcp_headers(ADMIN_API_TOKEN)
 
     assert_response :success
     assert_equal "2025-11-25", JSON.parse(response.body).dig("result", "protocolVersion")
   end
 
   test "answers GET with 405 so clients skip the optional SSE stream" do
-    get "/mcp", headers: auth_header(VALID_TOKEN).merge("Accept" => "text/event-stream")
+    get "/mcp", headers: mcp_headers(ADMIN_API_TOKEN).merge("Accept" => "text/event-stream")
     assert_response :method_not_allowed
     assert_equal "application/json", response.media_type
   end
 
   test "accepts DELETE session termination" do
-    delete "/mcp", headers: auth_header(VALID_TOKEN)
+    delete "/mcp", headers: mcp_headers(ADMIN_API_TOKEN)
     assert_response :success
   end
 
@@ -76,19 +70,19 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "returns a JSON-RPC parse error for malformed JSON" do
-    post "/mcp", params: "{not json", headers: auth_header(VALID_TOKEN)
+    post "/mcp", params: "{not json", headers: mcp_headers(ADMIN_API_TOKEN)
     assert_response :bad_request
     assert_equal(-32700, JSON.parse(response.body).dig("error", "code"))
   end
 
   test "rejects an unsupported protocol version header" do
     post "/mcp", params: mcp_request("tools/list"),
-      headers: auth_header(VALID_TOKEN).merge("MCP-Protocol-Version" => "1999-01-01")
+      headers: mcp_headers(ADMIN_API_TOKEN).merge("MCP-Protocol-Version" => "1999-01-01")
     assert_response :bad_request
   end
 
   test "tool names satisfy Claude's naming rules" do
-    post "/mcp", params: mcp_request("tools/list"), headers: auth_header(VALID_TOKEN)
+    post "/mcp", params: mcp_request("tools/list"), headers: mcp_headers(ADMIN_API_TOKEN)
 
     JSON.parse(response.body).dig("result", "tools").each do |tool|
       assert_match(/\A[a-zA-Z0-9_-]{1,64}\z/, tool["name"])
@@ -196,7 +190,7 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
       identifier: post_record.slug,
       title: "Updated Title",
       content: "## New content"
-    }, token: WRITER_TOKEN)
+    }, token: WRITER_API_TOKEN)
 
     data = parse_tool_result(result)
     assert_equal "Updated Title", data["title"]
@@ -207,7 +201,7 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "delete_post removes post" do
     post_record = posts(:draft_post)
-    result = call_tool("delete_post", { identifier: post_record.slug }, token: WRITER_TOKEN)
+    result = call_tool("delete_post", { identifier: post_record.slug }, token: WRITER_API_TOKEN)
     data = parse_tool_result(result)
 
     assert data["deleted"]
@@ -218,7 +212,7 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "publish_post publishes a draft" do
     post_record = posts(:draft_post)
-    result = call_tool("publish_post", { identifier: post_record.slug }, token: WRITER_TOKEN)
+    result = call_tool("publish_post", { identifier: post_record.slug }, token: WRITER_API_TOKEN)
     data = parse_tool_result(result)
 
     assert_equal "published", data["status"]
@@ -233,7 +227,7 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
     result = call_tool("schedule_post", {
       identifier: post_record.slug,
       published_at: future
-    }, token: WRITER_TOKEN)
+    }, token: WRITER_API_TOKEN)
 
     data = parse_tool_result(result)
     assert_equal "scheduled", data["status"]
@@ -264,26 +258,7 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def auth_header(token)
-    MCP_HEADERS.merge("Authorization" => "Bearer #{token}")
-  end
-
-  def mcp_request(method, params = nil, id: 1)
-    req = { jsonrpc: "2.0", method: method, id: id }
-    req[:params] = params if params
-    req.to_json
-  end
-
-  def mcp_call(method, params = nil, token: VALID_TOKEN)
-    post "/mcp",
-      params: mcp_request(method, params),
-      headers: auth_header(token)
-
-    assert_response :success
-    JSON.parse(response.body)
-  end
-
-  def call_tool(name, arguments, token: VALID_TOKEN)
+  def call_tool(name, arguments, token: ADMIN_API_TOKEN)
     # First initialize
     mcp_call("initialize", {
       protocolVersion: "2025-03-26",
@@ -293,10 +268,5 @@ class Mcp::SessionsControllerTest < ActionDispatch::IntegrationTest
 
     # Then call tool
     mcp_call("tools/call", { name: name, arguments: arguments }, token: token)
-  end
-
-  def parse_tool_result(result)
-    text = result.dig("result", "content", 0, "text")
-    JSON.parse(text)
   end
 end

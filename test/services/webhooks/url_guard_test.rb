@@ -39,13 +39,9 @@ module Webhooks
 
     private
 
-    def with_resolution(addresses)
+    def with_resolution(addresses, &block)
       infos = addresses.map { |ip| Addrinfo.tcp(ip, 0) }
-      original = Addrinfo.method(:getaddrinfo)
-      Addrinfo.define_singleton_method(:getaddrinfo) { |*_args, **_kwargs| infos }
-      yield
-    ensure
-      Addrinfo.define_singleton_method(:getaddrinfo, original)
+      with_singleton_stub(Addrinfo, :getaddrinfo, ->(*_args, **_kwargs) { infos }, &block)
     end
   end
 end
