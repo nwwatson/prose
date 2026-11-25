@@ -5,7 +5,7 @@
   <%= seo_head_tags(
         title: "#{@identity.name} — #{site_name}",
         description: description,
-        url: author_url(@identity, handle: @identity.handle)
+        url: author_url(handle: @identity.handle)
       ) %>
   <%= json_ld_for_author(@identity) %>
 <% end %>
@@ -69,7 +69,7 @@
 
   <% if @next_page %>
     <div class="load-more">
-      <%= link_to t('authors.show.load_more'), author_path(@identity, handle: @identity.handle, page: @next_page),
+      <%= link_to t('authors.show.load_more'), author_path(handle: @identity.handle, page: @next_page),
             class: "btn btn--primary" %>
     </div>
   <% end %>
