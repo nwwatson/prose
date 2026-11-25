@@ -1,4 +1,4 @@
-<% content_for(:title, "#{@post.title} Analytics — #{site_name}") %>
+<% content_for(:title, page_title(t('admin.post_dashboard.show.page_title', title: @post.title))) %>
 
 <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
   <div>
@@ -7,7 +7,7 @@
       <% if @post.published? %>
         <%= t('shared.published') %> <%= @post.published_at ? l(@post.published_at.to_date, format: :short) : nil %>
       <% else %>
-        <%= @post.status.capitalize %>
+        <%= status_label(@post) %>
       <% end %>
       · <%= @post.user.display_name %>
     </p>

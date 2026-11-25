@@ -20,6 +20,42 @@ en:
       with_time: "%b %-d, %Y at %-I:%M %p"
     am: "am"
     pm: "pm"
+  datetime:
+    distance_in_words:
+      half_a_minute: "half a minute"
+      less_than_x_seconds:
+        one: "less than 1 second"
+        other: "less than %{count} seconds"
+      x_seconds:
+        one: "1 second"
+        other: "%{count} seconds"
+      less_than_x_minutes:
+        one: "less than a minute"
+        other: "less than %{count} minutes"
+      x_minutes:
+        one: "1 minute"
+        other: "%{count} minutes"
+      about_x_hours:
+        one: "about 1 hour"
+        other: "about %{count} hours"
+      x_days:
+        one: "1 day"
+        other: "%{count} days"
+      about_x_months:
+        one: "about 1 month"
+        other: "about %{count} months"
+      x_months:
+        one: "1 month"
+        other: "%{count} months"
+      about_x_years:
+        one: "about 1 year"
+        other: "about %{count} years"
+      over_x_years:
+        one: "over 1 year"
+        other: "over %{count} years"
+      almost_x_years:
+        one: "almost 1 year"
+        other: "almost %{count} years"
   # Shared / common strings
   shared:
     pagination: "Pagination"
@@ -41,7 +77,6 @@ en:
     actions: "Actions"
     loading: "Loading..."
     never: "Never"
-    ago: "ago"
     by: "By"
     on: "on"
     or: "or"
@@ -59,6 +94,7 @@ en:
     are_you_sure: "Are you sure?"
     no_category: "No category"
     not_set: "Not set"
+    time_ago: "%{time} ago"
 
   # Public-facing layouts
   layouts:
@@ -69,6 +105,7 @@ en:
       toggle_dark_mode: "Toggle dark mode"
       reading_list: "Reading list"
       copyright_html: "&copy; %{year} %{site_name}. All rights reserved."
+      rss_feed: "%{site_name} RSS Feed"
     editor:
       keep_editing: "Keep editing"
       discard: "Discard"
@@ -76,14 +113,17 @@ en:
       posts: "Posts"
       discard_post: "Discard post?"
       discard_post_message: "This post hasn't been saved yet. Are you sure you want to discard it?"
+      title: "Editor"
     admin_page_editor:
       pages: "Pages"
       discard_page: "Discard page?"
       discard_page_message: "This page hasn't been saved yet. Are you sure you want to discard it?"
+      title: "Page Editor"
     newsletter_editor:
       newsletters: "Newsletters"
       discard_newsletter: "Discard newsletter?"
       discard_newsletter_message: "This newsletter hasn't been saved yet. Are you sure you want to discard it?"
+      title: "Newsletter Editor"
     admin:
       content: "Content"
       all_posts: "All Posts"
@@ -110,6 +150,7 @@ en:
       webhooks: "Webhooks"
       exports: "Export"
       navigation: "Navigation"
+      title: "Admin"
 
   # Public views
   posts:
@@ -130,9 +171,11 @@ en:
         copy_link: "Copy link"
         copied: "Copied!"
         native_share: "Share"
+      breadcrumb: "breadcrumb"
     post_navigation:
       previous_post: "Previous Post"
       next_post: "Next Post"
+      label: "Post navigation"
     related_posts:
       you_might_also_like: "You might also like"
     post_page:
@@ -145,6 +188,9 @@ en:
       paid_heading: "This post is for paid members"
       paid_description: "Become a paid member of %{site_name} to access this and all premium content."
       upgrade_cta: "See membership options"
+    table_of_contents:
+      title: "Table of Contents"
+      label: "Table of contents"
 
   reading_list:
     show:
@@ -186,6 +232,12 @@ en:
       comment: "Comment"
       subscribe_to_join: "Subscribe to join the conversation."
       notify_on_reply: "Notify me of replies"
+      markdown:
+        bold: "bold"
+        italic: "italic"
+        code: "code"
+        link: "link"
+        quote: "quote"
 
   authors:
     index:
@@ -193,6 +245,9 @@ en:
       meet_the_authors: "Meet the authors of %{site_name}"
       meet_the_people: "Meet the people behind %{site_name}."
       website: "Website"
+      post_count:
+        one: "1 post"
+        other: "%{count} posts"
     show:
       posts_by: "Posts by %{name} on %{site_name}"
       posts_published:
@@ -205,6 +260,7 @@ en:
   tags:
     show:
       tagged: "Tagged: %{name}"
+      description: "Posts tagged with %{name}"
 
   pages:
     about:
@@ -254,9 +310,13 @@ en:
   handles:
     form:
       choose_handle: "Choose a handle"
+    availability:
+      available: "Available"
+      taken: "Taken"
 
   tag_select:
     search_placeholder: "Search or create tags..."
+    create_html: "Create \"%{label}\""
 
   # Admin views
   admin:
@@ -268,6 +328,7 @@ en:
       new:
         create_account_message: "Create your admin account to get started."
         create_account: "Create account"
+        title: "Setup"
     dashboard:
       show:
         title: "Dashboard"
@@ -312,9 +373,11 @@ en:
         no_posts: "No posts"
         get_started: "Get started by creating a new post."
       form:
-        errors_prevented_html: "%{count} prevented this post from being saved:"
         title_placeholder: "Post title"
         subtitle_placeholder: "Add a subtitle..."
+        errors_prevented:
+          one: "1 error prevented this post from being saved:"
+          other: "%{count} errors prevented this post from being saved:"
       settings_fields:
         publish_at: "Publish at"
         schedule_help: "Set when this post should be published."
@@ -337,6 +400,8 @@ en:
         meta_description_help: "Max 160 characters. Falls back to subtitle or content excerpt if blank."
         delete_post: "Delete post"
         delete_post_confirm: "Are you sure you want to delete this post?"
+        table_of_contents: "Table of Contents"
+        or: "or"
       editor_panel:
         title: "Editor Panel"
         new_ai_conversation: "New AI conversation"
@@ -356,6 +421,8 @@ en:
         suggesting_prompt: "Suggesting a prompt..."
       preview:
         preview: "Preview"
+      edit:
+        title: "Edit Post"
     categories:
       index:
         title: "Categories"
@@ -365,6 +432,9 @@ en:
         posts: "Posts"
         no_categories: "No categories"
         get_started: "Get started by creating a new category."
+        post_count:
+          one: "1 post"
+          other: "%{count} posts"
       new:
         title: "New Category"
       edit:
@@ -438,6 +508,9 @@ en:
         subscribers: "Subscribers"
         no_labels: "No labels"
         get_started: "Create labels to organize your subscribers."
+        subscriber_count:
+          one: "1 subscriber"
+          other: "%{count} subscribers"
       new:
         title: "New Label"
       edit:
@@ -517,6 +590,9 @@ en:
       form:
         price_cents: "Price (cents)"
         price_help: "Price in the smallest currency unit (e.g., 1000 = $10.00)."
+      intervals:
+        month: "Month"
+        year: "Year"
     memberships:
       index:
         title: "Members"
@@ -698,8 +774,10 @@ en:
         no_newsletters: "No newsletters"
         get_started: "Get started by creating a new newsletter."
       form:
-        errors_prevented_html: "%{count} prevented this newsletter from being saved:"
         title_placeholder: "Newsletter subject"
+        errors_prevented:
+          one: "1 error prevented this newsletter from being saved:"
+          other: "%{count} errors prevented this newsletter from being saved:"
       editor_panel:
         title: "Newsletter Settings"
         template: "Template"
@@ -731,13 +809,29 @@ en:
         save_first: "Save the newsletter first to enable send and schedule options."
         delete_newsletter: "Delete newsletter"
         delete_confirm: "Are you sure you want to delete this newsletter?"
+      show:
+        sent_ago: "Sent %{time}"
+        by: "by %{name}"
+        back: "Back to Newsletters"
+        recipients: "Recipients"
+        opens: "Opens"
+        clicks: "Clicks"
+        bounces: "Bounces"
+        content_preview: "Content Preview"
+        delivery_log: "Delivery Log"
+        subscriber: "Subscriber"
+        sent: "Sent"
+        opened: "Opened"
+        clicked: "Clicked"
+        bounced: "Bounced"
+      edit:
+        title: "Edit Newsletter"
     settings:
       edit:
         title: "Site Settings"
         export_content: "Export your content (Markdown or JSON) →"
         manage_navigation: "Manage header, footer and social links →"
         subtitle: "Configure your site name, description, and default social sharing image."
-        errors_prevented_html: "%{count} prevented settings from being saved:"
         description_placeholder: "A brief description of your site"
         default_og_image: "Default social sharing image"
         og_image_help: "Used as the default image for social sharing (og:image) when a post has no featured image."
@@ -811,11 +905,13 @@ en:
         language: "Language"
         locale: "Language"
         locale_description: "Choose the language for your site's user interface."
+        errors_prevented:
+          one: "1 error prevented settings from being saved:"
+          other: "%{count} errors prevented settings from being saved:"
     newsletter_settings:
       edit:
         title: "Newsletter Settings"
         subtitle: "Configure email branding and delivery for your newsletters."
-        errors_prevented_html: "%{count} prevented settings from being saved:"
         email_branding: "Email Branding"
         email_branding_description: "Customize the look of your newsletter emails. These are site-wide defaults that can be overridden per newsletter."
         default_template: "Default template"
@@ -850,6 +946,10 @@ en:
         webhook_url: "Webhook URL:"
         webhook_description: "To enable open/click tracking, configure the SendGrid Event Webhook to POST to:"
         save_settings: "Save settings"
+        errors_prevented:
+          one: "1 error prevented settings from being saved:"
+          other: "%{count} errors prevented settings from being saved:"
+        preheader_placeholder: "Preview text shown in inbox..."
     growth:
       show:
         title: "Subscriber Growth"
@@ -903,6 +1003,7 @@ en:
         no_traffic_data: "No traffic data yet."
         comments: "Comments (%{count})"
         no_comments: "No comments yet."
+        page_title: "%{title} Analytics"
     pages:
       index:
         title: "Pages"
@@ -914,7 +1015,9 @@ en:
         get_started: "Create your first page to get started."
       form:
         title_placeholder: "Page title"
-        errors_prevented_html: "%{count} prevented this page from being saved:"
+        errors_prevented:
+          one: "1 error prevented this page from being saved:"
+          other: "%{count} errors prevented this page from being saved:"
       editor_panel:
         title: "Page Settings"
       settings_fields:
@@ -927,11 +1030,14 @@ en:
         meta_description_help: "Up to 160 characters. Used by search engines."
         delete_page: "Delete page"
         delete_page_confirm: "Are you sure you want to delete this page? This cannot be undone."
+      new:
+        title: "New Page"
+      edit:
+        title: "Edit Page"
     profiles:
       edit:
         title: "Author Profile"
         subtitle: "Manage your public author profile. This information appears on your author page and posts."
-        errors_prevented_html: "%{count} prevented your profile from being saved:"
         avatar_help: "Square image recommended. Will be cropped to a circle."
         display_name: "Display name"
         handle_help: "Letters, numbers, and underscores only. This is used in your author page URL."
@@ -944,11 +1050,27 @@ en:
         github_handle: "GitHub username"
         save_profile: "Save Profile"
         view_public_profile: "View public profile"
+        errors_prevented:
+          one: "1 error prevented your profile from being saved:"
+          other: "%{count} errors prevented your profile from being saved:"
+        twitter_placeholder: "username"
+        github_placeholder: "username"
+        handle_placeholder: "your_handle"
     ai:
       featured_image_preview:
         generated_image: "Generated Featured Image"
         save_as_featured: "Save as Featured Image"
         regenerate: "Regenerate"
+      featured_image_loading:
+        generating: "Generating image..."
+        wait: "This may take a moment."
+      featured_image_error:
+        heading: "Image generation error: %{error}"
+        try_again: "Try Again"
+      image_prompt_form:
+        heading: "AI-Suggested Image Prompt"
+        generate: "Generate Image"
+        suggest_new: "Suggest New Prompt"
     post_versions:
       index:
         save_version: "Save version"
@@ -960,6 +1082,44 @@ en:
         back: "Back"
         title_change: "Title changed"
         content_diff: "Content changes"
+    statuses:
+      post:
+        draft: "Draft"
+        scheduled: "Scheduled"
+        published: "Published"
+      page:
+        draft: "Draft"
+        published: "Published"
+      newsletter:
+        draft: "Draft"
+        scheduled: "Scheduled"
+        sending: "Sending"
+        sent: "Sent"
+      membership:
+        active: "Active"
+        past_due: "Past Due"
+        canceled: "Canceled"
+        incomplete: "Incomplete"
+        trialing: "Trialing"
+    email_options:
+      templates:
+        minimal:
+          name: "Minimal"
+          description: "Clean, text-focused layout"
+        branded:
+          name: "Branded"
+          description: "Logo header with accent color bar"
+        editorial:
+          name: "Editorial"
+          description: "Magazine-style with large heading area"
+      fonts:
+        system: "System Default"
+        georgia: "Georgia"
+        helvetica: "Helvetica"
+        verdana: "Verdana"
+      providers:
+        smtp: "SMTP (Default)"
+        sendgrid: "SendGrid"
 
   # Mailers
   activity_pub:
@@ -1019,6 +1179,8 @@ en:
     ai:
       configurable:
         add_api_keys: "Add your API keys in Settings to enable AI features."
+        add_image_api_keys: "Add your Anthropic and %{provider} API keys in Settings to enable image generation."
+        image_provider: "image"
     subscriptions:
       check_email: "Check your email for a sign-in link."
       invalid_email: "Please enter a valid email address."
@@ -1064,6 +1226,7 @@ en:
       sessions:
         signed_in: "Signed in successfully."
         signed_out: "Signed out successfully."
+        invalid_credentials: "Invalid email or password."
       newsletters:
         created: "Newsletter created."
         updated: "Newsletter updated."
@@ -1132,3 +1295,13 @@ en:
         welcome: "Welcome to %{site_name}! Your admin account has been created."
       ai:
         generating_image: "Generating featured image..."
+        error: "AI error: %{message}"
+      profiles:
+        updated: "Profile updated."
+      x_posts:
+        could_not_process: "Could not process X post URL"
+      youtube_videos:
+        could_not_process: "Could not process YouTube URL"
+    handles:
+      updated: "Handle updated."
+      could_not_update: "Handle could not be updated."

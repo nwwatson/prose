@@ -45,6 +45,38 @@ module AdminHelper
     content_tag(:p, "#{arrow} #{sign}#{change}% #{I18n.t('admin.dashboard.show.vs_last_month')}".html_safe, class: "mt-1 text-xs #{color}")
   end
 
+  def status_label(record, status = record.status)
+    t("admin.statuses.#{record.model_name.i18n_key}.#{status}")
+  end
+
+  def interval_label(interval)
+    t("admin.membership_tiers.intervals.#{interval}")
+  end
+
+  def email_template_name(key)
+    t("admin.email_options.templates.#{key}.name")
+  end
+
+  def email_template_description(key)
+    t("admin.email_options.templates.#{key}.description")
+  end
+
+  def email_template_options
+    SiteSetting::EmailBranding::EMAIL_TEMPLATES.keys.map { |key| [ email_template_name(key), key ] }
+  end
+
+  def email_font_name(key)
+    t("admin.email_options.fonts.#{key}")
+  end
+
+  def email_font_options
+    SiteSetting::EmailBranding::EMAIL_FONT_FAMILIES.keys.map { |key| [ email_font_name(key), key ] }
+  end
+
+  def email_provider_options
+    SiteSetting::EmailConfiguration::EMAIL_PROVIDERS.keys.map { |key| [ t("admin.email_options.providers.#{key}"), key ] }
+  end
+
   def status_badge(label, color_class:, size: :md)
     padding = size == :sm ? "px-2 py-0.5" : "px-2.5 py-0.5"
     content_tag(:span, label, class: "inline-flex items-center rounded-full #{padding} text-xs font-medium #{color_class}")

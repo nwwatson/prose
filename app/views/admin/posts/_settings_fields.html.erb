@@ -4,7 +4,7 @@
     <div data-controller="status-toggle">
       <%= f.label :status, class: "block text-sm font-medium text-gray-900" %>
       <%= render "shared/custom_select", form: f, field: :status,
-            options: Post.statuses.keys.map { |s| [s.capitalize, s] },
+            options: Post.statuses.keys.map { |s| [status_label(post, s), s] },
             form_attr: "post_form",
             data: { action: "change->status-toggle#update" } %>
 
@@ -90,7 +90,7 @@
 
     <div class="flex items-center">
       <%= f.check_box :show_toc, form: "post_form", class: "rounded border-gray-300 text-gray-600 focus:ring-gray-600" %>
-      <%= f.label :show_toc, "Table of Contents", class: "ml-2 text-sm font-medium text-gray-900" %>
+      <%= f.label :show_toc, t('admin.posts.settings_fields.table_of_contents'), class: "ml-2 text-sm font-medium text-gray-900" %>
     </div>
 
     <div <% if site_setting.image_ai_configured? && post.persisted? %>
@@ -108,7 +108,7 @@
         <%= f.file_field :featured_image, accept: "image/*", form: "post_form",
               class: "block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-gray-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-gray-700 hover:file:bg-gray-200" %>
         <% if site_setting.image_ai_configured? && post.persisted? %>
-          <p class="my-2 text-center text-xs text-gray-400">or</p>
+          <p class="my-2 text-center text-xs text-gray-400"><%= t('admin.posts.settings_fields.or') %></p>
           <button type="button"
                   data-action="click->ai-image-modal#open"
                   class="inline-flex items-center gap-1.5 rounded-md bg-purple-100 px-3 py-1.5 text-xs font-medium text-purple-700 hover:bg-purple-200">

@@ -3,7 +3,7 @@
     <%= link_to newsletter.title, edit_admin_newsletter_path(newsletter), class: "text-sm font-medium text-gray-900 hover:text-gray-600" %>
   </td>
   <td class="whitespace-nowrap px-6 py-4">
-    <%= status_badge(newsletter.status.capitalize, color_class: newsletter_status_color(newsletter.status)) %>
+    <%= status_badge(status_label(newsletter), color_class: newsletter_status_color(newsletter.status)) %>
   </td>
   <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
     <%= newsletter.sent? ? newsletter.recipients_count : "—" %>

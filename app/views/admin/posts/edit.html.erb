@@ -1,4 +1,4 @@
-<% content_for(:title, "Edit Post — #{site_name}") %>
+<% content_for(:title, page_title(t('admin.posts.edit.title'))) %>
 
 <% if @post.persisted? %>
   <% content_for(:top_bar_actions) do %>

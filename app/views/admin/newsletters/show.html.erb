@@ -1,4 +1,4 @@
-<% content_for(:title, "#{@newsletter.title} — #{site_name}") %>
+<% content_for(:title, page_title(@newsletter.title)) %>
 
 <div class="max-w-4xl">
   <div class="flex items-center justify-between">
@@ -12,31 +12,31 @@
               when 'scheduled' then 'bg-blue-100 text-blue-800'
               else 'bg-gray-100 text-gray-800'
               end %>">
-          <%= @newsletter.status.capitalize %>
+          <%= status_label(@newsletter) %>
         </span>
         <% if @newsletter.sent_at %>
-          <span>Sent <%= time_ago_in_words(@newsletter.sent_at) %> ago</span>
+          <span><%= t('admin.newsletters.show.sent_ago', time: time_ago(@newsletter.sent_at)) %></span>
         <% end %>
-        <span>by <%= @newsletter.user.display_name %></span>
+        <span><%= t('admin.newsletters.show.by', name: @newsletter.user.display_name) %></span>
       </div>
     </div>
-    <%= link_to "Back to Newsletters", admin_newsletters_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
+    <%= link_to t('admin.newsletters.show.back'), admin_newsletters_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
   </div>
 
   <%# Stats cards %>
   <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-    <%= render "admin/shared/stat_card", label: "Recipients", value: @analytics.deliveries_count %>
+    <%= render "admin/shared/stat_card", label: t('admin.newsletters.show.recipients'), value: @analytics.deliveries_count %>
 
-    <%= render "admin/shared/stat_card", label: "Opens", value: @analytics.opens_count, note: "#{@analytics.open_rate}%" %>
+    <%= render "admin/shared/stat_card", label: t('admin.newsletters.show.opens'), value: @analytics.opens_count, note: "#{@analytics.open_rate}%" %>
 
-    <%= render "admin/shared/stat_card", label: "Clicks", value: @analytics.clicks_count, note: "#{@analytics.click_rate}%" %>
+    <%= render "admin/shared/stat_card", label: t('admin.newsletters.show.clicks'), value: @analytics.clicks_count, note: "#{@analytics.click_rate}%" %>
 
-    <%= render "admin/shared/stat_card", label: "Bounces", value: @analytics.bounces_count, note: "#{@analytics.bounce_rate}%" %>
+    <%= render "admin/shared/stat_card", label: t('admin.newsletters.show.bounces'), value: @analytics.bounces_count, note: "#{@analytics.bounce_rate}%" %>
   </div>
 
   <%# Body preview %>
   <div class="mt-8 bg-white shadow rounded-lg p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">Content Preview</h2>
+    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.newsletters.show.content_preview') %></h2>
     <div class="prose max-w-none">
       <%= @newsletter.body %>
     </div>
@@ -45,15 +45,15 @@
   <%# Delivery log %>
   <% if @deliveries.load.any? %>
     <div class="mt-8 bg-white shadow rounded-lg p-6">
-      <h2 class="text-lg font-medium text-gray-900 mb-4">Delivery Log</h2>
+      <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.newsletters.show.delivery_log') %></h2>
       <table class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
-            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Subscriber</th>
-            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Sent</th>
-            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Opened</th>
-            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Clicked</th>
-            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2">Bounced</th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.newsletters.show.subscriber') %></th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.newsletters.show.sent') %></th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.newsletters.show.opened') %></th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.newsletters.show.clicked') %></th>
+            <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.newsletters.show.bounced') %></th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">

@@ -13,7 +13,11 @@ export default class extends Controller {
   ]
 
   static values = {
-    fonts: Object
+    fonts: Object,
+    templateFallback: String,
+    fontFallback: String,
+    preheaderFallback: String,
+    footerFallback: String
   }
 
   update() {
@@ -35,14 +39,14 @@ export default class extends Controller {
 
     if (this.hasPreviewTemplateTarget && this.hasTemplateTarget) {
       const selected = this.templateTarget.selectedOptions[0]
-      this.previewTemplateTarget.textContent = selected ? selected.text : "Minimal"
+      this.previewTemplateTarget.textContent = selected ? selected.text : this.templateFallbackValue
     }
 
     if (this.hasFontFamilyTarget) {
       const key = this.fontFamilyTarget.value
       const stack = this.fontsValue[key] || this.fontsValue["system"]
       if (this.hasPreviewFontTarget) {
-        this.previewFontTarget.textContent = this.fontFamilyTarget.selectedOptions[0]?.text || "System Default"
+        this.previewFontTarget.textContent = this.fontFamilyTarget.selectedOptions[0]?.text || this.fontFallbackValue
       }
       if (this.hasPreviewHeadingTarget) {
         this.previewHeadingTarget.style.fontFamily = stack
@@ -54,13 +58,13 @@ export default class extends Controller {
 
     if (this.hasPreviewPreheaderTarget && this.hasPreheaderTarget) {
       const text = this.preheaderTarget.value.trim()
-      this.previewPreheaderTarget.textContent = text || "Preview text shown in inbox..."
+      this.previewPreheaderTarget.textContent = text || this.preheaderFallbackValue
       this.previewPreheaderTarget.style.opacity = text ? "1" : "0.5"
     }
 
     if (this.hasPreviewFooterTarget && this.hasFooterTarget) {
       const text = this.footerTarget.value.trim()
-      this.previewFooterTarget.textContent = text || "Custom footer text"
+      this.previewFooterTarget.textContent = text || this.footerFallbackValue
       this.previewFooterTarget.style.opacity = text ? "1" : "0.5"
     }
 

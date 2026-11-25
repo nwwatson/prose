@@ -8,7 +8,7 @@ module Admin
       @identity = current_user.identity
 
       if @identity.update(identity_params)
-        redirect_to edit_admin_profile_path, notice: "Profile updated."
+        redirect_to edit_admin_profile_path, notice: t("flash.admin.profiles.updated")
       else
         render :edit, status: :unprocessable_entity
       end

@@ -9,7 +9,7 @@ module Admin
     end
 
     def embed_error_message
-      "Could not process YouTube URL"
+      t("flash.admin.youtube_videos.could_not_process")
     end
   end
 end

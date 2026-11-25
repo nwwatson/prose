@@ -1,6 +1,6 @@
 <%= form_with model: [:admin, page], id: "page_form",
     data: { action: "input->autosave#scheduleAutosave change->autosave#handleChange lexxy:change->autosave#scheduleAutosave submit->autosave#preventSubmit" } do |f| %>
-  <%= render "admin/shared/form_errors", record: page, heading: t("admin.pages.form.errors_prevented_html", count: pluralize(page.errors.count, "error")) %>
+  <%= render "admin/shared/form_errors", record: page, heading: t("admin.pages.form.errors_prevented", count: page.errors.count) %>
 
   <%# Writing area %>
   <div class="space-y-4">

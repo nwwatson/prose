@@ -3,6 +3,7 @@ import { debounce } from "lib/timers"
 
 export default class extends Controller {
   static targets = ["input", "status"]
+  static values = { available: String, taken: String }
 
   connect() {
     this.abortController = null
@@ -43,7 +44,7 @@ export default class extends Controller {
       // A newer check superseded this one while it was in flight.
       if (this.abortController !== controller) return
 
-      this.statusTarget.textContent = data.available ? "Available" : "Taken"
+      this.statusTarget.textContent = data.available ? this.availableValue : this.takenValue
       this.statusTarget.className = data.available
         ? "text-sm text-green-600"
         : "text-sm text-red-600"

@@ -2,7 +2,7 @@
 
 <% content_for(:head) do %>
   <%= seo_head_tags(
-        title: "Authors — #{site_name}",
+        title: page_title(t('authors.index.title')),
         description: t('authors.index.meet_the_authors', site_name: site_name),
         url: authors_url
       ) %>
@@ -38,7 +38,7 @@
           <% end %>
 
           <div class="author-card__meta">
-            <span><%= pluralize(@post_counts.fetch(identity.user.id, 0), "post") %></span>
+            <span><%= t('authors.index.post_count', count: @post_counts.fetch(identity.user.id, 0)) %></span>
             <% if identity.has_social_links? %>
               <span>&middot;</span>
               <div class="author-card__social-links">

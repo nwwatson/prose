@@ -10,6 +10,6 @@ class SubscriberMailer < ApplicationMailer
     @subscriber = subscriber
     @magic_link = subscriber_session_url(token: subscriber.auth_token)
     load_email_branding
-    mail(to: subscriber.email, subject: t("subscriber_mailer.magic_link.sign_in_to", site_name: @site_name))
+    mail(to: subscriber.email, subject: t("subscriber_mailer.magic_link.subject", site_name: @site_name))
   end
 end

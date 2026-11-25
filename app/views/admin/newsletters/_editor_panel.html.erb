@@ -45,7 +45,7 @@
             <span class="text-sm font-medium text-gray-900"><%= t('admin.newsletters.editor_panel.site_default') %></span>
             <span class="block text-xs text-gray-500"><%= t('admin.newsletters.editor_panel.site_default_description') %></span>
           </label>
-          <% SiteSetting::EmailBranding::EMAIL_TEMPLATES.each do |key, meta| %>
+          <% SiteSetting::EmailBranding::EMAIL_TEMPLATES.each_key do |key| %>
             <label class="relative cursor-pointer rounded-md border p-3 hover:bg-gray-50 <%= newsletter.template == key ? 'border-blue-500 ring-2 ring-blue-500' : 'border-gray-200' %>"
                    data-action="click->template-select#select"
                    data-template-select-target="card"
@@ -53,8 +53,8 @@
               <input type="radio" name="newsletter[template]" value="<%= key %>" form="newsletter_form"
                      class="sr-only" data-template-select-target="input" data-action="change->autosave#handleChange"
                      <%= "checked" if newsletter.template == key %>>
-              <span class="text-sm font-medium text-gray-900"><%= meta[:name] %></span>
-              <span class="block text-xs text-gray-500"><%= meta[:description] %></span>
+              <span class="text-sm font-medium text-gray-900"><%= email_template_name(key) %></span>
+              <span class="block text-xs text-gray-500"><%= email_template_description(key) %></span>
             </label>
           <% end %>
         </div>
@@ -80,7 +80,7 @@
           <input type="text" name="newsletter[preheader_text]" form="newsletter_form"
                  value="<%= newsletter.preheader_text %>"
                  maxlength="150"
-                 placeholder="<%= site_setting.email_preheader_text.presence || 'Preview text shown in inbox...' %>"
+                 placeholder="<%= site_setting.email_preheader_text.presence || t('admin.newsletters.editor_panel.preheader_placeholder') %>"
                  data-action="change->autosave#handleChange"
                  class="<%= admin_input_classes %>">
           <p class="mt-1 text-xs text-gray-500"><%= t('admin.newsletters.editor_panel.preheader_help') %></p>

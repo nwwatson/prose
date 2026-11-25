@@ -25,7 +25,7 @@ module Admin
               locals: { error: e.message, post: @post }
             )
           }
-          format.html { redirect_to edit_admin_post_path(@post), alert: "AI error: #{e.message}" }
+          format.html { redirect_to edit_admin_post_path(@post), alert: t("flash.admin.ai.error", message: e.message) }
         end
       end
 

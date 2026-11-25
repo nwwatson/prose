@@ -5,10 +5,17 @@ class HandleAvailabilitiesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.replace("handle_availability",
-          html: available ? '<span id="handle_availability" class="text-sm text-green-600">Available</span>'.html_safe : '<span id="handle_availability" class="text-sm text-red-600">Taken</span>'.html_safe)
+        render turbo_stream: turbo_stream.replace("handle_availability", html: availability_badge(available))
       end
       format.json { render json: { available: available } }
     end
+  end
+
+  private
+
+  def availability_badge(available)
+    key, color = available ? [ "available", "text-green-600" ] : [ "taken", "text-red-600" ]
+
+    helpers.tag.span(t("handles.availability.#{key}"), id: "handle_availability", class: "text-sm #{color}")
   end
 end

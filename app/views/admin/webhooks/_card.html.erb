@@ -11,7 +11,7 @@
     <% end %>
   </div>
   <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
-    <span><%= t('admin.webhooks.index.last_triggered') %>: <%= webhook.last_triggered_at ? time_ago_in_words(webhook.last_triggered_at) + " " + t('shared.ago') : t('shared.never') %></span>
+    <span><%= t('admin.webhooks.index.last_triggered') %>: <%= time_ago(webhook.last_triggered_at) %></span>
     <% if webhook.last_response_code %>
       <span><%= t('admin.webhooks.index.last_response') %>: <%= webhook.last_response_code %></span>
     <% end %>

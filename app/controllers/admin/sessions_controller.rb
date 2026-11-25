@@ -15,7 +15,7 @@ module Admin
         start_session(user, ip_address: request.remote_ip, user_agent: request.user_agent)
         redirect_to admin_root_path, notice: t("flash.admin.sessions.signed_in")
       else
-        flash.now[:alert] = "Invalid email or password."
+        flash.now[:alert] = t("flash.admin.sessions.invalid_credentials")
         render :new, status: :unprocessable_entity
       end
     end

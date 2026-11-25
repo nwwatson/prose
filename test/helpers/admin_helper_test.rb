@@ -49,4 +49,16 @@ class AdminHelperTest < ActionView::TestCase
   test "admin_th_classes returns the shared header cell classes" do
     assert_equal "px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500", admin_th_classes
   end
+
+  test "status_label translates every status of every model that shows one" do
+    [ Post, Page, Newsletter, Membership ].each do |model|
+      model.statuses.each_key do |status|
+        %i[en es].each do |locale|
+          assert I18n.exists?("admin.statuses.#{model.model_name.i18n_key}.#{status}", locale, fallback: false),
+            "#{locale}: #{model}##{status}"
+        end
+      end
+    end
+    assert_equal "Past Due", status_label(Membership.new(status: :past_due))
+  end
 end
