@@ -6,8 +6,8 @@ module Mcp
       input_schema(
         properties: {
           status: { type: "string", enum: %w[draft scheduled published], description: "Filter by post status" },
-          category: { type: "string", description: "Filter by category name" },
-          tag: { type: "string", description: "Filter by tag name" },
+          category: { type: "string", description: "Filter by category name or slug (an unknown category returns no posts)" },
+          tag: { type: "string", description: "Filter by tag name or slug (an unknown tag returns no posts)" },
           search: { type: "string", description: "Search posts by title, subtitle, or body content" },
           page: { type: "integer", description: "Page number (default: 1)", minimum: 1 },
           per_page: { type: "integer", description: "Results per page (default: 20, max: 50)", minimum: 1, maximum: 50 }
@@ -18,37 +18,14 @@ module Mcp
 
       class << self
         def call(server_context:, **params)
-          posts = Post.for_listing.includes(:tags)
+          result = Mcp::PostListQuery.call(params)
 
-          posts = posts.where(status: params[:status]) if params[:status].present?
-
-          if params[:category].present?
-            category = find_category(params[:category])
-            posts = posts.where(category: category) if category
-          end
-
-          if params[:tag].present?
-            tag = Tag.find_by(name: params[:tag]) || Tag.find_by(slug: params[:tag])
-            posts = posts.joins(:tags).where(tags: { id: tag&.id }) if tag
-          end
-
-          posts = posts.search(params[:search]) if params[:search].present?
-
-          per_page = [ params[:per_page] || 20, 50 ].min
-          page = params[:page] || 1
-          offset = (page - 1) * per_page
-
-          total = posts.count
-          posts = posts.order(created_at: :desc).limit(per_page).offset(offset)
-
-          result = {
-            posts: posts.map { |p| Mcp::PostSerializer.call(p) },
-            total: total,
-            page: page,
-            per_page: per_page
-          }
-
-          success(result)
+          success({
+            posts: result.posts.map { |post| Mcp::PostSerializer.call(post) },
+            total: result.total,
+            page: result.page,
+            per_page: result.per_page
+          })
         end
       end
     end

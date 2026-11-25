@@ -20,7 +20,7 @@ module Mcp
 
       if include_content
         data[:content_html] = post.content&.to_s
-        data[:content_plain] = post.content&.to_plain_text
+        data[:content_plain] = post.body_plain
       end
 
       data

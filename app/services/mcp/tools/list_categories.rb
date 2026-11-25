@@ -9,12 +9,7 @@ module Mcp
 
       class << self
         def call(server_context:, **_params)
-          post_counts = Category.post_counts
-          categories = Category.ordered.map do |c|
-            { id: c.id, name: c.name, slug: c.slug, description: c.description, position: c.position, post_count: post_counts.fetch(c.id, 0) }
-          end
-
-          success({ categories: categories })
+          success({ categories: Mcp::CategorySerializer.all })
         end
       end
     end

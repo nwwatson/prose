@@ -9,9 +9,10 @@ module Mcp
           content: { type: "string", description: "Post content in markdown format" },
           subtitle: { type: "string", description: "Post subtitle" },
           slug: { type: "string", description: "URL slug (auto-generated from title if omitted)" },
-          category: { type: "string", description: "Category name" },
+          category: { type: "string", description: "Category name or slug (must already exist)" },
           tags: { type: "array", items: { type: "string" }, description: "Array of tag names" },
-          meta_description: { type: "string", description: "SEO meta description (max 160 chars)" }
+          meta_description: { type: "string", description: "SEO meta description (max 160 chars)" },
+          featured: { type: "boolean", description: "Whether post is featured" }
         },
         required: [ "title" ]
       )
@@ -20,28 +21,10 @@ module Mcp
 
       class << self
         def call(server_context:, title:, **params)
-          user = server_context[:user]
+          post = Mcp::PostWriter.create(user: server_context[:user], attrs: params.merge(title: title))
 
-          post = Post.new(
-            title: title,
-            subtitle: params[:subtitle],
-            slug: params[:slug],
-            meta_description: params[:meta_description],
-            user: user,
-            status: :draft
-          )
-
-          if params[:content].present?
-            post.content = Mcp::MarkdownConverter.to_html(params[:content])
-          end
-
-          post.category = find_category(params[:category]) if params[:category].present?
-
-          post.save!
-          post.tags = find_or_create_tags(params[:tags]) if params[:tags].present?
-
-          success(Mcp::PostSerializer.call(post.reload, include_content: true))
-        rescue ActiveRecord::RecordInvalid => e
+          success(Mcp::PostSerializer.call(post, include_content: true))
+        rescue Mcp::PostWriter::UnknownCategory, ActiveRecord::RecordInvalid => e
           failure(e.message)
         end
       end
