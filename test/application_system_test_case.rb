@@ -1,5 +1,22 @@
 require "test_helper"
 
+# Capybara 3.40's ChromeDriver#reset! clears storage between tests with
+# `Storage.clearDataForOrigin` and origin "*". Chrome 158 rejects that ("* is not a
+# valid URL"), so every system test errors in teardown and localStorage leaks into
+# the next test. Clear cookies browser-wide and storage for the app server's origin
+# instead. Remove this once Capybara stops sending the wildcard origin.
+module ClearStorageWithoutWildcardOrigin
+  def execute_cdp(cmd, params = {})
+    return super unless cmd == "Storage.clearDataForOrigin" && params[:origin] == "*"
+
+    super("Storage.clearCookies")
+    storage_types = params[:storageTypes].to_s.split(",") - [ "cookies" ]
+    origin = Capybara.current_session.server&.base_url
+    super(cmd, params.merge(origin: origin, storageTypes: storage_types.join(","))) if origin && storage_types.any?
+  end
+end
+Capybara::Selenium::Driver::ChromeDriver.prepend(ClearStorageWithoutWildcardOrigin)
+
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   driven_by :selenium, using: :headless_chrome, screen_size: [ 1400, 900 ]
 
