@@ -7,6 +7,6 @@ module WebhookDispatcher
     return if webhook_ids.empty?
 
     data = yield
-    webhook_ids.each { |webhook_id| DeliverWebhookJob.perform_later(webhook_id, event, data) }
+    ActiveJob.perform_all_later(webhook_ids.map { |webhook_id| DeliverWebhookJob.new(webhook_id, event, data) })
   end
 end

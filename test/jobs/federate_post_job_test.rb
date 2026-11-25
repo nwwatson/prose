@@ -2,6 +2,7 @@ require "test_helper"
 
 class FederatePostJobTest < ActiveJob::TestCase
   include ActivityPubTestHelper
+  include BulkEnqueueHelper
 
   setup do
     enable_federation!
@@ -16,6 +17,19 @@ class FederatePostJobTest < ActiveJob::TestCase
     inbox, body = enqueued_jobs.last[:args]
     assert_equal "https://remote.example/inbox", inbox
     assert_equal "Create", JSON.parse(body)["type"]
+  end
+
+  test "bulk-enqueues the deliveries in slices" do
+    inboxes = %w[https://one.example/inbox https://two.example/inbox https://three.example/inbox]
+
+    batches = with_singleton_stub(FediverseActor, :follower_inboxes, -> { inboxes }) do
+      with_const(FederatePostJob, :BATCH_SIZE, 2) do
+        capture_bulk_enqueues { FederatePostJob.perform_now("create", @post.id, ActivityPub::Urls.post_url(@post)) }
+      end
+    end
+
+    assert_equal [ 2, 1 ], batches.map(&:size)
+    assert_equal inboxes, batches.flatten.map { |job| job.arguments.first }
   end
 
   test "Delete works after the post is gone" do
