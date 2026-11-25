@@ -5,41 +5,15 @@ on:
   push:
     branches: [ master ]
 
+# A newer push to a pull request cancels the run it supersedes. Runs on master
+# always finish, so every merged commit gets a result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
 jobs:
-  scan_ruby:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
-      
-      - name: Scan for known security vulnerabilities in gems used
-        run: bin/bundler-audit
-      
-  scan_js:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: bin/importmap audit
-
-  lint:
+  # Security scans and linting take seconds each, so they share one Ruby setup.
+  scan_and_lint:
     runs-on: ubuntu-latest
     env:
       RUBOCOP_CACHE_ROOT: tmp/rubocop
@@ -51,6 +25,15 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
+      - name: Scan for common Rails security vulnerabilities using static analysis
+        run: bin/brakeman --no-pager
+
+      - name: Scan for known security vulnerabilities in gems used
+        run: bin/bundler-audit
+
+      - name: Scan for security vulnerabilities in JavaScript dependencies
+        run: bin/importmap audit
 
       - name: Prepare RuboCop cache
         uses: actions/cache@v6
@@ -89,9 +72,15 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
-          SECRET_KEY_BASE: a-]test-secret-key-base-for-ci-that-is-long-enough-to-satisfy-rails-minimum-length-requirement
+          SECRET_KEY_BASE: a-test-secret-key-base-for-ci-that-is-long-enough-to-satisfy-rails-minimum-length-requirement
           # REDIS_URL: redis://localhost:6379/0
         run: bin/rails db:test:prepare test
+
+      - name: Check that seeds load
+        env:
+          RAILS_ENV: test
+          SECRET_KEY_BASE: a-test-secret-key-base-for-ci-that-is-long-enough-to-satisfy-rails-minimum-length-requirement
+        run: bin/rails db:seed:replant
 
   system-test:
     runs-on: ubuntu-latest
