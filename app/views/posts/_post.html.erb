@@ -1,35 +1,34 @@
-<%# locals: (post:, heading: :h3, featured: false, snippet: nil, show_category: true, show_author: true, show_subtitle: true, show_reading_time: true, show_excerpt: false) %>
-<% cache_key = [ post, post.user&.identity, post.category, snippet&.body_snippet, heading, featured, show_category, show_author, show_subtitle, show_reading_time, show_excerpt ] %>
-<% cache(cache_key) do %>
-  <article class="post-card<%= " post-card--featured" if featured %>">
-    <header>
-      <%= content_tag heading, class: "post-card__title" do %>
-        <%= link_to post.title, post_path(slug: post.slug), class: "post-card__link" %>
-      <% end %>
-      <% if show_subtitle && post.subtitle.present? %>
-        <p class="post-card__subtitle"><%= post.subtitle %></p>
-      <% end %>
-      <div class="post-card__meta post-meta">
-        <% if show_author %>
-          <span><%= t('shared.by') %> <%= author_link(post.user) %></span>
-          <span class="post-meta__separator">&middot;</span>
-        <% end %>
-        <%= published_on(post) %>
-        <% if show_reading_time %>
-          <span class="post-meta__separator">&middot;</span>
-          <span><%= post.reading_time_minutes %> <%= t('shared.min_read') %></span>
-        <% end %>
-        <% if show_category && post.category %>
-          <span class="post-meta__separator">&middot;</span>
-          <%= link_to post.category.name, category_path(slug: post.category.slug), class: "text-link--category" %>
-        <% end %>
-        <%= bookmark_button(post) %>
-      </div>
-    </header>
-    <% if snippet&.body_snippet.present? %>
-      <p class="post-card__excerpt"><%= sanitize snippet.body_snippet, tags: %w[mark] %></p>
-    <% elsif show_excerpt && post.body_plain.present? %>
-      <div class="post-card__excerpt"><%= post.excerpt %></div>
+<%# locals: (post:, snippets:, heading:, featured:, show_category:, show_author:, show_subtitle:, show_reading_time:, show_excerpt:) %>
+<%# Rendered through PostCardsHelper#render_post_cards, which supplies every option and the collection cache key. %>
+<% snippet = snippets[post.id] %>
+<article class="post-card<%= " post-card--featured" if featured %>">
+  <header>
+    <%= content_tag heading, class: "post-card__title" do %>
+      <%= link_to post.title, post_path(slug: post.slug), class: "post-card__link" %>
     <% end %>
-  </article>
-<% end %>
+    <% if show_subtitle && post.subtitle.present? %>
+      <p class="post-card__subtitle"><%= post.subtitle %></p>
+    <% end %>
+    <div class="post-card__meta post-meta">
+      <% if show_author %>
+        <span><%= t('shared.by') %> <%= author_link(post.user) %></span>
+        <span class="post-meta__separator">&middot;</span>
+      <% end %>
+      <%= published_on(post) %>
+      <% if show_reading_time %>
+        <span class="post-meta__separator">&middot;</span>
+        <span><%= post.reading_time_minutes %> <%= t('shared.min_read') %></span>
+      <% end %>
+      <% if show_category && post.category %>
+        <span class="post-meta__separator">&middot;</span>
+        <%= link_to post.category.name, category_path(slug: post.category.slug), class: "text-link--category" %>
+      <% end %>
+      <%= bookmark_button(post) %>
+    </div>
+  </header>
+  <% if snippet&.body_snippet.present? %>
+    <p class="post-card__excerpt"><%= sanitize snippet.body_snippet, tags: %w[mark] %></p>
+  <% elsif show_excerpt && post.body_plain.present? %>
+    <div class="post-card__excerpt"><%= post.excerpt %></div>
+  <% end %>
+</article>

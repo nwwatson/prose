@@ -12,8 +12,8 @@
   <h1 class="page-heading"><%= t('tags.show.tagged', name: @tag.name) %></h1>
 </div>
 
-<div class="post-listing">
-  <% @posts.each do |post| %>
-    <%= render "posts/post", post: post, show_subtitle: false, show_reading_time: false, show_category: false %>
-  <% end %>
+<div class="post-listing" data-controller="infinite-scroll">
+  <%= render "posts/post_page", posts: @posts, page: @page, next_page: @next_page,
+        next_page_path: (tag_path(slug: @tag.slug, page: @next_page) if @next_page),
+        card: { show_subtitle: false, show_reading_time: false, show_category: false } %>
 </div>

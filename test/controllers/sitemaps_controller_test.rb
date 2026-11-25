@@ -20,4 +20,16 @@ class SitemapsControllerTest < ActionDispatch::IntegrationTest
       assert_no_match(/#{record.slug}\.#{record.slug}/, response.body)
     end
   end
+
+  test "sitemap loads only slugs and timestamps, not post bodies" do
+    queries = []
+    callback = ->(event) { queries << event.payload[:sql] if event.payload[:sql].match?(/FROM "(posts|pages|categories|tags)"/) }
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") { get sitemap_path(format: :xml) }
+
+    assert_response :success
+    assert_not_empty queries
+    queries.each do |sql|
+      assert_no_match(/\*|body_plain/, sql.split(/\bFROM\b/).first)
+    end
+  end
 end

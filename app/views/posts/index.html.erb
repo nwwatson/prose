@@ -11,9 +11,7 @@
 
 <%# Featured post hero %>
 <% if @featured_posts.any? %>
-  <% @featured_posts.each do |post| %>
-    <%= render "posts/post", post: post, heading: :h2, featured: true, show_category: false, show_excerpt: true %>
-  <% end %>
+  <%= render_post_cards @featured_posts, heading: :h2, featured: true, show_category: false, show_excerpt: true %>
 <% end %>
 
 <%# Search %>
@@ -27,7 +25,7 @@
 <%# Post listing with infinite scroll %>
 <% if @posts.any? %>
   <div class="post-listing" data-controller="infinite-scroll">
-    <%= render "posts/post_page", posts: @posts, page: @page, next_page: @next_page, query: @query %>
+    <%= render "posts/post_page", posts: @posts, page: @page, next_page: @next_page, next_page_path: next_posts_page_path, snippets: @snippets %>
   </div>
 <% elsif @query.present? %>
   <div class="empty-state">
