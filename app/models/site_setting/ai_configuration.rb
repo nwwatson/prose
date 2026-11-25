@@ -1,19 +1,20 @@
 module SiteSetting::AiConfiguration
   extend ActiveSupport::Concern
 
+  # The first entry of each list is the default. When removing an id, add a data
+  # migration that moves saved settings off it, or they fail validation.
   AI_MODELS = %w[
-    claude-sonnet-4-5-20250929
-    claude-haiku-4-5-20251001
-    claude-opus-4-20250514
+    claude-sonnet-5-5
+    claude-haiku-5-5
+    claude-opus-5-5
   ].freeze
 
   IMAGE_MODELS = {
-    "imagen-4.0-generate-001" => :gemini,
-    "imagen-4.0-fast-generate-001" => :gemini,
-    "imagen-4.0-ultra-generate-001" => :gemini,
-    "gpt-image-1" => :openai,
-    "gpt-image-1-mini" => :openai,
-    "dall-e-3" => :openai
+    "gemini-nano-banana-2.1" => :gemini,
+    "gemini-3.1-flash-lite-image" => :gemini,
+    "gemini-3-pro-image" => :gemini,
+    "gpt-image-2.6-sunburst" => :openai,
+    "gpt-image-2.6-flare" => :openai
   }.freeze
 
   included do

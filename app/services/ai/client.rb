@@ -16,8 +16,8 @@ module Ai
     end
 
     # The image model ids are ours (SiteSetting::AiConfiguration::IMAGE_MODELS), so
-    # send them straight to their provider. RubyLLM's registry no longer lists all
-    # of them, and resolves some ids to another provider when none is given.
+    # send them straight to their provider. A stored registry can lag behind that
+    # list, and RubyLLM resolves some ids to another provider when none is given.
     def paint(prompt, settings = SiteSetting.current)
       configure!(settings)
       RubyLLM.paint(prompt, model: settings.image_model_name_for_image,
