@@ -27,6 +27,22 @@ class Admin::NewslettersControllerTest < ActionDispatch::IntegrationTest
     assert_select "form"
   end
 
+  test "the editor counts no segment up front and links each option to its count" do
+    resolved = 0
+    count_resolve = ->(*) { resolved += 1 }
+
+    with_instance_stub(Segment, :resolve, count_resolve) do
+      get new_admin_newsletter_path
+      assert_response :success
+      get edit_admin_newsletter_path(newsletters(:draft_newsletter))
+    end
+
+    assert_response :success
+    assert_equal 0, resolved
+    segment = segments(:vip_segment)
+    assert_select "option[value='#{segment.id}'][data-count-url='/admin/segments/#{segment.id}/count']", text: segment.name
+  end
+
   test "POST create creates a draft newsletter" do
     assert_difference "Newsletter.count", 1 do
       post admin_newsletters_path, params: { newsletter: { title: "New Campaign" } }
@@ -43,20 +59,6 @@ class Admin::NewslettersControllerTest < ActionDispatch::IntegrationTest
   test "GET edit renders form" do
     get edit_admin_newsletter_path(newsletters(:draft_newsletter))
     assert_response :success
-  end
-
-  test "GET edit resolves each segment's subscriber count at most once" do
-    resolve_count = 0
-    original_resolve = Segment.instance_method(:resolve)
-    counting_resolve = -> do
-      resolve_count += 1
-      original_resolve.bind_call(self)
-    end
-
-    with_instance_stub(Segment, :resolve, counting_resolve) { get edit_admin_newsletter_path(newsletters(:draft_newsletter)) }
-
-    assert_response :success
-    assert_equal Segment.count, resolve_count
   end
 
   test "PATCH update updates newsletter" do

@@ -53,7 +53,6 @@ class SubscriberGrowthQuery
 
   def acquisition_channels
     @relation
-      .left_joins(:source_post)
       .group(
         Arel.sql("CASE WHEN source_post_id IS NOT NULL THEN 'post' ELSE 'direct' END")
       )

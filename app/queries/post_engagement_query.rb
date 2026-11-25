@@ -7,7 +7,8 @@ class PostEngagementQuery
   end
 
   def views_count(since: nil)
-    @views_query.total_views(since: since)
+    @views_count ||= {}
+    @views_count[since] ||= @views_query.total_views(since: since)
   end
 
   def unique_viewers(since: nil)
@@ -19,7 +20,7 @@ class PostEngagementQuery
   end
 
   def comments_count
-    @post.comments.approved.count
+    @comments_count ||= @post.comments.approved.count
   end
 
   def engagement_rate

@@ -4,6 +4,7 @@ module Mcp
   class SiteInfo
     def self.call
       settings = SiteSetting.current
+      posts_by_status = Post.group(:status).count
 
       {
         site_name: settings.site_name,
@@ -11,10 +12,10 @@ module Mcp
         categories: Mcp::CategorySerializer.all(detailed: false),
         tags: Mcp::TagSerializer.all(detailed: false),
         post_counts: {
-          total: Post.count,
-          published: Post.published.count,
-          draft: Post.draft.count,
-          scheduled: Post.scheduled.count
+          total: posts_by_status.values.sum,
+          published: posts_by_status.fetch("published", 0),
+          draft: posts_by_status.fetch("draft", 0),
+          scheduled: posts_by_status.fetch("scheduled", 0)
         }
       }
     end

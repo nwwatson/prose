@@ -6,7 +6,7 @@ class RevenueQuery
   end
 
   def monthly_recurring_revenue
-    @relation.current.joins(:membership_tier).sum(
+    @monthly_recurring_revenue ||= @relation.current.joins(:membership_tier).sum(
       Arel.sql(<<~SQL.squish)
         CASE WHEN membership_tiers.interval = #{MembershipTier.intervals[:month].to_i}
           THEN price_cents
@@ -25,7 +25,7 @@ class RevenueQuery
   end
 
   def churn_rate(since: 30.days.ago)
-    canceled = @relation.where(status: :canceled).where("canceled_at >= ?", since).count
+    canceled = @relation.canceled_since(since).count
     total_at_start = @relation.where("created_at < ?", since).count
     percentage(canceled, total_at_start)
   end
