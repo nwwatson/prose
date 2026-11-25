@@ -4,18 +4,10 @@
   <%= render "admin/shared/page_header", title: t('admin.categories.index.title'),
         action: link_to(t('admin.categories.index.new_category'), new_admin_category_path, class: admin_button_classes(variant: :primary, extra: "self-start")) %>
 
-  <% if @categories.any? %>
+  <% if @categories.load.any? %>
     <%# Mobile card layout %>
     <div class="space-y-3 lg:hidden">
-      <% @categories.each do |category| %>
-        <%= link_to edit_admin_category_path(category), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
-          <div class="flex items-center justify-between">
-            <p class="text-sm font-medium text-gray-900"><%= category.name %></p>
-            <p class="text-sm text-gray-500"><%= @post_counts.fetch(category.id, 0) %> posts</p>
-          </div>
-          <p class="mt-1 text-xs text-gray-500 font-mono"><%= category.slug %></p>
-        <% end %>
-      <% end %>
+      <%= render partial: "card", collection: @categories, as: :category, locals: { post_counts: @post_counts } %>
     </div>
 
     <%# Desktop table layout %>
@@ -30,16 +22,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 bg-white">
-          <% @categories.each do |category| %>
-            <tr>
-              <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= category.name %></td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= category.slug %></td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= @post_counts.fetch(category.id, 0) %></td>
-              <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                <%= link_to t('shared.edit'), edit_admin_category_path(category), class: "text-gray-600 hover:text-gray-900" %>
-              </td>
-            </tr>
-          <% end %>
+          <%= render partial: "row", collection: @categories, as: :category, locals: { post_counts: @post_counts } %>
         </tbody>
       </table>
     </div>

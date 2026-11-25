@@ -1,0 +1,7 @@
+<tr>
+  <td class="py-2 text-sm text-gray-900"><%= delivery.subscriber.email %></td>
+  <td class="py-2 text-sm text-gray-500"><%= delivery.sent_at ? l(delivery.sent_at, format: :short) : nil %></td>
+  <td class="py-2 text-sm text-gray-500"><%= delivery.opened_at ? l(delivery.opened_at, format: :short) : "—" %></td>
+  <td class="py-2 text-sm text-gray-500"><%= delivery.clicked_at ? l(delivery.clicked_at, format: :short) : "—" %></td>
+  <td class="py-2 text-sm text-gray-500"><%= delivery.bounced_at ? l(delivery.bounced_at, format: :short) : "—" %></td>
+</tr>

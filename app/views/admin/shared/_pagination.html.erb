@@ -1,0 +1,19 @@
+<%# Previous/next links for a collection paginated with Paginatable. Other query
+    params (filters, search) are carried over. %>
+<% if page > 1 || next_page %>
+  <% link_class = admin_button_classes(variant: :outline) %>
+  <% page_path = ->(number) { "#{request.path}?#{request.query_parameters.merge("page" => number).to_query}" } %>
+  <nav class="mt-4 flex items-center justify-between gap-3" aria-label="<%= t('shared.pagination') %>" data-testid="pagination">
+    <div>
+      <% if page > 1 %>
+        <%= link_to t('shared.previous'), page_path.call(page - 1), rel: "prev", class: link_class %>
+      <% end %>
+    </div>
+    <span class="text-sm text-gray-500"><%= t('shared.page_number', page: page) %></span>
+    <div>
+      <% if next_page %>
+        <%= link_to t('shared.next'), page_path.call(next_page), rel: "next", class: link_class %>
+      <% end %>
+    </div>
+  </nav>
+<% end %>

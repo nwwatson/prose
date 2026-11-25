@@ -21,6 +21,10 @@ es:
     am: "a. m."
     pm: "p. m."
   shared:
+    pagination: "Paginación"
+    previous: "Anterior"
+    next: "Siguiente"
+    page_number: "Página %{page}"
     home: "Inicio"
     about: "Acerca de"
     search: "Buscar"

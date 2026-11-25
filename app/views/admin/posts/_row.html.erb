@@ -1,0 +1,20 @@
+<tr>
+  <td class="px-6 py-4">
+    <div>
+      <%= link_to post.title, edit_admin_post_path(post), class: "text-sm font-medium text-gray-900 hover:text-gray-600" %>
+      <% if post.subtitle.present? %>
+        <p class="text-sm text-gray-500"><%= post.subtitle %></p>
+      <% end %>
+    </div>
+  </td>
+  <td class="whitespace-nowrap px-6 py-4">
+    <%= status_badge(post.status.capitalize, color_class: post_status_color(post.status)) %>
+  </td>
+  <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500"><%= post.user.display_name %></td>
+  <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+    <%= post.published_at ? l(post.published_at.to_date, format: :short) : l(post.updated_at.to_date, format: :short) %>
+  </td>
+  <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+    <%= link_to t('shared.edit'), edit_admin_post_path(post), class: "text-gray-600 hover:text-gray-900" %>
+  </td>
+</tr>

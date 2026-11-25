@@ -6,8 +6,9 @@ module Admin
     before_action :set_subscriber, only: [ :comp ]
 
     def index
-      @memberships = Membership.by_recency.includes(:subscriber, :membership_tier)
+      @memberships = Membership.by_recency.order(id: :desc).includes(:subscriber, :membership_tier)
       @memberships = @memberships.where(status: params[:status]) if params[:status].present?
+      @memberships = paginate(@memberships)
     end
 
     def show

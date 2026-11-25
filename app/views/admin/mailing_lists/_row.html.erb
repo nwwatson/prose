@@ -1,0 +1,14 @@
+<tr>
+  <td class="px-6 py-4 text-sm">
+    <p class="font-medium text-gray-900"><%= list.name %></p>
+    <% if list.description.present? %>
+      <p class="mt-1 max-w-md truncate text-gray-500"><%= list.description %></p>
+    <% end %>
+  </td>
+  <td class="px-6 py-4 text-sm text-gray-500"><%= list.frequency.presence || "—" %></td>
+  <td class="px-6 py-4 text-sm"><div class="flex flex-wrap gap-2"><%= render "badges", list: list %></div></td>
+  <td class="px-6 py-4 text-sm text-gray-500"><%= subscriber_counts.fetch(list.id, 0) %></td>
+  <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+    <%= link_to t('shared.edit'), edit_admin_mailing_list_path(list), class: "text-gray-600 hover:text-gray-900" %>
+  </td>
+</tr>

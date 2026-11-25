@@ -4,11 +4,11 @@ module Admin
     before_action :load_labels, only: %i[new create edit update]
 
     def index
-      @segments = Segment.order(:name)
+      @segments = paginate(Segment.order(:name, :id))
     end
 
     def show
-      @subscribers = @segment.resolve.includes(:identity, :subscriber_labels).order(created_at: :desc)
+      @subscribers = paginate(@segment.resolve.includes(:subscriber_labels).order(created_at: :desc, id: :desc))
     end
 
     def new

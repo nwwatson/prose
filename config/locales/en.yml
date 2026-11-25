@@ -22,6 +22,10 @@ en:
     pm: "pm"
   # Shared / common strings
   shared:
+    pagination: "Pagination"
+    previous: "Previous"
+    next: "Next"
+    page_number: "Page %{page}"
     home: "Home"
     about: "About"
     search: "Search"

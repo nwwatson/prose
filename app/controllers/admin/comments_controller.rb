@@ -1,7 +1,7 @@
 module Admin
   class CommentsController < BaseController
     def index
-      @comments = Comment.includes(:post, :identity).order(created_at: :desc)
+      @comments = Comment.includes(:post, :identity).order(created_at: :desc, id: :desc)
 
       case params[:filter]
       when "pending"
@@ -9,6 +9,8 @@ module Admin
       when "approved"
         @comments = @comments.approved
       end
+
+      @comments = paginate(@comments)
     end
 
     def update

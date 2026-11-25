@@ -1,0 +1,17 @@
+<%= link_to admin_subscriber_path(subscriber), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
+  <div class="flex items-start justify-between gap-3">
+    <p class="min-w-0 truncate text-sm font-medium text-gray-900"><%= subscriber.email %></p>
+    <%= status_badge(subscriber.confirmed? ? t('shared.confirmed') : t('shared.pending'),
+          color_class: "flex-shrink-0 #{subscriber.confirmed? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}") %>
+  </div>
+  <% if subscriber.subscriber_labels.any? %>
+    <div class="mt-2 flex flex-wrap gap-1">
+      <% subscriber.subscriber_labels.each do |label| %>
+        <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium text-white" style="background-color: <%= label.color %>">
+          <%= label.name %>
+        </span>
+      <% end %>
+    </div>
+  <% end %>
+  <p class="mt-2 text-xs text-gray-500"><%= l(subscriber.created_at.to_date, format: :short) %></p>
+<% end %>

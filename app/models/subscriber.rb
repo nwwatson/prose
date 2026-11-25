@@ -17,6 +17,24 @@ class Subscriber < ApplicationRecord
   scope :confirmed, -> { where.not(confirmed_at: nil).where(unsubscribed_at: nil) }
   scope :active, -> { where(unsubscribed_at: nil) }
 
+  # Matches part of the email or handle. A blank term matches everyone.
+  scope :search, ->(term) {
+    next all if term.blank?
+
+    left_joins(:identity).where(
+      "subscribers.email LIKE :q ESCAPE '\\' OR identities.handle LIKE :q ESCAPE '\\'",
+      q: "%#{sanitize_sql_like(term)}%"
+    )
+  }
+
+  # A subquery rather than a join, so preloaded labels aren't narrowed to the
+  # filtered one.
+  scope :with_label, ->(label_id) {
+    next all if label_id.blank?
+
+    where(id: SubscriberLabeling.where(subscriber_label_id: label_id).select(:subscriber_id))
+  }
+
   def self.subscribe_or_sign_in!(email:, source_post_id: nil)
     subscriber = find_or_initialize_by(email: email)
     new_subscriber = subscriber.new_record?
