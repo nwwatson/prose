@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { renderSparkline } from "lib/svg_chart"
+import { renderSparkline } from "admin/lib/svg_chart"
 
 // Simple SVG sparkline chart (no external dependencies)
 export default class extends Controller {

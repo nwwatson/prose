@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { renderBarChart, formatDayLabel } from "lib/svg_chart"
+import { renderBarChart, formatDayLabel } from "admin/lib/svg_chart"
 
 export default class extends Controller {
   static targets = ["canvas"]

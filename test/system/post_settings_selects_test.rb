@@ -1,7 +1,7 @@
 require "application_system_test_case"
 
 # Covers the keyboard behavior `tag_select` and `custom_select` now share via
-# `lib/listbox.js`, plus the two-stage Escape between an open dropdown and the
+# `admin/lib/listbox.js`, plus the two-stage Escape between an open dropdown and the
 # editor drawer (which no longer probes either controller's DOM).
 class PostSettingsSelectsTest < ApplicationSystemTestCase
   setup do
