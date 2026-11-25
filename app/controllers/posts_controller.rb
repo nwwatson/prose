@@ -12,8 +12,8 @@ class PostsController < ApplicationController
 
     @snippets = @query ? viewable_snippets(@posts, @query) : {}
 
-    if turbo_frame_request_id&.start_with?("posts_page_")
-      render partial: "posts/post_page", locals: { posts: @posts, page: @page, next_page: @next_page, query: @query }, layout: false
+    if post_page_frame_request?
+      render partial: "posts/post_page", locals: { posts: @posts, page: @page, next_page: @next_page, next_page_path: next_posts_page_path, snippets: @snippets }, layout: false
     end
   end
 
@@ -28,6 +28,11 @@ class PostsController < ApplicationController
   end
 
   private
+
+  def next_posts_page_path
+    posts_path(page: @next_page, q: @query) if @next_page
+  end
+  helper_method :next_posts_page_path
 
   # Body snippets quote the post's text, so gated posts only get one for readers
   # who may read them. Without a snippet the card (and its cache key) matches the

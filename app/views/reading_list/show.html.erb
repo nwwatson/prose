@@ -10,7 +10,7 @@
 </div>
 
 <% if identity_signed_in? %>
-  <%= render "reading_list/posts", posts: @posts, framed: false %>
+  <%= render "reading_list/posts", posts: @posts, framed: false, page: @page, next_page: @next_page %>
 <% else %>
   <div data-controller="reading-list" data-reading-list-url-value="<%= reading_list_posts_path %>">
     <%= turbo_frame_tag "reading_list_posts", data: { reading_list_target: "frame" }, target: "_top" do %>

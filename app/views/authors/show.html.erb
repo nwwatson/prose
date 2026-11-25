@@ -62,9 +62,7 @@
   <h2 class="section-heading"><%= t('authors.show.posts_by_author', name: @identity.name) %></h2>
 
   <div class="post-listing">
-    <% @posts.each do |post| %>
-      <%= render "posts/post", post: post, show_author: false %>
-    <% end %>
+    <%= render_post_cards @posts, show_author: false %>
   </div>
 
   <% if @next_page %>

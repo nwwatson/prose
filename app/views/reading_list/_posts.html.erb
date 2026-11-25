@@ -1,11 +1,18 @@
-<%# locals: (posts:, framed:) %>
+<%# locals: (posts:, framed:, page: nil, next_page: nil) %>
+<%# Signed-in readers' lists are paginated (page is set); an anonymous reader's
+    list arrives in one turbo frame from ReadingListPostsController. %>
 <% list = capture do %>
   <% if posts.any? %>
-    <div class="post-listing">
-      <% posts.each do |post| %>
-        <%= render "posts/post", post: post %>
-      <% end %>
-    </div>
+    <% if page %>
+      <div class="post-listing" data-controller="infinite-scroll">
+        <%= render "posts/post_page", posts: posts, page: page, next_page: next_page,
+              next_page_path: (reading_list_path(page: next_page) if next_page) %>
+      </div>
+    <% else %>
+      <div class="post-listing">
+        <%= render_post_cards posts %>
+      </div>
+    <% end %>
   <% else %>
     <div class="empty-state">
       <p class="empty-state__text"><%= t('reading_list.show.empty') %></p>
