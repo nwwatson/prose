@@ -20,6 +20,7 @@ class Webhook < ApplicationRecord
   validate :events_are_known
 
   scope :active, -> { where(active: true) }
+  scope :subscribed_to, ->(event) { where("EXISTS (SELECT 1 FROM json_each(webhooks.events) WHERE json_each.value = ?)", event) }
 
   def subscribed_to?(event)
     events.include?(event)
@@ -27,18 +28,24 @@ class Webhook < ApplicationRecord
 
   # A failure only counts toward auto-disable when `count_failure` is true —
   # DeliverWebhookJob passes false for attempts that will still be retried, so
-  # one event exhausting its retries counts as a single failure.
+  # one event exhausting its retries counts as a single failure. The failure
+  # count is incremented in SQL so concurrent deliveries can't lose an update.
   def record_delivery_result!(success:, response_code: nil, count_failure: true)
-    attrs = { last_triggered_at: Time.current, last_response_code: response_code }
+    now = Time.current
+    attrs = { last_triggered_at: now, last_response_code: response_code, updated_at: now }
+    attrs[:consecutive_failures] = 0 if success
 
-    if success
-      attrs[:consecutive_failures] = 0
-    elsif count_failure
-      attrs[:consecutive_failures] = consecutive_failures + 1
-      attrs[:active] = false if attrs[:consecutive_failures] >= MAX_CONSECUTIVE_FAILURES
+    transaction do
+      self.class.where(id: id).update_all(attrs)
+      if !success && count_failure
+        self.class.where(id: id).update_all([
+          "consecutive_failures = consecutive_failures + 1, " \
+          "active = CASE WHEN consecutive_failures + 1 >= ? THEN FALSE ELSE active END",
+          MAX_CONSECUTIVE_FAILURES
+        ])
+      end
     end
-
-    update!(attrs)
+    reload
   end
 
   def prune_deliveries!(keep: DELIVERY_LOG_LIMIT)
