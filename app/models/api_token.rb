@@ -1,5 +1,7 @@
 class ApiToken < ApplicationRecord
   TOKEN_PREFIX = "prose_"
+  # How stale `last_used_at` may get before a request from the same IP rewrites it.
+  USAGE_TOUCH_INTERVAL = 1.minute
 
   belongs_to :user
 
@@ -37,7 +39,11 @@ class ApiToken < ApplicationRecord
     revoked_at.present?
   end
 
+  # Runs on every API and MCP request, so it writes only when the IP changes or
+  # the stored time is stale: SQLite has a single writer.
   def touch_usage!(ip_address:)
-    update!(last_used_at: Time.current, last_used_ip: ip_address)
+    return if last_used_ip == ip_address && last_used_at&.after?(USAGE_TOUCH_INTERVAL.ago)
+
+    update_columns(last_used_at: Time.current, last_used_ip: ip_address)
   end
 end

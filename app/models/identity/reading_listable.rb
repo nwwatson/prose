@@ -33,14 +33,31 @@ module Identity::ReadingListable
     ids = Array(post_ids).map(&:to_i).select(&:positive?).uniq
     return if ids.empty?
 
-    room = ReadingListItem::MAX_ITEMS - reading_list_items.count
-    new_ids = Post.live.where(id: ids).where.not(id: reading_list_items.select(:post_id)).pluck(:id)
-    # Ids arrive newest-first (browser order); keep the newest that fit, then
-    # insert oldest-first so created_at preserves the reader's ordering.
-    new_ids = new_ids.sort_by { |id| ids.index(id) }.first([ room, 0 ].max)
-
+    # SQLite takes the write lock when the transaction starts, so the room
+    # counted here can't be taken before the insert.
     transaction do
-      new_ids.reverse_each { |id| reading_list_items.create!(post_id: id) }
+      room = ReadingListItem::MAX_ITEMS - reading_list_items.count
+      importable = Post.live.where(id: ids).where.not(id: reading_list_items.select(:post_id)).pluck(:id)
+      # Ids arrive newest-first (browser order), which `&` preserves.
+      insert_reading_list_items((ids & importable).first([ room, 0 ].max))
     end
+  end
+
+  private
+
+  # One INSERT for the whole import, skipping model validations (the caller has
+  # already applied them). Each row is stamped a microsecond older than the one
+  # before, and inserted oldest-first, so `newest_first` returns the given order.
+  def insert_reading_list_items(post_ids)
+    return if post_ids.empty?
+
+    now = Time.current
+    rows = post_ids.each_with_index.map do |post_id, age|
+      saved_at = now - Rational(age, 1_000_000)
+      { identity_id: id, post_id: post_id, created_at: saved_at, updated_at: saved_at }
+    end
+
+    ReadingListItem.insert_all(rows.reverse, unique_by: %i[identity_id post_id])
+    reading_list_items.reset
   end
 end

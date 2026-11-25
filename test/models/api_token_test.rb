@@ -58,6 +58,34 @@ class ApiTokenTest < ActiveSupport::TestCase
     assert_equal "192.168.1.1", token.last_used_ip
   end
 
+  test "touch_usage! writes nothing again within a minute from the same IP" do
+    token = api_tokens(:admin_token)
+    token.touch_usage!(ip_address: "192.168.1.1")
+
+    travel 30.seconds do
+      assert_no_queries { token.touch_usage!(ip_address: "192.168.1.1") }
+    end
+  end
+
+  test "touch_usage! writes once the stored time is older than a minute" do
+    token = api_tokens(:admin_token)
+    token.touch_usage!(ip_address: "192.168.1.1")
+
+    travel 61.seconds do
+      assert_queries_count(1) { token.touch_usage!(ip_address: "192.168.1.1") }
+      assert_in_delta Time.current, token.reload.last_used_at, 1.second
+    end
+  end
+
+  test "touch_usage! writes straight away when the IP changes" do
+    token = api_tokens(:admin_token)
+    token.touch_usage!(ip_address: "192.168.1.1")
+
+    token.touch_usage!(ip_address: "10.0.0.1")
+
+    assert_equal "10.0.0.1", token.reload.last_used_ip
+  end
+
   test "active scope excludes revoked tokens" do
     active = ApiToken.active
     assert_includes active, api_tokens(:admin_token)
