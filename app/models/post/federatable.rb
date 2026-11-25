@@ -8,17 +8,19 @@ module Post::Federatable
   included do
     has_many :fediverse_likes, dependent: :destroy
 
-    after_update_commit :federate_status_change, if: -> { saved_change_to_status? && federation_enabled? }
-    after_update_commit :federate_update, if: -> { !saved_change_to_status? && published? && revised? && federation_enabled? }
+    # Transitions come from Post::Publishable, shared with Post::Webhookable
+    # and Post::Notifiable, so a post created already published sends a Create.
+    after_commit :federate_status_change, on: [ :create, :update ], if: -> { saved_change_to_status? && federation_enabled? }
+    after_commit :federate_update, on: [ :create, :update ], if: -> { edited_while_published? && federation_enabled? }
     after_destroy_commit :federate_delete, if: -> { published? && federation_enabled? }
   end
 
   private
 
   def federate_status_change
-    if published?
+    if became_published?
       FederatePostJob.perform_later("create", id, ActivityPub::Urls.post_url(self))
-    elsif status_before_last_save == "published"
+    elsif left_published?
       federate_delete
     end
   end

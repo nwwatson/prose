@@ -81,4 +81,62 @@ class Post::WebhookableTest < ActiveJob::TestCase
       assert_no_enqueued_jobs(only: PostUpdatedWebhookJob) { @post.revert_to_draft! }
     end
   end
+
+  # --- status transitions ---
+
+  def status_events
+    enqueued_jobs.select { |job| job[:job] == DeliverWebhookJob }.map { |job| job[:args][1] }
+  end
+
+  test "creating a post as published fires post.published once" do
+    Post.create!(title: "Born published", user: users(:admin), status: :published, published_at: Time.current)
+
+    assert_equal [ "post.published" ], status_events
+    assert_no_enqueued_jobs only: PostUpdatedWebhookJob
+  end
+
+  test "creating a draft fires nothing" do
+    Post.create!(title: "Just a draft", user: users(:admin))
+
+    assert_empty status_events
+    assert_no_enqueued_jobs only: PostUpdatedWebhookJob
+  end
+
+  test "creating a scheduled post fires post.scheduled" do
+    Post.create!(title: "Later", user: users(:admin), status: :scheduled, published_at: 1.day.from_now)
+
+    assert_equal [ "post.scheduled" ], status_events
+  end
+
+  test "draft to published fires post.published" do
+    posts(:draft_post).publish!
+
+    assert_equal [ "post.published" ], status_events
+  end
+
+  test "published to draft fires post.unpublished" do
+    @post.revert_to_draft!
+
+    assert_equal [ "post.unpublished" ], status_events
+  end
+
+  test "published to scheduled fires post.unpublished then post.scheduled" do
+    @post.schedule!(1.day.from_now)
+
+    assert_equal [ "post.unpublished", "post.scheduled" ], status_events
+  end
+
+  test "a scheduled post reverted to draft was never public, so fires nothing" do
+    posts(:scheduled_post).revert_to_draft!
+
+    assert_empty status_events
+  end
+
+  test "scheduled to published via PublishScheduledPostsJob fires post.published" do
+    travel 2.days
+    PublishScheduledPostsJob.perform_now
+
+    assert_equal "published", posts(:scheduled_post).reload.status
+    assert_equal [ "post.published" ], status_events
+  end
 end
