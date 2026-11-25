@@ -244,6 +244,9 @@ en:
       no_more_newsletters: "You will no longer receive newsletters from us."
       return_to_site: "Return to site"
 
+  feeds:
+    read_more: "Read the full post on %{site}"
+
   handles:
     form:
       choose_handle: "Choose a handle"

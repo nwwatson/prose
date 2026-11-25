@@ -14,7 +14,13 @@ xml.rss version: "2.0",
       xml.item do
         xml.title post.title
         xml.description post.seo_description if post.seo_description.present?
-        xml.tag! "content:encoded", post.content.to_s
+        # The feed is anonymous, so members-only and paid posts get a teaser only.
+        if post.visibility_public?
+          xml.tag! "content:encoded", post.content.to_s
+        else
+          read_more = link_to(t("feeds.read_more", site: site_name), post_url(slug: post.slug))
+          xml.tag! "content:encoded", tag.p(post.seo_description) + tag.p(read_more)
+        end
         xml.pubDate post.published_at.rfc822
         xml.link post_url(slug: post.slug)
         xml.guid post_url(slug: post.slug)
