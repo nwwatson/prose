@@ -13,11 +13,8 @@ class DigestMailer < ApplicationMailer
     return if @posts.empty? # unpublished since the digest was queued
 
     @total_count = total_count
-    @unsubscribe_url = generate_unsubscribe_url(subscriber)
-    @email_preferences_url = email_preferences_url(token: subscriber.email_preferences_token)
+    prepare_subscriber_links(subscriber)
     load_email_branding
-
-    set_list_unsubscribe_headers(@unsubscribe_url)
 
     mail(to: subscriber.email, subject: t("digest_mailer.digest.subject", count: total_count, site_name: @site_name))
   end

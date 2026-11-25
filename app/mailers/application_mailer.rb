@@ -16,16 +16,13 @@ class ApplicationMailer < ActionMailer::Base
     @email_logo_url = @email_settings[:logo_url]
   end
 
-  def set_list_unsubscribe_headers(url)
-    headers["List-Unsubscribe"] = "<#{url}>"
-    headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click"
-  end
+  # The unsubscribe and preferences links every post email, digest and
+  # newsletter carries, plus the one-click List-Unsubscribe headers.
+  def prepare_subscriber_links(subscriber)
+    @unsubscribe_url = unsubscribe_url(token: subscriber.unsubscribe_token)
+    @email_preferences_url = email_preferences_url(token: subscriber.email_preferences_token)
 
-  def generate_unsubscribe_url(subscriber)
-    token = Rails.application.message_verifier("unsubscribe").generate(
-      subscriber.id,
-      expires_in: 30.days
-    )
-    unsubscribe_url(token: token)
+    headers["List-Unsubscribe"] = "<#{@unsubscribe_url}>"
+    headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click"
   end
 end
