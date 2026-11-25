@@ -11,7 +11,8 @@ CI.run do
   step "Tests: Rails", "bin/rails test"
   step "Tests: Seeds", "env RAILS_ENV=test bin/rails db:seed:replant"
 
-  # Optional: Run system tests
+  # GitHub CI (.github/workflows/ci.yml) runs the same steps plus system tests.
+  # Uncomment to run them locally too (needs Chrome):
   # step "Tests: System", "bin/rails test:system"
 
   # Optional: set a green GitHub commit status to unblock PR merge.

@@ -267,7 +267,7 @@ Recurring email jobs (post digests, scheduled newsletters) run on the schedules 
 For file uploads stored in S3 instead of local disk:
 
 1. Uncomment `gem "aws-sdk-s3"` in the `Gemfile` and run `bundle install`
-2. Set environment variables:
+2. Set environment variables in `config/deploy.yml` (the commented-out AWS secret lines are already there):
 
 ```yaml
 env:
@@ -280,6 +280,8 @@ env:
     - AWS_ACCESS_KEY_ID
     - AWS_SECRET_ACCESS_KEY
 ```
+
+3. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to `.kamal/secrets` (for example `AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID`).
 
 ### Optional: Passkey Authentication (WebAuthn)
 
@@ -322,7 +324,7 @@ Turn on **Admin → Settings → Fediverse** to let Mastodon, Threads, and other
 | `SMTP_DOMAIN` | No | `APP_HOST` | HELO domain for SMTP |
 | `SMTP_AUTHENTICATION` | No | `plain` | SMTP auth method (`plain`, `login`, `cram_md5`) |
 | `WEB_CONCURRENCY` | No | `1` | Number of Puma worker processes |
-| `JOB_CONCURRENCY` | No | `1` | Number of Solid Queue worker threads |
+| `JOB_CONCURRENCY` | No | `1` | Number of Solid Queue worker processes (each runs 3 threads, see `config/queue.yml`) |
 | `WEBAUTHN_ORIGIN` | No | `http://localhost:3000` | Full origin URL for passkey/WebAuthn verification |
 | `WEBAUTHN_RP_ID` | No | `localhost` | Relying Party ID for passkeys (usually your domain) |
 | `RAILS_LOG_LEVEL` | No | `info` | Log verbosity (`debug`, `info`, `warn`, `error`) |
