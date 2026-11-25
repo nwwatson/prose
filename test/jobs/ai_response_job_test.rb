@@ -14,17 +14,42 @@ class AiResponseJobTest < ActiveSupport::TestCase
     assert_instance_of AiResponseJob, job
   end
 
-  test "resolves system prompt for quick actions" do
-    job = AiResponseJob.new
+  test "every quick action has its own system prompt and anything else is a chat" do
     context = "Title: Test\nContent: test content"
+    chat_prompt = Ai::SystemPrompts.chat(context)
 
-    %w[proofread critique brainstorm seo social image_prompt].each do |action|
-      prompt = job.send(:resolve_system_prompt, action, context)
-      assert prompt.present?, "Expected prompt for #{action} to be present"
+    Ai::SystemPrompts::QUICK_ACTIONS.each do |action, method_name|
+      assert_equal Ai::SystemPrompts.public_send(method_name, context), Ai::SystemPrompts.for(action, context)
+      refute_equal chat_prompt, Ai::SystemPrompts.for(action, context)
     end
 
-    prompt = job.send(:resolve_system_prompt, nil, context)
-    assert prompt.present?
+    assert_equal chat_prompt, Ai::SystemPrompts.for(nil, context)
+    assert_equal chat_prompt, Ai::SystemPrompts.for("unknown", context)
+  end
+
+  test "batches streamed chunks into few broadcasts without changing the text" do
+    chunks = Array.new(100) { |i| "word#{i} " }
+
+    broadcasts = with_const(AiResponseJob, :STREAM_FLUSH_INTERVAL, 60) { run_job_streaming(chunks) }
+
+    assert_operator broadcasts.size, :<=, 5
+    assert_equal chunks.join, broadcasts.join
+    assert_equal chunks.join, @chat.messages.where(role: "assistant").last.content
+  end
+
+  test "flushes as soon as the interval has passed" do
+    broadcasts = with_const(AiResponseJob, :STREAM_FLUSH_INTERVAL, 0) { run_job_streaming(%w[one two three]) }
+
+    assert_equal %w[one two three], broadcasts
+  end
+
+  test "escapes streamed text so markup split across chunks reaches the view as text" do
+    broadcasts = with_const(AiResponseJob, :STREAM_FLUSH_INTERVAL, 60) do
+      run_job_streaming([ "<img src=x ", "onerror=alert(1)> & done" ])
+    end
+
+    assert_equal [ "&lt;img src=x onerror=alert(1)&gt; &amp; done" ], broadcasts
+    assert_equal "<img src=x onerror=alert(1)> & done", @chat.messages.where(role: "assistant").last.content
   end
 
   test "builds context from post" do
@@ -61,5 +86,32 @@ class AiResponseJobTest < ActiveSupport::TestCase
 
     assert_equal @chat.messages.count - 1, standalone.added.size
     refute_includes standalone.added.map(&:last), @chat.messages.find(latest_user_message_id).content
+  end
+
+  private
+
+  # Runs the job against a fake LLM that streams +chunks+, returning the HTML of
+  # each chunk broadcast.
+  def run_job_streaming(chunks)
+    fake_chat = Object.new
+    fake_chat.define_singleton_method(:with_instructions) { |_| self }
+    fake_chat.define_singleton_method(:add_message) { |**| }
+    fake_chat.define_singleton_method(:ask) do |_content, &block|
+      chunks.each { |content| block.call(Struct.new(:content).new(content)) }
+    end
+
+    broadcasts = []
+    target = "ai-streaming-content-#{@chat.id}"
+    record = ->(*, **options) { broadcasts << options[:html].to_str if options[:target] == target }
+
+    stub_client_chat(fake_chat) do
+      with_singleton_stub(Turbo::StreamsChannel, :broadcast_append_to, record) do
+        with_singleton_stub(Turbo::StreamsChannel, :broadcast_replace_to, ->(*, **) { }) do
+          AiResponseJob.perform_now(@chat.id, "Hello")
+        end
+      end
+    end
+
+    broadcasts
   end
 end

@@ -1,6 +1,21 @@
 module Ai
   class SystemPrompts
+    # Quick action name (as sent by the editor) => prompt method.
+    QUICK_ACTIONS = {
+      "proofread" => :proofread,
+      "critique" => :critique,
+      "brainstorm" => :brainstorm,
+      "seo" => :seo,
+      "social" => :social_media_chat,
+      "image_prompt" => :image_prompt
+    }.freeze
+
     class << self
+      # The system prompt for a quick action; anything else is a plain chat.
+      def for(quick_action, context)
+        public_send(QUICK_ACTIONS.fetch(quick_action, :chat), context)
+      end
+
       def chat(context)
         <<~PROMPT
           You are a helpful writing assistant for a blog post editor. You help writers improve their content, brainstorm ideas, and answer questions about writing.

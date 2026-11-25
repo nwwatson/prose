@@ -1,12 +1,18 @@
 class AiResponseJob < ApplicationJob
   queue_as :default
 
+  # Streamed chunks are buffered and broadcast together, because every broadcast
+  # is a render plus a Solid Cable insert on SQLite. A chunk that arrives once
+  # either limit is reached flushes the buffer.
+  STREAM_FLUSH_INTERVAL = 0.075 # seconds
+  STREAM_FLUSH_SIZE = 200 # characters
+
   def perform(chat_id, user_content, quick_action: nil, title_override: nil, subtitle_override: nil, content_override: nil)
     chat_record = Chat.find(chat_id)
     settings = SiteSetting.current
 
     context = build_context(chat_record, title_override, subtitle_override, content_override)
-    system_prompt = resolve_system_prompt(quick_action, context)
+    system_prompt = ::Ai::SystemPrompts.for(quick_action, context)
 
     # Broadcast streaming placeholder
     Turbo::StreamsChannel.broadcast_append_to(
@@ -25,17 +31,7 @@ class AiResponseJob < ApplicationJob
     latest_user_message_id = chat_record.messages.where(role: "user").order(:created_at).last&.id
     replay_history(standalone, chat_record, latest_user_message_id)
 
-    full_content = +""
-    standalone.ask(user_content) do |chunk|
-      if chunk.content.present?
-        full_content << chunk.content
-        Turbo::StreamsChannel.broadcast_append_to(
-          "chat_#{chat_record.id}",
-          target: "ai-streaming-content-#{chat_record.id}",
-          html: chunk.content
-        )
-      end
-    end
+    full_content = stream_response(standalone, user_content, chat_record)
 
     # Persist only the assistant message
     assistant_message = chat_record.messages.create!(role: "assistant", content: full_content)
@@ -56,6 +52,42 @@ class AiResponseJob < ApplicationJob
 
   private
 
+  # Broadcasts the reply as it streams in and returns the whole text.
+  def stream_response(standalone, user_content, chat_record)
+    full_content = +""
+    buffer = +""
+    flushed_at = monotonic_now
+
+    standalone.ask(user_content) do |chunk|
+      next if chunk.content.blank?
+
+      full_content << chunk.content
+      buffer << chunk.content
+      next if buffer.length < STREAM_FLUSH_SIZE && monotonic_now - flushed_at < STREAM_FLUSH_INTERVAL
+
+      broadcast_chunk(chat_record, buffer)
+      buffer = +""
+      flushed_at = monotonic_now
+    end
+
+    broadcast_chunk(chat_record, buffer) if buffer.present?
+    full_content
+  end
+
+  # Turbo inserts +html+ as markup, so the model's text is escaped: the
+  # streaming view reads it back through textContent and renders the Markdown.
+  def broadcast_chunk(chat_record, text)
+    Turbo::StreamsChannel.broadcast_append_to(
+      "chat_#{chat_record.id}",
+      target: "ai-streaming-content-#{chat_record.id}",
+      html: ERB::Util.html_escape(text)
+    )
+  end
+
+  def monotonic_now
+    Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  end
+
   def replay_history(standalone, chat_record, latest_user_message_id)
     chat_record.messages.where(role: %w[user assistant]).order(:created_at).find_each do |msg|
       # Skip the latest user message — we'll pass it to `ask` below
@@ -75,18 +107,6 @@ class AiResponseJob < ApplicationJob
       )
     else
       builder.build
-    end
-  end
-
-  def resolve_system_prompt(quick_action, context)
-    case quick_action
-    when "proofread" then ::Ai::SystemPrompts.proofread(context)
-    when "critique" then ::Ai::SystemPrompts.critique(context)
-    when "brainstorm" then ::Ai::SystemPrompts.brainstorm(context)
-    when "seo" then ::Ai::SystemPrompts.seo(context)
-    when "social" then ::Ai::SystemPrompts.social_media_chat(context)
-    when "image_prompt" then ::Ai::SystemPrompts.image_prompt(context)
-    else ::Ai::SystemPrompts.chat(context)
     end
   end
 end
