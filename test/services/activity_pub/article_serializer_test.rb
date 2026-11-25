@@ -19,6 +19,13 @@ module ActivityPub
       assert_includes article["content"], %(href="#{Urls.base_url}/about")
     end
 
+    test "a YouTube embed federates as a link" do
+      video = YouTubeVideo.create!(url: "https://www.youtube.com/watch?v=abc123", video_id: "abc123")
+      @post.update!(content: "<p>Watch</p>#{ActionText::Attachment.from_attachable(video).to_html}")
+
+      assert_includes ArticleSerializer.call(@post)["content"], %(<a href="#{video.url}">#{video.url}</a>)
+    end
+
     test "gated posts federate only a teaser and a link" do
       @post.update!(content: "<p>#{"Intro. " * 50}Secret paid content</p>", visibility: :paid_only, meta_description: "A teaser")
       article = ArticleSerializer.call(@post)
