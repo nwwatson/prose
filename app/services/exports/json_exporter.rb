@@ -26,14 +26,26 @@ module Exports
 
     # Returns a rewound Tempfile containing the JSON document. The caller owns
     # the file and should close! it once it has been attached.
+    #
+    # The document is written as it is read, one record at a time, and matches
+    # JSON.pretty_generate(as_json) byte for byte.
     def call
       tempfile = Tempfile.new([ "prose-json-export", ".json" ])
-      tempfile.write(JSON.pretty_generate(as_json))
+      ActiveRecord::Base.uncached { write_document(tempfile) }
       tempfile.rewind
       tempfile
     end
 
+    # The whole document in memory. Only #call is safe for large sites.
     def as_json
+      document.transform_values { |value| value.is_a?(Enumerator) ? value.to_a : value }
+    end
+
+    private
+
+    # Every top-level key in output order. Collections are Enumerators, so no
+    # table is read until its turn comes.
+    def document
       {
         format: "prose",
         version: FORMAT_VERSION,
@@ -51,20 +63,59 @@ module Exports
       }
     end
 
-    private
+    def write_document(io)
+      io << "{"
+      document.each_with_index do |(key, value), index|
+        io << "," unless index.zero?
+        io << "\n  " << JSON.generate(key.to_s) << ": "
+        value.is_a?(Enumerator) ? write_array(io, value) : io << nested_json(value, 1)
+      end
+      io << "\n}"
+    end
+
+    def write_array(io, records)
+      separator = "["
+      records.each do |record|
+        io << separator << "\n    " << nested_json(record, 2)
+        separator = ","
+      end
+      io << (separator == "[" ? "[]" : "\n  ]")
+    end
+
+    # Pretty JSON indented to sit +depth+ levels down. Newlines inside strings
+    # are escaped, so every literal newline is formatting.
+    def nested_json(value, depth)
+      JSON.pretty_generate(value).gsub("\n", "\n#{'  ' * depth}")
+    end
+
+    # Serializes a scope lazily, loading it in batches (by primary key, so only
+    # for collections that are exported in id order).
+    def each_in_batches(scope)
+      Enumerator.new do |yielder|
+        scope.find_each { |record| yielder << yield(record) }
+      end
+    end
+
+    # Serializes a small, hand-curated collection that has its own sort order,
+    # which find_each cannot follow.
+    def in_order(scope)
+      Enumerator.new do |yielder|
+        scope.each { |record| yielder << yield(record) }
+      end
+    end
 
     def site
       SiteSetting.current.attributes.slice(*SITE_SETTING_ATTRIBUTES)
     end
 
     def navigation_items
-      NavigationItem.order(:location, :position, :id).map do |item|
+      in_order(NavigationItem.order(:location, :position, :id)) do |item|
         item.slice(:label, :url, :location, :position, :open_in_new_tab)
       end
     end
 
     def authors
-      User.includes(:identity).order(:id).map do |user|
+      each_in_batches(User.includes(:identity)) do |user|
         identity = user.identity
         {
           id: user.id,
@@ -82,17 +133,18 @@ module Exports
     end
 
     def categories
-      Category.ordered.map do |category|
+      in_order(Category.ordered) do |category|
         category.slice(:id, :name, :slug, :description, :position)
       end
     end
 
     def tags
-      Tag.order(:name).map { |tag| tag.slice(:id, :name, :slug) }
+      in_order(Tag.order(:name)) { |tag| tag.slice(:id, :name, :slug) }
     end
 
     def posts
-      Post.includes(:tags, :mailing_list_posts, :rich_text_content, featured_image_attachment: :blob).order(:id).map do |post|
+      scope = Post.includes(:tags, :mailing_list_posts, :rich_text_content, featured_image_attachment: :blob)
+      each_in_batches(scope) do |post|
         post.slice(:id, :title, :subtitle, :slug, :status, :visibility, :featured, :show_toc,
                    :meta_description, :category_id, :user_id).merge(
           published_at: post.published_at&.iso8601,
@@ -107,7 +159,7 @@ module Exports
     end
 
     def pages
-      Page.includes(:rich_text_content).order(:id).map do |page|
+      each_in_batches(Page.includes(:rich_text_content)) do |page|
         page.slice(:id, :title, :slug, :status, :meta_description, :user_id).merge(
           published_at: page.published_at&.iso8601,
           created_at: page.created_at.iso8601,
@@ -118,17 +170,17 @@ module Exports
     end
 
     def subscriber_labels
-      SubscriberLabel.order(:name).map { |label| label.slice(:id, :name, :color) }
+      in_order(SubscriberLabel.order(:name)) { |label| label.slice(:id, :name, :color) }
     end
 
     def mailing_lists
-      MailingList.order(:id).map do |list|
+      each_in_batches(MailingList.all) do |list|
         list.slice(:id, :name, :slug, :description, :frequency, :active, :subscribe_by_default)
       end
     end
 
     def subscribers
-      Subscriber.includes(:subscriber_labelings, :mailing_list_subscriptions).order(:id).map do |subscriber|
+      each_in_batches(Subscriber.includes(:subscriber_labelings, :mailing_list_subscriptions)) do |subscriber|
         {
           id: subscriber.id,
           email: subscriber.email,
