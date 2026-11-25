@@ -18,30 +18,30 @@ class SiteSetting::AiConfigurationTest < ActiveSupport::TestCase
   # Provider-aware image_ai_configured? tests
 
   test "image_ai_configured? with gemini model and gemini key" do
-    @setting.update!(claude_api_key: "sk-ant-test", gemini_api_key: "AIza-test", image_model: "imagen-4.0-generate-001")
+    @setting.update!(claude_api_key: "sk-ant-test", gemini_api_key: "AIza-test", image_model: "gemini-nano-banana-2.1")
     assert @setting.image_ai_configured?
   end
 
   test "image_ai_configured? with gemini model but only openai key" do
-    @setting.update!(claude_api_key: "sk-ant-test", gemini_api_key: nil, openai_api_key: "sk-test", image_model: "imagen-4.0-generate-001")
+    @setting.update!(claude_api_key: "sk-ant-test", gemini_api_key: nil, openai_api_key: "sk-test", image_model: "gemini-nano-banana-2.1")
     assert_not @setting.image_ai_configured?
   end
 
   test "image_ai_configured? with openai model and openai key" do
-    @setting.update!(claude_api_key: "sk-ant-test", openai_api_key: "sk-test", image_model: "gpt-image-1")
+    @setting.update!(claude_api_key: "sk-ant-test", openai_api_key: "sk-test", image_model: "gpt-image-2.6-sunburst")
     assert @setting.image_ai_configured?
   end
 
   test "image_ai_configured? with openai model but only gemini key" do
-    @setting.update!(claude_api_key: "sk-ant-test", openai_api_key: nil, gemini_api_key: "AIza-test", image_model: "gpt-image-1")
+    @setting.update!(claude_api_key: "sk-ant-test", openai_api_key: nil, gemini_api_key: "AIza-test", image_model: "gpt-image-2.6-sunburst")
     assert_not @setting.image_ai_configured?
   end
 
   test "image_ai_configured? always requires claude_api_key" do
-    @setting.update!(claude_api_key: nil, gemini_api_key: "AIza-test", image_model: "imagen-4.0-generate-001")
+    @setting.update!(claude_api_key: nil, gemini_api_key: "AIza-test", image_model: "gemini-nano-banana-2.1")
     assert_not @setting.image_ai_configured?
 
-    @setting.update!(claude_api_key: nil, openai_api_key: "sk-test", image_model: "gpt-image-1")
+    @setting.update!(claude_api_key: nil, openai_api_key: "sk-test", image_model: "gpt-image-2.6-sunburst")
     assert_not @setting.image_ai_configured?
   end
 
@@ -116,32 +116,49 @@ class SiteSetting::AiConfigurationTest < ActiveSupport::TestCase
     assert_empty @setting.errors[:ai_max_tokens]
   end
 
+  test "a new site starts on the default models" do
+    setting = SiteSetting.new
+
+    assert_equal SiteSetting::AiConfiguration::AI_MODELS.first, setting.ai_model
+    assert_equal SiteSetting::AiConfiguration::IMAGE_MODELS.keys.first, setting.image_model
+  end
+
+  test "every offered model is in the RubyLLM registry under its provider" do
+    SiteSetting::AiConfiguration::AI_MODELS.each do |id|
+      assert_equal "anthropic", RubyLLM.models.find(id, provider: :anthropic).provider.to_s
+    end
+
+    SiteSetting::AiConfiguration::IMAGE_MODELS.each do |id, provider|
+      assert_equal id, RubyLLM.models.find(id, provider: provider).id
+    end
+  end
+
   # Helper method tests
 
   test "ai_model_name returns configured model or default" do
-    @setting.ai_model = "claude-haiku-4-5-20251001"
-    assert_equal "claude-haiku-4-5-20251001", @setting.ai_model_name
+    @setting.ai_model = "claude-haiku-5-5"
+    assert_equal "claude-haiku-5-5", @setting.ai_model_name
 
     @setting.ai_model = ""
-    assert_equal "claude-sonnet-4-5-20250929", @setting.ai_model_name
+    assert_equal "claude-sonnet-5-5", @setting.ai_model_name
   end
 
   test "image_model_name_for_image returns configured model or default" do
-    @setting.image_model = "gpt-image-1"
-    assert_equal "gpt-image-1", @setting.image_model_name_for_image
+    @setting.image_model = "gpt-image-2.6-sunburst"
+    assert_equal "gpt-image-2.6-sunburst", @setting.image_model_name_for_image
 
     @setting.image_model = ""
-    assert_equal "imagen-4.0-generate-001", @setting.image_model_name_for_image
+    assert_equal "gemini-nano-banana-2.1", @setting.image_model_name_for_image
   end
 
   test "image_model_provider returns provider for configured model" do
-    @setting.image_model = "imagen-4.0-generate-001"
+    @setting.image_model = "gemini-nano-banana-2.1"
     assert_equal :gemini, @setting.image_model_provider
 
-    @setting.image_model = "gpt-image-1"
+    @setting.image_model = "gpt-image-2.6-sunburst"
     assert_equal :openai, @setting.image_model_provider
 
-    @setting.image_model = "dall-e-3"
+    @setting.image_model = "gpt-image-2.6-flare"
     assert_equal :openai, @setting.image_model_provider
   end
 end

@@ -23,7 +23,7 @@ class Admin::Ai::FeaturedImagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "suggest_prompt redirects when openai model selected without openai key" do
-    SiteSetting.current.update!(image_model: "gpt-image-1", openai_api_key: nil)
+    SiteSetting.current.update!(image_model: "gpt-image-2.6-sunburst", openai_api_key: nil)
     post suggest_prompt_admin_post_ai_featured_image_path(@post)
     assert_redirected_to edit_admin_settings_path
   end
