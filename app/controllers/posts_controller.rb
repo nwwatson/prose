@@ -10,7 +10,7 @@ class PostsController < ApplicationController
 
     @posts = paginate(all_posts)
 
-    @snippets = @query ? Post.search_with_snippets(@query) : {}
+    @snippets = @query ? viewable_snippets(@posts, @query) : {}
 
     if turbo_frame_request_id&.start_with?("posts_page_")
       render partial: "posts/post_page", locals: { posts: @posts, page: @page, next_page: @next_page, query: @query }, layout: false
@@ -25,5 +25,14 @@ class PostsController < ApplicationController
     @next_post = @post.next_post
     @comments = @post.threaded_comments
     track_post_view(@post)
+  end
+
+  private
+
+  # Body snippets quote the post's text, so gated posts only get one for readers
+  # who may read them. Without a snippet the card (and its cache key) matches the
+  # plain listing.
+  def viewable_snippets(posts, query)
+    Post.search_with_snippets(query).slice(*posts.select { |post| can_view_post?(post) }.map(&:id))
   end
 end
