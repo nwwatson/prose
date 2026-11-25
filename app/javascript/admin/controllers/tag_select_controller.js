@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { requestJSON } from "lib/request"
-import { useClickOutside } from "lib/click_outside"
-import { ListboxNavigator } from "lib/listbox"
+import { useClickOutside } from "admin/lib/click_outside"
+import { ListboxNavigator } from "admin/lib/listbox"
 
 export default class extends Controller {
   static targets = [

@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { requestJSON } from "lib/request"
-import { insertAttachment } from "lib/action_text"
+import { insertAttachment } from "admin/lib/action_text"
 
 const PROVIDERS = [
   { name: "xPost", pattern: /^https?:\/\/(x\.com|twitter\.com)\/\w+\/status\/\d+/ },

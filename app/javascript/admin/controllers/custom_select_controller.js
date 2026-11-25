@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { escapeHtml } from "lib/dom"
-import { useClickOutside } from "lib/click_outside"
-import { ListboxNavigator } from "lib/listbox"
+import { useClickOutside } from "admin/lib/click_outside"
+import { ListboxNavigator } from "admin/lib/listbox"
 
 const HIGHLIGHT_CLASSES = [ "ring-2", "ring-inset", "ring-blue-400" ]
 
