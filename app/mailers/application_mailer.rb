@@ -2,7 +2,15 @@ class ApplicationMailer < ActionMailer::Base
   default from: EmailService.from_address
   layout "mailer"
 
+  # Mail is rendered in jobs and in API requests as well as in site requests, so
+  # the locale can't be left to whoever built the message.
+  around_action :use_site_locale
+
   private
+
+  def use_site_locale(&)
+    I18n.with_locale(SiteSetting.current.locale, &)
+  end
 
   def load_email_branding
     @email_settings = SiteSetting.current.email_branding

@@ -5,9 +5,9 @@ class PasswordComplexityValidator < ActiveModel::EachValidator
     return if value.blank?
 
     record.errors.add(attribute, :too_short, count: MIN_LENGTH) if value.length < MIN_LENGTH
-    record.errors.add(attribute, "must include an uppercase letter") unless value.match?(/[A-Z]/)
-    record.errors.add(attribute, "must include a lowercase letter") unless value.match?(/[a-z]/)
-    record.errors.add(attribute, "must include a number") unless value.match?(/\d/)
-    record.errors.add(attribute, "must include a symbol") unless value.match?(/[^A-Za-z0-9]/)
+    record.errors.add(attribute, :missing_uppercase) unless value.match?(/[A-Z]/)
+    record.errors.add(attribute, :missing_lowercase) unless value.match?(/[a-z]/)
+    record.errors.add(attribute, :missing_number) unless value.match?(/\d/)
+    record.errors.add(attribute, :missing_symbol) unless value.match?(/[^A-Za-z0-9]/)
   end
 end

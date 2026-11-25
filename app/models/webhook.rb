@@ -66,7 +66,7 @@ class Webhook < ApplicationRecord
 
   def events_are_known
     unknown = Array(events) - EVENTS
-    errors.add(:events, "contains unknown event types: #{unknown.join(', ')}") if unknown.any?
+    errors.add(:events, :unknown_event_types, types: unknown.join(", ")) if unknown.any?
   end
 
   def url_is_http_or_https
@@ -74,11 +74,11 @@ class Webhook < ApplicationRecord
 
     uri = URI.parse(url)
     if !uri.is_a?(URI::HTTP) || uri.host.blank?
-      errors.add(:url, "must be a valid http:// or https:// URL")
+      errors.add(:url, :http_url)
     elsif Outbound::UrlGuard.blocked_host?(uri.hostname)
-      errors.add(:url, "must not point to a local, private, or reserved network address")
+      errors.add(:url, :private_address)
     end
   rescue URI::InvalidURIError
-    errors.add(:url, "must be a valid http:// or https:// URL")
+    errors.add(:url, :http_url)
   end
 end

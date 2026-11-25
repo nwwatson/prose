@@ -3,7 +3,7 @@ class SubscriberLabel < ApplicationRecord
   has_many :subscribers, through: :subscriber_labelings
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
-  validates :color, presence: true, hex_color: { message: "must be a valid hex color (e.g. #6B7280)" }
+  validates :color, presence: true, hex_color: true
 
   scope :ordered, -> { order(:name) }
 
