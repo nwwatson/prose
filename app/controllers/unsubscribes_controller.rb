@@ -12,9 +12,7 @@ class UnsubscribesController < ApplicationController
   private
 
   def set_subscriber_from_token
-    subscriber_id = Rails.application.message_verifier("unsubscribe").verify(params[:token])
-    @subscriber = Subscriber.find(subscriber_id)
-  rescue ActiveSupport::MessageVerifier::InvalidSignature
-    redirect_to root_path, alert: t("flash.unsubscribes.invalid_link")
+    @subscriber = Subscriber.find_by_unsubscribe_token(params[:token])
+    redirect_to root_path, alert: t("flash.unsubscribes.invalid_link") unless @subscriber
   end
 end

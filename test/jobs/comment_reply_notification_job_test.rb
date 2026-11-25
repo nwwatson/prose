@@ -7,7 +7,7 @@ class CommentReplyNotificationJobTest < ActiveJob::TestCase
     reply = comments(:reply)
     reply.parent_comment.update!(notify_on_reply: true)
 
-    assert_enqueued_emails 1 do
+    assert_emails 1 do
       CommentReplyNotificationJob.perform_now(reply)
     end
   end
@@ -16,7 +16,7 @@ class CommentReplyNotificationJobTest < ActiveJob::TestCase
     reply = comments(:reply)
     reply.parent_comment.update!(notify_on_reply: false)
 
-    assert_no_enqueued_emails do
+    assert_no_emails do
       CommentReplyNotificationJob.perform_now(reply)
     end
   end
@@ -25,7 +25,7 @@ class CommentReplyNotificationJobTest < ActiveJob::TestCase
     reply = comments(:reply)
     reply.parent_comment.update!(notify_on_reply: true, deleted_at: Time.current)
 
-    assert_no_enqueued_emails do
+    assert_no_emails do
       CommentReplyNotificationJob.perform_now(reply)
     end
   end
@@ -41,7 +41,17 @@ class CommentReplyNotificationJobTest < ActiveJob::TestCase
     )
     reply.save!(validate: false)
 
-    assert_no_enqueued_emails do
+    assert_no_emails do
+      CommentReplyNotificationJob.perform_now(reply)
+    end
+  end
+
+  test "does not send when the parent author has no confirmed subscription" do
+    reply = comments(:reply)
+    reply.parent_comment.update!(notify_on_reply: true)
+    reply.parent_comment.identity.subscriber.update!(confirmed_at: nil)
+
+    assert_no_emails do
       CommentReplyNotificationJob.perform_now(reply)
     end
   end

@@ -6,6 +6,9 @@ module Subscriber::EmailPreferences
   # the subscriber unsubscribes.
   DIGEST_PERIODS = { "weekly" => 1.week, "monthly" => 1.month }.freeze
   PREFERENCES_TOKEN_EXPIRY = 30.days
+  # Unsubscribe links are already sitting in inboxes: changing the verifier name
+  # or shortening the expiry would break them.
+  UNSUBSCRIBE_TOKEN_EXPIRY = 30.days
 
   included do
     enum :email_frequency, { immediate: 0, weekly: 1, monthly: 2, none: 3 }, prefix: :email, validate: true
@@ -21,6 +24,18 @@ module Subscriber::EmailPreferences
     def preferences_verifier
       Rails.application.message_verifier("email_preferences")
     end
+
+    def find_by_unsubscribe_token(token)
+      find_by(id: unsubscribe_verifier.verified(token))
+    end
+
+    def unsubscribe_verifier
+      Rails.application.message_verifier("unsubscribe")
+    end
+  end
+
+  def unsubscribe_token
+    self.class.unsubscribe_verifier.generate(id, expires_in: UNSUBSCRIBE_TOKEN_EXPIRY)
   end
 
   def email_preferences_token
