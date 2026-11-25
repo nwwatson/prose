@@ -6,13 +6,9 @@ class Tag < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
-  slugged_from :name, uniquify: false
+  slugged_from :name, uniquify: false, to_param: true
 
   def self.post_counts
     PostTag.group(:tag_id).count
-  end
-
-  def to_param
-    slug
   end
 end

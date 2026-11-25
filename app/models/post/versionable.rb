@@ -1,5 +1,6 @@
 module Post::Versionable
   extend ActiveSupport::Concern
+  include Prunable
 
   VERSION_COOLDOWN = 5.minutes
 
@@ -42,11 +43,6 @@ module Post::Versionable
   private
 
   def prune_old_versions!
-    return unless post_versions.count > PostVersion::MAX_VERSIONS_PER_POST
-
-    excess_ids = post_versions.ordered
-      .offset(PostVersion::MAX_VERSIONS_PER_POST)
-      .pluck(:id)
-    post_versions.where(id: excess_ids).delete_all if excess_ids.any?
+    prune_to_newest(post_versions.ordered, keep: PostVersion::MAX_VERSIONS_PER_POST)
   end
 end

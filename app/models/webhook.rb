@@ -1,4 +1,6 @@
 class Webhook < ApplicationRecord
+  include Prunable
+
   EVENTS = %w[
     post.published post.updated post.deleted post.scheduled post.unpublished
     subscriber.created subscriber.deleted
@@ -49,8 +51,7 @@ class Webhook < ApplicationRecord
   end
 
   def prune_deliveries!(keep: DELIVERY_LOG_LIMIT)
-    cutoff_ids = webhook_deliveries.recent.offset(keep).pluck(:id)
-    webhook_deliveries.where(id: cutoff_ids).delete_all if cutoff_ids.any?
+    prune_to_newest(webhook_deliveries.recent, keep: keep)
   end
 
   def regenerate_secret!

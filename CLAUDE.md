@@ -76,7 +76,7 @@ app/models/webhook_delivery.rb      # WebhookDelivery: per-attempt delivery log 
 app/models/post_version.rb          # PostVersion: full snapshot of post content per version
 app/models/reading_list_item.rb     # ReadingListItem: identity ↔ post bookmark (unique per pair, capped at MAX_ITEMS = 500 per identity)
 app/models/identity/reading_listable.rb # module Identity::ReadingListable (bookmark!/unbookmark!, reading_list_posts/_post_ids, import_reading_list!)
-app/models/concerns/sluggable.rb     # module Sluggable (slugged_from macro: slug generation/uniquifying, used by Post, Page, Category, Tag)
+app/models/concerns/sluggable.rb     # module Sluggable (slugged_from macro: slug generation/uniquifying, used by Post, Page, Category, Tag, MailingList; `to_param: true` puts the slug in URLs — all but MailingList)
 app/models/concerns/identity_backed.rb # module IdentityBacked (belongs_to :identity, email validation/normalization, build_identity_if_needed; overridable default_identity_name), included by User and Subscriber
 app/models/comment/editable.rb        # module Comment::Editable (15-min edit window, soft delete)
 app/models/comment/notifiable.rb      # module Comment::Notifiable (reply notification callbacks)
@@ -85,6 +85,8 @@ app/models/navigation_item.rb        # NavigationItem: header/footer/social menu
 app/models/navigation_item/cacheable.rb # module NavigationItem::Cacheable (for_location cached per location, expired after_commit)
 app/models/navigation_item/social_platform.rb # module NavigationItem::SocialPlatform (infers icon platform from URL host)
 app/models/concerns/publishable.rb   # module Publishable — shared `publishes_at` macro (live scope, publish!/schedule!/revert_to_draft!), included by Post, Page, Newsletter
+app/models/post/status_transitions.rb # module Post::StatusTransitions (became_published?/became_scheduled?/left_published?/edited_while_published?)
+app/models/concerns/prunable.rb      # module Prunable (private prune_to_newest(relation, keep:, destroy:) — "keep newest N" for Export, Webhook deliveries, post versions)
 app/validators/future_validator.rb   # FutureValidator: shared "must be in the future" validation used by Publishable
 app/validators/hex_color_validator.rb # HexColorValidator: shared `validates :x, hex_color: true` for #RRGGBB colors, used by SiteSetting::DarkTheme, SiteSetting::EmailBranding, SubscriberLabel, Newsletter::Templatable
 app/models/currency.rb               # Currency: SYMBOLS/NAMES/CODES, `.symbol`, `.format(cents, code)`, `.options_for_select` — used by MembershipTier#formatted_price and SiteSetting::PaymentConfiguration#currency_symbol/SUPPORTED_CURRENCIES
@@ -113,6 +115,10 @@ app/models/site_setting/payment_configuration.rb # module SiteSetting::PaymentCo
 ```
 
 Keep model files under 200 lines — extract behavior into concerns when they grow.
+
+`publishes_at(column, live_statuses: :published)` is the only definition of `live` (matching status, timestamp not in the future). `Post` passes `live_statuses: %i[published scheduled]`, so a due scheduled post is live before `PublishScheduledPostsJob` reaches it, and declares its own `ready_to_publish` for that job. There is one `Publishable` module — don't add a `Post::Publishable` wrapper, which `include Publishable` in `Post` would silently resolve to.
+
+History-like records that keep only the newest N go through `prune_to_newest` (`Prunable`) with a newest-first relation; it deletes in one statement, so pass `destroy: true` (as `Export` does, to purge its file) when the records have callbacks or attachments.
 
 `has_many` associations whose children have no callbacks, attachments or dependents of their own use `dependent: :delete_all` (`post_tags`, `post_views`, `post_versions`, `reading_list_items`, `fediverse_likes`, `newsletter_deliveries`, `subscriber_labelings`, `webhook_deliveries`), so destroying a parent issues one DELETE per table instead of one per row while holding SQLite's writer. Giving one of those child models a destroy callback, attachment or dependent means switching its parents back to `:destroy`. Don't add a single-column index that a composite index on the same table already starts with.
 
@@ -187,7 +193,7 @@ The home page, category, tag and signed-in `/reading-list` pages are paginated w
 `PostVersion` stores full snapshots (title, subtitle, content HTML, body plain text) on each save. Auto-versioning triggers on update with a 5-minute cooldown (`Post::Versionable`). Manual "Save version" button in the editor drawer's Versions tab. Diff view uses the `diffy` gem for plain-text comparison. "Restore" replaces the post's current content. Max 50 versions per post, pruned inline on version creation. Admin CRUD at `/admin/posts/:id/post_versions`.
 
 ### Post Status Transitions
-`Post::Notifiable`, `Post::Webhookable` and `Post::Federatable` all react to status changes from `after_commit on: [:create, :update]`, using the shared predicates on `Post::Publishable`: `became_published?`, `became_scheduled?`, `left_published?` (the status before the last save was published) and `edited_while_published?` (no status change, published, and `revised?`). On create the "before" status is the column default (draft), so creating a post already published behaves exactly like publishing a draft: one email, one `post.published` webhook, one fediverse `Create`. Use these predicates rather than re-deriving transitions from `saved_change_to_status?` in a new concern.
+`Post::Notifiable`, `Post::Webhookable` and `Post::Federatable` all react to status changes from `after_commit on: [:create, :update]`, using the shared predicates in `Post::StatusTransitions`: `became_published?`, `became_scheduled?`, `left_published?` (the status before the last save was published) and `edited_while_published?` (no status change, published, and `revised?`). On create the "before" status is the column default (draft), so creating a post already published behaves exactly like publishing a draft: one email, one `post.published` webhook, one fediverse `Create`. Use these predicates rather than re-deriving transitions from `saved_change_to_status?` in a new concern.
 
 ### Post Revisions (Coalesced Updates)
 `Post::Revisable` stamps `posts.revised_at` in a `before_save` whenever a save changes something readers and integrations see: `REVISED_ATTRIBUTES` (title, subtitle, slug, body_plain, visibility, published_at, meta_description). Settings-only saves (featured, show_toc, category) and counter bumps move `updated_at` but not `revised_at`. It's included right after `Post::Searchable` so a content change has already reached `body_plain`. `Post::Webhookable` and `Post::Federatable` enqueue their "updated" notification (`PostUpdatedWebhookJob`, `FederatePostJob("update")`) only when `revised?`, delayed by `Post::Revisable::UPDATE_DELAY` (2 minutes) and carrying `revised_at.to_f`; the job skips itself when `post.revised_since?(revision)`, so autosave every 3 seconds yields one notification per burst. Coalescing on `revised_at` rather than `updated_at` is deliberate: a settings-only save after an edit would otherwise make the edit's job skip with no newer job queued.

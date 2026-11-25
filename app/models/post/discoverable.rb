@@ -3,8 +3,8 @@ module Post::Discoverable
 
   def related_posts(limit: 3)
     candidates = tag_matched_posts(limit)
-    candidates = backfill_with_category(candidates, limit) if candidates.size < limit
-    candidates = backfill_with_recent(candidates, limit) if candidates.size < limit
+    candidates = backfill(candidates, limit, Post.live.where(category_id: category_id)) if candidates.size < limit && category_id.present?
+    candidates = backfill(candidates, limit, Post.live) if candidates.size < limit
     candidates
   end
 
@@ -32,34 +32,14 @@ module Post::Discoverable
         .to_a
   end
 
-  def backfill_with_category(candidates, limit)
-    return candidates if category_id.blank?
-
+  # Tops `candidates` up to `limit` with the newest posts in `scope`.
+  def backfill(candidates, limit, scope)
     exclude_ids = [ id ] + candidates.map(&:id)
-    remaining = limit - candidates.size
 
-    category_posts = Post.live
-                         .where(category_id: category_id)
-                         .where.not(id: exclude_ids)
-                         .with_attached_featured_image
-                         .order(published_at: :desc)
-                         .limit(remaining)
-                         .to_a
-
-    candidates + category_posts
-  end
-
-  def backfill_with_recent(candidates, limit)
-    exclude_ids = [ id ] + candidates.map(&:id)
-    remaining = limit - candidates.size
-
-    recent_posts = Post.live
-                       .where.not(id: exclude_ids)
-                       .with_attached_featured_image
-                       .order(published_at: :desc)
-                       .limit(remaining)
-                       .to_a
-
-    candidates + recent_posts
+    candidates + scope.where.not(id: exclude_ids)
+                      .with_attached_featured_image
+                      .order(published_at: :desc)
+                      .limit(limit - candidates.size)
+                      .to_a
   end
 end

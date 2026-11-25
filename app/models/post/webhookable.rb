@@ -1,4 +1,4 @@
-# Fires post.* webhook events from status transitions (Post::Publishable).
+# Fires post.* webhook events from status transitions (Post::StatusTransitions).
 #
 # - post.published: the post became published (including created as published)
 # - post.unpublished: the post left published, to draft or to scheduled

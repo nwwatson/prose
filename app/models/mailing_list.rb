@@ -22,7 +22,7 @@ class MailingList < ApplicationRecord
 
   # Confirmed, not globally unsubscribed subscribers of this list.
   def recipients
-    Subscriber.confirmed.where(id: mailing_list_subscriptions.select(:subscriber_id))
+    Subscriber.confirmed.subscribed_to(self)
   end
 
   def self.subscriber_counts

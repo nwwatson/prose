@@ -1,6 +1,7 @@
 class Post < ApplicationRecord
   include Sluggable
   include Publishable
+  include StatusTransitions
   include Searchable
   include Revisable
   include Discoverable
@@ -11,6 +12,7 @@ class Post < ApplicationRecord
   include Notifiable
 
   enum :status, { draft: 0, scheduled: 1, published: 2 }
+  publishes_at :published_at, live_statuses: %i[published scheduled]
 
   belongs_to :user
   belongs_to :category, optional: true
@@ -28,11 +30,7 @@ class Post < ApplicationRecord
   validates :title, presence: true
   validates :meta_description, length: { maximum: 160 }, allow_blank: true
 
-  slugged_from :title, message: "must be URL-safe (lowercase letters, numbers, hyphens)"
-
-  def to_param
-    slug
-  end
+  slugged_from :title, message: "must be URL-safe (lowercase letters, numbers, hyphens)", to_param: true
 
   def threaded_comments
     comments.approved.top_level.includes(:identity, approved_replies: :identity)
@@ -46,6 +44,7 @@ class Post < ApplicationRecord
     body_plain.to_s.truncate(length)
   end
 
+  scope :ready_to_publish, -> { scheduled.where(published_at: ..Time.current) }
   scope :featured, -> { where(featured: true) }
   scope :by_publication_date, -> { order(published_at: :desc) }
   scope :with_author, -> { includes(user: :identity) }

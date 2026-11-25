@@ -6,10 +6,12 @@ module Publishable
   end
 
   class_methods do
-    def publishes_at(column = :published_at)
+    # `live_statuses` are the statuses `live` accepts once the timestamp has
+    # passed; Post also counts `scheduled` ones the publish job hasn't reached.
+    def publishes_at(column = :published_at, live_statuses: :published)
       self.publishable_timestamp_column = column
 
-      scope :live, -> { where(status: :published).where(column => ..Time.current) }
+      scope :live, -> { where(status: live_statuses).where(column => ..Time.current) }
 
       validates column, future: true, if: -> { try(:scheduled?) && public_send(:"#{column}_changed?") }
     end
