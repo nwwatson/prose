@@ -128,4 +128,51 @@ class EmailService::Sendgrid::WebhookProcessorTest < ActiveSupport::TestCase
 
     assert_not_nil delivery.opened_at
   end
+
+  test "open events increment open_count in the database, not from a stale record" do
+    delivery = newsletter_deliveries(:sent_to_confirmed)
+    stale = NewsletterDelivery.find(delivery.id)
+    event = event_for(delivery, "open")
+
+    # Both events see the record as it was before either one was written.
+    with_singleton_stub(NewsletterDelivery, :find_by, ->(*) { stale }) do
+      travel_to(2.hours.ago) { @processor.process(event) }
+      @processor.process(event)
+    end
+    delivery.reload
+
+    assert_equal 2, delivery.open_count
+    assert_operator delivery.opened_at, :<, 1.hour.ago
+  end
+
+  test "open events count from zero when open_count is null" do
+    delivery = newsletter_deliveries(:sent_to_confirmed)
+    delivery.update_columns(open_count: nil)
+
+    @processor.process(event_for(delivery, "open"))
+
+    assert_equal 1, delivery.reload.open_count
+  end
+
+  test "a concurrent click event keeps the first clicked_at" do
+    delivery = newsletter_deliveries(:sent_to_confirmed)
+    stale = NewsletterDelivery.find(delivery.id)
+    event = event_for(delivery, "click")
+
+    with_singleton_stub(NewsletterDelivery, :find_by, ->(*) { stale }) do
+      travel_to(2.hours.ago) { @processor.process(event) }
+      @processor.process(event)
+    end
+
+    assert_operator delivery.reload.clicked_at, :<, 1.hour.ago
+  end
+
+  private
+
+  def event_for(delivery, type)
+    {
+      "event" => type,
+      "unique_args" => { "newsletter_id" => delivery.newsletter_id.to_s, "subscriber_id" => delivery.subscriber_id.to_s }
+    }
+  end
 end

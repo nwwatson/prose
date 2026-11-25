@@ -23,19 +23,28 @@ class EmailService::Sendgrid::WebhookProcessor
 
     case event["event"]
     when "open"
-      delivery.update(
-        opened_at: delivery.opened_at || Time.current,
-        open_count: delivery.open_count + 1
-      )
+      record_open(delivery)
     when "click"
-      delivery.update(
-        clicked_at: delivery.clicked_at || Time.current
-      )
+      record_click(delivery)
     when "bounce", "dropped"
       delivery.update(bounced_at: Time.current)
     when "spamreport", "unsubscribe"
-      subscriber = delivery.subscriber
-      subscriber.unsubscribe! if subscriber.respond_to?(:unsubscribe!)
+      delivery.subscriber.unsubscribe!
     end
+  end
+
+  # Open and click events for one delivery can arrive concurrently, so both are
+  # written in SQL rather than computed from the loaded record.
+  def record_open(delivery)
+    NewsletterDelivery.where(id: delivery.id).update_all([
+      "open_count = COALESCE(open_count, 0) + 1, opened_at = COALESCE(opened_at, :now), updated_at = :now",
+      { now: Time.current }
+    ])
+  end
+
+  # Only the first click is recorded.
+  def record_click(delivery)
+    now = Time.current
+    NewsletterDelivery.where(id: delivery.id, clicked_at: nil).update_all(clicked_at: now, updated_at: now)
   end
 end
