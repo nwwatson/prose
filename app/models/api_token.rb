@@ -8,6 +8,8 @@ class ApiToken < ApplicationRecord
   validates :token_prefix, presence: true
 
   scope :active, -> { where(revoked_at: nil) }
+  # Admins manage every token; writers only their own.
+  scope :visible_to, ->(user) { user.admin? ? all : where(user: user) }
 
   def self.generate_for(user, name:)
     raw_token = TOKEN_PREFIX + SecureRandom.hex(32)

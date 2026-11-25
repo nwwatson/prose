@@ -7,7 +7,7 @@ module Admin
 
     def index
       @memberships = Membership.by_recency.order(id: :desc).includes(:subscriber, :membership_tier)
-      @memberships = @memberships.where(status: params[:status]) if params[:status].present?
+      @memberships = filter_by_status(@memberships, Membership.statuses.keys)
       @memberships = paginate(@memberships)
     end
 

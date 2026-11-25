@@ -3,7 +3,8 @@ module Admin
   # before Stripe keys are added, since saving a tier is what triggers the
   # initial sync (see MembershipTier::Syncable).
   class MembershipTiersController < BaseController
-    before_action :set_tier, only: [ :edit, :update, :destroy ]
+    include Admin::CrudResource
+    crud_resource MembershipTier, as: :tier
 
     def index
       @tiers = MembershipTier.ordered
@@ -14,42 +15,18 @@ module Admin
       @tier = MembershipTier.new(currency: SiteSetting.current.payments_currency)
     end
 
-    def create
-      @tier = MembershipTier.new(tier_params)
-
-      if @tier.save
-        redirect_to admin_membership_tiers_path, notice: t("flash.admin.membership_tiers.created")
-      else
-        render :new, status: :unprocessable_entity
-      end
-    end
-
-    def edit
-    end
-
-    def update
-      if @tier.update(tier_params)
-        redirect_to admin_membership_tiers_path, notice: t("flash.admin.membership_tiers.updated")
-      else
-        render :edit, status: :unprocessable_entity
-      end
-    end
-
+    # A tier with members refuses to be destroyed.
     def destroy
       if @tier.destroy
-        redirect_to admin_membership_tiers_path, notice: t("flash.admin.membership_tiers.deleted")
+        redirect_to index_path, notice: crud_notice(:deleted)
       else
-        redirect_to admin_membership_tiers_path, alert: t("flash.admin.membership_tiers.has_members")
+        redirect_to index_path, alert: t("flash.admin.membership_tiers.has_members")
       end
     end
 
     private
 
-    def set_tier
-      @tier = MembershipTier.find(params[:id])
-    end
-
-    def tier_params
+    def resource_params
       params.require(:membership_tier).permit(:name, :description, :price_cents, :currency, :interval, :active, :position)
     end
   end

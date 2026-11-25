@@ -10,42 +10,35 @@ class CommentsController < ApplicationController
     @comment.identity = current_identity
 
     if @comment.save
-      respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.append("comments", partial: "comments/comment", locals: { comment: @comment, post: @post }) }
-        format.html { redirect_to post_path(slug: @post.slug, anchor: "comment_#{@comment.id}") }
-      end
+      render_comment :append, "comments", anchor: "comment_#{@comment.id}"
     else
-      respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_form", partial: "comments/form", locals: { post: @post, comment: @comment }) }
-        format.html { redirect_to post_path(slug: @post.slug), alert: t("flash.comments.could_not_save") }
-      end
+      render_comment :replace, "comment_form", partial: "comments/form", alert: t("flash.comments.could_not_save")
     end
   end
 
   def update
     if @comment.update(body: comment_params[:body], edited_at: Time.current)
-      respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_#{@comment.id}", partial: "comments/comment", locals: { comment: @comment, post: @post }) }
-        format.html { redirect_to post_path(slug: @post.slug, anchor: "comment_#{@comment.id}") }
-      end
+      render_comment :replace, "comment_#{@comment.id}", anchor: "comment_#{@comment.id}"
     else
-      respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("edit_comment_#{@comment.id}", partial: "comments/edit_form", locals: { post: @post, comment: @comment }) }
-        format.html { redirect_to post_path(slug: @post.slug), alert: t("flash.comments.could_not_save") }
-      end
+      render_comment :replace, "edit_comment_#{@comment.id}", partial: "comments/edit_form", alert: t("flash.comments.could_not_save")
     end
   end
 
   def destroy
     @comment.soft_delete!
-
-    respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_#{@comment.id}", partial: "comments/comment", locals: { comment: @comment, post: @post }) }
-      format.html { redirect_to post_path(slug: @post.slug), notice: t("flash.comments.deleted") }
-    end
+    render_comment :replace, "comment_#{@comment.id}", notice: t("flash.comments.deleted")
   end
 
   private
+
+  # Turbo requests get a stream applying +partial+ to +target+; others are sent
+  # back to the post with +flash+.
+  def render_comment(action, target, partial: "comments/comment", anchor: nil, **flash)
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.public_send(action, target, partial: partial, locals: { comment: @comment, post: @post }) }
+      format.html { redirect_to post_path(slug: @post.slug, anchor: anchor), **flash }
+    end
+  end
 
   def set_comment
     @comment = @post.comments.find(params[:id])
