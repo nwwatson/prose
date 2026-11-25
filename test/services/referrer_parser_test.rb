@@ -48,6 +48,44 @@ class ReferrerParserTest < ActiveSupport::TestCase
     assert_equal "x.com", result[:domain]
   end
 
+  test "classifies exact hosts and subdomains of known sources" do
+    {
+      "https://x.com/user" => "twitter",
+      "https://twitter.com/user" => "twitter",
+      "https://mobile.twitter.com/user" => "twitter",
+      "https://t.co/abc123" => "twitter",
+      "https://www.facebook.com/post" => "facebook",
+      "https://lnkd.in/abc" => "linkedin",
+      "https://www.linkedin.com/feed" => "linkedin",
+      "https://old.reddit.com/r/rails" => "reddit",
+      "https://news.ycombinator.com/item?id=1" => "hackernews",
+      "https://www.google.com/search" => "google",
+      "https://www.google.co.uk/search" => "google"
+    }.each do |referrer, expected|
+      assert_equal expected, ReferrerParser.call(referrer)[:source], "expected #{referrer} to be #{expected}"
+    end
+  end
+
+  test "does not classify hosts that merely contain a source name or substring" do
+    %w[
+      https://dropbox.com/s/abc
+      https://netflix.com/title/1
+      https://wix.com/site
+      https://box.com/file
+      https://xyz.com/page
+      https://notx.com/page
+      https://nt.co/page
+      https://john.example/post
+      https://hn.example.com/post
+      https://mygoogle.com/page
+      https://google.evil.com/page
+      https://redditor.example/page
+      https://myfacebook.com/page
+    ].each do |referrer|
+      assert_equal "other", ReferrerParser.call(referrer)[:source], "expected #{referrer} to be other"
+    end
+  end
+
   test "referrer with no query params has nil UTM fields" do
     result = ReferrerParser.call("https://www.reddit.com/r/rails")
 

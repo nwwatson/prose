@@ -32,15 +32,28 @@ class ReferrerParser
 
   private
 
+  # Google uses ccTLD variants (google.de, google.co.uk), so it is matched by pattern.
+  GOOGLE_HOST = /(?:\A|\.)google\.(?:[a-z]{2,3}\.)?[a-z]{2,}\z/
+
+  # Matched on whole host boundaries (exact host or a subdomain), never as a substring,
+  # so `dropbox.com` or `john.example` cannot be classified as a social network.
+  SOURCE_DOMAINS = {
+    "twitter" => %w[x.com twitter.com t.co],
+    "facebook" => %w[facebook.com fb.com],
+    "linkedin" => %w[linkedin.com lnkd.in],
+    "reddit" => %w[reddit.com redd.it],
+    "hackernews" => %w[news.ycombinator.com]
+  }.freeze
+
   def classify(host)
-    case host
-    when /google/ then "google"
-    when /twitter|x\.com/ then "twitter"
-    when /facebook/ then "facebook"
-    when /linkedin/ then "linkedin"
-    when /reddit/ then "reddit"
-    when /hn|hacker-news|news\.ycombinator/ then "hackernews"
-    else "other"
-    end
+    return "google" if GOOGLE_HOST.match?(host)
+
+    SOURCE_DOMAINS.each { |source, domains| return source if host_in?(host, domains) }
+
+    "other"
+  end
+
+  def host_in?(host, domains)
+    domains.any? { |domain| host == domain || host.end_with?(".#{domain}") }
   end
 end
