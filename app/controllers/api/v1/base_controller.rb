@@ -29,18 +29,6 @@ module Api
         render json: { error: message }, status: status
       end
 
-      def paginate(scope)
-        per_page = [ (params[:per_page] || 20).to_i, 50 ].min
-        per_page = 20 if per_page < 1
-        page = [ params[:page].to_i, 1 ].max
-
-        total = scope.count
-        records = scope.limit(per_page).offset((page - 1) * per_page)
-
-        set_pagination_headers(page: page, per_page: per_page, total: total)
-        records
-      end
-
       def set_pagination_headers(page:, per_page:, total:)
         response.set_header("X-Total-Count", total.to_s)
 

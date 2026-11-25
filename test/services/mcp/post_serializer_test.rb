@@ -48,4 +48,11 @@ class Mcp::PostSerializerTest < ActiveSupport::TestCase
 
     assert_not_nil result[:author]
   end
+
+  test "content_plain is the post's body_plain" do
+    post = posts(:published_post)
+    post.update!(content: "<p>Hello <strong>world</strong></p>")
+
+    assert_equal post.body_plain, Mcp::PostSerializer.call(post, include_content: true)[:content_plain]
+  end
 end

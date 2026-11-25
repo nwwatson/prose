@@ -80,4 +80,16 @@ curl https://your-prose-instance.com/api/v1/posts \
 Errors are returned as `{ "error": "message" }` with an appropriate HTTP status: `401` for
 authentication failures, `400` when a required parameter is missing, `404` when a record isn't found,
 `422` for validation failures (including an unknown `category` on create/update), and `429` when rate limited.
-Filtering posts by a `category` or `tag` that doesn't exist returns an empty list.
+
+### Categories, tags and clearing fields
+
+These rules are shared with the MCP tools, so both interfaces behave the same way:
+
+- `category` and `tag` filters on `GET /api/v1/posts` match a name or slug. A `category` or `tag`
+  that doesn't exist returns an empty list (`X-Total-Count: 0`), not an unfiltered one.
+- `category` on create/update must name an existing category (by name or slug); an unknown one is a
+  `422` with `{ "error": "Category not found: <value>" }` and nothing is saved. Categories are never
+  created implicitly. Tags, by contrast, are found or created by name.
+- On update, only the fields you send are changed. Sending `category` or `content` empty clears it;
+  sending `tags` replaces the post's tags (an empty list removes them all).
+- A `page` below 1 is treated as page 1; `per_page` defaults to 20 and is capped at 50.

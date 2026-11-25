@@ -16,16 +16,9 @@ module Mcp
         def call(server_context:, filename:, data:, **params)
           io, content_type = decode_upload(data: data, filename: filename, content_type: params[:content_type])
 
-          blob = ActiveStorage::Blob.create_and_upload!(
-            io: io,
-            filename: filename,
-            content_type: content_type
-          )
+          asset = Mcp::AssetUploader.call(io: io, filename: filename, content_type: content_type)
 
-          url = Rails.application.routes.url_helpers.rails_blob_path(blob, only_path: true)
-          markdown = "![#{filename}](#{url})"
-
-          success({ url: url, filename: filename, content_type: blob.content_type, byte_size: blob.byte_size, markdown: markdown })
+          success(asset.merge(markdown: "![#{asset[:filename]}](#{asset[:url]})"))
         rescue => e
           failure(e.message)
         end

@@ -120,6 +120,19 @@ claude mcp remove prose
 | `list_tags` | All tags with post counts. |
 | `create_tag` | Find or create a tag by name. |
 
+### Categories, tags and clearing fields
+
+These rules are shared with the REST API (`docs/api_setup.md`):
+
+- `list_posts` `category` and `tag` filters match a name or slug. A category or tag that doesn't exist
+  returns no posts (`total: 0`) rather than ignoring the filter. A `page` below 1 is treated as page 1.
+- `create_post` and `update_post` require `category` to name an existing category (by name or slug).
+  An unknown one returns an error result, `{ "error": "Category not found: <value>" }`, and nothing
+  is saved. Tags are found or created by name.
+- `update_post` changes only the fields you pass. Passing `category` or `content` as an empty string
+  clears it; passing `tags` replaces the post's tags. All changes are written in one save, so a
+  published post sends one `post.updated` webhook and one fediverse Update.
+
 ### Assets
 
 | Tool | Description |

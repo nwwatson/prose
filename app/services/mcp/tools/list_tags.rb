@@ -9,12 +9,7 @@ module Mcp
 
       class << self
         def call(server_context:, **_params)
-          post_counts = Tag.post_counts
-          tags = Tag.all.order(:name).map do |t|
-            { id: t.id, name: t.name, slug: t.slug, post_count: post_counts.fetch(t.id, 0) }
-          end
-
-          success({ tags: tags })
+          success({ tags: Mcp::TagSerializer.all })
         end
       end
     end

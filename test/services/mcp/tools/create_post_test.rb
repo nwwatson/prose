@@ -44,4 +44,13 @@ class Mcp::Tools::CreatePostTest < ActiveSupport::TestCase
     parsed = JSON.parse(result.content.first[:text])
     assert parsed["error"].present?
   end
+
+  test "returns an error for an unknown category and creates nothing" do
+    assert_no_difference "Post.count" do
+      result = Mcp::Tools::CreatePost.call(server_context: { user: users(:admin) }, title: "Orphan", category: "no-such-category")
+
+      assert result.error?
+      assert_equal "Category not found: no-such-category", JSON.parse(result.content.first[:text])["error"]
+    end
+  end
 end
