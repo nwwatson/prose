@@ -46,13 +46,40 @@ module ActivityPub
 
     test "oversized responses are rejected" do
       with_fake_http(FakeResponse.new("200", "a" * (HttpClient::MAX_RESPONSE_BYTES + 1))) do
-        assert_raises(HttpClient::Error) { HttpClient.get("https://remote.example/actor") }
+        error = assert_raises(HttpClient::Error) { HttpClient.get("https://remote.example/actor") }
+        assert_match(/too large/, error.message)
+      end
+    end
+
+    test "redirects are failures, never followed" do
+      with_fake_http(FakeResponse.new("301", "")) do |fake|
+        error = assert_raises(HttpClient::Error) { HttpClient.get("https://remote.example/actor") }
+        assert_equal 301, error.status
+        assert_equal "/actor", fake.last_request.path
+      end
+    end
+
+    test "production refuses plain http before connecting" do
+      with_fake_http(FakeResponse.new("200", "{}")) do |fake|
+        with_singleton_stub(Rails, :env, -> { ActiveSupport::EnvironmentInquirer.new("production") }) do
+          error = assert_raises(HttpClient::Error) { HttpClient.get("http://remote.example/actor") }
+          assert_equal "URL must be https", error.message
+        end
+        assert_nil fake.last_request
+      end
+    end
+
+    test "plain http is allowed outside production" do
+      with_fake_http(FakeResponse.new("200", "{}")) do |fake|
+        assert_equal({}, HttpClient.get("http://remote.example/actor"))
+        assert_not fake.use_ssl
       end
     end
 
     test "private addresses are refused" do
-      with_fake_http(FakeResponse.new("200", "{}"), resolved_ip: "10.0.0.5") do
+      with_fake_http(FakeResponse.new("200", "{}"), resolved_ip: "10.0.0.5") do |fake|
         assert_raises(HttpClient::Error) { HttpClient.get("https://remote.example/actor") }
+        assert_nil fake.last_request
       end
     end
   end

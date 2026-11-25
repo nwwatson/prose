@@ -30,7 +30,7 @@ module HttpHelper
   def with_fake_http(outcome, resolved_ip: "93.184.216.34")
     fake = FakeHTTP.new(outcome)
     with_singleton_stub(Net::HTTP, :new, ->(*) { fake }) do
-      with_singleton_stub(Webhooks::UrlGuard, :resolve, ->(_host) { [ resolved_ip ] }) { yield fake }
+      with_singleton_stub(Outbound::UrlGuard, :resolve, ->(_host) { [ resolved_ip ] }) { yield fake }
     end
   end
 

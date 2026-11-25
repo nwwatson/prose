@@ -1,8 +1,8 @@
 require "ipaddr"
 require "socket"
 
-module Webhooks
-  # Guards outbound webhook requests against SSRF: endpoint URLs must not point
+module Outbound
+  # Guards outbound requests (webhooks, ActivityPub) against SSRF: URLs must not point
   # at loopback, private, link-local (cloud metadata), or otherwise reserved
   # addresses — either literally or via DNS resolution.
   module UrlGuard
@@ -43,11 +43,11 @@ module Webhooks
     # Resolves the host and returns an IP address that is safe to connect to.
     # Raises UnsafeUrlError if the host is blocked or any resolved address is.
     def resolve!(host)
-      raise UnsafeUrlError, "Webhook host is not allowed" if blocked_host?(host)
+      raise UnsafeUrlError, "Host is not allowed" if blocked_host?(host)
 
       addresses = resolve(host.to_s.delete_prefix("[").delete_suffix("]"))
-      raise UnsafeUrlError, "Webhook host could not be resolved" if addresses.empty?
-      raise UnsafeUrlError, "Webhook host resolves to a disallowed address" if addresses.any? { |ip| blocked_ip?(ip) }
+      raise UnsafeUrlError, "Host could not be resolved" if addresses.empty?
+      raise UnsafeUrlError, "Host resolves to a disallowed address" if addresses.any? { |ip| blocked_ip?(ip) }
 
       addresses.first
     end
