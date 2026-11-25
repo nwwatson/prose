@@ -21,6 +21,28 @@ class Exports::JsonExporterTest < ActiveSupport::TestCase
     tempfile&.close!
   end
 
+  test "the streamed file matches pretty-generating the whole document" do
+    posts(:published_post).update!(title: "Line one\nline two \u2028 caf\u00e9 </script>")
+    SubscriberLabeling.delete_all
+    SubscriberLabel.delete_all # an empty collection prints as []
+
+    freeze_time do
+      tempfile = Exports::JsonExporter.call
+
+      assert_equal JSON.pretty_generate(Exports::JsonExporter.new.as_json).b, File.binread(tempfile.path)
+    ensure
+      tempfile&.close!
+    end
+  end
+
+  test "loads large collections in batches" do
+    queries = capture_sql { Exports::JsonExporter.call.close! }
+
+    %w[users posts pages mailing_lists subscribers].each do |table|
+      assert queries.any? { |sql| sql.match?(/FROM "#{table}" .*ORDER BY "#{table}"."id" ASC LIMIT/) }, "#{table} is not batched"
+    end
+  end
+
   test "includes every top-level collection" do
     data = export_data
 
@@ -88,6 +110,13 @@ class Exports::JsonExporterTest < ActiveSupport::TestCase
   end
 
   private
+
+  def capture_sql
+    queries = []
+    subscriber = ->(*, payload) { queries << payload[:sql] }
+    ActiveSupport::Notifications.subscribed(subscriber, "sql.active_record") { yield }
+    queries
+  end
 
   def export_data
     @export_data ||= JSON.parse(JSON.generate(Exports::JsonExporter.new.as_json))
