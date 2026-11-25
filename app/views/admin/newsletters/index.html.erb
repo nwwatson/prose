@@ -15,24 +15,10 @@
   </div>
 
   <%# Newsletter list %>
-  <% if @newsletters.any? %>
+  <% if @newsletters.load.any? %>
     <%# Mobile card layout %>
     <div class="space-y-3 lg:hidden">
-      <% @newsletters.each do |newsletter| %>
-        <%= link_to edit_admin_newsletter_path(newsletter), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
-          <div class="flex items-start justify-between gap-3">
-            <p class="min-w-0 text-sm font-medium text-gray-900"><%= newsletter.title %></p>
-            <%= status_badge(newsletter.status.capitalize, color_class: "flex-shrink-0 #{newsletter_status_color(newsletter.status)}") %>
-          </div>
-          <div class="mt-2 flex items-center gap-3 text-xs text-gray-500">
-            <% if newsletter.sent? %>
-              <span><%= newsletter.recipients_count %> <%= t('admin.newsletters.index.recipients').downcase %></span>
-              <span>&middot;</span>
-            <% end %>
-            <span><%= newsletter.sent_at ? l(newsletter.sent_at.to_date, format: :short) : l(newsletter.updated_at.to_date, format: :short) %></span>
-          </div>
-        <% end %>
-      <% end %>
+      <%= render partial: "card", collection: @newsletters, as: :newsletter %>
     </div>
 
     <%# Desktop table layout %>
@@ -48,25 +34,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 bg-white">
-          <% @newsletters.each do |newsletter| %>
-            <tr>
-              <td class="px-6 py-4">
-                <%= link_to newsletter.title, edit_admin_newsletter_path(newsletter), class: "text-sm font-medium text-gray-900 hover:text-gray-600" %>
-              </td>
-              <td class="whitespace-nowrap px-6 py-4">
-                <%= status_badge(newsletter.status.capitalize, color_class: newsletter_status_color(newsletter.status)) %>
-              </td>
-              <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                <%= newsletter.sent? ? newsletter.recipients_count : "—" %>
-              </td>
-              <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                <%= newsletter.sent_at ? l(newsletter.sent_at.to_date, format: :short) : l(newsletter.updated_at.to_date, format: :short) %>
-              </td>
-              <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                <%= link_to t('shared.edit'), edit_admin_newsletter_path(newsletter), class: "text-gray-600 hover:text-gray-900" %>
-              </td>
-            </tr>
-          <% end %>
+          <%= render partial: "row", collection: @newsletters, as: :newsletter %>
         </tbody>
       </table>
     </div>
@@ -74,4 +42,6 @@
     <%= render "admin/shared/empty_state", title: t('admin.newsletters.index.no_newsletters'), description: t('admin.newsletters.index.get_started'),
           action_label: t('admin.newsletters.index.new_newsletter'), action_path: new_admin_newsletter_path %>
   <% end %>
+
+  <%= render "admin/shared/pagination", page: @page, next_page: @next_page %>
 </div>

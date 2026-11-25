@@ -22,12 +22,12 @@ module Admin
         @newsletters = @newsletters.search(params[:search])
       end
 
-      @newsletters = @newsletters.by_recency
+      @newsletters = paginate(@newsletters.by_recency.order(id: :desc))
     end
 
     def show
       @analytics = NewsletterAnalyticsQuery.new(@newsletter)
-      @deliveries = @newsletter.newsletter_deliveries.includes(:subscriber).order(sent_at: :desc)
+      @deliveries = paginate(@newsletter.newsletter_deliveries.includes(:subscriber).order(sent_at: :desc, id: :desc))
     end
 
     def new

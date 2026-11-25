@@ -6,20 +6,10 @@
 
   <p class="max-w-2xl text-sm text-gray-500"><%= t('admin.mailing_lists.index.intro') %></p>
 
-  <% if @mailing_lists.any? %>
+  <% if @mailing_lists.load.any? %>
     <%# Mobile card layout %>
     <div class="space-y-3 lg:hidden">
-      <% @mailing_lists.each do |list| %>
-        <%= link_to edit_admin_mailing_list_path(list), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
-          <div class="flex items-center justify-between gap-3">
-            <span class="text-sm font-medium text-gray-900"><%= list.name %></span>
-            <p class="text-sm text-gray-500"><%= t('admin.mailing_lists.index.subscriber_count', count: @subscriber_counts.fetch(list.id, 0)) %></p>
-          </div>
-          <div class="mt-2 flex flex-wrap gap-2">
-            <%= render "badges", list: list %>
-          </div>
-        <% end %>
-      <% end %>
+      <%= render partial: "card", collection: @mailing_lists, as: :list, locals: { subscriber_counts: @subscriber_counts } %>
     </div>
 
     <%# Desktop table layout %>
@@ -35,22 +25,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 bg-white">
-          <% @mailing_lists.each do |list| %>
-            <tr>
-              <td class="px-6 py-4 text-sm">
-                <p class="font-medium text-gray-900"><%= list.name %></p>
-                <% if list.description.present? %>
-                  <p class="mt-1 max-w-md truncate text-gray-500"><%= list.description %></p>
-                <% end %>
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= list.frequency.presence || "—" %></td>
-              <td class="px-6 py-4 text-sm"><div class="flex flex-wrap gap-2"><%= render "badges", list: list %></div></td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= @subscriber_counts.fetch(list.id, 0) %></td>
-              <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                <%= link_to t('shared.edit'), edit_admin_mailing_list_path(list), class: "text-gray-600 hover:text-gray-900" %>
-              </td>
-            </tr>
-          <% end %>
+          <%= render partial: "row", collection: @mailing_lists, as: :list, locals: { subscriber_counts: @subscriber_counts } %>
         </tbody>
       </table>
     </div>

@@ -1,0 +1,7 @@
+<%= link_to edit_admin_category_path(category), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
+  <div class="flex items-center justify-between">
+    <p class="text-sm font-medium text-gray-900"><%= category.name %></p>
+    <p class="text-sm text-gray-500"><%= post_counts.fetch(category.id, 0) %> posts</p>
+  </div>
+  <p class="mt-1 text-xs text-gray-500 font-mono"><%= category.slug %></p>
+<% end %>

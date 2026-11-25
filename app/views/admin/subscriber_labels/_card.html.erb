@@ -1,0 +1,10 @@
+<%= link_to edit_admin_subscriber_label_path(label), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
+  <div class="flex items-center justify-between">
+    <span class="inline-flex items-center gap-2">
+      <span class="inline-block h-3 w-3 rounded-full" style="background-color: <%= label.color %>"></span>
+      <span class="text-sm font-medium text-gray-900"><%= label.name %></span>
+    </span>
+    <p class="text-sm text-gray-500"><%= subscriber_counts.fetch(label.id, 0) %> subscribers</p>
+  </div>
+  <p class="mt-1 text-xs text-gray-500"><%= label.color %></p>
+<% end %>

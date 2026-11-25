@@ -1,0 +1,25 @@
+<tr>
+  <td class="px-4 py-3 text-sm font-medium text-gray-900"><%= token.name %></td>
+  <td class="px-4 py-3 text-sm font-mono text-gray-500"><%= token.token_prefix %>...</td>
+  <% if current_user.admin? %>
+    <td class="px-4 py-3 text-sm text-gray-500"><%= token.user.display_name %></td>
+  <% end %>
+  <td class="px-4 py-3 text-sm text-gray-500">
+    <%= token.last_used_at ? time_ago_in_words(token.last_used_at) + " " + t('shared.ago') : t('shared.never') %>
+  </td>
+  <td class="px-4 py-3 text-sm text-gray-500"><%= l(token.created_at.to_date, format: :short) %></td>
+  <td class="px-4 py-3 text-sm">
+    <% if token.revoked? %>
+      <%= status_badge(t('shared.revoked'), color_class: "bg-red-100 text-red-800", size: :sm) %>
+    <% else %>
+      <%= status_badge(t('shared.active'), color_class: "bg-green-100 text-green-800", size: :sm) %>
+    <% end %>
+  </td>
+  <td class="px-4 py-3 text-right text-sm">
+    <% unless token.revoked? %>
+      <%= button_to t('admin.api_tokens.index.revoke'), admin_api_token_path(token), method: :delete,
+            class: "text-red-600 hover:text-red-800 text-sm font-medium",
+            data: { turbo_confirm: t('admin.api_tokens.index.revoke_confirm') } %>
+    <% end %>
+  </td>
+</tr>

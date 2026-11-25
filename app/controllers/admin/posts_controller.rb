@@ -20,7 +20,7 @@ module Admin
 
       @posts = @posts.search(params[:search]) if params[:search].present?
 
-      @posts = @posts.order(updated_at: :desc)
+      @posts = paginate(@posts.order(updated_at: :desc, id: :desc))
     end
 
     def new

@@ -11,40 +11,15 @@
     </nav>
   </div>
 
-  <% if @comments.any? %>
+  <% if @comments.load.any? %>
     <div class="space-y-4">
-      <% @comments.each do |comment| %>
-        <div class="rounded-lg bg-white p-4 shadow ring-1 ring-gray-200">
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div class="flex-1 min-w-0">
-              <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                <span class="font-medium text-gray-900"><%= comment.identity.handle || comment.identity.name %></span>
-                <% if comment.federated? %>
-                  <%= status_badge t('admin.comments.index.fediverse'), color_class: "bg-violet-100 text-violet-800", size: :sm %>
-                <% end %>
-                <span class="text-gray-500"><%= t('shared.on') %></span>
-                <span class="font-medium text-gray-900 truncate"><%= comment.post.title %></span>
-                <span class="text-gray-500">&middot;</span>
-                <time class="text-gray-500"><%= time_ago_in_words(comment.created_at) %> <%= t('shared.ago') %></time>
-              </div>
-              <div class="mt-2 text-gray-700 prose-comment"><%= sanitize_markdown(comment.rendered_body) %></div>
-            </div>
-            <div class="flex flex-wrap items-center gap-2 sm:ml-4 sm:flex-shrink-0">
-              <% unless comment.approved? %>
-                <%= button_to t('admin.comments.index.approve'), admin_comment_path(comment), params: { approved: true }, method: :patch, class: "rounded bg-green-50 px-3 py-2 text-xs font-medium text-green-700 hover:bg-green-100 sm:py-1" %>
-              <% end %>
-              <% if comment.approved? %>
-                <%= button_to t('admin.comments.index.reject'), admin_comment_path(comment), params: { approved: false }, method: :patch, class: "rounded bg-yellow-50 px-3 py-2 text-xs font-medium text-yellow-700 hover:bg-yellow-100 sm:py-1" %>
-              <% end %>
-              <%= button_to t('shared.delete'), admin_comment_path(comment), method: :delete, data: { turbo_confirm: t('admin.comments.index.delete_confirm') }, class: "rounded bg-red-50 px-3 py-2 text-xs font-medium text-red-700 hover:bg-red-100 sm:py-1" %>
-            </div>
-          </div>
-        </div>
-      <% end %>
+      <%= render partial: "comment", collection: @comments, as: :comment %>
     </div>
   <% else %>
     <div class="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
       <p class="text-sm text-gray-500"><%= t('admin.comments.index.no_comments') %></p>
     </div>
   <% end %>
+
+  <%= render "admin/shared/pagination", page: @page, next_page: @next_page %>
 </div>

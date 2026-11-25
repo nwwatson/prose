@@ -1,0 +1,13 @@
+<%= link_to edit_admin_newsletter_path(newsletter), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
+  <div class="flex items-start justify-between gap-3">
+    <p class="min-w-0 text-sm font-medium text-gray-900"><%= newsletter.title %></p>
+    <%= status_badge(newsletter.status.capitalize, color_class: "flex-shrink-0 #{newsletter_status_color(newsletter.status)}") %>
+  </div>
+  <div class="mt-2 flex items-center gap-3 text-xs text-gray-500">
+    <% if newsletter.sent? %>
+      <span><%= newsletter.recipients_count %> <%= t('admin.newsletters.index.recipients').downcase %></span>
+      <span>&middot;</span>
+    <% end %>
+    <span><%= newsletter.sent_at ? l(newsletter.sent_at.to_date, format: :short) : l(newsletter.updated_at.to_date, format: :short) %></span>
+  </div>
+<% end %>

@@ -4,7 +4,7 @@
   <%= render "admin/shared/page_header", title: t('admin.subscribers.index.title'),
         action: content_tag(:p, t('admin.subscribers.index.confirmed_of_total', confirmed: @confirmed_subscribers_count, total: @total_subscribers_count), class: "text-sm text-gray-500") %>
 
-  <% if @labels.any? %>
+  <% if @labels.load.any? %>
     <div class="flex flex-wrap items-center gap-2">
       <span class="text-sm text-gray-500"><%= t('admin.subscribers.index.filter_by_label') %></span>
       <div class="flex flex-wrap gap-2 overflow-x-auto">
@@ -16,28 +16,10 @@
     </div>
   <% end %>
 
-  <% if @subscribers.any? %>
+  <% if @subscribers.load.any? %>
     <%# Mobile card layout %>
     <div class="space-y-3 lg:hidden">
-      <% @subscribers.each do |subscriber| %>
-        <%= link_to admin_subscriber_path(subscriber), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
-          <div class="flex items-start justify-between gap-3">
-            <p class="min-w-0 truncate text-sm font-medium text-gray-900"><%= subscriber.email %></p>
-            <%= status_badge(subscriber.confirmed? ? t('shared.confirmed') : t('shared.pending'),
-                  color_class: "flex-shrink-0 #{subscriber.confirmed? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}") %>
-          </div>
-          <% if subscriber.subscriber_labels.any? %>
-            <div class="mt-2 flex flex-wrap gap-1">
-              <% subscriber.subscriber_labels.each do |label| %>
-                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium text-white" style="background-color: <%= label.color %>">
-                  <%= label.name %>
-                </span>
-              <% end %>
-            </div>
-          <% end %>
-          <p class="mt-2 text-xs text-gray-500"><%= l(subscriber.created_at.to_date, format: :short) %></p>
-        <% end %>
-      <% end %>
+      <%= render partial: "card", collection: @subscribers, as: :subscriber %>
     </div>
 
     <%# Desktop table layout %>
@@ -52,31 +34,13 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 bg-white">
-          <% @subscribers.each do |subscriber| %>
-            <tr>
-              <td class="px-6 py-4 text-sm text-gray-900">
-                <%= link_to subscriber.email, admin_subscriber_path(subscriber), class: "hover:text-gray-600" %>
-              </td>
-              <td class="px-6 py-4">
-                <div class="flex flex-wrap gap-1">
-                  <% subscriber.subscriber_labels.each do |label| %>
-                    <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium text-white" style="background-color: <%= label.color %>">
-                      <%= label.name %>
-                    </span>
-                  <% end %>
-                </div>
-              </td>
-              <td class="whitespace-nowrap px-6 py-4">
-                <%= status_badge(subscriber.confirmed? ? t('shared.confirmed') : t('shared.pending'),
-                      color_class: subscriber.confirmed? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800') %>
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= l(subscriber.created_at.to_date, format: :short) %></td>
-            </tr>
-          <% end %>
+          <%= render partial: "row", collection: @subscribers, as: :subscriber %>
         </tbody>
       </table>
     </div>
   <% else %>
     <%= render "admin/shared/empty_state", description: t('admin.subscribers.index.no_subscribers') %>
   <% end %>
+
+  <%= render "admin/shared/pagination", page: @page, next_page: @next_page %>
 </div>

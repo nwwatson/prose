@@ -4,18 +4,10 @@
   <%= render "admin/shared/page_header", title: t('admin.segments.index.title'),
         action: link_to(t('admin.segments.index.new_segment'), new_admin_segment_path, class: admin_button_classes(variant: :primary, extra: "self-start")) %>
 
-  <% if @segments.any? %>
+  <% if @segments.load.any? %>
     <%# Mobile card layout %>
     <div class="space-y-3 lg:hidden">
-      <% @segments.each do |segment| %>
-        <%= link_to admin_segment_path(segment), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
-          <p class="text-sm font-medium text-gray-900"><%= segment.name %></p>
-          <% if segment.description.present? %>
-            <p class="mt-1 truncate text-sm text-gray-500"><%= truncate(segment.description, length: 60) %></p>
-          <% end %>
-          <p class="mt-2 text-xs text-gray-500"><%= segment.subscriber_count %> <%= t('admin.segments.index.subscribers').downcase %></p>
-        <% end %>
-      <% end %>
+      <%= render partial: "card", collection: @segments, as: :segment %>
     </div>
 
     <%# Desktop table layout %>
@@ -30,18 +22,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 bg-white">
-          <% @segments.each do |segment| %>
-            <tr>
-              <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                <%= link_to segment.name, admin_segment_path(segment), class: "hover:text-gray-600" %>
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= truncate(segment.description, length: 60) %></td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= segment.subscriber_count %></td>
-              <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                <%= link_to t('shared.edit'), edit_admin_segment_path(segment), class: "text-gray-600 hover:text-gray-900" %>
-              </td>
-            </tr>
-          <% end %>
+          <%= render partial: "row", collection: @segments, as: :segment %>
         </tbody>
       </table>
     </div>
@@ -54,4 +35,6 @@
       </div>
     </div>
   <% end %>
+
+  <%= render "admin/shared/pagination", page: @page, next_page: @next_page %>
 </div>

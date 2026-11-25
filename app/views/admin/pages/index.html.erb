@@ -4,20 +4,10 @@
   <%= render "admin/shared/page_header", title: t("admin.pages.index.title"),
         action: link_to(t("admin.pages.index.new_page"), new_admin_page_path, class: admin_button_classes(variant: :primary, extra: "self-start")) %>
 
-  <% if @pages.any? %>
+  <% if @pages.load.any? %>
     <%# Mobile card layout %>
     <div class="space-y-3 lg:hidden">
-      <% @pages.each do |page| %>
-        <%= link_to edit_admin_page_path(page), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
-          <div class="flex items-start justify-between gap-3">
-            <p class="min-w-0 text-sm font-medium text-gray-900"><%= page.title %></p>
-            <%= status_badge(page.status.capitalize, color_class: "flex-shrink-0 #{page.published? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}") %>
-          </div>
-          <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-gray-500">
-            <span class="font-mono">/<%= page.slug %></span>
-          </div>
-        <% end %>
-      <% end %>
+      <%= render partial: "card", collection: @pages, as: :page %>
     </div>
 
     <%# Desktop table layout %>
@@ -32,20 +22,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 bg-white">
-          <% @pages.each do |page| %>
-            <tr>
-              <td class="px-6 py-4">
-                <%= link_to page.title, edit_admin_page_path(page), class: "text-sm font-medium text-gray-900 hover:text-gray-600" %>
-              </td>
-              <td class="whitespace-nowrap px-6 py-4">
-                <%= status_badge(page.status.capitalize, color_class: page.published? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800') %>
-              </td>
-              <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 font-mono">/<%= page.slug %></td>
-              <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                <%= link_to t("shared.edit"), edit_admin_page_path(page), class: "text-gray-600 hover:text-gray-900" %>
-              </td>
-            </tr>
-          <% end %>
+          <%= render partial: "row", collection: @pages, as: :page %>
         </tbody>
       </table>
     </div>

@@ -1,6 +1,6 @@
 <% content_for(:title, "#{t('admin.membership_tiers.index.title')} — #{site_name}") %>
 
-<% if @tiers.any? { |tier| !tier.synced_to_stripe? } %>
+<% if @tiers.load.any? { |tier| !tier.synced_to_stripe? } %>
   <%= turbo_stream_from "membership_tiers" %>
 <% end %>
 

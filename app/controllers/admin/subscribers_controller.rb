@@ -1,18 +1,12 @@
 module Admin
   class SubscribersController < BaseController
     def index
-      @subscribers = Subscriber.includes(:identity, :subscriber_labels).order(created_at: :desc)
+      subscribers = Subscriber.includes(:identity, :subscriber_labels)
+        .search(params[:search])
+        .with_label(params[:label])
+        .order(created_at: :desc, id: :desc)
 
-      if params[:search].present?
-        search_term = "%#{Subscriber.sanitize_sql_like(params[:search])}%"
-        @subscribers = @subscribers.left_joins(:identity)
-          .where("subscribers.email LIKE ? OR identities.handle LIKE ?", search_term, search_term)
-      end
-
-      if params[:label].present?
-        @subscribers = @subscribers.joins(:subscriber_labels).where(subscriber_labels: { id: params[:label] })
-      end
-
+      @subscribers = paginate(subscribers)
       @labels = SubscriberLabel.ordered
       @confirmed_subscribers_count = Subscriber.confirmed.count
       @total_subscribers_count = Subscriber.count

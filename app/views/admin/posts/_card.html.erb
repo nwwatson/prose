@@ -1,0 +1,16 @@
+<%= link_to edit_admin_post_path(post), class: "block rounded-lg bg-white p-4 shadow ring-1 ring-gray-200" do %>
+  <div class="flex items-start justify-between gap-3">
+    <div class="min-w-0 flex-1">
+      <p class="text-sm font-medium text-gray-900"><%= post.title %></p>
+      <% if post.subtitle.present? %>
+        <p class="mt-0.5 truncate text-sm text-gray-500"><%= post.subtitle %></p>
+      <% end %>
+    </div>
+    <%= status_badge(post.status.capitalize, color_class: "flex-shrink-0 #{post_status_color(post.status)}") %>
+  </div>
+  <div class="mt-2 flex items-center gap-3 text-xs text-gray-500">
+    <span><%= post.user.display_name %></span>
+    <span>&middot;</span>
+    <span><%= post.published_at ? l(post.published_at.to_date, format: :short) : l(post.updated_at.to_date, format: :short) %></span>
+  </div>
+<% end %>

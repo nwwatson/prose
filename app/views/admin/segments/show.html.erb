@@ -13,10 +13,10 @@
 
   <div class="rounded-md bg-gray-50 p-4">
     <p class="text-sm font-medium text-gray-900"><%= t('admin.segments.show.matching_subscribers') %></p>
-    <p class="mt-1 text-2xl font-bold text-gray-900"><%= @subscribers.count %></p>
+    <p class="mt-1 text-2xl font-bold text-gray-900"><%= @segment.subscriber_count %></p>
   </div>
 
-  <% if @subscribers.any? %>
+  <% if @subscribers.load.any? %>
     <div class="overflow-hidden bg-white shadow ring-1 ring-gray-200 sm:rounded-lg">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
@@ -27,23 +27,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 bg-white">
-          <% @subscribers.each do |subscriber| %>
-            <tr>
-              <td class="px-6 py-4 text-sm text-gray-900">
-                <%= link_to subscriber.email, admin_subscriber_path(subscriber), class: "hover:text-gray-600" %>
-              </td>
-              <td class="px-6 py-4">
-                <div class="flex flex-wrap gap-1">
-                  <% subscriber.subscriber_labels.each do |label| %>
-                    <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white" style="background-color: <%= label.color %>">
-                      <%= label.name %>
-                    </span>
-                  <% end %>
-                </div>
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-500"><%= subscriber.confirmed_at ? l(subscriber.confirmed_at.to_date, format: :short) : nil %></td>
-            </tr>
-          <% end %>
+          <%= render partial: "subscriber_row", collection: @subscribers, as: :subscriber %>
         </tbody>
       </table>
     </div>
@@ -52,4 +36,6 @@
       <p class="text-sm text-gray-500"><%= t('admin.segments.show.no_subscribers') %></p>
     </div>
   <% end %>
+
+  <%= render "admin/shared/pagination", page: @page, next_page: @next_page %>
 </div>

@@ -1,0 +1,15 @@
+<tr>
+  <td class="px-6 py-4 text-sm text-gray-900">
+    <%= link_to subscriber.email, admin_subscriber_path(subscriber), class: "hover:text-gray-600" %>
+  </td>
+  <td class="px-6 py-4">
+    <div class="flex flex-wrap gap-1">
+      <% subscriber.subscriber_labels.each do |label| %>
+        <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white" style="background-color: <%= label.color %>">
+          <%= label.name %>
+        </span>
+      <% end %>
+    </div>
+  </td>
+  <td class="px-6 py-4 text-sm text-gray-500"><%= subscriber.confirmed_at ? l(subscriber.confirmed_at.to_date, format: :short) : nil %></td>
+</tr>
