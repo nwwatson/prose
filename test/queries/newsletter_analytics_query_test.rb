@@ -46,6 +46,12 @@ class NewsletterAnalyticsQueryTest < ActiveSupport::TestCase
     assert rate <= 100.0
   end
 
+  test "every stat comes from one query" do
+    assert_query_count(1, table: "newsletter_deliveries") do
+      %i[deliveries_count opens_count clicks_count bounces_count open_rate click_rate bounce_rate].each { |stat| @query.public_send(stat) }
+    end
+  end
+
   test "rates return 0 for newsletter with no deliveries" do
     newsletter = newsletters(:draft_newsletter)
     query = NewsletterAnalyticsQuery.new(newsletter)

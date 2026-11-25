@@ -9,6 +9,7 @@ class Membership < ApplicationRecord
   validates :status, presence: true
 
   scope :current, -> { where(status: [ :active, :trialing ]) }
+  scope :canceled_since, ->(time) { canceled.where("canceled_at >= ?", time) }
   scope :by_recency, -> { order(created_at: :desc) }
 
   def self.grant_complimentary!(subscriber:, membership_tier:)

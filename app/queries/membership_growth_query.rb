@@ -6,11 +6,13 @@ class MembershipGrowthQuery
   end
 
   def new_members(since: 30.days.ago)
-    @relation.where("created_at >= ?", since).count
+    @new_members ||= {}
+    @new_members[since] ||= @relation.where("created_at >= ?", since).count
   end
 
   def cancellations(since: 30.days.ago)
-    @relation.where(status: :canceled).where("canceled_at >= ?", since).count
+    @cancellations ||= {}
+    @cancellations[since] ||= @relation.canceled_since(since).count
   end
 
   def net_growth(since: 30.days.ago)
@@ -19,7 +21,7 @@ class MembershipGrowthQuery
 
   def growth_by_month(since: 12.months.ago)
     new_by_month = by_month(@relation.where("created_at >= ?", since), :created_at)
-    canceled_by_month = by_month(@relation.where(status: :canceled).where("canceled_at >= ?", since), :canceled_at)
+    canceled_by_month = by_month(@relation.canceled_since(since), :canceled_at)
 
     months = new_by_month.keys | canceled_by_month.keys
     months.sort.map do |month|

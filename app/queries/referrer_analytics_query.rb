@@ -4,40 +4,19 @@ class ReferrerAnalyticsQuery
   end
 
   def top_domains(limit: 10, since: 30.days.ago)
-    @relation
-      .since(since)
-      .where.not(referrer_domain: nil)
-      .group(:referrer_domain)
-      .order("count_all DESC")
-      .limit(limit)
-      .count
+    breakdown(:referrer_domain, since: since, limit: limit)
   end
 
   def utm_sources(since: 30.days.ago)
-    @relation
-      .since(since)
-      .with_utm
-      .group(:utm_source)
-      .order("count_all DESC")
-      .count
+    breakdown(:utm_source, since: since)
   end
 
   def utm_mediums(since: 30.days.ago)
-    @relation
-      .since(since)
-      .where.not(utm_medium: nil)
-      .group(:utm_medium)
-      .order("count_all DESC")
-      .count
+    breakdown(:utm_medium, since: since)
   end
 
   def utm_campaigns(since: 30.days.ago)
-    @relation
-      .since(since)
-      .where.not(utm_campaign: nil)
-      .group(:utm_campaign)
-      .order("count_all DESC")
-      .count
+    breakdown(:utm_campaign, since: since)
   end
 
   def campaign_detail(campaign, since: 30.days.ago)
@@ -47,5 +26,18 @@ class ReferrerAnalyticsQuery
       sources: scope.group(:utm_source).order("count_all DESC").count,
       mediums: scope.group(:utm_medium).order("count_all DESC").count
     }
+  end
+
+  private
+
+  # Views per value of +column+ (blank rows excluded), most viewed first.
+  def breakdown(column, since:, limit: nil)
+    @relation
+      .since(since)
+      .where.not(column => nil)
+      .group(column)
+      .order("count_all DESC")
+      .limit(limit)
+      .count
   end
 end

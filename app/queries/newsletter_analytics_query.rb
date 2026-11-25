@@ -7,19 +7,19 @@ class NewsletterAnalyticsQuery
   end
 
   def deliveries_count
-    @deliveries.count
+    counts[0]
   end
 
   def opens_count
-    @deliveries.where.not(opened_at: nil).count
+    counts[1]
   end
 
   def clicks_count
-    @deliveries.where.not(clicked_at: nil).count
+    counts[2]
   end
 
   def bounces_count
-    @deliveries.where.not(bounced_at: nil).count
+    counts[3]
   end
 
   def open_rate
@@ -32,5 +32,14 @@ class NewsletterAnalyticsQuery
 
   def bounce_rate
     percentage(bounces_count, deliveries_count)
+  end
+
+  private
+
+  # All four totals in one query; COUNT(column) skips NULLs.
+  def counts
+    @counts ||= @deliveries.pick(
+      Arel.sql("COUNT(*)"), Arel.sql("COUNT(opened_at)"), Arel.sql("COUNT(clicked_at)"), Arel.sql("COUNT(bounced_at)")
+    )
   end
 end

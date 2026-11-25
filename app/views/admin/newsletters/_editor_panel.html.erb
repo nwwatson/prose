@@ -103,16 +103,18 @@
       </div>
 
       <%# Segment targeting %>
-      <div>
-        <label class="block text-sm font-medium text-gray-900 mb-1"><%= t('admin.newsletters.editor_panel.audience') %></label>
-        <select name="newsletter[segment_id]" form="newsletter_form"
-                data-action="change->autosave#handleChange"
+      <div data-controller="segment-count">
+        <label for="newsletter_segment_id" class="block text-sm font-medium text-gray-900 mb-1"><%= t('admin.newsletters.editor_panel.audience') %></label>
+        <select name="newsletter[segment_id]" id="newsletter_segment_id" form="newsletter_form"
+                data-segment-count-target="select"
+                data-action="change->autosave#handleChange change->segment-count#refresh"
                 class="<%= admin_input_classes %>">
           <option value=""><%= t('admin.newsletters.editor_panel.all_subscribers') %></option>
           <% @segments.each do |segment| %>
-            <option value="<%= segment.id %>" <%= "selected" if newsletter.segment_id == segment.id %>><%= segment.name %> (<%= segment.subscriber_count %>)</option>
+            <option value="<%= segment.id %>" data-count-url="<%= count_admin_segment_path(segment) %>" <%= "selected" if newsletter.segment_id == segment.id %>><%= segment.name %></option>
           <% end %>
         </select>
+        <div data-segment-count-target="output" class="mt-2 rounded-md bg-gray-50 p-4" hidden></div>
       </div>
 
       <%# Subscriber count %>
