@@ -1,8 +1,8 @@
 module ActivityPub
   # Every ActivityPub id must be an absolute, stable URL, and they have to match
   # between the web request that serves an object and the background job that
-  # delivers it. Both build them here from the mailer's default_url_options
-  # (APP_HOST in production) rather than from the incoming request's host.
+  # delivers it. Both build them here from AppUrlOptions (APP_HOST in
+  # production) rather than from the incoming request's host.
   module Urls
     PUBLIC_COLLECTION = "https://www.w3.org/ns/activitystreams#Public".freeze
     POST_PATH = %r{\A/posts/(?<slug>[a-z0-9]+(?:-[a-z0-9]+)*)/?\z}
@@ -10,10 +10,7 @@ module ActivityPub
     module_function
 
     def url_options
-      options = (Rails.application.config.action_mailer.default_url_options || {}).slice(:host, :port, :protocol)
-      options[:host] ||= "localhost"
-      options[:protocol] ||= Rails.application.config.force_ssl ? "https" : "http"
-      options
+      AppUrlOptions.call
     end
 
     # The authority used in the acct: handle, e.g. "example.com".

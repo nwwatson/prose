@@ -94,11 +94,11 @@ class PostTest < ActiveSupport::TestCase
     end
   end
 
-  test "updating post content enqueues a post.updated webhook delivery" do
+  test "updating post content enqueues a delayed post.updated webhook" do
     post = posts(:published_post)
 
-    assert_enqueued_with(job: DeliverWebhookJob, args: ->(args) { args[0] == webhooks(:post_events_webhook).id && args[1] == "post.updated" }) do
-      post.update!(title: "Updated Title")
+    assert_no_enqueued_jobs only: DeliverWebhookJob do
+      assert_enqueued_with(job: PostUpdatedWebhookJob) { post.update!(title: "Updated Title") }
     end
   end
 

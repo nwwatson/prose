@@ -27,7 +27,7 @@
           </button>
         <% end %>
         <%= button_to t('shared.delete'),
-              post_comment_path(post, comment, slug: post.slug),
+              post_comment_path(post, comment),
               method: :delete,
               data: { turbo_confirm: t('comments.delete_confirm') },
               class: "comment__action-btn--delete" %>

@@ -31,13 +31,13 @@ class Comment < ApplicationRecord
     return if approved?
 
     update!(approved: true)
-    WebhookDispatcher.deliver("comment.approved", Webhooks::CommentSerializer.call(self))
+    WebhookDispatcher.deliver("comment.approved") { Webhooks::CommentSerializer.call(self) }
   end
 
   private
 
   def emit_created_webhook
-    WebhookDispatcher.deliver("comment.created", Webhooks::CommentSerializer.call(self))
+    WebhookDispatcher.deliver("comment.created") { Webhooks::CommentSerializer.call(self) }
   end
 
   def max_one_level_nesting

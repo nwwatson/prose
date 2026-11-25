@@ -26,15 +26,17 @@ class DeliverWebhookJob < ApplicationJob
   private
 
   def log_delivery!(webhook, event, data, response_code:, success:, error_message: nil)
-    webhook.webhook_deliveries.create!(
-      event: event,
-      payload: data,
-      response_code: response_code,
-      success: success,
-      error_message: error_message,
-      attempted_at: Time.current
-    )
-    webhook.prune_deliveries!
-    webhook.record_delivery_result!(success: success, response_code: response_code, count_failure: executions >= MAX_ATTEMPTS)
+    Webhook.transaction do
+      webhook.webhook_deliveries.create!(
+        event: event,
+        payload: data,
+        response_code: response_code,
+        success: success,
+        error_message: error_message,
+        attempted_at: Time.current
+      )
+      webhook.prune_deliveries!
+      webhook.record_delivery_result!(success: success, response_code: response_code, count_failure: executions >= MAX_ATTEMPTS)
+    end
   end
 end

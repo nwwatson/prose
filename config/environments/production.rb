@@ -55,8 +55,13 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "example.com") }
+  # Host and protocol for links in emails and, through AppUrlOptions, in webhook
+  # payloads and ActivityPub ids. Follows force_ssl so RAILS_ASSUME_SSL=false
+  # installs keep http links.
+  config.action_mailer.default_url_options = {
+    host: ENV.fetch("APP_HOST", "example.com"),
+    protocol: config.force_ssl ? "https" : "http"
+  }
 
   # Outgoing SMTP server. Set SMTP_ADDRESS to enable email delivery.
   if ENV["SMTP_ADDRESS"].present?

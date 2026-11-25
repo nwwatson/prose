@@ -43,6 +43,19 @@ class PageTest < ActiveSupport::TestCase
     end
   end
 
+  test "every top-level route a page slug could collide with is reserved" do
+    # A page at one of these slugs would be shadowed by the route, so each must be reserved.
+    # Only slug-shaped first segments can collide: `.well-known`, `:slug`, `rails/...` internals
+    # and underscore-named routes are excluded by the same format the slug validation uses.
+    segments = Rails.application.routes.routes.filter_map do |route|
+      route.path.spec.to_s.split("(").first.split("/").reject(&:empty?).first
+    end
+    collidable = segments.uniq.grep(Sluggable::SLUG_FORMAT)
+
+    assert_empty collidable - Page::RESERVED_SLUGS,
+      "Top-level routes missing from Page::RESERVED_SLUGS: #{(collidable - Page::RESERVED_SLUGS).join(', ')}"
+  end
+
   test "meta_description limited to 160 characters" do
     page = Page.new(title: "Test", meta_description: "x" * 161, user: users(:admin))
     assert_not page.valid?

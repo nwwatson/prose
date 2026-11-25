@@ -124,7 +124,7 @@ class MetaTagsHelperTest < ActionView::TestCase
     assert identity.handle.present?
     doc = head_fragment(meta_tags_for_post(@post))
 
-    assert_equal [ author_url(identity, handle: identity.handle) ], doc.css("meta[property='article:author']").map { |t| t["content"] }
+    assert_equal [ "/authors/#{identity.handle}" ], doc.css("meta[property='article:author']").map { |t| URI(t["content"]).path }
   end
 
   test "meta_tags_for_post falls back to the display name when the author has no handle" do

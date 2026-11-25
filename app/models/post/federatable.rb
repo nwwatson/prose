@@ -5,15 +5,11 @@
 module Post::Federatable
   extend ActiveSupport::Concern
 
-  # Autosave can save a published post every few seconds while it's being
-  # edited; updates are coalesced so followers get one Update per burst.
-  UPDATE_DELAY = 2.minutes
-
   included do
     has_many :fediverse_likes, dependent: :destroy
 
     after_update_commit :federate_status_change, if: -> { saved_change_to_status? && federation_enabled? }
-    after_update_commit :federate_update, if: -> { !saved_change_to_status? && published? && federated_attributes_changed? && federation_enabled? }
+    after_update_commit :federate_update, if: -> { !saved_change_to_status? && published? && revised? && federation_enabled? }
     after_destroy_commit :federate_delete, if: -> { published? && federation_enabled? }
   end
 
@@ -27,16 +23,13 @@ module Post::Federatable
     end
   end
 
+  # Coalesced so followers get one Update per burst of edits (Post::Revisable).
   def federate_update
-    FederatePostJob.set(wait: UPDATE_DELAY).perform_later("update", id, ActivityPub::Urls.post_url(self), updated_at.to_f)
+    FederatePostJob.set(wait: Post::Revisable::UPDATE_DELAY).perform_later("update", id, ActivityPub::Urls.post_url(self), revised_at.to_f)
   end
 
   def federate_delete
     FederatePostJob.perform_later("delete", id, ActivityPub::Urls.post_url(self))
-  end
-
-  def federated_attributes_changed?
-    saved_change_to_title? || saved_change_to_subtitle? || saved_change_to_body_plain? || saved_change_to_visibility?
   end
 
   def federation_enabled?

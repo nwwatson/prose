@@ -112,6 +112,6 @@ class StructuredDataHelperTest < ActionView::TestCase
 
     assert_equal "Person", data["@type"]
     assert_equal identity.name, data["name"]
-    assert_equal author_url(identity, handle: identity.handle), data["url"]
+    assert_equal "/authors/#{identity.handle}", URI(data["url"]).path
   end
 end

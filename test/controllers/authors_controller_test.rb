@@ -24,46 +24,46 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
 
   test "GET show renders author profile" do
     identity = identities(:admin_identity)
-    get author_path(identity, handle: identity.handle)
+    get "/authors/#{identity.handle}"
     assert_response :success
     assert_select "h1", text: identity.name
   end
 
   test "GET show displays author bio as markdown" do
     identity = identities(:admin_identity)
-    get author_path(identity, handle: identity.handle)
+    get "/authors/#{identity.handle}"
     assert_response :success
     assert_select ".prose", text: /Site administrator/
   end
 
   test "GET show lists published posts by author" do
     identity = identities(:admin_identity)
-    get author_path(identity, handle: identity.handle)
+    get "/authors/#{identity.handle}"
     assert_response :success
     assert_select "h3 a", text: posts(:published_post).title
   end
 
   test "GET show does not list draft posts" do
     identity = identities(:writer_identity)
-    get author_path(identity, handle: identity.handle)
+    get "/authors/#{identity.handle}"
     assert_response :success
     assert_select "h3 a", text: posts(:draft_post).title, count: 0
   end
 
   test "GET show returns 404 for unknown handle" do
-    get author_path(id: "nonexistent", handle: "nonexistent")
+    get "/authors/nonexistent"
     assert_response :not_found
   end
 
   test "GET show includes JSON-LD Person schema" do
     identity = identities(:admin_identity)
-    get author_path(identity, handle: identity.handle)
+    get "/authors/#{identity.handle}"
     assert_select "script[type='application/ld+json']"
   end
 
   test "GET show displays social links" do
     identity = identities(:admin_identity)
-    get author_path(identity, handle: identity.handle)
+    get "/authors/#{identity.handle}"
     assert_response :success
     assert_select "a[href='https://example.com']"
     assert_select "a[href='https://x.com/adminuser']"
@@ -72,7 +72,7 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
 
   test "GET show displays post count" do
     identity = identities(:admin_identity)
-    get author_path(identity, handle: identity.handle)
+    get "/authors/#{identity.handle}"
     assert_response :success
     assert_match(/\d+ posts? published/, response.body)
   end
@@ -95,9 +95,9 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
         published_at: i.hours.ago, user: identity.user, body_plain: "Body #{i}")
     end
 
-    get author_path(identity, handle: identity.handle)
+    get "/authors/#{identity.handle}"
     assert_response :success
-    assert_select "a[href=?]", author_path(identity, handle: identity.handle, page: 2)
+    assert_select "a[href=?]", "/authors/#{identity.handle}?page=2"
   end
 
   test "GET show has no next page link on the last page" do
@@ -107,8 +107,8 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
         published_at: i.hours.ago, user: identity.user, body_plain: "Body #{i}")
     end
 
-    get author_path(identity, handle: identity.handle, page: 2)
+    get "/authors/#{identity.handle}?page=2"
     assert_response :success
-    assert_select "a[href=?]", author_path(identity, handle: identity.handle, page: 3), count: 0
+    assert_select "a[href=?]", "/authors/#{identity.handle}?page=3", count: 0
   end
 end

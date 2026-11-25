@@ -15,7 +15,7 @@ class Page < ApplicationRecord
 
   RESERVED_SLUGS = %w[
     admin posts authors categories tags subscriptions feed sitemap robots up mcp
-    subscriber_session handle handle_availability unsubscribe webhooks
+    api activitypub cable rails memberships handle unsubscribe webhooks
     reading-list email-preferences
   ].freeze
 
