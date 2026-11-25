@@ -4,34 +4,6 @@ module Webhooks
   class SenderTest < ActiveSupport::TestCase
     FakeResponse = Struct.new(:code, :body)
 
-    class FakeHTTP
-      attr_accessor :use_ssl, :open_timeout, :read_timeout, :write_timeout, :ipaddr
-      attr_reader :last_request
-
-      def initialize(outcome)
-        @outcome = outcome
-      end
-
-      def request(request)
-        @last_request = request
-        raise @outcome if @outcome.is_a?(Exception)
-
-        @outcome
-      end
-    end
-
-    def with_fake_http(outcome, resolved_ip: "93.184.216.34")
-      fake = FakeHTTP.new(outcome)
-      original_new = Net::HTTP.method(:new)
-      original_resolve = UrlGuard.method(:resolve)
-      Net::HTTP.define_singleton_method(:new) { |*_args| fake }
-      UrlGuard.define_singleton_method(:resolve) { |_host| [ resolved_ip ] }
-      yield fake
-    ensure
-      Net::HTTP.define_singleton_method(:new, original_new)
-      UrlGuard.define_singleton_method(:resolve, original_resolve)
-    end
-
     test "returns a response on success" do
       with_fake_http(FakeResponse.new("200", "ok")) do
         response = Webhooks::Sender.post("https://example.com/hook", body: "{}", secret: "s3cret")

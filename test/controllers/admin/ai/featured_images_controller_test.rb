@@ -8,14 +8,6 @@ class Admin::Ai::FeaturedImagesControllerTest < ActionDispatch::IntegrationTest
     SiteSetting.current.update!(claude_api_key: "test-key", gemini_api_key: "test-gemini-key")
   end
 
-  def stub_client_chat(fake_chat)
-    original_chat = Ai::Client.method(:chat)
-    Ai::Client.define_singleton_method(:chat) { |*| fake_chat }
-    yield
-  ensure
-    Ai::Client.define_singleton_method(:chat, original_chat)
-  end
-
   test "suggest_prompt redirects when image AI not configured" do
     SiteSetting.current.update!(gemini_api_key: nil)
     post suggest_prompt_admin_post_ai_featured_image_path(@post)

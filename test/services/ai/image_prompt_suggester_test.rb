@@ -6,14 +6,6 @@ class Ai::ImagePromptSuggesterTest < ActiveSupport::TestCase
     @post = posts(:published_post)
   end
 
-  def stub_client_chat(fake_chat)
-    original_chat = Ai::Client.method(:chat)
-    Ai::Client.define_singleton_method(:chat) { |*| fake_chat }
-    yield
-  ensure
-    Ai::Client.define_singleton_method(:chat, original_chat)
-  end
-
   test "call returns the stripped chat response content" do
     fake_response = OpenStruct.new(content: "  A vivid landscape at sunset.  ")
     fake_chat = Object.new

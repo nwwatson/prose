@@ -26,18 +26,14 @@ class ExportJobTest < ActiveJob::TestCase
 
   test "marks the export failed when the exporter raises" do
     export = exports(:pending_markdown)
-    Exports::MarkdownExporter.singleton_class.alias_method(:original_call, :call)
-    Exports::MarkdownExporter.define_singleton_method(:call) { raise "disk full" }
-
-    ExportJob.perform_now(export)
+    with_singleton_stub(Exports::MarkdownExporter, :call, ->(*) { raise "disk full" }) do
+      ExportJob.perform_now(export)
+    end
 
     export.reload
     assert export.failed?
     assert_equal "disk full", export.error_message
     assert_not export.file.attached?
-  ensure
-    Exports::MarkdownExporter.singleton_class.alias_method(:call, :original_call)
-    Exports::MarkdownExporter.singleton_class.remove_method(:original_call)
   end
 
   test "broadcasts status changes to the exports stream" do

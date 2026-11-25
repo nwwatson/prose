@@ -31,18 +31,12 @@ class Ai::ClientTest < ActiveSupport::TestCase
     settings = SiteSetting.current
     image = Object.new
     captured = nil
-    original_paint = RubyLLM.method(:paint)
-
-    RubyLLM.define_singleton_method(:paint) do |prompt, **options|
+    fake_paint = ->(prompt, **options) do
       captured = [ prompt, options ]
       image
     end
 
-    begin
-      result = Ai::Client.paint("a sunset", settings)
-    ensure
-      RubyLLM.define_singleton_method(:paint, original_paint)
-    end
+    result = with_singleton_stub(RubyLLM, :paint, fake_paint) { Ai::Client.paint("a sunset", settings) }
 
     expected = { model: settings.image_model_name_for_image, provider: settings.image_model_provider, assume_model_exists: true }
     assert_equal [ "a sunset", expected ], captured

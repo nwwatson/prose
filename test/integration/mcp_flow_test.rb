@@ -1,8 +1,6 @@
 require "test_helper"
 
 class McpFlowTest < ActionDispatch::IntegrationTest
-  TOKEN = "prose_admin_test_token_1234567890abcdef"
-
   test "full workflow: initialize, create post, update, publish, verify" do
     # 1. Initialize
     result = mcp_call("initialize", {
@@ -83,28 +81,5 @@ class McpFlowTest < ActionDispatch::IntegrationTest
     full_post = parse_tool_result(result)
     assert_equal "Integration Test Post", full_post["title"]
     assert full_post["content_html"].present?
-  end
-
-  private
-
-  def mcp_call(method, params = nil)
-    body = { jsonrpc: "2.0", method: method, id: SecureRandom.uuid }
-    body[:params] = params if params
-
-    post "/mcp",
-      params: body.to_json,
-      headers: {
-        "Authorization" => "Bearer #{TOKEN}",
-        "Content-Type" => "application/json",
-        "Accept" => "application/json, text/event-stream"
-      }
-
-    assert_response :success
-    JSON.parse(response.body)
-  end
-
-  def parse_tool_result(result)
-    text = result.dig("result", "content", 0, "text")
-    JSON.parse(text)
   end
 end

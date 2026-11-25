@@ -3,7 +3,7 @@ require "ostruct"
 
 class StripeWebhookJobTest < ActiveJob::TestCase
   test "handles checkout.session.completed" do
-    SiteSetting.current.update!(stripe_secret_key: "sk_test", stripe_publishable_key: "pk_test")
+    configure_stripe!
 
     tier = membership_tiers(:monthly)
     subscriber = subscribers(:with_token)
@@ -23,19 +23,16 @@ class StripeWebhookJobTest < ActiveJob::TestCase
       "customer" => "cus_new_checkout_test"
     }
 
-    PaymentService::Stripe.define_method(:retrieve_subscription) { |_id| mock_subscription }
-
-    assert_difference "Membership.count", 1 do
-      StripeWebhookJob.perform_now("checkout.session.completed", event_data)
+    with_instance_stub(PaymentService::Stripe, :retrieve_subscription, ->(_id) { mock_subscription }) do
+      assert_difference "Membership.count", 1 do
+        StripeWebhookJob.perform_now("checkout.session.completed", event_data)
+      end
     end
 
     membership = Membership.find_by(stripe_subscription_id: "sub_new_checkout_test")
     assert_equal subscriber, membership.subscriber
     assert_equal tier, membership.membership_tier
     assert membership.active?
-  ensure
-    SiteSetting.current.update!(stripe_secret_key: nil, stripe_publishable_key: nil)
-    PaymentService::Stripe.remove_method(:retrieve_subscription) if PaymentService::Stripe.method_defined?(:retrieve_subscription, false)
   end
 
   test "handles customer.subscription.updated" do

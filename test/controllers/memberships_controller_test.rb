@@ -2,11 +2,7 @@ require "test_helper"
 
 class MembershipsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    SiteSetting.current.update!(stripe_secret_key: "sk_test", stripe_publishable_key: "pk_test")
-  end
-
-  teardown do
-    SiteSetting.current.update!(stripe_secret_key: nil, stripe_publishable_key: nil)
+    configure_stripe!
   end
 
   test "GET index renders pricing page when payments configured" do
@@ -15,7 +11,7 @@ class MembershipsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET index redirects when payments not configured" do
-    SiteSetting.current.update!(stripe_secret_key: nil, stripe_publishable_key: nil)
+    unconfigure_stripe!
     get memberships_path
     assert_redirected_to root_path
   end

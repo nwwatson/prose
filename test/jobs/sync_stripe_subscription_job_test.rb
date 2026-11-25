@@ -12,7 +12,7 @@ class SyncStripeSubscriptionJobTest < ActiveJob::TestCase
   end
 
   test "syncs current memberships from Stripe" do
-    SiteSetting.current.update!(stripe_secret_key: "sk_test", stripe_publishable_key: "pk_test")
+    configure_stripe!
 
     membership = memberships(:active_membership)
     period_start = 1.day.ago.to_i
@@ -24,29 +24,21 @@ class SyncStripeSubscriptionJobTest < ActiveJob::TestCase
       canceled_at: nil
     )
 
-    PaymentService::Stripe.define_method(:retrieve_subscription) { |_id| mock_subscription }
-
-    SyncStripeSubscriptionJob.perform_now
+    with_instance_stub(PaymentService::Stripe, :retrieve_subscription, ->(_id) { mock_subscription }) do
+      SyncStripeSubscriptionJob.perform_now
+    end
 
     membership.reload
     assert membership.past_due?
     assert_equal Time.at(period_start).to_i, membership.current_period_start.to_i
     assert_equal Time.at(period_end).to_i, membership.current_period_end.to_i
-  ensure
-    SiteSetting.current.update!(stripe_secret_key: nil, stripe_publishable_key: nil)
-    PaymentService::Stripe.remove_method(:retrieve_subscription) if PaymentService::Stripe.method_defined?(:retrieve_subscription, false)
   end
 
   test "logs and continues when a membership fails to sync" do
-    SiteSetting.current.update!(stripe_secret_key: "sk_test", stripe_publishable_key: "pk_test")
+    configure_stripe!
 
-    PaymentService::Stripe.define_method(:retrieve_subscription) { |_id| raise "boom" }
-
-    assert_nothing_raised do
-      SyncStripeSubscriptionJob.perform_now
+    with_instance_stub(PaymentService::Stripe, :retrieve_subscription, ->(_id) { raise "boom" }) do
+      assert_nothing_raised { SyncStripeSubscriptionJob.perform_now }
     end
-  ensure
-    SiteSetting.current.update!(stripe_secret_key: nil, stripe_publishable_key: nil)
-    PaymentService::Stripe.remove_method(:retrieve_subscription) if PaymentService::Stripe.method_defined?(:retrieve_subscription, false)
   end
 end

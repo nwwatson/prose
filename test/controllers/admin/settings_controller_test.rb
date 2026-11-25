@@ -145,8 +145,6 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
     }
     assert_redirected_to edit_admin_settings_path
     assert_equal "sk_test_original", SiteSetting.current.stripe_secret_key
-  ensure
-    SiteSetting.current.update!(stripe_secret_key: nil)
   end
 
   test "PATCH update enables fediverse federation and shows the handle" do

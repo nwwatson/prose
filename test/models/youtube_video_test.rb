@@ -51,14 +51,4 @@ class YouTubeVideoTest < ActiveSupport::TestCase
     assert_equal "youtube_videos/youtube_video", video.to_attachable_partial_path
     assert_equal "youtube_videos/youtube_video", video.to_trix_content_attachment_partial_path
   end
-
-  private
-
-  def stub_oembed_fetch(data)
-    original_fetch = OembedFetcher.method(:fetch)
-    OembedFetcher.define_singleton_method(:fetch) { |*| data }
-    yield
-  ensure
-    OembedFetcher.define_singleton_method(:fetch, original_fetch)
-  end
 end

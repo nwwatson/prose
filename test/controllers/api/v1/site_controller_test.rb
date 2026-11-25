@@ -1,12 +1,8 @@
 require "test_helper"
 
 class Api::V1::SiteControllerTest < ActionDispatch::IntegrationTest
-  def auth_header
-    { "Authorization" => "Bearer prose_admin_test_token_1234567890abcdef" }
-  end
-
   test "returns site info" do
-    get "/api/v1/site", headers: auth_header
+    get "/api/v1/site", headers: api_auth_header
     assert_response :success
 
     body = JSON.parse(response.body)
