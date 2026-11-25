@@ -15,27 +15,14 @@ module Admin
     end
 
     def destroy
-      token = find_token
-      token.revoke!
+      ApiToken.visible_to(current_user).find(params[:id]).revoke!
       redirect_to admin_api_tokens_path, notice: t("flash.admin.api_tokens.revoked")
     end
 
     private
 
     def load_api_tokens
-      @api_tokens = if current_user.admin?
-        ApiToken.includes(user: :identity).order(created_at: :desc)
-      else
-        current_user.api_tokens.order(created_at: :desc)
-      end
-    end
-
-    def find_token
-      if current_user.admin?
-        ApiToken.find(params[:id])
-      else
-        current_user.api_tokens.find(params[:id])
-      end
+      @api_tokens = ApiToken.visible_to(current_user).includes(user: :identity).order(created_at: :desc)
     end
   end
 end

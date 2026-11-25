@@ -64,4 +64,16 @@ class Admin::MembershipsControllerTest < ActionDispatch::IntegrationTest
     post admin_subscriber_comp_membership_path(subscriber), params: { tier_id: tier.id }
     assert_redirected_to new_admin_session_path
   end
+
+  test "GET index ignores an unknown status" do
+    sign_in_as(:admin)
+    get admin_memberships_path
+    all_rows = css_select("tbody tr").size
+    assert_operator all_rows, :>, 0
+
+    get admin_memberships_path(status: "bogus")
+
+    assert_response :success
+    assert_select "tbody tr", count: all_rows
+  end
 end

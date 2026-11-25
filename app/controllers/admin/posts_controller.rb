@@ -7,16 +7,7 @@ module Admin
     before_action :set_chat, only: [ :edit, :update ]
 
     def index
-      @posts = Post.for_listing
-
-      case params[:status]
-      when "published"
-        @posts = @posts.published
-      when "scheduled"
-        @posts = @posts.scheduled
-      when "draft"
-        @posts = @posts.draft
-      end
+      @posts = filter_by_status(Post.for_listing, %w[published scheduled draft])
 
       @posts = @posts.search(params[:search]) if params[:search].present?
 

@@ -7,16 +7,7 @@ module Admin
     before_action :set_audience_options, only: [ :new, :create, :edit, :update ]
 
     def index
-      @newsletters = Newsletter.includes(:user)
-
-      case params[:status]
-      when "sent"
-        @newsletters = @newsletters.sent
-      when "scheduled"
-        @newsletters = @newsletters.scheduled
-      when "draft"
-        @newsletters = @newsletters.draft
-      end
+      @newsletters = filter_by_status(Newsletter.includes(:user), %w[sent scheduled draft])
 
       if params[:search].present?
         @newsletters = @newsletters.search(params[:search])

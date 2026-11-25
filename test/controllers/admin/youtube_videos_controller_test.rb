@@ -59,4 +59,17 @@ class Admin::YouTubeVideosControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_equal "Could not process YouTube URL", response.parsed_body["error"]
   end
+
+  test "create reports validation errors like the X embed does" do
+    sign_in_as(:admin)
+    invalid = YouTubeVideo.new
+    invalid.validate
+
+    with_singleton_stub(YouTubeVideo, :find_or_create_from_url, ->(*) { invalid }) do
+      post "/admin/youtube_videos", params: { url: "https://youtu.be/abc123" }, as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_equal invalid.errors.full_messages.join(", "), response.parsed_body["error"]
+  end
 end

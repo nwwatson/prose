@@ -70,4 +70,17 @@ class Admin::XPostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_equal "Could not process X post URL", response.parsed_body["error"]
   end
+
+  test "create reports validation errors" do
+    sign_in_as(:admin)
+    invalid = XPost.new
+    invalid.validate
+
+    with_singleton_stub(XPost, :find_or_create_from_url, ->(*) { invalid }) do
+      post "/admin/x_posts", params: { url: "https://x.com/jane/status/9" }, as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_equal invalid.errors.full_messages.join(", "), response.parsed_body["error"]
+  end
 end

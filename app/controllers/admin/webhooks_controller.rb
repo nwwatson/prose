@@ -1,7 +1,10 @@
 module Admin
   class WebhooksController < BaseController
+    include Admin::CrudResource
+
+    # require_admin must run before the record is loaded.
     before_action :require_admin
-    before_action :set_webhook, only: [ :show, :edit, :update, :destroy, :test, :regenerate_secret ]
+    crud_resource Webhook, member_actions: %i[show test regenerate_secret]
 
     def index
       @webhooks = Webhook.order(created_at: :desc)
@@ -15,31 +18,9 @@ module Admin
       @webhook = Webhook.new(events: [])
     end
 
+    # The signing secret is shown once, on the edit page.
     def create
-      @webhook = Webhook.new(webhook_params)
-
-      if @webhook.save
-        flash[:raw_secret] = @webhook.signing_secret
-        redirect_to edit_admin_webhook_path(@webhook), notice: t("flash.admin.webhooks.created")
-      else
-        render :new, status: :unprocessable_entity
-      end
-    end
-
-    def edit
-    end
-
-    def update
-      if @webhook.update(webhook_params)
-        redirect_to admin_webhooks_path, notice: t("flash.admin.webhooks.updated")
-      else
-        render :edit, status: :unprocessable_entity
-      end
-    end
-
-    def destroy
-      @webhook.destroy
-      redirect_to admin_webhooks_path, notice: t("flash.admin.webhooks.deleted")
+      super { flash[:raw_secret] = @webhook.signing_secret }
     end
 
     def test
@@ -55,11 +36,11 @@ module Admin
 
     private
 
-    def set_webhook
-      @webhook = Webhook.find(params[:id])
+    def after_save_path
+      @webhook.previously_new_record? ? edit_admin_webhook_path(@webhook) : super
     end
 
-    def webhook_params
+    def resource_params
       params.require(:webhook).permit(:url, :active, events: [])
     end
   end
