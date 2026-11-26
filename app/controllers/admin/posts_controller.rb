@@ -4,7 +4,8 @@ module Admin
     uses_editor_layout "admin_editor"
 
     before_action :set_post, only: [ :edit, :update, :destroy, :preview ]
-    before_action :set_chat, only: [ :edit, :update ]
+    before_action :load_chat, only: :edit
+    before_action :load_editor_options, only: [ :new, :create, :edit, :update ]
 
     def index
       @posts = filter_by_status(Post.for_listing, %w[published scheduled draft])
@@ -36,6 +37,8 @@ module Admin
         @post.create_version_if_needed!(user: current_user)
         respond_with_saved(@post, notice: t("flash.admin.posts.updated"), status: :ok)
       else
+        # Only a re-rendered editor shows the chat; a JSON autosave doesn't.
+        load_chat unless request.format.json?
         respond_with_errors(@post, :edit)
       end
     end
@@ -52,11 +55,21 @@ module Admin
     private
 
     def set_post
-      @post = Post.includes(:user, :category, :tags).find_by!(slug: params[:id])
+      scope = action_name.in?(%w[edit preview]) ? Post.includes(:user, :category, :tags) : Post
+      @post = scope.find_by!(slug: params[:id])
     end
 
-    def set_chat
-      @chat = Chat.find_or_create_for(post: @post, user: current_user, conversation_type: "chat") if SiteSetting.current.ai_configured?
+    def load_chat
+      return unless SiteSetting.current.ai_configured?
+
+      @chat = Chat.find_or_create_for(post: @post, user: current_user, conversation_type: "chat")
+      @chat_messages = @chat.conversation_messages
+    end
+
+    # Lazy relations: nothing is queried unless the editor renders.
+    def load_editor_options
+      @categories = Category.ordered
+      @tags = Tag.order(:name)
     end
 
     def post_params

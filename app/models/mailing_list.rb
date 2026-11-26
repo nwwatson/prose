@@ -20,6 +20,11 @@ class MailingList < ApplicationRecord
   scope :ordered, -> { order(:name) }
   scope :subscribed_by_default, -> { active.where(subscribe_by_default: true) }
 
+  # The lists a post's editor offers: active ones, plus any it already has.
+  def self.selectable_for(post)
+    active.or(where(id: post.mailing_list_ids)).ordered
+  end
+
   # Confirmed, not globally unsubscribed subscribers of this list.
   def recipients
     Subscriber.confirmed.subscribed_to(self)

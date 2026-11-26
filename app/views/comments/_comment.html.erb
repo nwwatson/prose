@@ -33,8 +33,10 @@
               class: "comment__action-btn--delete" %>
       </div>
     <% end %>
-    <div id="edit_comment_<%= comment.id %>" class="comment__edit-area">
-      <%= render "comments/edit_form", post: post, comment: comment %>
-    </div>
+    <% if comment.editable_by?(current_identity) %>
+      <div id="edit_comment_<%= comment.id %>" class="comment__edit-area">
+        <%= render "comments/edit_form", post: post, comment: comment %>
+      </div>
+    <% end %>
   <% end %>
 </div>

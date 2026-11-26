@@ -36,26 +36,21 @@
 
   <% if @post.featured_image.attached? %>
     <div class="post-detail__featured-image">
-      <%= optimized_featured_image_tag(@post, class: "post-detail__featured-image-img", alt: @post.title) %>
+      <%= optimized_featured_image_tag(@post, class: "post-detail__featured-image-img", alt: @post.title, loading: "eager", fetchpriority: "high") %>
     </div>
   <% end %>
 
   <% if @can_view %>
-    <% toc = TocExtractor.new(@post.content) %>
-    <% if @post.show_toc && toc.has_toc? %>
+    <%# Rendering Action Text is expensive: do it once and reuse the string. %>
+    <% body = @post.content.to_s %>
+    <% toc = TocExtractor.new(body) if @post.show_toc %>
+    <% if toc&.has_toc? %>
       <div data-controller="toc">
         <%= render "posts/table_of_contents", headings: toc.headings %>
-
-        <div class="post-detail__content prose prose-lg dark:prose-invert prose-headings:font-display prose-a:text-ink-blue prose-a:no-underline hover:prose-a:underline"
-             data-controller="code-highlight">
-          <%= sanitize toc.content_with_anchors, tags: ActionText::ContentHelper.allowed_tags + %w[id], attributes: ActionText::ContentHelper.allowed_attributes + %w[id] %>
-        </div>
+        <%= render "posts/body", html: sanitize(toc.content_with_anchors, tags: ActionText::ContentHelper.allowed_tags + %w[id], attributes: ActionText::ContentHelper.allowed_attributes + %w[id]) %>
       </div>
     <% else %>
-      <div class="post-detail__content prose prose-lg dark:prose-invert prose-headings:font-display prose-a:text-ink-blue prose-a:no-underline hover:prose-a:underline"
-           data-controller="code-highlight">
-        <%= @post.content %>
-      </div>
+      <%= render "posts/body", html: body %>
     <% end %>
 
     <% if @post.tags.any? %>

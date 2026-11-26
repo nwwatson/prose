@@ -6,7 +6,7 @@ module ReadingListHelper
     if identity_signed_in?
       tag.meta name: "reading-list", content: "account", data: {
         key: "identity-#{current_identity.id}",
-        post_ids: current_identity.reading_list_post_ids.to_json,
+        post_ids: reading_list_post_ids.to_json,
         items_url: reading_list_items_path,
         import_url: reading_list_import_path
       }
@@ -33,6 +33,11 @@ module ReadingListHelper
   end
 
   private
+
+  # Memoized for the request (the view context lives that long).
+  def reading_list_post_ids
+    @reading_list_post_ids ||= current_identity.reading_list_post_ids
+  end
 
   def bookmark_icon
     tag.svg class: "bookmark-btn__icon", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "1.5", "aria-hidden": "true" do
