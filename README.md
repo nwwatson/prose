@@ -123,6 +123,8 @@ curl https://your-domain.com/api/v1/posts \
 
 This project uses **GitHub Flow**. The `master` branch is always deployable — all work happens on feature branches and is merged via pull request.
 
+How the code is organized is documented in [docs/design_guide.md](docs/design_guide.md) (general patterns) and [docs/architecture/](docs/architecture/README.md) (one file per feature). `CLAUDE.md` lists the project rules.
+
 ### Workflow
 
 1. Create a branch from `master`:
