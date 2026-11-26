@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["card", "input"]
+  static targets = ["card"]
 
   select(event) {
     const card = event.currentTarget

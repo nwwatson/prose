@@ -10,7 +10,7 @@
      class="relative mt-2">
 
   <%# Empty sentinel so tag_ids is always submitted (clears all tags when none selected) %>
-  <input type="hidden" name="<%= field_name %>" value="" form="<%= form_attr %>" data-tag-select-target="emptyInput">
+  <input type="hidden" name="<%= field_name %>" value="" form="<%= form_attr %>">
 
   <%# Container for hidden inputs (one per selected tag) %>
   <div data-tag-select-target="hiddenInputs">
@@ -20,8 +20,7 @@
   </div>
 
   <%# Combo box: pills + search input %>
-  <div data-tag-select-target="comboBox"
-       data-action="click->tag-select#focusInput"
+  <div data-action="click->tag-select#focusInput"
        class="flex flex-wrap items-center gap-1 rounded-md bg-white px-2 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 cursor-text min-h-[38px]">
     <div data-tag-select-target="pills" class="contents">
       <% tags.select { |t| selected_set.include?(t.id) }.each do |tag| %>

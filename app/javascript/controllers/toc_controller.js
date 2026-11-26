@@ -1,6 +1,15 @@
 import { Controller } from "@hotwired/stimulus"
+import { useTimeouts } from "lib/timers"
 
 export default class extends Controller {
+  connect() {
+    this.timeouts = useTimeouts()
+  }
+
+  disconnect() {
+    this.timeouts.clearAll()
+  }
+
   scrollTo(event) {
     event.preventDefault()
 
@@ -16,11 +25,11 @@ export default class extends Controller {
     history.pushState(null, "", href)
 
     // Apply highlight after scroll completes
-    setTimeout(() => this.highlight(target), 300)
+    this.timeouts.set(() => this.highlight(target), 300)
   }
 
   highlight(element) {
     element.classList.add("toc-highlight")
-    setTimeout(() => element.classList.remove("toc-highlight"), 2000)
+    this.timeouts.set(() => element.classList.remove("toc-highlight"), 2000)
   }
 }

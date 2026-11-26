@@ -34,13 +34,13 @@
       <%# Design section %>
       <div data-controller="template-select">
         <p class="text-sm font-medium text-gray-900 mb-3"><%= t('admin.newsletters.editor_panel.template') %></p>
-        <div class="grid grid-cols-1 gap-2" data-template-select-target="cards">
+        <div class="grid grid-cols-1 gap-2">
           <label class="relative cursor-pointer rounded-md border p-3 hover:bg-gray-50 <%= newsletter.template.blank? ? 'border-blue-500 ring-2 ring-blue-500' : 'border-gray-200' %>"
                  data-action="click->template-select#select"
                  data-template-select-target="card"
                  data-value="">
             <input type="radio" name="newsletter[template]" value="" form="newsletter_form"
-                   class="sr-only" data-template-select-target="input" data-action="change->autosave#handleChange"
+                   class="sr-only" data-action="change->autosave#handleChange"
                    <%= "checked" if newsletter.template.blank? %>>
             <span class="text-sm font-medium text-gray-900"><%= t('admin.newsletters.editor_panel.site_default') %></span>
             <span class="block text-xs text-gray-500"><%= t('admin.newsletters.editor_panel.site_default_description') %></span>
@@ -51,7 +51,7 @@
                    data-template-select-target="card"
                    data-value="<%= key %>">
               <input type="radio" name="newsletter[template]" value="<%= key %>" form="newsletter_form"
-                     class="sr-only" data-template-select-target="input" data-action="change->autosave#handleChange"
+                     class="sr-only" data-action="change->autosave#handleChange"
                      <%= "checked" if newsletter.template == key %>>
               <span class="text-sm font-medium text-gray-900"><%= email_template_name(key) %></span>
               <span class="block text-xs text-gray-500"><%= email_template_description(key) %></span>

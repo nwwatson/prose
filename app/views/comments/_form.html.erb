@@ -18,7 +18,7 @@
         <%= f.text_area :body, rows: 3, placeholder: t('comments.form.placeholder'),
               data: { markdown_preview_target: "textarea", controller: "autogrow", action: "input->autogrow#resize" },
               class: "form-input comment-form__textarea prose-comment font-serif" %>
-        <div data-markdown-preview-target="preview"
+        <div data-markdown-preview-target="preview" hidden
              class="comment-form__preview prose-comment">
         </div>
       </div>

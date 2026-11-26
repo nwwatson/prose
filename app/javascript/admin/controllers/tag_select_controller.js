@@ -5,7 +5,7 @@ import { ListboxNavigator } from "admin/lib/listbox"
 
 export default class extends Controller {
   static targets = [
-    "emptyInput", "hiddenInputs", "comboBox", "pills",
+    "hiddenInputs", "pills",
     "searchInput", "dropdown", "option", "createOption", "createLabel",
     "pillTemplate", "optionTemplate", "checkmarkTemplate"
   ]

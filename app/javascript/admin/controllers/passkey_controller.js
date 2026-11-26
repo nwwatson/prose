@@ -1,8 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 import { csrfToken, requestJSON } from "lib/request"
+import { decodeOptions, serializeCredential } from "admin/lib/webauthn"
 
 export default class extends Controller {
-  static targets = ["authButton", "registerButton", "nameInput", "error"]
+  static targets = ["nameInput", "error"]
 
   connect() {
     if (!window.PublicKeyCredential) {
@@ -15,34 +16,12 @@ export default class extends Controller {
     this.clearError()
 
     try {
-      const optionsResponse = await requestJSON("/admin/passkey_authentication/options", { method: "POST" })
-      optionsResponse.challenge = this.base64urlToBuffer(optionsResponse.challenge)
-
-      if (optionsResponse.allowCredentials) {
-        optionsResponse.allowCredentials = optionsResponse.allowCredentials.map(cred => ({
-          ...cred,
-          id: this.base64urlToBuffer(cred.id)
-        }))
-      }
-
-      const credential = await navigator.credentials.get({ publicKey: optionsResponse })
+      const options = await requestJSON("/admin/passkey_authentication/options", { method: "POST" })
+      const credential = await navigator.credentials.get({ publicKey: decodeOptions(options) })
 
       const verifyResponse = await requestJSON("/admin/passkey_authentication/verify", {
         method: "POST",
-        body: {
-          credential: {
-            id: credential.id,
-            rawId: this.bufferToBase64url(credential.rawId),
-            type: credential.type,
-            response: {
-              authenticatorData: this.bufferToBase64url(credential.response.authenticatorData),
-              clientDataJSON: this.bufferToBase64url(credential.response.clientDataJSON),
-              signature: this.bufferToBase64url(credential.response.signature),
-              userHandle: credential.response.userHandle ? this.bufferToBase64url(credential.response.userHandle) : null
-            },
-            clientExtensionResults: credential.getClientExtensionResults()
-          }
-        }
+        body: { credential: serializeCredential(credential) }
       })
 
       if (verifyResponse.redirect_url) {
@@ -61,18 +40,8 @@ export default class extends Controller {
     this.clearError()
 
     try {
-      const optionsResponse = await requestJSON("/admin/passkeys/registration_options", { method: "POST" })
-      optionsResponse.challenge = this.base64urlToBuffer(optionsResponse.challenge)
-      optionsResponse.user.id = this.base64urlToBuffer(optionsResponse.user.id)
-
-      if (optionsResponse.excludeCredentials) {
-        optionsResponse.excludeCredentials = optionsResponse.excludeCredentials.map(cred => ({
-          ...cred,
-          id: this.base64urlToBuffer(cred.id)
-        }))
-      }
-
-      const credential = await navigator.credentials.create({ publicKey: optionsResponse })
+      const options = await requestJSON("/admin/passkeys/registration_options", { method: "POST" })
+      const credential = await navigator.credentials.create({ publicKey: decodeOptions(options) })
 
       const name = this.hasNameInputTarget ? this.nameInputTarget.value : "Passkey"
 
@@ -91,20 +60,9 @@ export default class extends Controller {
       nameInput.value = name
       form.appendChild(nameInput)
 
-      const credentialData = {
-        id: credential.id,
-        rawId: this.bufferToBase64url(credential.rawId),
-        type: credential.type,
-        response: {
-          attestationObject: this.bufferToBase64url(credential.response.attestationObject),
-          clientDataJSON: this.bufferToBase64url(credential.response.clientDataJSON)
-        },
-        clientExtensionResults: credential.getClientExtensionResults()
-      }
-
       const credInput = document.createElement("input")
       credInput.name = "credential"
-      credInput.value = JSON.stringify(credentialData)
+      credInput.value = JSON.stringify(serializeCredential(credential))
       form.appendChild(credInput)
 
       document.body.appendChild(form)
@@ -133,26 +91,5 @@ export default class extends Controller {
       this.errorTarget.textContent = ""
       this.errorTarget.classList.add("hidden")
     }
-  }
-
-  base64urlToBuffer(base64url) {
-    const base64 = base64url.replace(/-/g, "+").replace(/_/g, "/")
-    const padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, "=")
-    const binary = atob(padded)
-    const buffer = new ArrayBuffer(binary.length)
-    const view = new Uint8Array(buffer)
-    for (let i = 0; i < binary.length; i++) {
-      view[i] = binary.charCodeAt(i)
-    }
-    return buffer
-  }
-
-  bufferToBase64url(buffer) {
-    const bytes = new Uint8Array(buffer)
-    let binary = ""
-    for (let i = 0; i < bytes.byteLength; i++) {
-      binary += String.fromCharCode(bytes[i])
-    }
-    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "")
   }
 }

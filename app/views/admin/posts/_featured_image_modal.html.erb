@@ -2,7 +2,7 @@
 
 <%# Backdrop %>
 <div data-ai-image-modal-target="backdrop"
-     data-action="click->ai-image-modal#cancel"
+     data-action="click->ai-image-modal#close"
      class="fixed inset-0 z-60 bg-black/50 transition-opacity duration-200 hidden"></div>
 
 <%# Dialog %>
@@ -12,7 +12,7 @@
     <%# Header %>
     <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
       <h3 class="text-base font-semibold text-gray-900"><%= t('admin.posts.featured_image_modal.title') %></h3>
-      <button type="button" data-action="click->ai-image-modal#cancel"
+      <button type="button" data-action="click->ai-image-modal#close"
               class="rounded-md p-1 text-gray-400 hover:text-gray-600 focus:outline-none">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -22,7 +22,7 @@
 
     <%# Body %>
     <div class="p-5">
-      <div id="ai-image-modal-content" data-ai-image-modal-target="content">
+      <div id="ai-image-modal-content">
         <div class="flex flex-col items-center py-6 text-center">
           <svg class="h-8 w-8 animate-spin text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

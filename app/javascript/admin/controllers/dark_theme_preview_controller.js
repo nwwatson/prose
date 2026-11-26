@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [
-    "themeSelect", "customFields", "preview", "previewLink",
+    "customFields", "preview", "previewLink",
     "bgColor", "textColor", "accentColor"
   ]
   static values = { themes: Object }

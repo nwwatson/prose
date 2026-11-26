@@ -59,7 +59,7 @@ export function renderBarChart(container, entries, { formatLabel, minBarWidth = 
       x2: width - paddingRight,
       y1: y,
       y2: y,
-      stroke: "#e5e7eb",
+      class: "stroke-gray-200",
       "stroke-width": "1"
     }))
 
@@ -67,8 +67,7 @@ export function renderBarChart(container, entries, { formatLabel, minBarWidth = 
       x: paddingLeft - 8,
       y: y + 4,
       "text-anchor": "end",
-      class: "text-xs",
-      fill: "#9ca3af",
+      class: "text-xs fill-gray-400",
       "font-size": "11"
     }, value))
   }
@@ -85,7 +84,7 @@ export function renderBarChart(container, entries, { formatLabel, minBarWidth = 
       width: barWidth,
       height: barHeight,
       rx: Math.min(barWidth / 4, 4),
-      fill: "#2563eb"
+      class: "fill-blue-600"
     })
     rect.appendChild(svgEl("title", {}, `${labels[i]}: ${v}`))
     svg.appendChild(rect)
@@ -99,7 +98,7 @@ export function renderBarChart(container, entries, { formatLabel, minBarWidth = 
       x: paddingLeft + i * barGap + barGap / 2,
       y: height - 10,
       "text-anchor": "middle",
-      fill: "#9ca3af",
+      class: "fill-gray-400",
       "font-size": "11"
     }, labels[i]))
   })
@@ -108,7 +107,7 @@ export function renderBarChart(container, entries, { formatLabel, minBarWidth = 
 }
 
 // Renders a line sparkline with area fill into container, replacing its contents.
-export function renderSparkline(container, values, { height = 200, padding = 20, stroke = "#4f46e5", fill = "rgba(79, 70, 229, 0.1)" } = {}) {
+export function renderSparkline(container, values, { height = 200, padding = 20 } = {}) {
   if (values.length === 0) {
     container.replaceChildren()
     return
@@ -129,8 +128,7 @@ export function renderSparkline(container, values, { height = 200, padding = 20,
 
   svg.appendChild(svgEl("polyline", {
     points: points.join(" "),
-    fill: "none",
-    stroke,
+    class: "fill-none stroke-indigo-600",
     "stroke-width": "2"
   }))
 
@@ -139,7 +137,7 @@ export function renderSparkline(container, values, { height = 200, padding = 20,
     ...points,
     `${padding + ((values.length - 1) / span) * (width - padding * 2)},${height - padding}`
   ]
-  svg.appendChild(svgEl("polygon", { points: areaPoints.join(" "), fill }))
+  svg.appendChild(svgEl("polygon", { points: areaPoints.join(" "), class: "fill-indigo-600/10" }))
 
   container.replaceChildren(svg)
 }

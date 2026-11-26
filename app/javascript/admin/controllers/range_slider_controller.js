@@ -12,7 +12,7 @@ export default class extends Controller {
     const input = this.inputTarget
     const percent = ((input.value - input.min) / (input.max - input.min)) * 100
 
-    input.style.background = `linear-gradient(to right, #3b82f6 ${percent}%, #e5e7eb ${percent}%)`
+    input.style.background = `linear-gradient(to right, var(--color-blue-500) ${percent}%, var(--color-gray-200) ${percent}%)`
     this.valueTarget.textContent = `${input.value}${this.suffixValue}`
   }
 }

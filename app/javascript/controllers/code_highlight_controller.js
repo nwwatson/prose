@@ -1,7 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
+import { copyText } from "lib/clipboard"
+import { useTimeouts } from "lib/timers"
+
+const FEEDBACK_DURATION_MS = 2000
 
 export default class extends Controller {
   async connect() {
+    this.timeouts = useTimeouts()
+
     const blocks = this.element.querySelectorAll("pre code")
     if (blocks.length === 0) return
 
@@ -11,6 +17,10 @@ export default class extends Controller {
       hljs.highlightElement(block)
       this.addCopyButton(block.closest("pre"))
     })
+  }
+
+  disconnect() {
+    this.timeouts.clearAll()
   }
 
   addCopyButton(pre) {
@@ -31,13 +41,10 @@ export default class extends Controller {
     const code = pre.querySelector("code")
     if (!code) return
 
-    try {
-      await navigator.clipboard.writeText(code.textContent)
-      button.textContent = "Copied!"
-      setTimeout(() => { button.textContent = "Copy" }, 2000)
-    } catch {
-      button.textContent = "Failed"
-      setTimeout(() => { button.textContent = "Copy" }, 2000)
-    }
+    const copied = await copyText(code.textContent)
+    if (!this.element.isConnected) return
+
+    button.textContent = copied ? "Copied!" : "Failed"
+    this.timeouts.set(() => { button.textContent = "Copy" }, FEEDBACK_DURATION_MS)
   }
 }
