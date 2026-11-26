@@ -95,6 +95,14 @@ module AdminHelper
     [ extra, base ].compact.join(" ")
   end
 
+  def admin_label_classes(extra: nil)
+    [ "block text-sm font-medium text-gray-900", extra ].compact.join(" ")
+  end
+
+  def admin_hint_classes
+    "mt-1 text-xs text-gray-500"
+  end
+
   def admin_th_classes
     "px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
   end

@@ -2,44 +2,39 @@
 <%= fields_for :post, post do |f| %>
   <div class="space-y-6 p-6">
     <div data-controller="status-toggle">
-      <%= f.label :status, class: "block text-sm font-medium text-gray-900" %>
+      <%= f.label :status, class: admin_label_classes %>
       <%= render "shared/custom_select", form: f, field: :status,
             options: Post.statuses.keys.map { |s| [status_label(post, s), s] },
             form_attr: "post_form",
             data: { action: "change->status-toggle#update" } %>
 
       <div data-status-toggle-target="publishedAt" class="<%= 'hidden' unless post.scheduled? %> mt-6">
-        <%= f.label :published_at, t('admin.posts.settings_fields.publish_at'), class: "block text-sm font-medium text-gray-900" %>
+        <%= f.label :published_at, t('admin.posts.settings_fields.publish_at'), class: admin_label_classes %>
         <div class="mt-2">
           <%= f.datetime_local_field :published_at,
                 form: "post_form",
                 class: admin_input_classes %>
         </div>
-        <p class="mt-1 text-xs text-gray-500"><%= t('admin.posts.settings_fields.schedule_help') %></p>
+        <p class="<%= admin_hint_classes %>"><%= t('admin.posts.settings_fields.schedule_help') %></p>
       </div>
     </div>
 
-    <div>
-      <%= f.label :slug, class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <%= f.text_field :slug,
-              form: "post_form",
-              class: admin_input_classes,
-              placeholder: t('admin.posts.settings_fields.slug_placeholder') %>
-      </div>
-      <p class="mt-1 text-xs text-gray-500"><%= t('admin.posts.settings_fields.slug_help') %></p>
-    </div>
+    <%= render "admin/shared/field", form: f, attribute: :slug,
+          hint: t('admin.posts.settings_fields.slug_help') do %>
+      <%= f.text_field :slug,
+            form: "post_form",
+            class: admin_input_classes,
+            placeholder: t('admin.posts.settings_fields.slug_placeholder') %>
+    <% end %>
 
-    <div>
-      <%= f.label :category_id, t('admin.posts.settings_fields.category'), class: "block text-sm font-medium text-gray-900" %>
+    <%= render "admin/shared/field", form: f, attribute: :category_id, label: t('admin.posts.settings_fields.category'), wrapper_class: nil do %>
       <%= render "shared/custom_select", form: f, field: :category_id,
             collection: Category.ordered, value_method: :id, text_method: :name,
             include_blank: t('shared.no_category'),
             form_attr: "post_form" %>
-    </div>
+    <% end %>
 
-    <div>
-      <%= f.label :tag_ids, t('admin.posts.settings_fields.tags'), class: "block text-sm font-medium text-gray-900" %>
+    <%= render "admin/shared/field", form: f, attribute: :tag_ids, label: t('admin.posts.settings_fields.tags'), wrapper_class: nil do %>
       <%= render "shared/tag_select",
             form: f,
             field: :tag_ids,
@@ -47,25 +42,24 @@
             selected_ids: post.tag_ids,
             form_attr: "post_form",
             create_url: admin_tags_path %>
-    </div>
+    <% end %>
 
     <div class="flex items-center">
       <%= f.check_box :featured, form: "post_form", class: "rounded border-gray-300 text-gray-600 focus:ring-gray-600" %>
       <%= f.label :featured, class: "ml-2 text-sm font-medium text-gray-900" %>
     </div>
 
-    <div>
-      <%= f.label :visibility, t('admin.posts.settings_fields.visibility'), class: "block text-sm font-medium text-gray-900" %>
+    <%= render "admin/shared/field", form: f, attribute: :visibility, label: t('admin.posts.settings_fields.visibility'), wrapper_class: nil,
+          hint: t('admin.posts.settings_fields.visibility_help') do %>
       <%= render "shared/custom_select", form: f, field: :visibility,
             options: Post.visibilities.keys.map { |v| [t("admin.posts.settings_fields.visibility_#{v}"), v] },
             form_attr: "post_form" %>
-      <p class="mt-1 text-xs text-gray-500"><%= t('admin.posts.settings_fields.visibility_help') %></p>
-    </div>
+    <% end %>
 
     <% mailing_lists = MailingList.active.or(MailingList.where(id: post.mailing_list_ids)).ordered %>
     <% if mailing_lists.any? %>
       <fieldset>
-        <legend class="block text-sm font-medium text-gray-900"><%= t('admin.posts.settings_fields.mailing_lists') %></legend>
+        <legend class="<%= admin_label_classes %>"><%= t('admin.posts.settings_fields.mailing_lists') %></legend>
         <%# Empty value so unchecking every list still submits (and means "email nobody"). %>
         <%= hidden_field_tag "post[mailing_list_ids][]", "", form: "post_form", id: nil %>
         <div class="mt-2 space-y-2">
@@ -78,7 +72,7 @@
             </label>
           <% end %>
         </div>
-        <p class="mt-1 text-xs text-gray-500">
+        <p class="<%= admin_hint_classes %>">
           <% if post.subscribers_notified_at %>
             <%= t('admin.posts.settings_fields.mailing_lists_sent', date: l(post.subscribers_notified_at, format: :with_time)) %>
           <% else %>
@@ -98,7 +92,7 @@
            data-ai-image-modal-suggest-url-value="<%= suggest_prompt_admin_post_ai_featured_image_path(post) %>"
            data-ai-image-modal-generate-url-value="<%= admin_post_ai_featured_image_path(post) %>"
          <% end %>>
-      <%= f.label :featured_image, class: "block text-sm font-medium text-gray-900" %>
+      <%= f.label :featured_image, class: admin_label_classes %>
       <div class="mt-2">
         <% if post.featured_image.attached? %>
           <div id="featured-image-preview" class="mb-3">
@@ -124,15 +118,12 @@
       <% end %>
     </div>
 
-    <div>
-      <%= f.label :meta_description, t('admin.posts.settings_fields.meta_description'), class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <%= f.text_area :meta_description, rows: 3, maxlength: 160, form: "post_form",
-              class: admin_input_classes,
-              placeholder: t('admin.posts.settings_fields.meta_description_placeholder') %>
-      </div>
-      <p class="mt-1 text-xs text-gray-500"><%= t('admin.posts.settings_fields.meta_description_help') %></p>
-    </div>
+    <%= render "admin/shared/field", form: f, attribute: :meta_description, label: t('admin.posts.settings_fields.meta_description'),
+          hint: t('admin.posts.settings_fields.meta_description_help') do %>
+      <%= f.text_area :meta_description, rows: 3, maxlength: 160, form: "post_form",
+            class: admin_input_classes,
+            placeholder: t('admin.posts.settings_fields.meta_description_placeholder') %>
+    <% end %>
 
     <% if post.persisted? %>
       <div class="border-t border-gray-200 pt-6">

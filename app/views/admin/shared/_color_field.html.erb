@@ -1,0 +1,17 @@
+<%# locals: (form:, attribute:, label:, target: {}, compact: false) %>
+<%# A swatch and hex text input kept in step by the color-pair controller. `target` is the preview controller's data attributes. %>
+<%
+  wrapper_class = compact ? "mt-1 flex items-center gap-2" : "mt-2 flex items-center gap-3"
+  swatch_class = compact ? "h-8 w-8 cursor-pointer rounded border border-gray-300 p-0.5" : "h-9 w-14 cursor-pointer rounded border border-gray-300"
+  text_class = "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm"
+  text_class += " font-mono" unless compact
+%>
+<div>
+  <%= form.label attribute, label, class: admin_label_classes %>
+  <div class="<%= wrapper_class %>" data-controller="color-pair">
+    <%= form.color_field attribute, class: swatch_class,
+          data: target.merge(color_pair_target: "color", action: "input->color-pair#fromColor") %>
+    <%= form.text_field attribute, class: text_class,
+          data: { color_pair_target: "text", action: "input->color-pair#fromText" } %>
+  </div>
+</div>

@@ -166,4 +166,15 @@ class Admin::SettingsControllerTest < ActionDispatch::IntegrationTest
     patch admin_settings_path, params: { site_setting: { activitypub_username: "not valid" } }
     assert_response :unprocessable_entity
   end
+
+  test "GET edit shows the mask for a stored key and never the key" do
+    sign_in_as(:admin)
+    SiteSetting.current.update!(stripe_secret_key: "sk_live_secret", openai_api_key: nil)
+
+    get edit_admin_settings_path
+
+    assert_select "input[type=password][name='site_setting[stripe_secret_key]'][value=?]", SiteSetting::MaskedSecrets::MASK
+    assert_select "input[type=password][name='site_setting[openai_api_key]'][value=?]", ""
+    assert_not_includes response.body, "sk_live_secret"
+  end
 end

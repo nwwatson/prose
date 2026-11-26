@@ -6,7 +6,7 @@
 %>
 <div data-controller="range-slider" data-range-slider-suffix-value="<%= suffix %>">
   <div class="flex justify-between mb-2">
-    <%= form.label field, label, class: "block text-sm font-medium text-gray-900" %>
+    <%= form.label field, label, class: admin_label_classes %>
     <span class="text-sm font-medium text-blue-600" data-range-slider-target="value"><%= form.object.send(field) %><%= suffix %></span>
   </div>
   <%= form.range_field field, min: min, max: max, step: step,

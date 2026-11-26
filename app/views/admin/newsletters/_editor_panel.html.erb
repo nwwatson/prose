@@ -60,7 +60,7 @@
         </div>
 
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-900 mb-1"><%= t('admin.newsletters.editor_panel.accent_color') %></label>
+          <label class="<%= admin_label_classes(extra: "mb-1") %>"><%= t('admin.newsletters.editor_panel.accent_color') %></label>
           <div class="flex items-center gap-2">
             <input type="color" name="newsletter[accent_color]" form="newsletter_form"
                    value="<%= newsletter.accent_color.presence || newsletter.resolved_accent_color %>"
@@ -72,18 +72,18 @@
                    data-action="change->autosave#handleChange"
                    class="<%= admin_input_classes %>">
           </div>
-          <p class="mt-1 text-xs text-gray-500"><%= t('admin.newsletters.editor_panel.accent_color_help') %></p>
+          <p class="<%= admin_hint_classes %>"><%= t('admin.newsletters.editor_panel.accent_color_help') %></p>
         </div>
 
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-900 mb-1"><%= t('admin.newsletters.editor_panel.preheader_text') %></label>
+          <label class="<%= admin_label_classes(extra: "mb-1") %>"><%= t('admin.newsletters.editor_panel.preheader_text') %></label>
           <input type="text" name="newsletter[preheader_text]" form="newsletter_form"
                  value="<%= newsletter.preheader_text %>"
                  maxlength="150"
                  placeholder="<%= site_setting.email_preheader_text.presence || t('admin.newsletters.editor_panel.preheader_placeholder') %>"
                  data-action="change->autosave#handleChange"
                  class="<%= admin_input_classes %>">
-          <p class="mt-1 text-xs text-gray-500"><%= t('admin.newsletters.editor_panel.preheader_help') %></p>
+          <p class="<%= admin_hint_classes %>"><%= t('admin.newsletters.editor_panel.preheader_help') %></p>
         </div>
       </div>
 
@@ -91,7 +91,7 @@
 
       <%# Mailing list targeting %>
       <div>
-        <label for="newsletter_mailing_list_id" class="block text-sm font-medium text-gray-900 mb-1"><%= t('admin.newsletters.editor_panel.mailing_list') %></label>
+        <label for="newsletter_mailing_list_id" class="<%= admin_label_classes(extra: "mb-1") %>"><%= t('admin.newsletters.editor_panel.mailing_list') %></label>
         <select name="newsletter[mailing_list_id]" id="newsletter_mailing_list_id" form="newsletter_form"
                 data-action="change->autosave#handleChange"
                 class="<%= admin_input_classes %>">
@@ -104,7 +104,7 @@
 
       <%# Segment targeting %>
       <div data-controller="segment-count">
-        <label for="newsletter_segment_id" class="block text-sm font-medium text-gray-900 mb-1"><%= t('admin.newsletters.editor_panel.audience') %></label>
+        <label for="newsletter_segment_id" class="<%= admin_label_classes(extra: "mb-1") %>"><%= t('admin.newsletters.editor_panel.audience') %></label>
         <select name="newsletter[segment_id]" id="newsletter_segment_id" form="newsletter_form"
                 data-segment-count-target="select"
                 data-action="change->autosave#handleChange change->segment-count#refresh"
@@ -160,7 +160,7 @@
                   class: admin_button_classes(variant: :primary, extra: "w-full") %>
 
             <%= form_with url: schedule_admin_newsletter_path(newsletter), method: :post, class: "space-y-2" do |f| %>
-              <label class="block text-sm font-medium text-gray-900"><%= t('admin.newsletters.editor_panel.schedule_for_later') %></label>
+              <label class="<%= admin_label_classes %>"><%= t('admin.newsletters.editor_panel.schedule_for_later') %></label>
               <%= f.datetime_local_field :scheduled_for,
                     class: admin_input_classes %>
               <%= f.submit t('admin.newsletters.editor_panel.schedule'), class: "w-full rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200 cursor-pointer" %>
