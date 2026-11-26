@@ -1,16 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 import { renderMarkdown } from "lib/markdown"
 
+const ACTIVE_TAB_CLASS = "comment-form__tab--active"
+
 export default class extends Controller {
   static targets = ["textarea", "preview", "writeTab", "previewTab"]
 
   showWrite() {
-    this.textareaTarget.classList.remove("hidden")
-    this.previewTarget.classList.add("hidden")
-    this.writeTabTarget.classList.add("border-gray-900", "text-gray-900", "dark:border-gray-100", "dark:text-gray-100")
-    this.writeTabTarget.classList.remove("border-transparent", "text-gray-500")
-    this.previewTabTarget.classList.remove("border-gray-900", "text-gray-900", "dark:border-gray-100", "dark:text-gray-100")
-    this.previewTabTarget.classList.add("border-transparent", "text-gray-500")
+    this.#show({ preview: false })
   }
 
   showPreview() {
@@ -19,11 +16,15 @@ export default class extends Controller {
       ? renderMarkdown(markdown, { theme: "comment" })
       : '<p class="text-gray-400 italic">Nothing to preview</p>'
 
-    this.textareaTarget.classList.add("hidden")
-    this.previewTarget.classList.remove("hidden")
-    this.previewTabTarget.classList.add("border-gray-900", "text-gray-900", "dark:border-gray-100", "dark:text-gray-100")
-    this.previewTabTarget.classList.remove("border-transparent", "text-gray-500")
-    this.writeTabTarget.classList.remove("border-gray-900", "text-gray-900", "dark:border-gray-100", "dark:text-gray-100")
-    this.writeTabTarget.classList.add("border-transparent", "text-gray-500")
+    this.#show({ preview: true })
+  }
+
+  // Uses the `hidden` attribute, not the utility class: unlayered component CSS
+  // (.form-input's `display: block`) outranks Tailwind's `.hidden`.
+  #show({ preview }) {
+    this.textareaTarget.hidden = preview
+    this.previewTarget.hidden = !preview
+    this.writeTabTarget.classList.toggle(ACTIVE_TAB_CLASS, !preview)
+    this.previewTabTarget.classList.toggle(ACTIVE_TAB_CLASS, preview)
   }
 }

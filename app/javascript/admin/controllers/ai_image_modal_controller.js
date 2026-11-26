@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { requestTurboStream } from "lib/request"
 
 export default class extends Controller {
-  static targets = ["backdrop", "dialog", "content", "promptInput"]
+  static targets = ["backdrop", "dialog"]
   static values = {
     suggestUrl: String,
     generateUrl: String
@@ -21,10 +21,6 @@ export default class extends Controller {
     document.body.classList.remove("overflow-hidden")
   }
 
-  cancel() {
-    this.close()
-  }
-
   suggestPrompt() {
     requestTurboStream(this.suggestUrlValue, { method: "POST" })
   }
@@ -38,9 +34,5 @@ export default class extends Controller {
   saveAndClose() {
     this.close()
     window.Turbo.visit(window.location.href)
-  }
-
-  regenerate() {
-    this.suggestPrompt()
   }
 }

@@ -2,8 +2,6 @@ import { Controller } from "@hotwired/stimulus"
 import { storage } from "lib/storage"
 
 export default class extends Controller {
-  static targets = ["icon"]
-
   connect() {
     this.mediaQuery = matchMedia("(prefers-color-scheme: dark)")
     this.handleSystemChange = this.handleSystemChange.bind(this)

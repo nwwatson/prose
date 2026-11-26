@@ -3,7 +3,7 @@ import { capitalize } from "lib/dom"
 
 export default class extends Controller {
   static targets = [
-    "preview", "previewBg", "previewAccent", "previewHeading", "previewBody",
+    "previewBg", "previewAccent", "previewHeading", "previewBody",
     "previewTemplate", "previewFont", "previewPreheader", "previewFooter",
     "previewSocialTwitter", "previewSocialGithub", "previewSocialLinkedin", "previewSocialWebsite",
     "previewSocial",

@@ -8,7 +8,6 @@
       <li class="toc__item<%= " toc__item--level-#{heading.level}" if heading.level > 2 %>">
         <a href="#<%= heading.id %>"
            class="toc__link"
-           data-toc-target="link"
            data-action="click->toc#scrollTo"><%= heading.text %></a>
       </li>
     <% end %>

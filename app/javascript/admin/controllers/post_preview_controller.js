@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { request } from "lib/request"
 
 export default class extends Controller {
-  static targets = ["editor", "preview", "toggleButton", "toggleIcon", "toggleLabel"]
+  static targets = ["editor", "preview", "toggleIcon", "toggleLabel"]
 
   connect() {
     this.previewing = false

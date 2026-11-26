@@ -26,6 +26,16 @@ class ShareButtonsTest < ApplicationSystemTestCase
     end
   end
 
+  test "copying the link shows the copied feedback" do
+    post = posts(:published_post)
+    visit post_path(slug: post.slug)
+
+    within ".share-buttons" do
+      click_button "Copy link"
+      assert_selector ".share-buttons__copy-feedback[role='status']", text: /\S/
+    end
+  end
+
   test "native share button is only revealed when the Web Share API is available" do
     post = posts(:published_post)
     visit post_path(slug: post.slug)

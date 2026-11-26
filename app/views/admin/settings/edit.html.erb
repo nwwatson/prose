@@ -116,7 +116,7 @@
             <%= f.label :dark_theme, t('admin.settings.edit.dark_theme_label'), class: "block text-sm font-medium text-gray-900" %>
             <%= render "shared/custom_select", form: f, field: :dark_theme,
                   options: SiteSetting::DarkTheme::DARK_THEMES.map { |key, meta| [meta[:name], key] },
-                  data: { dark_theme_preview_target: "themeSelect", action: "change->dark-theme-preview#update" } %>
+                  data: { action: "change->dark-theme-preview#update" } %>
           </div>
 
           <div data-dark-theme-preview-target="customFields" class="<%= @site_setting.dark_theme == 'custom' ? '' : 'hidden' %> space-y-4">
