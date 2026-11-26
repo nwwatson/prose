@@ -40,7 +40,7 @@
                  post: @post || Post.new,
                  ai_available: ai_available,
                  chat: @chat,
-                 messages: @chat ? @chat.messages.where(role: %w[user assistant]).order(:created_at) : [] %>
+                 messages: @chat_messages || [] %>
 
     </div>
   </body>

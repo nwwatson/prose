@@ -8,15 +8,20 @@ module Post::Discoverable
     candidates
   end
 
+  # Only what the previous/next links need.
   def previous_post
-    Post.live.where("published_at < ?", published_at).order(published_at: :desc).first
+    neighbors.where("published_at < ?", published_at).order(published_at: :desc).first
   end
 
   def next_post
-    Post.live.where("published_at > ?", published_at).order(published_at: :asc).first
+    neighbors.where("published_at > ?", published_at).order(published_at: :asc).first
   end
 
   private
+
+  def neighbors
+    Post.live.select(:id, :slug, :title)
+  end
 
   def tag_matched_posts(limit)
     return Post.none.to_a if tag_ids.empty?

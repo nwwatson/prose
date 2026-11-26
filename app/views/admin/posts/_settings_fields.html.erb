@@ -33,7 +33,7 @@
     <div>
       <%= f.label :category_id, t('admin.posts.settings_fields.category'), class: "block text-sm font-medium text-gray-900" %>
       <%= render "shared/custom_select", form: f, field: :category_id,
-            collection: Category.ordered, value_method: :id, text_method: :name,
+            collection: @categories, value_method: :id, text_method: :name,
             include_blank: t('shared.no_category'),
             form_attr: "post_form" %>
     </div>
@@ -43,7 +43,7 @@
       <%= render "shared/tag_select",
             form: f,
             field: :tag_ids,
-            tags: Tag.all.order(:name),
+            tags: @tags,
             selected_ids: post.tag_ids,
             form_attr: "post_form",
             create_url: admin_tags_path %>
@@ -62,7 +62,7 @@
       <p class="mt-1 text-xs text-gray-500"><%= t('admin.posts.settings_fields.visibility_help') %></p>
     </div>
 
-    <% mailing_lists = MailingList.active.or(MailingList.where(id: post.mailing_list_ids)).ordered %>
+    <% mailing_lists = MailingList.selectable_for(post) %>
     <% if mailing_lists.any? %>
       <fieldset>
         <legend class="block text-sm font-medium text-gray-900"><%= t('admin.posts.settings_fields.mailing_lists') %></legend>

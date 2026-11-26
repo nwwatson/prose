@@ -125,4 +125,9 @@ class Post::DiscoverableTest < ActiveSupport::TestCase
     assert related.size > 0
     assert related.all? { |rp| rp.id != post.id }
   end
+  test "previous_post and next_post load only what the links need" do
+    previous = posts(:published_post).previous_post || posts(:published_post).next_post
+
+    assert_equal %w[id slug title], previous.attributes.keys.sort
+  end
 end
