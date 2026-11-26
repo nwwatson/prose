@@ -1,62 +1,34 @@
 <%# locals: (post:, ai_available:, chat: nil, messages: [], versions_url: nil) %>
 
-<div data-editor-drawer-target="panel"
-     <% if ai_available %>
-       data-controller="ai-chat"
-       data-ai-chat-messages-url-value="<%= admin_post_ai_messages_path(post) %>"
-       data-ai-chat-conversation-url-value="<%= admin_post_ai_conversation_path(post) %>"
-       data-ai-chat-prompts-value="<%= %w[proofread critique brainstorm social].index_with { |action| t("admin.posts.editor_panel.quick_prompts.#{action}") }.to_json %>"
-       data-action="editor-drawer:tab-shown->ai-chat#tabShown"
-     <% end %>
-     class="fixed top-14 right-0 bottom-0 z-50 flex w-full translate-x-full flex-col border-l border-gray-200 bg-white shadow-xl transition-transform duration-300 ease-in-out sm:w-[28rem]">
+<% drawer_data = if ai_available
+     { controller: "ai-chat",
+       ai_chat_messages_url_value: admin_post_ai_messages_path(post),
+       ai_chat_conversation_url_value: admin_post_ai_conversation_path(post),
+       ai_chat_prompts_value: %w[proofread critique brainstorm social].index_with { |action| t("admin.posts.editor_panel.quick_prompts.#{action}") }.to_json,
+       action: "editor-drawer:tab-shown->ai-chat#tabShown" }
+   else
+     {}
+   end %>
+<% clear_conversation = capture do %>
+  <% if ai_available %>
+    <button type="button" data-action="click->ai-chat#clearConversation" title="<%= t('admin.posts.editor_panel.new_ai_conversation') %>"
+            class="rounded-md p-1.5 text-gray-400 hover:text-gray-600 focus:outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+    </button>
+  <% end %>
+<% end %>
 
-  <%# Panel header with pin button %>
-  <div class="flex items-center justify-between border-b border-gray-200 px-4 py-2">
-    <span class="text-sm font-semibold text-gray-900"><%= t('admin.posts.editor_panel.title') %></span>
-    <div class="flex items-center gap-1">
-      <% if ai_available %>
-        <button type="button" data-action="click->ai-chat#clearConversation" title="<%= t('admin.posts.editor_panel.new_ai_conversation') %>"
-                class="rounded-md p-1.5 text-gray-400 hover:text-gray-600 focus:outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-        </button>
-      <% end %>
-      <button type="button" data-action="click->editor-drawer#togglePin" title="<%= t('admin.posts.editor_panel.pin_panel') %>"
-              class="hidden rounded-md p-1.5 text-gray-400 hover:text-gray-600 focus:outline-none sm:inline-flex">
-        <svg data-editor-drawer-target="pinIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-        </svg>
-      </button>
-    </div>
-  </div>
-
+<%= render "layouts/editor/drawer", title: t('admin.posts.editor_panel.title'), header_actions: clear_conversation, data: drawer_data do %>
   <%# Tab bar %>
   <div class="flex border-b border-gray-200">
     <% if ai_available %>
-      <button type="button"
-              data-editor-drawer-target="tabButton"
-              data-tab="ai"
-              data-action="click->editor-drawer#switchTab"
-              class="flex-1 border-b-2 px-4 py-2.5 text-center text-sm font-medium border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700">
-        <%= t('admin.posts.editor_panel.ai_assistant') %>
-      </button>
+      <%= render "layouts/editor/drawer_tab", tab: "ai", label: t('admin.posts.editor_panel.ai_assistant') %>
     <% end %>
-    <button type="button"
-            data-editor-drawer-target="tabButton"
-            data-tab="settings"
-            data-action="click->editor-drawer#switchTab"
-            class="flex-1 border-b-2 px-4 py-2.5 text-center text-sm font-medium border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700">
-      <%= t('admin.posts.editor_panel.settings') %>
-    </button>
+    <%= render "layouts/editor/drawer_tab", tab: "settings", label: t('admin.posts.editor_panel.settings') %>
     <% if post.persisted? %>
-      <button type="button"
-              data-editor-drawer-target="tabButton"
-              data-tab="versions"
-              data-action="click->editor-drawer#switchTab"
-              class="flex-1 border-b-2 px-4 py-2.5 text-center text-sm font-medium border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700">
-        <%= t('admin.posts.editor_panel.versions') %>
-      </button>
+      <%= render "layouts/editor/drawer_tab", tab: "versions", label: t('admin.posts.editor_panel.versions') %>
     <% end %>
   </div>
 
@@ -146,4 +118,4 @@
       </turbo-frame>
     </div>
   <% end %>
-</div>
+<% end %>

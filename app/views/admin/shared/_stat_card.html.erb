@@ -1,9 +1,10 @@
-<%# locals: (label:, value:, trend: nil, note: nil) %>
-<div class="bg-white overflow-hidden shadow rounded-lg">
+<%# locals: (label:, value:, trend: nil, note: nil, wrapper_class: nil, value_class: nil) %>
+<%# wrapper_class: adds grid classes such as col-span-*; value_class: adds to the value (e.g. capitalize). %>
+<div class="<%= class_names("bg-white overflow-hidden shadow rounded-lg", wrapper_class) %>">
   <div class="p-4 sm:p-5">
     <div class="text-sm font-medium text-gray-500 truncate"><%= label %></div>
-    <div class="mt-1 text-2xl font-semibold text-gray-900 sm:text-3xl"><%= value %></div>
+    <div class="<%= class_names("mt-1 text-2xl font-semibold text-gray-900 sm:text-3xl", value_class) %>"><%= value %></div>
     <% if trend %><%= render_trend(trend) %><% end %>
-    <% if note %><div class="mt-1 text-xs text-gray-500"><%= note %></div><% end %>
+    <% if note %><div class="mt-1 text-xs text-gray-500 truncate"><%= note %></div><% end %>
   </div>
 </div>

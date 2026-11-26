@@ -1,0 +1,26 @@
+<%# locals: (headers:, rows:, empty:) %>
+<%# rows: an enumerable of cell arrays (a Hash works for label => count). The first column is the label; the rest are right-aligned counts. %>
+<% if rows.any? %>
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead>
+        <tr>
+          <% headers.each_with_index do |header, index| %>
+            <th class="<%= index.zero? ? "text-left" : "text-right" %> text-xs font-medium text-gray-500 uppercase pb-2"><%= header %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% rows.each do |cells| %>
+          <tr>
+            <% cells.each_with_index do |cell, index| %>
+              <td class="py-2 text-sm <%= index.zero? ? "text-gray-900" : "text-gray-500 text-right" %>"><%= cell %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-sm text-gray-500"><%= empty %></p>
+<% end %>

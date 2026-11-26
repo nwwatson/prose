@@ -14,122 +14,51 @@
 
   <%= render "admin/shared/stat_card", label: t('admin.dashboard.show.published_posts'), value: @published_posts_count %>
 
-  <div class="col-span-2 bg-white overflow-hidden shadow rounded-lg sm:col-span-1 lg:col-span-1">
-    <div class="p-4 sm:p-5">
-      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.dashboard.show.newsletters_sent_30d') %></div>
-      <div class="mt-1 text-2xl font-semibold text-gray-900 sm:text-3xl"><%= @newsletters_sent_30d %></div>
-    </div>
-  </div>
+  <%= render "admin/shared/stat_card", label: t('admin.dashboard.show.newsletters_sent_30d'), value: @newsletters_sent_30d,
+             wrapper_class: "col-span-2 sm:col-span-1 lg:col-span-1" %>
 </div>
 
 <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900"><%= t('admin.dashboard.show.views_last_30_days') %></h2>
-    <div class="mt-4 w-full" data-controller="chart" data-chart-target="canvas" data-chart-data-value="<%= @views_by_day.to_json %>" style="height: 200px;"></div>
+  <%= render "admin/shared/panel", title: t('admin.dashboard.show.views_last_30_days') do %>
+    <div class="w-full" data-controller="chart" data-chart-target="canvas" data-chart-data-value="<%= @views_by_day.to_json %>" style="height: 200px;"></div>
     <% if @views_by_day.empty? %>
       <p class="mt-4 text-sm text-gray-500"><%= t('admin.dashboard.show.no_view_data') %></p>
     <% end %>
-  </div>
+  <% end %>
 
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900"><%= t('admin.dashboard.show.subscriber_growth_30d') %></h2>
-    <div class="mt-4 w-full" data-controller="chart" data-chart-target="canvas" data-chart-data-value="<%= @subscriber_growth.to_json %>" style="height: 200px;"></div>
+  <%= render "admin/shared/panel", title: t('admin.dashboard.show.subscriber_growth_30d') do %>
+    <div class="w-full" data-controller="chart" data-chart-target="canvas" data-chart-data-value="<%= @subscriber_growth.to_json %>" style="height: 200px;"></div>
     <% if @subscriber_growth.empty? %>
       <p class="mt-4 text-sm text-gray-500"><%= t('admin.dashboard.show.no_subscriber_data') %></p>
     <% end %>
-  </div>
+  <% end %>
 </div>
 
 <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
   <%# Traffic Sources Summary %>
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-lg font-medium text-gray-900"><%= t('admin.dashboard.show.traffic_sources') %></h2>
-      <%= link_to t('admin.dashboard.show.view_details'), admin_traffic_path, class: "text-sm text-blue-600 hover:text-blue-800" %>
-    </div>
-    <% if @traffic_sources.any? %>
-      <div class="space-y-3">
-        <% max_count = @traffic_sources.values.max %>
-        <% @traffic_sources.first(5).each do |source, count| %>
-          <div>
-            <div class="flex justify-between text-sm mb-1">
-              <span class="font-medium text-gray-700 capitalize"><%= source %></span>
-              <span class="text-gray-500"><%= count %></span>
-            </div>
-            <div class="w-full bg-gray-100 rounded-full h-2">
-              <div class="bg-blue-600 h-2 rounded-full" style="width: <%= max_count > 0 ? (count.to_f / max_count * 100).round(1) : 0 %>%"></div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <p class="text-sm text-gray-500"><%= t('admin.dashboard.show.no_traffic_data') %></p>
-    <% end %>
-  </div>
+  <%= render "admin/shared/panel", title: t('admin.dashboard.show.traffic_sources'),
+             action: link_to(t('admin.dashboard.show.view_details'), admin_traffic_path, class: "text-sm text-blue-600 hover:text-blue-800") do %>
+    <%= render "admin/shared/bar_list", counts: @traffic_sources, limit: 5, empty: t('admin.dashboard.show.no_traffic_data') %>
+  <% end %>
 
   <%# Top Engaged Posts %>
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.dashboard.show.top_engaged_posts') %></h2>
-    <% if @top_engaged_posts.any? %>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.dashboard.show.post') %></th>
-              <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.dashboard.show.views') %></th>
-              <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.dashboard.show.loves') %></th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <% @top_engaged_posts.each do |post| %>
-              <tr>
-                <td class="py-2 text-sm text-gray-900">
-                  <%= link_to post.title, admin_post_dashboard_path(post), class: "hover:text-indigo-600" %>
-                </td>
-                <td class="py-2 text-sm text-gray-500 text-right"><%= post.views_count %></td>
-                <td class="py-2 text-sm text-gray-500 text-right"><%= post.loves_count %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <p class="text-sm text-gray-500"><%= t('admin.dashboard.show.no_views_recorded') %></p>
-    <% end %>
-  </div>
+  <%= render "admin/shared/panel", title: t('admin.dashboard.show.top_engaged_posts') do %>
+    <%= render "admin/shared/count_table",
+               headers: [ t('admin.dashboard.show.post'), t('admin.dashboard.show.views'), t('admin.dashboard.show.loves') ],
+               rows: @top_engaged_posts.map { |post| [ link_to(post.title, admin_post_dashboard_path(post), class: "hover:text-indigo-600"), post.views_count, post.loves_count ] },
+               empty: t('admin.dashboard.show.no_views_recorded') %>
+  <% end %>
 </div>
 
 <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.dashboard.show.top_posts_30d') %></h2>
-    <% if @top_posts.any? %>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.dashboard.show.post') %></th>
-              <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.dashboard.show.views') %></th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <% @top_posts.each do |post| %>
-              <tr>
-                <td class="py-2 text-sm text-gray-900">
-                  <%= link_to post.title, admin_post_dashboard_path(post), class: "hover:text-indigo-600" %>
-                </td>
-                <td class="py-2 text-sm text-gray-500 text-right"><%= post.views_count %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <p class="text-sm text-gray-500"><%= t('admin.dashboard.show.no_views_recorded') %></p>
-    <% end %>
-  </div>
+  <%= render "admin/shared/panel", title: t('admin.dashboard.show.top_posts_30d') do %>
+    <%= render "admin/shared/count_table",
+               headers: [ t('admin.dashboard.show.post'), t('admin.dashboard.show.views') ],
+               rows: @top_posts.map { |post| [ link_to(post.title, admin_post_dashboard_path(post), class: "hover:text-indigo-600"), post.views_count ] },
+               empty: t('admin.dashboard.show.no_views_recorded') %>
+  <% end %>
 
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.dashboard.show.recent_posts') %></h2>
+  <%= render "admin/shared/panel", title: t('admin.dashboard.show.recent_posts') do %>
     <% if @recent_posts.any? %>
       <div class="space-y-3">
         <% @recent_posts.each do |post| %>
@@ -145,13 +74,12 @@
     <% else %>
       <p class="text-sm text-gray-500"><%= t('admin.dashboard.show.no_published_posts') %></p>
     <% end %>
-  </div>
+  <% end %>
 </div>
 
 <%# Subscriber Acquisition & Recent Newsletters %>
 <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.dashboard.show.subscriber_acquisition') %></h2>
+  <%= render "admin/shared/panel", title: t('admin.dashboard.show.subscriber_acquisition') do %>
     <% if @acquisition_channels.any? %>
       <div class="space-y-3">
         <% @acquisition_channels.each do |channel, count| %>
@@ -164,35 +92,14 @@
     <% else %>
       <p class="text-sm text-gray-500"><%= t('admin.dashboard.show.no_subscriber_data') %></p>
     <% end %>
-  </div>
+  <% end %>
 
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.dashboard.show.recent_newsletters') %></h2>
-    <% if @recent_newsletters.any? %>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.dashboard.show.newsletter') %></th>
-              <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.dashboard.show.recipients') %></th>
-              <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('shared.sent') %></th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <% @recent_newsletters.each do |newsletter| %>
-              <tr>
-                <td class="py-2 text-sm text-gray-900">
-                  <%= link_to newsletter.title, admin_newsletter_path(newsletter), class: "hover:text-indigo-600" %>
-                </td>
-                <td class="py-2 text-sm text-gray-500 text-right"><%= newsletter.recipients_count %></td>
-                <td class="py-2 text-sm text-gray-500 text-right"><%= newsletter.sent_at ? l(newsletter.sent_at.to_date, format: :short) : nil %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <p class="text-sm text-gray-500"><%= t('admin.dashboard.show.no_newsletters_sent') %></p>
-    <% end %>
-  </div>
+  <%= render "admin/shared/panel", title: t('admin.dashboard.show.recent_newsletters') do %>
+    <%= render "admin/shared/count_table",
+               headers: [ t('admin.dashboard.show.newsletter'), t('admin.dashboard.show.recipients'), t('shared.sent') ],
+               rows: @recent_newsletters.map { |newsletter| [ link_to(newsletter.title, admin_newsletter_path(newsletter), class: "hover:text-indigo-600"),
+                                                              newsletter.recipients_count,
+                                                              newsletter.sent_at ? l(newsletter.sent_at.to_date, format: :short) : nil ] },
+               empty: t('admin.dashboard.show.no_newsletters_sent') %>
+  <% end %>
 </div>

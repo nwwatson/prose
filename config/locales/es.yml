@@ -360,6 +360,7 @@ es:
         error: "Error al guardar"
       keep_editing: "Seguir editando"
       discard: "Descartar"
+      pin_panel: "Fijar panel"
     admin_editor:
       posts: "Publicaciones"
       discard_post: "¿Descartar publicación?"
@@ -655,7 +656,6 @@ es:
           social: "Escribe publicaciones para redes sociales sobre mi artículo"
         title: "Panel del editor"
         new_ai_conversation: "Nueva conversación con IA"
-        pin_panel: "Fijar panel"
         ai_assistant: "Asistente de IA"
         settings: "Configuración"
         proofread: "Revisar"

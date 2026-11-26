@@ -1,0 +1,20 @@
+<%# locals: (title:, header_actions: nil, data: {}) %>
+<%# The editor drawer shell: panel, header bar and pin button. The block is the tab bar and tab contents. %>
+<%# data: adds attributes to the panel, e.g. a controller mounted on it; the editor-drawer panel target is always set. %>
+<%= tag.div data: { editor_drawer_target: "panel", **data },
+            class: "fixed top-14 right-0 bottom-0 z-50 flex w-full translate-x-full flex-col border-l border-gray-200 bg-white shadow-xl transition-transform duration-300 ease-in-out sm:w-[28rem]" do %>
+  <div class="flex items-center justify-between border-b border-gray-200 px-4 py-2">
+    <span class="text-sm font-semibold text-gray-900"><%= title %></span>
+    <div class="flex items-center gap-1">
+      <%= header_actions %>
+      <button type="button" data-action="click->editor-drawer#togglePin" title="<%= t("layouts.editor.pin_panel") %>"
+              class="hidden rounded-md p-1.5 text-gray-400 hover:text-gray-600 focus:outline-none sm:inline-flex">
+        <svg data-editor-drawer-target="pinIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <%= yield %>
+<% end %>
