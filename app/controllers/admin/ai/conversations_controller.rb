@@ -8,7 +8,7 @@ module Admin
           user: current_user,
           conversation_type: @conversation_type
         )
-        @messages = @chat.messages.where(role: %w[user assistant]).order(:created_at)
+        @messages = @chat.conversation_messages
 
         render layout: false if request.xhr? || request.headers["Accept"]&.include?("text/vnd.turbo-stream.html")
       end

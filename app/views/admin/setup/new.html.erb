@@ -5,37 +5,25 @@
 <%= form_with model: @user, url: admin_setup_path, class: "mt-6 space-y-6" do |f| %>
   <%= render "admin/shared/form_errors", record: @user, wrapper_class: "" %>
 
-  <div>
-    <%= f.label :display_name, class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= f.text_field :display_name, required: true, autofocus: true, autocomplete: "name",
-            class: admin_input_classes %>
-    </div>
-  </div>
+  <%= render "admin/shared/field", form: f, attribute: :display_name do %>
+    <%= f.text_field :display_name, required: true, autofocus: true, autocomplete: "name",
+          class: admin_input_classes %>
+  <% end %>
 
-  <div>
-    <%= f.label :email, class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= f.email_field :email, required: true, autocomplete: "email",
-            class: admin_input_classes %>
-    </div>
-  </div>
+  <%= render "admin/shared/field", form: f, attribute: :email do %>
+    <%= f.email_field :email, required: true, autocomplete: "email",
+          class: admin_input_classes %>
+  <% end %>
 
-  <div>
-    <%= f.label :password, class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= f.password_field :password, required: true, autocomplete: "new-password",
-            class: admin_input_classes %>
-    </div>
-  </div>
+  <%= render "admin/shared/field", form: f, attribute: :password do %>
+    <%= f.password_field :password, required: true, autocomplete: "new-password",
+          class: admin_input_classes %>
+  <% end %>
 
-  <div>
-    <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password",
-            class: admin_input_classes %>
-    </div>
-  </div>
+  <%= render "admin/shared/field", form: f, attribute: :password_confirmation do %>
+    <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password",
+          class: admin_input_classes %>
+  <% end %>
 
   <div>
     <%= f.submit t('admin.setup.new.create_account'), class: "flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-pointer" %>

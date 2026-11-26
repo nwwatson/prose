@@ -33,7 +33,6 @@ class NavigationItem < ApplicationRecord
         items[id].update_columns(position: index, updated_at: Time.current) if items[id].position != index
       end
     end
-    expire_navigation_cache
   end
 
   def move(direction)

@@ -8,6 +8,11 @@ class Chat < ApplicationRecord
 
   scope :for_post_and_user, ->(post, user) { where(post: post, user: user) }
 
+  # What the chat panel shows: no system or tool messages.
+  def conversation_messages
+    messages.where(role: %w[user assistant]).order(:created_at)
+  end
+
   def self.find_or_create_for(post:, user:, conversation_type: "chat")
     find_or_create_by!(post: post, user: user, conversation_type: conversation_type)
   end

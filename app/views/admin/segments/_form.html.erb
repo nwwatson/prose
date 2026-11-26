@@ -4,19 +4,13 @@
   <%= render "admin/shared/form_errors", record: segment, wrapper_class: "" %>
 
   <div class="max-w-2xl space-y-6">
-    <div>
-      <%= f.label :name, class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <%= f.text_field :name, class: admin_input_classes %>
-      </div>
-    </div>
+    <%= render "admin/shared/field", form: f, attribute: :name do %>
+      <%= f.text_field :name, class: admin_input_classes %>
+    <% end %>
 
-    <div>
-      <%= f.label :description, class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <%= f.text_area :description, rows: 2, class: admin_input_classes %>
-      </div>
-    </div>
+    <%= render "admin/shared/field", form: f, attribute: :description do %>
+      <%= f.text_area :description, rows: 2, class: admin_input_classes %>
+    <% end %>
 
     <hr class="border-gray-200">
 
@@ -54,7 +48,7 @@
     <%# Date filters %>
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div>
-        <label class="block text-sm font-medium text-gray-900"><%= t('admin.segments.form.subscribed_after') %></label>
+        <label class="<%= admin_label_classes %>"><%= t('admin.segments.form.subscribed_after') %></label>
         <div class="mt-2">
           <input type="date" name="segment[subscribed_after]" value="<%= segment.subscribed_after %>"
                  data-action="change->segment-builder#refresh"
@@ -62,7 +56,7 @@
         </div>
       </div>
       <div>
-        <label class="block text-sm font-medium text-gray-900"><%= t('admin.segments.form.subscribed_before') %></label>
+        <label class="<%= admin_label_classes %>"><%= t('admin.segments.form.subscribed_before') %></label>
         <div class="mt-2">
           <input type="date" name="segment[subscribed_before]" value="<%= segment.subscribed_before %>"
                  data-action="change->segment-builder#refresh"
@@ -73,7 +67,7 @@
 
     <%# Engagement filter %>
     <div>
-      <label class="block text-sm font-medium text-gray-900"><%= t('admin.segments.form.engagement') %></label>
+      <label class="<%= admin_label_classes %>"><%= t('admin.segments.form.engagement') %></label>
       <div class="mt-2">
         <select name="segment[engagement]" data-action="change->segment-builder#refresh"
                 class="<%= admin_input_classes %>">
@@ -82,7 +76,7 @@
           <option value="inactive" <%= "selected" if segment.engagement == "inactive" %>><%= t('admin.segments.form.inactive') %></option>
         </select>
       </div>
-      <p class="mt-1 text-xs text-gray-500"><%= t('admin.segments.form.engagement_help') %></p>
+      <p class="<%= admin_hint_classes %>"><%= t('admin.segments.form.engagement_help') %></p>
     </div>
 
     <%# Live subscriber count %>

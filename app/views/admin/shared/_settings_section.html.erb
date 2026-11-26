@@ -1,0 +1,8 @@
+<%# locals: (title:, description:, divider: true, data: {}) %>
+<%# A titled fieldset; the block is its body, including the body's own spacing wrapper. %>
+<%= tag.fieldset class: ("border-t border-gray-200 pt-6" if divider), data: data do %>
+  <legend class="text-lg font-semibold text-gray-900"><%= title %></legend>
+  <p class="mt-1 text-sm text-gray-600"><%= description %></p>
+
+  <%= yield %>
+<% end %>

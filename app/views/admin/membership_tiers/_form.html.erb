@@ -2,51 +2,33 @@
   <%= render "admin/shared/form_errors", record: tier, wrapper_class: "" %>
 
   <div class="max-w-lg space-y-6">
-    <div>
-      <%= f.label :name, class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <%= f.text_field :name, class: admin_input_classes %>
-      </div>
-    </div>
+    <%= render "admin/shared/field", form: f, attribute: :name do %>
+      <%= f.text_field :name, class: admin_input_classes %>
+    <% end %>
 
-    <div>
-      <%= f.label :description, class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <%= f.text_area :description, rows: 3, class: admin_input_classes %>
-      </div>
+    <%= render "admin/shared/field", form: f, attribute: :description do %>
+      <%= f.text_area :description, rows: 3, class: admin_input_classes %>
+    <% end %>
+
+    <div class="grid grid-cols-2 gap-4">
+      <%= render "admin/shared/field", form: f, attribute: :price_cents, label: t('admin.membership_tiers.form.price_cents'),
+            hint: t('admin.membership_tiers.form.price_help') do %>
+        <%= f.number_field :price_cents, min: 1, class: admin_input_classes, placeholder: "1000" %>
+      <% end %>
+
+      <%= render "admin/shared/field", form: f, attribute: :interval do %>
+        <%= f.select :interval, MembershipTier.intervals.keys.map { |i| [interval_label(i), i] }, {}, class: admin_input_classes %>
+      <% end %>
     </div>
 
     <div class="grid grid-cols-2 gap-4">
-      <div>
-        <%= f.label :price_cents, t('admin.membership_tiers.form.price_cents'), class: "block text-sm font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.number_field :price_cents, min: 1, class: admin_input_classes, placeholder: "1000" %>
-        </div>
-        <p class="mt-1 text-xs text-gray-500"><%= t('admin.membership_tiers.form.price_help') %></p>
-      </div>
+      <%= render "admin/shared/field", form: f, attribute: :currency do %>
+        <%= f.select :currency, SiteSetting::PaymentConfiguration::SUPPORTED_CURRENCIES.map { |k, v| [v, k] }, {}, class: admin_input_classes %>
+      <% end %>
 
-      <div>
-        <%= f.label :interval, class: "block text-sm font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.select :interval, MembershipTier.intervals.keys.map { |i| [interval_label(i), i] }, {}, class: admin_input_classes %>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <%= f.label :currency, class: "block text-sm font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.select :currency, SiteSetting::PaymentConfiguration::SUPPORTED_CURRENCIES.map { |k, v| [v, k] }, {}, class: admin_input_classes %>
-        </div>
-      </div>
-
-      <div>
-        <%= f.label :position, class: "block text-sm font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.number_field :position, min: 0, class: admin_input_classes %>
-        </div>
-      </div>
+      <%= render "admin/shared/field", form: f, attribute: :position do %>
+        <%= f.number_field :position, min: 0, class: admin_input_classes %>
+      <% end %>
     </div>
 
     <div class="flex items-center gap-2">

@@ -4,12 +4,9 @@
   <%= render "admin/shared/form_errors", record: webhook, wrapper_class: "" %>
 
   <div class="max-w-2xl space-y-6">
-    <div>
-      <%= f.label :url, class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <%= f.url_field :url, placeholder: "https://example.com/webhooks/prose", class: admin_input_classes %>
-      </div>
-    </div>
+    <%= render "admin/shared/field", form: f, attribute: :url do %>
+      <%= f.url_field :url, placeholder: "https://example.com/webhooks/prose", class: admin_input_classes %>
+    <% end %>
 
     <div>
       <p class="text-sm font-medium text-gray-900 mb-2"><%= t('admin.webhooks.form.events') %></p>
@@ -31,7 +28,7 @@
           <%= f.check_box :active, class: "rounded border-gray-300 text-gray-900 focus:ring-gray-600" %>
           <span class="text-sm text-gray-700"><%= t('admin.webhooks.form.active') %></span>
         </label>
-        <p class="mt-1 text-xs text-gray-500"><%= t('admin.webhooks.form.active_help', count: Webhook::MAX_CONSECUTIVE_FAILURES) %></p>
+        <p class="<%= admin_hint_classes %>"><%= t('admin.webhooks.form.active_help', count: Webhook::MAX_CONSECUTIVE_FAILURES) %></p>
       </div>
     <% end %>
 

@@ -32,6 +32,10 @@ class Post < ApplicationRecord
 
   slugged_from :title, message: :url_safe_slug, to_param: true
 
+  def loved_by?(identity)
+    identity.present? && loves.exists?(identity: identity)
+  end
+
   def threaded_comments
     comments.approved.top_level.includes(:identity, approved_replies: :identity)
   end
