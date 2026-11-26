@@ -95,25 +95,6 @@ class SiteSettingTest < ActiveSupport::TestCase
     assert setting.valid?
   end
 
-  test "locale_name returns human-readable name for locale" do
-    setting = SiteSetting.current
-    setting.locale = "es"
-    assert_equal "Español", setting.locale_name
-  end
-
-  test "locale_name returns English for default locale" do
-    setting = SiteSetting.current
-    assert_equal "English", setting.locale_name
-  end
-
-  test "locale_name falls back to English for unknown locale" do
-    setting = SiteSetting.current
-    # Bypass validation to test the fallback
-    setting.instance_variable_set(:@attributes, setting.instance_variable_get(:@attributes))
-    setting.send(:write_attribute, :locale, "xx")
-    assert_equal "English", setting.locale_name
-  end
-
   test "SUPPORTED_LOCALES is frozen" do
     assert SiteSetting::Localization::SUPPORTED_LOCALES.frozen?
   end

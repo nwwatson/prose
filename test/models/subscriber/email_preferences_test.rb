@@ -9,7 +9,6 @@ class Subscriber::EmailPreferencesTest < ActiveSupport::TestCase
     subscriber = Subscriber.create!(email: "new-reader@example.com")
 
     assert subscriber.email_immediate?
-    assert_not subscriber.email_digest?
   end
 
   test "rejects an unknown frequency" do
@@ -17,13 +16,6 @@ class Subscriber::EmailPreferencesTest < ActiveSupport::TestCase
 
     assert_not @subscriber.valid?
     assert @subscriber.errors[:email_frequency].any?
-  end
-
-  test "email_digest? is true only for weekly and monthly" do
-    assert Subscriber.new(email_frequency: :weekly).email_digest?
-    assert Subscriber.new(email_frequency: :monthly).email_digest?
-    assert_not Subscriber.new(email_frequency: :immediate).email_digest?
-    assert_not Subscriber.new(email_frequency: :none).email_digest?
   end
 
   test "switching from immediate to a digest starts the window now" do

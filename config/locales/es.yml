@@ -312,7 +312,6 @@ es:
     next: "Siguiente"
     page_number: "Página %{page}"
     home: "Inicio"
-    about: "Acerca de"
     search: "Buscar"
     edit: "Editar"
     delete: "Eliminar"
@@ -339,7 +338,6 @@ es:
     revoked: "Revocado"
     sent: "Enviado"
     drafts: "Borradores"
-    all_rights_reserved: "Todos los derechos reservados."
     are_you_sure: "¿Estás seguro?"
     no_category: "Sin categoría"
     not_set: "No establecido"
@@ -393,7 +391,6 @@ es:
       membership_tiers: "Niveles"
       members: "Miembros"
       revenue: "Ingresos"
-      payment_settings: "Configuración de pagos"
       system: "Sistema"
       profile: "Perfil"
       pages: "Páginas"
@@ -516,9 +513,6 @@ es:
       description: "Publicaciones etiquetadas con %{name}"
 
   pages:
-    about:
-      about_site: "Acerca de %{site_name}"
-      about_description: "%{site_name} es una publicación cuidadosamente elaborada enfocada en ofrecer escritura e ideas de calidad."
     show: {}
 
   email_preferences:
@@ -637,7 +631,6 @@ es:
         slug_help: "Deja en blanco para generar automáticamente desde el título."
         category: "Categoría"
         tags: "Etiquetas"
-        featured: "Destacado"
         visibility: "Visibilidad"
         visibility_public: "Público"
         visibility_members_only: "Solo miembros"
@@ -704,7 +697,6 @@ es:
         title: "Suscriptores"
         confirmed_of_total: "%{confirmed} confirmados de %{total} en total"
         email: "Correo electrónico"
-        handle: "Nombre de usuario"
         labels: "Etiquetas"
         status: "Estado"
         subscribed: "Suscrito"
@@ -813,20 +805,6 @@ es:
         delete_confirm: "¿Eliminar este comentario?"
         no_comments: "Aún no hay comentarios."
         fediverse: "Fediverso"
-    payment_settings:
-      edit:
-        title: "Configuración de pagos"
-        subtitle: "Conecta Stripe para aceptar membresías de pago."
-        stripe_keys: "Claves de API de Stripe"
-        stripe_description: "Ingresa tus claves de API de Stripe para habilitar membresías de pago. Las claves se cifran en reposo."
-        publishable_key: "Clave publicable"
-        secret_key: "Clave secreta"
-        webhook_secret: "Secreto de firma de webhook"
-        webhook_help: "Requerido para verificar eventos de webhook de Stripe."
-        webhook_url: "URL de webhook:"
-        currency: "Moneda"
-        currency_label: "Moneda predeterminada"
-        save_settings: "Guardar configuración"
     membership_tiers:
       index:
         title: "Niveles de membresía"
@@ -1524,8 +1502,6 @@ es:
       passkeys:
         registered: "Clave de acceso registrada exitosamente."
         removed: "Clave de acceso eliminada."
-      payment_settings:
-        saved: "Configuración de pagos guardada."
       membership_tiers:
         created: "Nivel creado."
         updated: "Nivel actualizado."

@@ -19,15 +19,6 @@ class ReferrerAnalyticsQuery
     breakdown(:utm_campaign, since: since)
   end
 
-  def campaign_detail(campaign, since: 30.days.ago)
-    scope = @relation.since(since).with_campaign(campaign)
-    {
-      total_views: scope.count,
-      sources: scope.group(:utm_source).order("count_all DESC").count,
-      mediums: scope.group(:utm_medium).order("count_all DESC").count
-    }
-  end
-
   private
 
   # Views per value of +column+ (blank rows excluded), most viewed first.

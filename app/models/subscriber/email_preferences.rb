@@ -42,10 +42,6 @@ module Subscriber::EmailPreferences
     self.class.preferences_verifier.generate(id, expires_in: PREFERENCES_TOKEN_EXPIRY)
   end
 
-  def email_digest?
-    DIGEST_PERIODS.key?(email_frequency)
-  end
-
   # Start of the publication window the subscriber's next digest covers.
   # `last_digest_at` marks how far posts have already been delivered; with no
   # cursor the digest covers the most recent period.

@@ -6,7 +6,6 @@ class SiteSetting < ApplicationRecord
   include EmailConfiguration
   include EmailBranding
   include Localization
-  include Crawlers
   include PaymentConfiguration
   include MaskedSecrets
   include ActivityPubConfiguration

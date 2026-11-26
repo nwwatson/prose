@@ -60,14 +60,4 @@ class PasskeyTest < ActiveSupport::TestCase
     passkey = Passkey.new
     assert_equal 0, passkey.sign_count
   end
-
-  test "user passkey_registered? returns true when passkeys exist" do
-    user = users(:admin)
-    assert user.passkey_registered?
-  end
-
-  test "user passkey_registered? returns false when no passkeys" do
-    user = users(:writer)
-    assert_not user.passkey_registered?
-  end
 end

@@ -1,7 +1,5 @@
 module Admin
   class PasskeyAuthenticationController < ApplicationController
-    include Authentication
-
     layout "admin_auth"
 
     def options

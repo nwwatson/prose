@@ -62,14 +62,6 @@ class SubscriberTest < ActiveSupport::TestCase
     assert_not_includes Subscriber.confirmed, subscriber
   end
 
-  test "active scope excludes unsubscribed" do
-    subscriber = subscribers(:confirmed)
-    assert_includes Subscriber.active, subscriber
-
-    subscriber.unsubscribe!
-    assert_not_includes Subscriber.active, subscriber
-  end
-
   test "unsubscribe! sets unsubscribed_at" do
     subscriber = subscribers(:confirmed)
     assert_not subscriber.unsubscribed?

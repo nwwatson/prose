@@ -15,7 +15,6 @@ class Subscriber < ApplicationRecord
   delegate :handle, to: :identity, allow_nil: true
 
   scope :confirmed, -> { where.not(confirmed_at: nil).where(unsubscribed_at: nil) }
-  scope :active, -> { where(unsubscribed_at: nil) }
 
   # Matches part of the email or handle. A blank term matches everyone.
   scope :search, ->(term) {

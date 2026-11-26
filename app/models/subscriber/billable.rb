@@ -13,10 +13,6 @@ module Subscriber::Billable
     active_membership.present?
   end
 
-  def free_member?
-    confirmed? && !paid_member?
-  end
-
   def stripe_customer_id
     memberships.where.not(stripe_customer_id: nil).order(created_at: :desc).pick(:stripe_customer_id)
   end

@@ -313,7 +313,6 @@ en:
     next: "Next"
     page_number: "Page %{page}"
     home: "Home"
-    about: "About"
     search: "Search"
     edit: "Edit"
     delete: "Delete"
@@ -340,7 +339,6 @@ en:
     revoked: "Revoked"
     sent: "Sent"
     drafts: "Drafts"
-    all_rights_reserved: "All rights reserved."
     are_you_sure: "Are you sure?"
     no_category: "No category"
     not_set: "Not set"
@@ -395,7 +393,6 @@ en:
       membership_tiers: "Tiers"
       members: "Members"
       revenue: "Revenue"
-      payment_settings: "Payment Settings"
       system: "System"
       profile: "Profile"
       pages: "Pages"
@@ -519,9 +516,6 @@ en:
       description: "Posts tagged with %{name}"
 
   pages:
-    about:
-      about_site: "About %{site_name}"
-      about_description: "%{site_name} is a thoughtfully crafted publication focused on delivering quality writing and ideas."
     show: {}
 
   email_preferences:
@@ -641,7 +635,6 @@ en:
         slug_help: "Leave blank to auto-generate from title."
         category: "Category"
         tags: "Tags"
-        featured: "Featured"
         visibility: "Visibility"
         visibility_public: "Public"
         visibility_members_only: "Members only"
@@ -708,7 +701,6 @@ en:
         title: "Subscribers"
         confirmed_of_total: "%{confirmed} confirmed of %{total} total"
         email: "Email"
-        handle: "Handle"
         labels: "Labels"
         status: "Status"
         subscribed: "Subscribed"
@@ -817,20 +809,6 @@ en:
         delete_confirm: "Delete this comment?"
         no_comments: "No comments yet."
         fediverse: "Fediverse"
-    payment_settings:
-      edit:
-        title: "Payment Settings"
-        subtitle: "Connect Stripe to accept paid memberships."
-        stripe_keys: "Stripe API Keys"
-        stripe_description: "Enter your Stripe API keys to enable paid memberships. Keys are encrypted at rest."
-        publishable_key: "Publishable Key"
-        secret_key: "Secret Key"
-        webhook_secret: "Webhook Signing Secret"
-        webhook_help: "Required to verify webhook events from Stripe."
-        webhook_url: "Webhook URL:"
-        currency: "Currency"
-        currency_label: "Default currency"
-        save_settings: "Save settings"
     membership_tiers:
       index:
         title: "Membership Tiers"
@@ -1529,8 +1507,6 @@ en:
       passkeys:
         registered: "Passkey registered successfully."
         removed: "Passkey removed."
-      payment_settings:
-        saved: "Payment settings saved."
       membership_tiers:
         created: "Tier created."
         updated: "Tier updated."

@@ -27,7 +27,6 @@ class MembershipsController < ApplicationController
   end
 
   def success
-    @tier = nil
   end
 
   def portal
