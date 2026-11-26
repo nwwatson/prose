@@ -12,7 +12,7 @@ module Newsletter::Templatable
   end
 
   def resolved_accent_color(site = SiteSetting.current)
-    accent_color.presence || site.email_accent_color.presence || "#18181b"
+    accent_color.presence || site.email_accent_color.presence || SiteSetting::EmailBranding::DEFAULT_ACCENT_COLOR
   end
 
   def resolved_preheader_text(site = SiteSetting.current)

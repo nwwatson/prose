@@ -33,6 +33,12 @@ class Newsletter::TemplatableTest < ActiveSupport::TestCase
     assert_equal "#00ff00", @newsletter.resolved_accent_color
   end
 
+  test "resolved_accent_color falls back to email branding default" do
+    @newsletter.accent_color = nil
+    SiteSetting.current.update!(email_accent_color: nil)
+    assert_equal SiteSetting::EmailBranding::DEFAULT_ACCENT_COLOR, @newsletter.resolved_accent_color
+  end
+
   test "resolved_preheader_text uses newsletter value when set" do
     @newsletter.preheader_text = "Custom preview"
     assert_equal "Custom preview", @newsletter.resolved_preheader_text
