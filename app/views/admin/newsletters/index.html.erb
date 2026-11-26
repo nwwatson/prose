@@ -7,10 +7,10 @@
   <%# Status tabs %>
   <div class="border-b border-gray-200">
     <nav class="-mb-px flex space-x-4 overflow-x-auto sm:space-x-8">
-      <%= link_to t('shared.all'), admin_newsletters_path, class: "whitespace-nowrap border-b-2 #{params[:status].blank? ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
-      <%= link_to t('shared.sent'), admin_newsletters_path(status: "sent"), class: "whitespace-nowrap border-b-2 #{params[:status] == 'sent' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
-      <%= link_to t('shared.scheduled'), admin_newsletters_path(status: "scheduled"), class: "whitespace-nowrap border-b-2 #{params[:status] == 'scheduled' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
-      <%= link_to t('shared.drafts'), admin_newsletters_path(status: "draft"), class: "whitespace-nowrap border-b-2 #{params[:status] == 'draft' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
+      <%= admin_tab_link t('shared.all'), admin_newsletters_path, active: params[:status].blank? %>
+      <%= admin_tab_link t('shared.sent'), admin_newsletters_path(status: "sent"), active: params[:status] == 'sent' %>
+      <%= admin_tab_link t('shared.scheduled'), admin_newsletters_path(status: "scheduled"), active: params[:status] == 'scheduled' %>
+      <%= admin_tab_link t('shared.drafts'), admin_newsletters_path(status: "draft"), active: params[:status] == 'draft' %>
     </nav>
   </div>
 

@@ -26,6 +26,6 @@
   <% end %>
 
   <div>
-    <%= f.submit t('admin.setup.new.create_account'), class: "flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-pointer" %>
+    <%= f.submit t('admin.setup.new.create_account'), class: admin_button_classes(size: :sm, extra: "flex w-full justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-pointer") %>
   </div>
 <% end %>

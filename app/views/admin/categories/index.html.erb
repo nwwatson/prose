@@ -15,9 +15,9 @@
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.categories.index.name') %></th>
-            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.categories.index.slug') %></th>
-            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"><%= t('admin.categories.index.posts') %></th>
+            <th class="<%= admin_th_classes %>"><%= t('admin.categories.index.name') %></th>
+            <th class="<%= admin_th_classes %>"><%= t('admin.categories.index.slug') %></th>
+            <th class="<%= admin_th_classes %>"><%= t('admin.categories.index.posts') %></th>
             <th class="relative px-6 py-3"><span class="sr-only"><%= t('shared.actions') %></span></th>
           </tr>
         </thead>
@@ -27,12 +27,7 @@
       </table>
     </div>
   <% else %>
-    <div class="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
-      <h3 class="text-sm font-semibold text-gray-900"><%= t('admin.categories.index.no_categories') %></h3>
-      <p class="mt-1 text-sm text-gray-500"><%= t('admin.categories.index.get_started') %></p>
-      <div class="mt-6">
-        <%= link_to t('admin.categories.index.new_category'), new_admin_category_path, class: admin_button_classes(variant: :primary) %>
-      </div>
-    </div>
+    <%= render "admin/shared/empty_state", title: t('admin.categories.index.no_categories'), description: t('admin.categories.index.get_started'),
+          action_label: t('admin.categories.index.new_category'), action_path: new_admin_category_path %>
   <% end %>
 </div>

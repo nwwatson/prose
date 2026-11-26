@@ -82,16 +82,26 @@ module AdminHelper
     content_tag(:span, label, class: "inline-flex items-center rounded-full #{padding} text-xs font-medium #{color_class}")
   end
 
-  def admin_button_classes(variant: :primary, extra: nil)
-    base = case variant
-    when :primary then "rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700"
-    when :outline then "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+  BUTTON_PADDING = { sm: "px-3 py-1.5", md: "px-3 py-2", lg: "px-4 py-2" }.freeze
+
+  def admin_button_classes(variant: :primary, size: :md, extra: nil)
+    colors = case variant
+    when :primary then "bg-gray-900 text-white shadow-sm hover:bg-gray-700"
+    when :outline then "bg-white text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+    when :danger then "bg-red-600 text-white shadow-sm hover:bg-red-500"
     end
-    [ extra, base ].compact.join(" ")
+    [ extra, "rounded-md #{BUTTON_PADDING.fetch(size)} text-sm font-semibold #{colors}" ].compact.join(" ")
   end
 
-  def admin_input_classes(extra: nil)
-    base = "block w-full rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm"
+  # shape: :block fills its container, :inline sizes to its content, :suffix
+  # follows a text prefix inside a shared, shadowed wrapper.
+  def admin_input_classes(shape: :block, extra: nil)
+    layout = case shape
+    when :block then "block w-full rounded-md shadow-sm"
+    when :inline then "rounded-md shadow-sm"
+    when :suffix then "block w-full min-w-0 flex-1 rounded-none rounded-r-md"
+    end
+    base = "#{layout} bg-white px-3 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm"
     [ extra, base ].compact.join(" ")
   end
 
@@ -113,6 +123,10 @@ module AdminHelper
     when "scheduled" then "bg-yellow-100 text-yellow-800"
     when "draft" then "bg-gray-100 text-gray-800"
     end
+  end
+
+  def page_status_color(status)
+    status == "published" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
   end
 
   def newsletter_status_color(status)
@@ -140,6 +154,16 @@ module AdminHelper
     when "canceled" then "bg-red-100 text-red-800"
     else "bg-gray-100 text-gray-800"
     end
+  end
+
+  def subscriber_label_pill(label)
+    content_tag(:span, label.name, class: "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium text-white",
+      style: "background-color: #{label.color}")
+  end
+
+  def admin_tab_link(label, path, active:)
+    state = active ? "border-gray-900 text-gray-900" : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+    link_to label, path, class: "whitespace-nowrap border-b-2 #{state} px-1 pb-4 text-sm font-medium"
   end
 
   def admin_nav_link(label, path, icon: nil, small: false)

@@ -21,17 +21,9 @@
       <div class="px-6 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
         <dt class="text-sm font-medium text-gray-500"><%= t('admin.memberships.show.status') %></dt>
         <dd class="mt-1 text-sm sm:col-span-2 sm:mt-0">
-          <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium
-            <%= case @membership.status
-                when 'active' then 'bg-green-100 text-green-800'
-                when 'past_due' then 'bg-yellow-100 text-yellow-800'
-                when 'canceled' then 'bg-red-100 text-red-800'
-                else 'bg-gray-100 text-gray-800'
-                end %>">
-            <%= status_label(@membership) %>
-          </span>
+          <%= status_badge(status_label(@membership), color_class: membership_status_color(@membership.status), size: :sm) %>
           <% if @membership.complimentary? %>
-            <span class="ml-2 inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800"><%= t('admin.memberships.show.complimentary') %></span>
+            <%= status_badge(t('admin.memberships.show.complimentary'), color_class: "ml-2 bg-purple-100 text-purple-800", size: :sm) %>
           <% end %>
         </dd>
       </div>
@@ -57,7 +49,7 @@
   <% unless @membership.canceled? %>
     <div class="flex justify-end">
       <%= button_to t('admin.memberships.show.cancel_membership'), admin_membership_path(@membership), method: :delete,
-            class: "rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500",
+            class: admin_button_classes(variant: :danger),
             data: { turbo_confirm: t('admin.memberships.show.cancel_confirm') } %>
     </div>
   <% end %>

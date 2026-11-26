@@ -3,7 +3,7 @@
     <%= link_to page.title, edit_admin_page_path(page), class: "text-sm font-medium text-gray-900 hover:text-gray-600" %>
   </td>
   <td class="whitespace-nowrap px-6 py-4">
-    <%= status_badge(status_label(page), color_class: page.published? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800') %>
+    <%= status_badge(status_label(page), color_class: page_status_color(page.status)) %>
   </td>
   <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 font-mono">/<%= page.slug %></td>
   <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">

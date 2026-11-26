@@ -1,7 +1,7 @@
 <% content_for(:title, page_title(t('layouts.admin.settings'))) %>
 
 <div class="max-w-4xl">
-  <h1 class="text-2xl font-bold text-gray-900"><%= t('admin.settings.edit.title') %></h1>
+  <%= render "admin/shared/page_header", title: t('admin.settings.edit.title') %>
   <p class="mt-1 text-sm text-gray-600"><%= t('admin.settings.edit.subtitle') %></p>
   <% if current_user.admin? %>
     <p class="mt-2 text-sm text-gray-600">
@@ -122,8 +122,8 @@
             <p class="mb-2 text-xs font-medium uppercase tracking-wide" style="opacity: 0.5;"><%= t('shared.preview') %></p>
             <h2 class="text-xl font-bold"><%= t('admin.settings.edit.your_dark_theme') %></h2>
             <p class="mt-2 text-sm" style="opacity: 0.7;"><%= t('admin.settings.edit.dark_theme_preview_help') %></p>
-            <a href="#" class="mt-2 inline-block text-sm underline" data-dark-theme-preview-target="previewLink"
-               style="color: <%= @site_setting.dark_accent_hex %>;" onclick="return false;"><%= t('admin.settings.edit.sample_link') %></a>
+            <span class="mt-2 inline-block cursor-pointer text-sm underline" data-dark-theme-preview-target="previewLink"
+               style="color: <%= @site_setting.dark_accent_hex %>;" ><%= t('admin.settings.edit.sample_link') %></span>
           </div>
         </div>
       </div>
