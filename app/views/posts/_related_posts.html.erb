@@ -1,6 +1,6 @@
 <% if related_posts.any? %>
   <section class="related-posts">
-    <h3 class="related-posts__heading"><%= t('posts.related_posts.you_might_also_like') %></h3>
+    <h3 class="section-heading"><%= t('posts.related_posts.you_might_also_like') %></h3>
     <div class="related-posts__grid">
       <% related_posts.each do |post| %>
         <article>

@@ -2,7 +2,7 @@
  * .post-nav — Previous/next post navigation BEM block
  *
  * Usage:
- *   .post-nav              Nav container with top border
+ *   .post-nav              Nav container with top border (shared with .related-posts)
  *   .post-nav__inner       Flex row for prev/next sides
  *   .post-nav__side        Flex-1 column (left or right)
  *   .post-nav__side--right Right-aligned text
@@ -11,8 +11,10 @@
  *   .post-nav__title       Post title with group-hover color change
  * ========================================================================== */
 
-.post-nav {
-  @apply mt-10 border-t border-gray-200 dark:border-gray-700 pt-8;
+/* Both blocks that follow a post's body share this container. */
+.post-nav,
+.related-posts {
+  @apply mt-10 border-t border-rule pt-8;
 }
 
 .post-nav__inner {
@@ -32,7 +34,7 @@
 }
 
 .post-nav__label {
-  @apply text-sm text-gray-500 dark:text-gray-400;
+  @apply text-sm text-muted;
 }
 
 .post-nav__title {

@@ -22,11 +22,11 @@
  * ========================================================================== */
 
 .post-detail__breadcrumb {
-  @apply mb-4 text-sm text-gray-600 dark:text-gray-400;
+  @apply mb-4 text-sm text-muted-strong;
 }
 
 .post-detail__header {
-  @apply mb-8 border-b border-gray-300 dark:border-gray-700 pb-8;
+  @apply mb-8 border-b border-rule-strong pb-8;
 }
 
 .post-detail__title {
@@ -34,7 +34,7 @@
 }
 
 .post-detail__subtitle {
-  @apply mt-3 text-xl text-gray-600 dark:text-gray-400 font-subtitle;
+  @apply mt-3 text-xl text-muted-strong font-subtitle;
 }
 
 .post-detail__meta {
@@ -52,20 +52,20 @@
   @apply max-w-none;
 }
 
+/* Ruled-off sections under the post body, including the share buttons. */
+.post-detail__tags,
+.post-detail__engagement,
+.post-detail__comments-section,
+.share-buttons {
+  @apply mt-8 border-t border-rule pt-6;
+}
+
 .post-detail__tags {
-  @apply mt-8 border-t border-gray-200 dark:border-gray-700 pt-6 flex flex-wrap gap-2;
+  @apply flex flex-wrap gap-2;
 }
 
 .post-detail__tag {
   @apply inline-block rounded-full bg-gray-100 dark:bg-gray-700 px-3 py-1 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 no-underline;
-}
-
-.post-detail__engagement {
-  @apply mt-8 border-t border-gray-200 dark:border-gray-700 pt-6;
-}
-
-.post-detail__comments-section {
-  @apply mt-8 border-t border-gray-200 dark:border-gray-700 pt-6;
 }
 
 .post-detail__comments-heading {

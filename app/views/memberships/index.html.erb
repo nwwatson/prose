@@ -18,11 +18,11 @@
           <p class="pricing-card__description"><%= tier.description %></p>
         <% end %>
         <% if current_subscriber&.paid_member? %>
-          <%= link_to t('memberships.index.manage'), portal_memberships_path, class: "pricing-card__cta" %>
+          <%= link_to t('memberships.index.manage'), portal_memberships_path, class: "btn btn--inverse btn--large pricing-card__cta" %>
         <% elsif current_subscriber&.confirmed? %>
-          <%= button_to t('memberships.index.subscribe'), checkout_memberships_path(tier_id: tier.id), class: "pricing-card__cta" %>
+          <%= button_to t('memberships.index.subscribe'), checkout_memberships_path(tier_id: tier.id), class: "btn btn--inverse btn--large pricing-card__cta" %>
         <% else %>
-          <%= link_to t('memberships.index.sign_in_to_subscribe'), root_path, class: "pricing-card__cta" %>
+          <%= link_to t('memberships.index.sign_in_to_subscribe'), root_path, class: "btn btn--inverse btn--large pricing-card__cta" %>
         <% end %>
       </div>
     <% end %>

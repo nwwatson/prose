@@ -21,15 +21,15 @@
 }
 
 .comment--reply {
-  @apply ml-8 border-l-2 border-gray-200 dark:border-gray-700 pl-4;
+  @apply ml-8 border-l-2 border-rule pl-4;
 }
 
 .comment__deleted-text {
-  @apply text-sm text-gray-400 dark:text-gray-500 italic;
+  @apply text-sm text-faint italic;
 }
 
 .comment__meta {
-  @apply flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400;
+  @apply flex items-center space-x-2 text-sm text-muted;
 }
 
 .comment__author {
@@ -41,7 +41,7 @@
 }
 
 .comment__federated-badge {
-  @apply text-xs text-gray-400 dark:text-gray-500;
+  @apply text-xs text-faint;
 }
 
 .comment__body {

@@ -5,13 +5,9 @@
  * Note: prose typography classes are kept inline due to Tailwind v4 limitations.
  *
  * Usage:
- *   .static-page__title   Page title heading
+ *   (The title uses the shared .page-heading.)
  *   .static-page__content Page body content wrapper (compose with prose inline)
  * ========================================================================== */
-
-.static-page__title {
-  @apply font-display text-3xl font-bold;
-}
 
 .static-page__content {
   @apply mt-6 max-w-none;

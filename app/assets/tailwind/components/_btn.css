@@ -5,6 +5,8 @@
  *   .btn.btn--primary   Subscribe, comment submit, search, author "Load more"
  *   .btn.btn--secondary Comment edit cancel
  *   .btn.btn--danger    Unsubscribe confirm
+ *   .btn.btn--inverse   High-contrast call to action (paywall, pricing)
+ *   .btn.btn--large     Roomier variant (compose with --inverse)
  *   .btn.btn--small     Compact variant (compose with --primary, etc.)
  * ========================================================================== */
 
@@ -22,6 +24,14 @@
 
 .btn--danger {
   @apply bg-red-600 text-white hover:bg-red-500 px-4 py-2;
+}
+
+.btn--inverse {
+  @apply bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-200;
+}
+
+.btn--large {
+  @apply px-6 py-3;
 }
 
 .btn--small {

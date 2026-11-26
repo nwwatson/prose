@@ -11,7 +11,7 @@
  * ========================================================================== */
 
 .bookmark-btn {
-  @apply ml-auto inline-flex items-center rounded-md p-1 text-gray-400 dark:text-gray-500 hover:text-charcoal transition-colors cursor-pointer;
+  @apply ml-auto inline-flex items-center rounded-md p-1 text-faint hover:text-charcoal transition-colors cursor-pointer;
 }
 
 .bookmark-btn[hidden] {

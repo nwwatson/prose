@@ -9,7 +9,7 @@
 <% end %>
 
 <article>
-  <h1 class="static-page__title"><%= @page.title %></h1>
+  <h1 class="page-heading"><%= @page.title %></h1>
   <% if @page.content.present? %>
     <div class="static-page__content prose prose-lg prose-gray dark:prose-invert">
       <%= @page.content %>

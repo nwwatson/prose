@@ -30,6 +30,24 @@
   --color-charcoal: #2c2c2c;
   --color-ink-blue: #3d5a80;
 
+  /* -- Colors: Semantic Neutrals -------------------------------------------
+   * Greys shared by the public BEM components, each remapped in .dark {} below
+   * so a rule says `text-muted` rather than pairing a grey with a dark: grey.
+   * They aren't admin-configurable.
+   * --color-muted         Meta text, captions, hints.
+   * --color-muted-strong  Subtitles, excerpts, descriptions, secondary links.
+   * --color-faint         Idle icons and the smallest asides.
+   * --color-rule          Card borders and section dividers.
+   * --color-rule-strong   Masthead, footer and page-header borders.
+   * --color-surface       Raised cards (paywall, pricing).
+   * ----------------------------------------------------------------------- */
+  --color-muted: var(--color-gray-500);
+  --color-muted-strong: var(--color-gray-600);
+  --color-faint: var(--color-gray-400);
+  --color-rule: var(--color-gray-200);
+  --color-rule-strong: var(--color-gray-300);
+  --color-surface: var(--color-white);
+
   /* -- Colors: Dark Mode Palette -------------------------------------------
    * These define the raw dark-mode palette. The .dark {} block below remaps
    * the semantic tokens (cream, charcoal, ink-blue) to these values.
@@ -38,8 +56,6 @@
   --color-dark-bg: #1a1a2e;
   --color-dark-text: #e0def4;
   --color-dark-accent: #7ba4cc;
-  --color-dark-surface: #232340;
-  --color-dark-muted: #908caa;
 }
 
 /* Dark mode: remap semantic color tokens when .dark is on <html> */
@@ -47,6 +63,13 @@
   --color-cream: var(--color-dark-bg);
   --color-charcoal: var(--color-dark-text);
   --color-ink-blue: var(--color-dark-accent);
+
+  --color-muted: var(--color-gray-400);
+  --color-muted-strong: var(--color-gray-400);
+  --color-faint: var(--color-gray-500);
+  --color-rule: var(--color-gray-700);
+  --color-rule-strong: var(--color-gray-700);
+  --color-surface: var(--color-gray-800);
 }
 
 /* ==========================================================================

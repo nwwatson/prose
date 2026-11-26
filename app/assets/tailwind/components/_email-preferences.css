@@ -2,9 +2,7 @@
  * .email-preferences — Subscriber email frequency page BEM block
  *
  * Usage:
- *   .email-preferences                Page container
- *   .email-preferences__heading       Page heading
- *   .email-preferences__message       Intro text
+ *   (Page shell, heading and intro come from .narrow-page.)
  *   .email-preferences__notice        Muted note (e.g. already unsubscribed)
  *   .email-preferences__options       Option list (fieldset: lists or frequency)
  *   .email-preferences__legend        Visible heading for an option list
@@ -18,18 +16,6 @@
  *   .email-preferences__footer        Secondary links (unsubscribe/return)
  * ========================================================================== */
 
-.email-preferences {
-  @apply mx-auto max-w-md py-16;
-}
-
-.email-preferences__heading {
-  @apply text-center text-2xl font-bold text-gray-900 dark:text-gray-100;
-}
-
-.email-preferences__message {
-  @apply mt-4 text-center text-gray-600 dark:text-gray-400;
-}
-
 .email-preferences__notice {
   @apply mt-4 rounded-md bg-gray-100 px-4 py-3 text-center text-sm text-gray-600 dark:bg-gray-800 dark:text-gray-300;
 }
@@ -39,11 +25,11 @@
 }
 
 .email-preferences__legend {
-  @apply mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400;
+  @apply mb-3 text-sm font-semibold uppercase tracking-wide text-muted;
 }
 
 .email-preferences__option {
-  @apply flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400 has-[:checked]:border-gray-900 dark:border-gray-700 dark:hover:border-gray-500 dark:has-[:checked]:border-gray-100;
+  @apply flex cursor-pointer items-start gap-3 rounded-lg border border-rule p-4 transition-colors hover:border-gray-400 has-[:checked]:border-gray-900 dark:hover:border-gray-500 dark:has-[:checked]:border-gray-100;
 }
 
 .email-preferences__radio {
@@ -55,11 +41,11 @@
 }
 
 .email-preferences__option-meta {
-  @apply ml-1 text-sm font-normal text-gray-500 dark:text-gray-400;
+  @apply ml-1 text-sm font-normal text-muted;
 }
 
 .email-preferences__option-hint {
-  @apply block text-sm text-gray-500 dark:text-gray-400;
+  @apply block text-sm text-muted;
 }
 
 .email-preferences__error {
@@ -71,5 +57,5 @@
 }
 
 .email-preferences__footer {
-  @apply mt-6 text-center text-sm text-gray-500 dark:text-gray-400;
+  @apply mt-6 text-center text-sm text-muted;
 }

@@ -18,7 +18,7 @@
  * ========================================================================== */
 
 .author-profile {
-  @apply border-b border-gray-300 dark:border-gray-700 pb-8 mb-8;
+  @apply border-b border-rule-strong pb-8 mb-8;
 }
 
 .author-profile__inner {
@@ -34,7 +34,7 @@
 }
 
 .author-profile__avatar-initial {
-  @apply text-3xl font-bold text-gray-500 dark:text-gray-400;
+  @apply text-3xl font-bold text-muted;
 }
 
 .author-profile__info {
@@ -44,11 +44,11 @@
 /* NOTE: prose utilities from @tailwindcss/typography cannot be used with
    @apply in Tailwind v4. The prose classes are kept inline in the template. */
 .author-profile__bio {
-  @apply mt-3 max-w-none text-gray-600 dark:text-gray-400;
+  @apply mt-3 max-w-none text-muted-strong;
 }
 
 .author-profile__meta {
-  @apply mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400;
+  @apply mt-3 flex flex-wrap items-center gap-3 text-sm text-muted;
 }
 
 .author-profile__social-links {

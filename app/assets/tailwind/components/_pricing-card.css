@@ -10,11 +10,11 @@
  *   .pricing-card__amount      Dollar amount
  *   .pricing-card__interval    Billing interval (/mo, /yr)
  *   .pricing-card__description Tier description text
- *   .pricing-card__cta         Subscribe/action button
+ *   .pricing-card__cta         Button placement (compose with .btn .btn--inverse .btn--large)
  * ========================================================================== */
 
 .pricing-card {
-  @apply rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 text-center shadow-sm transition-shadow hover:shadow-md;
+  @apply rounded-xl border border-rule bg-surface p-8 text-center shadow-sm transition-shadow hover:shadow-md;
 }
 
 .pricing-card__name {
@@ -30,13 +30,13 @@
 }
 
 .pricing-card__interval {
-  @apply text-lg text-gray-500 dark:text-gray-400;
+  @apply text-lg text-muted;
 }
 
 .pricing-card__description {
-  @apply mt-4 text-sm text-gray-600 dark:text-gray-400;
+  @apply mt-4 text-sm text-muted-strong;
 }
 
 .pricing-card__cta {
-  @apply mt-8 inline-block w-full rounded-md bg-gray-900 dark:bg-gray-100 px-6 py-3 text-sm font-semibold text-white dark:text-gray-900 shadow-sm hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors cursor-pointer;
+  @apply mt-8 inline-block w-full;
 }

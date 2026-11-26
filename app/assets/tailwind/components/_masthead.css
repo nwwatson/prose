@@ -15,7 +15,7 @@
  * ========================================================================== */
 
 .masthead {
-  @apply border-b border-gray-300 dark:border-gray-700 py-6;
+  @apply border-b border-rule-strong py-6;
 }
 
 .masthead__inner {
@@ -34,16 +34,13 @@
   @apply absolute right-0 flex items-center;
 }
 
-.masthead__action-link {
-  @apply rounded-md p-2 text-gray-500 dark:text-gray-400 hover:text-charcoal transition-colors;
+.masthead__action-link,
+.masthead__toggle-btn {
+  @apply rounded-md p-2 text-muted hover:text-charcoal transition-colors;
 }
 
 .masthead__action-link[aria-current="page"] {
   @apply text-charcoal;
-}
-
-.masthead__toggle-btn {
-  @apply rounded-md p-2 text-gray-500 dark:text-gray-400 hover:text-charcoal transition-colors;
 }
 
 .masthead__nav {
@@ -51,7 +48,7 @@
 }
 
 .masthead__nav-link {
-  @apply text-gray-600 dark:text-gray-400 hover:text-charcoal;
+  @apply text-muted-strong hover:text-charcoal;
 }
 
 .masthead__nav-link[aria-current="page"] {
