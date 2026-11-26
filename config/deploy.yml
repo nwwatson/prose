@@ -105,7 +105,7 @@ builder:
   #
   # # Pass arguments and secrets to the Docker build process
   # args:
-  #   RUBY_VERSION: 3.4.13
+  #   RUBY_VERSION: 4.0.10
   # secrets:
   #   - GITHUB_TOKEN
 

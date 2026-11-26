@@ -26,7 +26,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 
 ## Tech Stack
 
-- **Ruby** 3.4.13 / **Rails** 8.1
+- **Ruby** 4.0.10 / **Rails** 8.1
 - **SQLite3** for all persistence
 - **Solid Queue** — database-backed background jobs
 - **Solid Cache** — database-backed caching
@@ -42,7 +42,7 @@ A self-hosted blogging platform built with Ruby on Rails 8.1 and the Solid stack
 
 ### Prerequisites
 
-- Ruby 3.4.13
+- Ruby 4.0.10
 - SQLite3
 
 ### Setup
