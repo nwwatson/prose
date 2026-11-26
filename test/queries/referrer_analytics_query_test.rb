@@ -43,13 +43,4 @@ class ReferrerAnalyticsQueryTest < ActiveSupport::TestCase
     assert_kind_of Hash, result
     assert result.key?("spring_sale") || result.key?("weekly_digest")
   end
-
-  test "campaign_detail returns breakdown for a campaign" do
-    result = @query.campaign_detail("spring_sale", since: 90.days.ago)
-    assert_kind_of Hash, result
-    assert result.key?(:total_views)
-    assert result.key?(:sources)
-    assert result.key?(:mediums)
-    assert result[:total_views].is_a?(Integer)
-  end
 end

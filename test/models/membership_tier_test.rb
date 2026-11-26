@@ -64,11 +64,6 @@ class MembershipTierTest < ActiveSupport::TestCase
     assert_equal membership_tiers(:monthly), tiers.first
   end
 
-  test "price_in_dollars" do
-    tier = membership_tiers(:monthly)
-    assert_equal 10.0, tier.price_in_dollars
-  end
-
   test "formatted_price" do
     tier = membership_tiers(:monthly)
     assert_equal "$10.00", tier.formatted_price

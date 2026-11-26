@@ -85,7 +85,7 @@ Rails.application.routes.draw do
         post :registration_options
       end
     end
-    resources :posts do
+    resources :posts, except: [ :show ] do
       member do
         get :preview
       end
@@ -106,7 +106,7 @@ Rails.application.routes.draw do
     resources :x_posts, only: [ :create ]
     resources :youtube_videos, only: [ :create ]
     resources :tags, only: [ :create ]
-    resources :categories
+    resources :categories, except: [ :show ]
     resources :comments, only: [ :index, :update, :destroy ]
     resources :newsletters do
       member do
@@ -115,7 +115,7 @@ Rails.application.routes.draw do
         get :preview
       end
     end
-    resources :subscriber_labels
+    resources :subscriber_labels, except: [ :show ]
     resources :mailing_lists, except: [ :show ]
     resources :segments do
       member { get :count }
@@ -129,7 +129,7 @@ Rails.application.routes.draw do
     resource :profile, only: [ :edit, :update ]
     resource :settings, only: [ :edit, :update ]
     resource :newsletter_settings, only: [ :edit, :update ]
-    resources :pages
+    resources :pages, except: [ :show ]
     resources :navigation_items, path: "navigation", except: [ :show, :new ] do
       member { patch :move }
       collection { patch :reorder }
@@ -138,7 +138,7 @@ Rails.application.routes.draw do
     resources :memberships, only: [ :index, :show, :destroy ]
     resource :revenue, only: [ :show ], controller: "revenue"
     resources :api_tokens, only: [ :index, :create, :destroy ]
-    resources :webhooks do
+    resources :webhooks, except: [ :show ] do
       member do
         post :test
         post :regenerate_secret

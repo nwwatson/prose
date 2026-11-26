@@ -30,8 +30,4 @@ module Identity::Profileable
   def has_social_links?
     website_url.present? || twitter_handle.present? || github_handle.present?
   end
-
-  def has_profile?
-    bio.present? || avatar.attached? || has_social_links?
-  end
 end

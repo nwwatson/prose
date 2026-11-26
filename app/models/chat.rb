@@ -6,8 +6,6 @@ class Chat < ApplicationRecord
 
   validates :conversation_type, presence: true, inclusion: { in: %w[chat proofread critique brainstorm seo social image] }
 
-  scope :for_post_and_user, ->(post, user) { where(post: post, user: user) }
-
   # What the chat panel shows: no system or tool messages.
   def conversation_messages
     messages.where(role: %w[user assistant]).order(:created_at)

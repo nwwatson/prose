@@ -17,10 +17,6 @@ class MembershipTier < ApplicationRecord
     Membership.current.group(:membership_tier_id).count
   end
 
-  def price_in_dollars
-    price_cents / 100.0
-  end
-
   def formatted_price
     Currency.format(price_cents, currency)
   end

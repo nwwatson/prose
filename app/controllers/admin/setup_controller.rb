@@ -1,7 +1,5 @@
 module Admin
   class SetupController < ApplicationController
-    include Authentication
-
     layout "admin_auth"
 
     before_action :require_no_users

@@ -34,20 +34,4 @@ class Post::AccessibleTest < ActiveSupport::TestCase
     @post.update!(visibility: :paid_only)
     assert_not @post.accessible_by?(subscribers(:unconfirmed))
   end
-
-  test "requires_membership?" do
-    @post.update!(visibility: :public)
-    assert_not @post.requires_membership?
-
-    @post.update!(visibility: :members_only)
-    assert @post.requires_membership?
-  end
-
-  test "requires_paid_membership?" do
-    @post.update!(visibility: :public)
-    assert_not @post.requires_paid_membership?
-
-    @post.update!(visibility: :paid_only)
-    assert @post.requires_paid_membership?
-  end
 end

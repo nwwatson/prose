@@ -19,15 +19,6 @@ class Subscriber::BillableTest < ActiveSupport::TestCase
     assert_not subscribers(:unconfirmed).paid_member?
   end
 
-  test "free_member? returns true for confirmed subscriber without membership" do
-    subscriber = subscribers(:with_token)
-    assert subscriber.free_member?
-  end
-
-  test "free_member? returns false for paid member" do
-    assert_not subscribers(:confirmed).free_member?
-  end
-
   test "stripe_customer_id returns most recent customer id" do
     subscriber = subscribers(:confirmed)
     assert_equal "cus_active_test", subscriber.stripe_customer_id

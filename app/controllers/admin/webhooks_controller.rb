@@ -4,14 +4,10 @@ module Admin
 
     # require_admin must run before the record is loaded.
     before_action :require_admin
-    crud_resource Webhook, member_actions: %i[show test regenerate_secret]
+    crud_resource Webhook, member_actions: %i[test regenerate_secret]
 
     def index
       @webhooks = Webhook.order(created_at: :desc)
-    end
-
-    def show
-      redirect_to edit_admin_webhook_path(@webhook)
     end
 
     def new

@@ -13,12 +13,4 @@ module Post::Accessible
 
     false
   end
-
-  def requires_membership?
-    !visibility_public?
-  end
-
-  def requires_paid_membership?
-    visibility_paid_only?
-  end
 end

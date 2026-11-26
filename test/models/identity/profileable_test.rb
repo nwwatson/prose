@@ -43,16 +43,6 @@ class Identity::ProfileableTest < ActiveSupport::TestCase
     refute identity.has_social_links?
   end
 
-  test "has_profile? returns true with bio" do
-    identity = identities(:admin_identity)
-    assert identity.has_profile?
-  end
-
-  test "has_profile? returns false with no profile data" do
-    identity = identities(:writer_identity)
-    refute identity.has_profile?
-  end
-
   test "twitter_handle normalizes by stripping @" do
     identity = identities(:admin_identity)
     identity.twitter_handle = "@someone"

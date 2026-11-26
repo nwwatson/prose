@@ -8,8 +8,4 @@ module Authorization
       redirect_to admin_root_path, alert: t("flash.authorization.not_authorized")
     end
   end
-
-  def require_staff
-    require_authentication unless signed_in?
-  end
 end
