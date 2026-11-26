@@ -5,7 +5,8 @@
   </head>
 
   <body class="h-full">
-    <div data-controller="autosave editor-drawer"
+    <div <%= autosave_labels %>
+         data-controller="autosave editor-drawer"
          data-autosave-back-url-value="<%= admin_newsletters_path %>"
          data-autosave-form-selector-value="#newsletter_form"
          data-autosave-title-selector-value="#newsletter_title"

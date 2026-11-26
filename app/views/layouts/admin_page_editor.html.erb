@@ -5,7 +5,8 @@
   </head>
 
   <body class="h-full">
-    <div data-controller="autosave editor-drawer"
+    <div <%= autosave_labels %>
+         data-controller="autosave editor-drawer"
          <% if @page&.persisted? %>
            data-autosave-url-value="<%= admin_page_path(@page) %>"
            data-autosave-method-value="PATCH"

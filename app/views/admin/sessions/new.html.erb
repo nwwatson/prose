@@ -17,7 +17,10 @@
 <% end %>
 
 <% if Passkey.any? %>
-  <div data-controller="passkey" class="mt-6">
+  <div data-controller="passkey" class="mt-6"
+       data-passkey-authentication-options-url-value="<%= admin_passkey_authentication_options_path %>"
+       data-passkey-verify-url-value="<%= admin_passkey_authentication_verify_path %>"
+       data-passkey-authentication-failed-message-value="<%= t('admin.passkeys.client.authentication_failed') %>">
     <div class="relative">
       <div class="absolute inset-0 flex items-center">
         <div class="w-full border-t border-gray-300"></div>

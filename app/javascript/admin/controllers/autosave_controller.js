@@ -10,7 +10,11 @@ export default class extends Controller {
     persisted: { type: Boolean, default: false },
     backUrl: String,
     formSelector: { type: String, default: "#post_form" },
-    titleSelector: { type: String, default: "#post_title" }
+    titleSelector: { type: String, default: "#post_title" },
+    unsavedLabel: String,
+    savingLabel: String,
+    savedLabel: String,
+    errorLabel: String
   }
 
   connect() {
@@ -189,19 +193,19 @@ export default class extends Controller {
 
     switch (state) {
       case "unsaved":
-        el.textContent = "Unsaved changes"
+        el.textContent = this.unsavedLabelValue
         el.classList.add("text-amber-600")
         break
       case "saving":
-        el.textContent = "Saving..."
+        el.textContent = this.savingLabelValue
         el.classList.add("text-gray-500")
         break
       case "saved":
-        el.textContent = "Saved"
+        el.textContent = this.savedLabelValue
         el.classList.add("text-gray-500")
         break
       case "error":
-        el.textContent = "Save failed"
+        el.textContent = this.errorLabelValue
         el.classList.add("text-red-600")
         break
     }

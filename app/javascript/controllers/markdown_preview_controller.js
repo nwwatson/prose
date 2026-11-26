@@ -1,10 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
+import { escapeHtml } from "lib/dom"
 import { renderMarkdown } from "lib/markdown"
 
 const ACTIVE_TAB_CLASS = "comment-form__tab--active"
 
 export default class extends Controller {
   static targets = ["textarea", "preview", "writeTab", "previewTab"]
+  static values = { emptyMessage: String }
 
   showWrite() {
     this.#show({ preview: false })
@@ -14,7 +16,7 @@ export default class extends Controller {
     const markdown = this.textareaTarget.value
     this.previewTarget.innerHTML = markdown.trim()
       ? renderMarkdown(markdown, { theme: "comment" })
-      : '<p class="text-gray-400 italic">Nothing to preview</p>'
+      : `<p class="text-gray-400 italic">${escapeHtml(this.emptyMessageValue)}</p>`
 
     this.#show({ preview: true })
   }

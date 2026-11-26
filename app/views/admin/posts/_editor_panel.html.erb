@@ -3,7 +3,9 @@
 <div data-editor-drawer-target="panel"
      <% if ai_available %>
        data-controller="ai-chat"
-       data-ai-chat-post-slug-value="<%= post.to_param %>"
+       data-ai-chat-messages-url-value="<%= admin_post_ai_messages_path(post) %>"
+       data-ai-chat-conversation-url-value="<%= admin_post_ai_conversation_path(post) %>"
+       data-ai-chat-prompts-value="<%= %w[proofread critique brainstorm social].index_with { |action| t("admin.posts.editor_panel.quick_prompts.#{action}") }.to_json %>"
        data-action="editor-drawer:tab-shown->ai-chat#tabShown"
      <% end %>
      class="fixed top-14 right-0 bottom-0 z-50 flex w-full translate-x-full flex-col border-l border-gray-200 bg-white shadow-xl transition-transform duration-300 ease-in-out sm:w-[28rem]">
