@@ -91,6 +91,54 @@ class PostSettingsSelectsTest < ApplicationSystemTestCase
     assert_drawer_closed
   end
 
+  test "rapid open, close, open of a custom select leaves it open" do
+    open_settings_tab
+
+    # A close starts a delayed hide; reopening before the transition ends must
+    # cancel it rather than let it hide the open dropdown.
+    hidden_after = page.evaluate_async_script(<<~JS, category_select.find("[data-custom-select-target='trigger']"))
+      const [trigger, done] = arguments
+      const dropdown = trigger.closest("[data-controller='custom-select']")
+        .querySelector("[data-custom-select-target='dropdown']")
+      trigger.click()
+      setTimeout(() => trigger.click(), 20)
+      setTimeout(() => trigger.click(), 40)
+      setTimeout(() => done(dropdown.classList.contains("hidden")), 500)
+    JS
+
+    assert_equal false, hidden_after
+    within(category_select) do
+      assert_selector "[data-custom-select-target='dropdown'].opacity-100", visible: :all
+    end
+  end
+
+  test "custom select marks the chosen option with aria-selected" do
+    open_settings_tab
+
+    within category_select do
+      assert_selector "li[aria-selected='true']", text: I18n.t("shared.no_category"), visible: :all
+      find("[data-custom-select-target='trigger']").click
+      find("li", text: categories(:technology).name).click
+
+      assert_selector "li[aria-selected='true']", count: 1, visible: :all
+      assert_selector "li[aria-selected='true']", text: categories(:technology).name, visible: :all
+    end
+  end
+
+  test "tag select toggles aria-selected on its options" do
+    open_settings_tab
+
+    tag_search_input.click
+    ruby = find("[data-tag-select-target='option'][data-tag-id='#{tags(:ruby).id}']")
+    assert_equal "false", ruby["aria-selected"]
+
+    ruby.click
+    assert_selector "[data-tag-select-target='option'][data-tag-id='#{tags(:ruby).id}'][aria-selected='true']", visible: :all
+
+    find("[data-tag-select-target='pills'] button[data-tag-id='#{tags(:ruby).id}']").click
+    assert_selector "[data-tag-select-target='option'][data-tag-id='#{tags(:ruby).id}'][aria-selected='false']", visible: :all
+  end
+
   private
     def open_settings_tab
       visit edit_admin_post_path(@post)

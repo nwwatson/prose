@@ -1,23 +1,27 @@
 <%# locals: (title:, message:) %>
-<div data-autosave-target="discardBackdrop"
-     data-action="click->autosave#closeDiscardModal"
-     class="fixed inset-0 z-60 bg-black/30 hidden"></div>
-<div data-autosave-target="discardModal"
-     class="fixed inset-0 z-70 flex items-center justify-center hidden">
-  <div class="w-full max-w-sm rounded-lg bg-white p-6 shadow-xl">
-    <h3 class="text-lg font-semibold text-gray-900"><%= title %></h3>
-    <p class="mt-2 text-sm text-gray-600"><%= message %></p>
-    <div class="mt-4 flex justify-end gap-3">
-      <button type="button"
-              data-action="click->autosave#closeDiscardModal"
-              class="rounded-md bg-gray-100 px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-200">
-        <%= t("layouts.editor.keep_editing") %>
-      </button>
-      <button type="button"
-              data-action="click->autosave#confirmDiscard"
-              class="rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-500">
-        <%= t("layouts.editor.discard") %>
-      </button>
+<%# Opened by autosave#handleBack, which dispatches `autosave:discard-requested`. %>
+<div data-controller="modal" data-action="autosave:discard-requested@window->modal#open">
+  <div data-modal-target="backdrop"
+       data-action="click->modal#close"
+       class="fixed inset-0 z-60 bg-black/30 hidden"></div>
+  <div data-modal-target="dialog"
+       role="dialog" aria-modal="true" aria-labelledby="discard-modal-title" tabindex="-1"
+       class="fixed inset-0 z-70 flex items-center justify-center hidden focus:outline-none">
+    <div class="w-full max-w-sm rounded-lg bg-white p-6 shadow-xl">
+      <h3 id="discard-modal-title" class="text-lg font-semibold text-gray-900"><%= title %></h3>
+      <p class="mt-2 text-sm text-gray-600"><%= message %></p>
+      <div class="mt-4 flex justify-end gap-3">
+        <button type="button"
+                data-action="click->modal#close"
+                class="rounded-md bg-gray-100 px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-200">
+          <%= t("layouts.editor.keep_editing") %>
+        </button>
+        <button type="button"
+                data-action="click->autosave#confirmDiscard"
+                class="rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-500">
+          <%= t("layouts.editor.discard") %>
+        </button>
+      </div>
     </div>
   </div>
 </div>

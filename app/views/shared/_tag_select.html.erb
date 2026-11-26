@@ -1,8 +1,17 @@
 <%# locals: (form:, field:, tags:, selected_ids:, form_attr: nil, create_url: nil) %>
 <%
+  # Selection is each option's aria-selected, styled with aria-selected: variants.
+  option_classes = "group relative cursor-pointer select-none py-2 pl-3 pr-9 text-gray-900 hover:bg-gray-100 aria-selected:bg-blue-600 aria-selected:text-white aria-selected:hover:bg-blue-700"
   field_name = "#{form.object_name}[#{field}][]"
   selected_set = selected_ids.to_set
 %>
+<% checkmark = capture do %>
+  <span class="absolute inset-y-0 right-0 hidden items-center pr-3 text-white group-aria-selected:flex">
+    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+    </svg>
+  </span>
+<% end %>
 <div data-controller="tag-select"
      data-tag-select-create-url-value="<%= create_url %>"
      data-tag-select-form-attr-value="<%= form_attr %>"
@@ -52,15 +61,10 @@
           data-tag-name="<%= tag.name.downcase %>"
           data-action="click->tag-select#toggleTag"
           role="option"
-          class="relative cursor-pointer select-none py-2 pl-3 pr-9 text-gray-900 hover:bg-gray-100 <%= 'bg-blue-600 text-white hover:bg-blue-700' if selected_set.include?(tag.id) %>">
+          aria-selected="<%= selected_set.include?(tag.id) %>"
+          class="<%= option_classes %>">
         <span class="block truncate"><%= tag.name %></span>
-        <% if selected_set.include?(tag.id) %>
-          <span class="checkmark absolute inset-y-0 right-0 flex items-center pr-3 text-white">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-            </svg>
-          </span>
-        <% end %>
+        <%= checkmark %>
       </li>
     <% end %>
     <li data-tag-select-target="createOption"
@@ -72,7 +76,7 @@
   </ul>
 
   <%# Markup the controller clones when a tag is selected or created. Kept here
-      so the pill/option/checkmark styling lives in one place. %>
+      so the pill/option styling lives in one place. %>
   <template data-tag-select-target="pillTemplate">
     <span class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700">
       <span data-pill-name></span>
@@ -88,16 +92,10 @@
     <li data-tag-select-target="option"
         data-action="click->tag-select#toggleTag"
         role="option"
-        class="relative cursor-pointer select-none py-2 pl-3 pr-9 text-gray-900 hover:bg-gray-100">
+        aria-selected="false"
+        class="<%= option_classes %>">
       <span class="block truncate"></span>
+      <%= checkmark %>
     </li>
-  </template>
-
-  <template data-tag-select-target="checkmarkTemplate">
-    <span class="checkmark absolute inset-y-0 right-0 flex items-center pr-3 text-white">
-      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-      </svg>
-    </span>
   </template>
 </div>

@@ -33,4 +33,23 @@
       role="listbox"
       class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 transition duration-100 ease-out hidden opacity-0 scale-95 focus:outline-none sm:text-sm">
   </ul>
+
+  <%# Cloned once per <option>. Selection is the li's aria-selected, styled with
+      aria-selected: variants; the swatch is removed for options without a color. %>
+  <template data-custom-select-target="optionTemplate">
+    <li role="option"
+        aria-selected="false"
+        data-action="click->custom-select#pick"
+        class="group relative cursor-pointer select-none py-2 pl-3 pr-9 text-gray-900 transition-colors hover:bg-gray-100 aria-selected:bg-blue-600 aria-selected:text-white aria-selected:hover:bg-blue-600">
+      <span data-option-label class="flex items-center gap-2 truncate">
+        <span data-option-swatch class="inline-block h-5 w-5 shrink-0 rounded border border-gray-300"></span>
+        <span data-option-text class="truncate"></span>
+      </span>
+      <span class="absolute inset-y-0 right-0 hidden items-center pr-3 text-white group-aria-selected:flex">
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+        </svg>
+      </span>
+    </li>
+  </template>
 </div>

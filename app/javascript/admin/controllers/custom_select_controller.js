@@ -1,21 +1,23 @@
 import { Controller } from "@hotwired/stimulus"
-import { escapeHtml } from "lib/dom"
 import { useClickOutside } from "admin/lib/click_outside"
 import { ListboxNavigator } from "admin/lib/listbox"
+import { fadeIn, fadeOut } from "admin/lib/transition"
 
 const HIGHLIGHT_CLASSES = [ "ring-2", "ring-inset", "ring-blue-400" ]
+const DROPDOWN_TRANSITION = { off: [ "opacity-0", "scale-95" ], on: [ "opacity-100", "scale-100" ] }
 
 export default class extends Controller {
-  static targets = ["select", "trigger", "triggerText", "dropdown"]
+  static targets = ["select", "trigger", "triggerText", "dropdown", "optionTemplate"]
 
   connect() {
+    this.opened = false
     this.buildOptions()
     this.syncTriggerText()
 
     this.clickOutside = useClickOutside(this, { onClickOutside: () => this.close() })
 
     this.navigator = new ListboxNavigator({
-      getItems: () => Array.from(this.dropdownTarget.querySelectorAll("li")),
+      getItems: () => this.items(),
       highlight: (li, on) => {
         if (on) {
           li.classList.add(...HIGHLIGHT_CLASSES)
@@ -25,7 +27,7 @@ export default class extends Controller {
       },
       onSelect: (li) => this.selectFromKeyboard(li),
       onEscape: (event) => this.escape(event),
-      getItemText: (li) => li.querySelector("span").textContent,
+      getItemText: (li) => li.querySelector("[data-option-text]").textContent,
       typeAhead: true,
       homeEnd: true,
       selectOnSpace: true
@@ -40,53 +42,35 @@ export default class extends Controller {
   }
 
   buildOptions() {
-    const dropdown = this.dropdownTarget
-    dropdown.innerHTML = ""
+    const items = Array.from(this.selectTarget.options, (option) => {
+      const li = this.optionTemplateTarget.content.firstElementChild.cloneNode(true)
+      li.dataset.value = option.value
+      li.querySelector("[data-option-text]").textContent = option.textContent
 
-    const options = this.selectTarget.options
-    for (let i = 0; i < options.length; i++) {
-      const option = options[i]
-      const li = document.createElement("li")
-      li.setAttribute("role", "option")
-      li.setAttribute("data-value", option.value)
-      li.setAttribute("data-action", "click->custom-select#pick")
-      li.className = this.optionClasses(option.value === this.selectTarget.value)
-      const color = option.dataset.color
-      const swatchHtml = color
-        ? `<span class="inline-block h-5 w-5 rounded border border-gray-300 shrink-0" style="background-color: ${escapeHtml(color)}"></span>`
-        : ""
-      const flexClass = color ? "flex items-center gap-2" : ""
+      const swatch = li.querySelector("[data-option-swatch]")
+      if (option.dataset.color) {
+        swatch.style.backgroundColor = option.dataset.color
+      } else {
+        swatch.remove()
+      }
+      return li
+    })
 
-      li.innerHTML = `
-        <span class="${flexClass} block truncate">${swatchHtml}${escapeHtml(option.textContent)}</span>
-        <span class="absolute inset-y-0 right-0 flex items-center pr-3 ${option.value === this.selectTarget.value ? "text-white" : "hidden"}">
-          <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
-          </svg>
-        </span>
-      `
-      dropdown.appendChild(li)
-    }
+    this.dropdownTarget.replaceChildren(...items)
+    this.updateSelectedState()
   }
 
-  optionClasses(selected) {
-    const base = "relative cursor-pointer select-none py-2 pl-3 pr-9 transition-colors"
-    if (selected) {
-      return `${base} bg-blue-600 text-white`
-    }
-    return `${base} text-gray-900 hover:bg-gray-100`
+  items() {
+    return Array.from(this.dropdownTarget.querySelectorAll("li"))
+  }
+
+  selectedItem() {
+    return this.dropdownTarget.querySelector('[aria-selected="true"]')
   }
 
   syncTriggerText() {
-    const selected = this.selectTarget.options[this.selectTarget.selectedIndex]
-    if (selected) {
-      const color = selected.dataset.color
-      if (color) {
-        this.triggerTextTarget.innerHTML = `<span class="flex items-center gap-2"><span class="inline-block h-5 w-5 rounded border border-gray-300 shrink-0" style="background-color: ${escapeHtml(color)}"></span>${escapeHtml(selected.textContent)}</span>`
-      } else {
-        this.triggerTextTarget.textContent = selected.textContent
-      }
-    }
+    const label = this.selectedItem()?.querySelector("[data-option-label]")
+    if (label) this.triggerTextTarget.replaceChildren(label.cloneNode(true))
   }
 
   toggle() {
@@ -98,12 +82,8 @@ export default class extends Controller {
   }
 
   open() {
-    const dropdown = this.dropdownTarget
-    dropdown.classList.remove("hidden")
-    // Force reflow before adding transition classes
-    dropdown.offsetHeight // eslint-disable-line no-unused-expressions
-    dropdown.classList.remove("opacity-0", "scale-95")
-    dropdown.classList.add("opacity-100", "scale-100")
+    this.opened = true
+    fadeIn(this.dropdownTarget, DROPDOWN_TRANSITION)
 
     this.clickOutside.observe()
     // Scoped to the component rather than `document` so an open dropdown's
@@ -113,40 +93,27 @@ export default class extends Controller {
     this.element.addEventListener("keydown", this.handleKeydown)
     this.triggerTarget.focus()
 
-    // Scroll selected option into view
-    const selected = dropdown.querySelector('[class*="bg-blue-600"]')
-    if (selected) {
-      selected.scrollIntoView({ block: "nearest" })
-    }
-
+    this.selectedItem()?.scrollIntoView({ block: "nearest" })
     this.navigator.index = this.selectedOptionIndex()
   }
 
   close() {
-    const dropdown = this.dropdownTarget
-    dropdown.classList.remove("opacity-100", "scale-100")
-    dropdown.classList.add("opacity-0", "scale-95")
-
-    const onTransitionEnd = () => {
-      dropdown.classList.add("hidden")
-      dropdown.removeEventListener("transitionend", onTransitionEnd)
-    }
-    dropdown.addEventListener("transitionend", onTransitionEnd)
+    this.opened = false
+    fadeOut(this.dropdownTarget, DROPDOWN_TRANSITION)
 
     this.clickOutside.unobserve()
     this.element.removeEventListener("keydown", this.handleKeydown)
   }
 
   isOpen() {
-    return !this.dropdownTarget.classList.contains("hidden")
+    return this.opened
   }
 
   pick(event) {
     const li = event.target.closest("li")
     if (!li) return
 
-    const value = li.getAttribute("data-value")
-    this.selectValue(value)
+    this.selectValue(li.dataset.value)
     this.close()
   }
 
@@ -154,25 +121,14 @@ export default class extends Controller {
     this.selectTarget.value = value
     this.selectTarget.dispatchEvent(new Event("change", { bubbles: true }))
 
+    this.updateSelectedState()
     this.syncTriggerText()
-    this.updateOptionStyles()
   }
 
-  updateOptionStyles() {
-    const items = this.dropdownTarget.querySelectorAll("li")
+  updateSelectedState() {
     const currentValue = this.selectTarget.value
-
-    items.forEach((li) => {
-      const isSelected = li.getAttribute("data-value") === currentValue
-      li.className = this.optionClasses(isSelected)
-
-      const checkmark = li.querySelector("span:last-child")
-      if (isSelected) {
-        checkmark.classList.remove("hidden")
-        checkmark.classList.add("text-white")
-      } else {
-        checkmark.classList.add("hidden")
-      }
+    this.items().forEach((li) => {
+      li.setAttribute("aria-selected", li.dataset.value === currentValue)
     })
   }
 
@@ -184,7 +140,7 @@ export default class extends Controller {
 
   selectFromKeyboard(li) {
     if (!li) return
-    this.selectValue(li.getAttribute("data-value"))
+    this.selectValue(li.dataset.value)
     this.close()
     this.triggerTarget.focus()
   }
@@ -198,11 +154,6 @@ export default class extends Controller {
   }
 
   selectedOptionIndex() {
-    const items = this.dropdownTarget.querySelectorAll("li")
-    const currentValue = this.selectTarget.value
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].getAttribute("data-value") === currentValue) return i
-    }
-    return 0
+    return Math.max(0, this.items().indexOf(this.selectedItem()))
   }
 }

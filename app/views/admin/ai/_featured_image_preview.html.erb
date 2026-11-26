@@ -5,7 +5,7 @@
       <%= image_tag rails_storage_proxy_path(post.featured_image), class: "w-full" %>
     </div>
     <div class="flex gap-2">
-      <button type="button" data-action="click->ai-image-modal#saveAndClose"
+      <button type="button" data-action="click->modal#close click->ai-image-modal#reload"
               class="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-500">
         <%= t('admin.ai.featured_image_preview.save_as_featured') %>
       </button>
@@ -13,7 +13,7 @@
               class="rounded-md bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200">
         <%= t('admin.ai.featured_image_preview.regenerate') %>
       </button>
-      <button type="button" data-action="click->ai-image-modal#close"
+      <button type="button" data-action="click->modal#close"
               class="rounded-md bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200">
         <%= t('shared.cancel') %>
       </button>
