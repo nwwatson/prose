@@ -7,7 +7,7 @@ export default class extends Controller {
   static targets = [
     "hiddenInputs", "pills",
     "searchInput", "dropdown", "option", "createOption", "createLabel",
-    "pillTemplate", "optionTemplate", "checkmarkTemplate"
+    "pillTemplate", "optionTemplate"
   ]
 
   static values = {
@@ -225,23 +225,11 @@ export default class extends Controller {
     return template.content.firstElementChild.cloneNode(true)
   }
 
+  // Selection lives in aria-selected; the view styles it (and shows the
+  // checkmark) with aria-selected: variants.
   markOptionSelected(id, selected) {
     const option = this.optionTargets.find(o => o.dataset.tagId === String(id))
-    if (!option) return
-
-    if (selected) {
-      option.classList.add("bg-blue-600", "text-white", "hover:bg-blue-700")
-      option.classList.remove("text-gray-900", "hover:bg-gray-100")
-      // Add checkmark
-      if (!option.querySelector(".checkmark")) {
-        option.appendChild(this.cloneTemplate(this.checkmarkTemplateTarget))
-      }
-    } else {
-      option.classList.remove("bg-blue-600", "text-white", "hover:bg-blue-700")
-      option.classList.add("text-gray-900", "hover:bg-gray-100")
-      const check = option.querySelector(".checkmark")
-      if (check) check.remove()
-    }
+    if (option) option.setAttribute("aria-selected", selected)
   }
 
   visibleOptions() {
@@ -265,7 +253,7 @@ export default class extends Controller {
 
     if (option === this.createOptionTarget) {
       option.classList.add("bg-blue-50")
-    } else if (!option.classList.contains("bg-blue-600")) {
+    } else if (option.getAttribute("aria-selected") !== "true") {
       option.classList.add("bg-gray-100")
     }
   }

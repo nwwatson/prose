@@ -3,7 +3,7 @@ import { request } from "lib/request"
 import { useTimeouts } from "lib/timers"
 
 export default class extends Controller {
-  static targets = ["status", "discardBackdrop", "discardModal"]
+  static targets = ["status"]
   static values = {
     url: String,
     method: { type: String, default: "POST" },
@@ -146,7 +146,9 @@ export default class extends Controller {
     const hasTitle = titleInput && titleInput.value.trim()
 
     if (!this.persistedValue && !hasTitle) {
-      this.openDiscardModal()
+      // The discard confirmation (layouts/editor/_discard_modal) is a `modal`
+      // controller listening for this event.
+      this.dispatch("discard-requested")
       return
     }
 
@@ -166,18 +168,6 @@ export default class extends Controller {
     }
 
     window.Turbo.visit(this.backUrlValue)
-  }
-
-  openDiscardModal() {
-    this.discardBackdropTarget.classList.remove("hidden")
-    this.discardModalTarget.classList.remove("hidden")
-    document.body.classList.add("overflow-hidden")
-  }
-
-  closeDiscardModal() {
-    this.discardBackdropTarget.classList.add("hidden")
-    this.discardModalTarget.classList.add("hidden")
-    document.body.classList.remove("overflow-hidden")
   }
 
   confirmDiscard() {

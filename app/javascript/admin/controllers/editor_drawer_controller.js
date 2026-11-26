@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { storage } from "lib/storage"
+import { fadeIn, fadeOut, hide } from "admin/lib/transition"
 
 const ACTIVE_TAB_CLASSES = [ "border-blue-500", "text-blue-600" ]
 const INACTIVE_TAB_CLASSES = [ "border-transparent", "text-gray-500", "hover:border-gray-300", "hover:text-gray-700" ]
@@ -69,15 +70,11 @@ export default class extends Controller {
     this.setToggleIcon(true)
 
     if (this.pinnedValue) {
-      this.slidePanel(true)
       this.setPinnedMargin(true)
     } else {
-      this.overlayTarget.classList.remove("hidden")
-      requestAnimationFrame(() => {
-        this.overlayTarget.classList.remove("opacity-0")
-        this.slidePanel(true)
-      })
+      fadeIn(this.overlayTarget)
     }
+    this.slidePanel(true)
   }
 
   close() {
@@ -85,12 +82,7 @@ export default class extends Controller {
     if (this.pinnedValue) this.setPinnedMargin(false)
     this.slidePanel(false)
 
-    if (!this.pinnedValue) {
-      this.overlayTarget.classList.add("opacity-0")
-      this.panelTarget.addEventListener("transitionend", () => {
-        this.overlayTarget.classList.add("hidden")
-      }, { once: true })
-    }
+    if (!this.pinnedValue) fadeOut(this.overlayTarget)
   }
 
   // Tab switching
@@ -132,7 +124,7 @@ export default class extends Controller {
     if (!this.smQuery.matches) return
     this.pinnedValue = true
     storage.set("prose:editor-drawer-pinned", "true")
-    this.overlayTarget.classList.add("hidden", "opacity-0")
+    hide(this.overlayTarget)
     this.setPinnedMargin(true)
     this.setPinIcon(true)
   }
@@ -147,18 +139,13 @@ export default class extends Controller {
     this.setPinnedMargin(false)
     this.setPinIcon(false)
     // Show overlay since panel is open and now unpinned
-    if (this.isOpen) this.showOverlay()
+    if (this.isOpen) fadeIn(this.overlayTarget)
   }
 
   setPinIcon(active) {
     if (!this.hasPinIconTarget) return
     this.pinIconTarget.classList.toggle("text-blue-600", active)
     this.pinIconTarget.classList.toggle("text-gray-400", !active)
-  }
-
-  showOverlay() {
-    this.overlayTarget.classList.remove("hidden")
-    requestAnimationFrame(() => this.overlayTarget.classList.remove("opacity-0"))
   }
 
   setPinnedMargin(pinned) {
@@ -188,8 +175,8 @@ export default class extends Controller {
       return
     }
 
-    // Escape to close. An open custom-select or tag-select dropdown stops
-    // Escape from propagating to this document-level listener, so the first
+    // Escape to close. An open custom-select or tag-select dropdown, or an
+    // open modal, stops Escape from propagating to this document-level listener, so the first
     // Escape closes the dropdown and only the next one closes the drawer.
     if (event.key === "Escape" && this.isOpen) {
       this.close()
