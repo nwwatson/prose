@@ -1,31 +1,17 @@
 /* ==========================================================================
  * .unsubscribe-page — Unsubscribe confirmation/success page BEM block
  *
- * Centered page layout for unsubscribe flow.
+ * Elements of the unsubscribe flow. The page shell, heading and intro come
+ * from .narrow-page.
  *
  * Usage:
- *   .unsubscribe-page              Page container
- *   .unsubscribe-page__heading     Page heading
- *   .unsubscribe-page__message     Primary message text
  *   .unsubscribe-page__sub-message Secondary/smaller message
  *   .unsubscribe-page__action      Action button container
  *   .unsubscribe-page__cancel      Cancel/return link
  * ========================================================================== */
 
-.unsubscribe-page {
-  @apply mx-auto max-w-md py-16 text-center;
-}
-
-.unsubscribe-page__heading {
-  @apply text-2xl font-bold text-gray-900 dark:text-gray-100;
-}
-
-.unsubscribe-page__message {
-  @apply mt-4 text-gray-600 dark:text-gray-400;
-}
-
 .unsubscribe-page__sub-message {
-  @apply mt-2 text-sm text-gray-500 dark:text-gray-400;
+  @apply mt-2 text-sm text-muted;
 }
 
 .unsubscribe-page__action {
@@ -33,5 +19,5 @@
 }
 
 .unsubscribe-page__cancel {
-  @apply mt-4 block text-sm text-gray-500 dark:text-gray-400;
+  @apply mt-4 block text-sm text-muted;
 }

@@ -17,7 +17,7 @@
  * ========================================================================== */
 
 .comment-form__tabs {
-  @apply mb-2 flex border-b border-gray-200 dark:border-gray-700;
+  @apply mb-2 flex border-b border-rule;
 }
 
 .comment-form__tab {
@@ -41,7 +41,7 @@
 }
 
 .comment-form__help {
-  @apply flex items-center space-x-3 text-xs text-gray-400 dark:text-gray-500;
+  @apply flex items-center space-x-3 text-xs text-faint;
 }
 
 .comment-form__help-code {
@@ -53,7 +53,7 @@
 }
 
 .comment-form__notify-label {
-  @apply flex items-center space-x-1.5 text-xs text-gray-500 dark:text-gray-400 cursor-pointer;
+  @apply flex items-center space-x-1.5 text-xs text-muted cursor-pointer;
 }
 
 .comment-form__errors {
@@ -61,7 +61,7 @@
 }
 
 .comment-form__guest-prompt {
-  @apply rounded-lg border border-gray-200 dark:border-gray-700 p-4 text-center text-sm text-gray-500 dark:text-gray-400;
+  @apply rounded-lg border border-rule p-4 text-center text-sm text-muted;
 }
 
 .comment-form {

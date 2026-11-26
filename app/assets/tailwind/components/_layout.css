@@ -8,10 +8,9 @@
  *   .section-divider    Horizontal rule between sections
  *   .empty-state        Empty content placeholder container
  *   .empty-state__text  Empty state message text
- *   .muted-text         De-emphasized text
  *   .post-listing       Vertical stack of post cards
  *   .page-subtitle      Muted subtitle below page headings
- *   .section-heading    Section heading (e.g. "Posts by Author")
+ *   .section-heading    Section heading ("Posts by Author", related posts)
  *   .load-more          Centered load-more button container
  *   .infinite-scroll-loading  Hidden loading indicator for infinite scroll
  * ========================================================================== */
@@ -29,7 +28,7 @@
 }
 
 .section-divider {
-  @apply border-t border-gray-200 dark:border-gray-700;
+  @apply border-t border-rule;
 }
 
 .empty-state {
@@ -37,11 +36,7 @@
 }
 
 .empty-state__text {
-  @apply text-lg text-gray-500 dark:text-gray-400;
-}
-
-.muted-text {
-  @apply text-gray-500 dark:text-gray-400;
+  @apply text-lg text-muted;
 }
 
 .post-listing {
@@ -49,7 +44,7 @@
 }
 
 .page-subtitle {
-  @apply mt-2 text-gray-500 dark:text-gray-400;
+  @apply mt-2 text-muted;
 }
 
 .section-heading {
@@ -61,5 +56,5 @@
 }
 
 .infinite-scroll-loading {
-  @apply hidden py-8 text-center text-gray-500 dark:text-gray-400;
+  @apply hidden py-8 text-center text-muted;
 }

@@ -12,7 +12,7 @@
 }
 
 .text-link--muted {
-  @apply text-gray-600 dark:text-gray-400 hover:text-charcoal;
+  @apply text-muted-strong hover:text-charcoal;
 }
 
 .text-link--category {

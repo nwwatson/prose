@@ -16,7 +16,7 @@
  * ========================================================================== */
 
 .author-card {
-  @apply border-b border-gray-200 dark:border-gray-700 pb-8;
+  @apply border-b border-rule pb-8;
 }
 
 .author-card__inner {
@@ -32,7 +32,7 @@
 }
 
 .author-card__avatar-initial {
-  @apply text-xl font-bold text-gray-500 dark:text-gray-400;
+  @apply text-xl font-bold text-muted;
 }
 
 .author-card__info {
@@ -44,11 +44,11 @@
 }
 
 .author-card__bio {
-  @apply mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-2;
+  @apply mt-1 text-sm text-muted-strong line-clamp-2;
 }
 
 .author-card__meta {
-  @apply mt-2 flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400;
+  @apply mt-2 flex items-center gap-3 text-sm text-muted;
 }
 
 .author-card__social-links {

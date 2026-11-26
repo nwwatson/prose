@@ -2,8 +2,8 @@
  * .related-posts — Related posts grid BEM block
  *
  * Usage:
- *   .related-posts           Section container with top border
- *   .related-posts__heading  Section heading
+ *   .related-posts           Section container (styled with .post-nav in _post-nav.css;
+ *                            the heading uses the shared .section-heading)
  *   .related-posts__grid     Responsive 3-column grid
  *   .related-posts__card     Article wrapper
  *   .related-posts__image    Featured image (aspect-video, rounded)
@@ -11,14 +11,6 @@
  *   .related-posts__link     Title link
  *   .related-posts__date     Publication date
  * ========================================================================== */
-
-.related-posts {
-  @apply mt-10 border-t border-gray-200 dark:border-gray-700 pt-8;
-}
-
-.related-posts__heading {
-  @apply font-display text-xl font-bold mb-6;
-}
 
 .related-posts__grid {
   @apply grid grid-cols-1 sm:grid-cols-3 gap-6;
@@ -37,5 +29,5 @@
 }
 
 .related-posts__date {
-  @apply text-sm text-gray-500 dark:text-gray-400 mt-1 block;
+  @apply text-sm text-muted mt-1 block;
 }

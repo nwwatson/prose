@@ -15,11 +15,11 @@
  * ========================================================================== */
 
 .post-card {
-  @apply border-b border-gray-200 dark:border-gray-700 pb-8;
+  @apply border-b border-rule pb-8;
 }
 
 .post-card--featured {
-  @apply mb-12 border-b border-gray-300 dark:border-gray-700 pb-8;
+  @apply mb-12 border-b border-rule-strong pb-8;
 }
 
 .post-card__title {
@@ -35,7 +35,7 @@
 }
 
 .post-card__subtitle {
-  @apply mt-1 text-gray-600 dark:text-gray-400 font-subtitle;
+  @apply mt-1 text-muted-strong font-subtitle;
 }
 
 .post-card--featured .post-card__subtitle {
@@ -51,7 +51,7 @@
 }
 
 .post-card__excerpt {
-  @apply mt-3 text-sm text-gray-600 dark:text-gray-400 leading-relaxed;
+  @apply mt-3 text-sm text-muted-strong leading-relaxed;
 }
 
 .post-card--featured .post-card__excerpt {

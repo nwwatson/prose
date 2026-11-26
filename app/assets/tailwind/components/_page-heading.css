@@ -2,7 +2,8 @@
  * .page-heading — Shared page heading BEM block
  *
  * Usage:
- *   .page-heading    Section/page titles (tags, categories, authors, pages)
+ *   .page-heading    Page titles (tags, categories, authors, reading list,
+ *                    static pages)
  * ========================================================================== */
 
 .page-heading {

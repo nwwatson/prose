@@ -12,11 +12,11 @@
  * ========================================================================== */
 
 .site-footer {
-  @apply border-t border-gray-300 dark:border-gray-700 py-8;
+  @apply border-t border-rule-strong py-8;
 }
 
 .site-footer__inner {
-  @apply mx-auto max-w-3xl px-4 text-center text-sm text-gray-500 dark:text-gray-400 space-y-4;
+  @apply mx-auto max-w-3xl px-4 text-center text-sm text-muted space-y-4;
 }
 
 .site-footer__nav {
@@ -24,7 +24,7 @@
 }
 
 .site-footer__link {
-  @apply text-gray-600 dark:text-gray-400 hover:text-charcoal transition-colors;
+  @apply text-muted-strong hover:text-charcoal transition-colors;
 }
 
 .site-footer__social {
@@ -32,7 +32,7 @@
 }
 
 .site-footer__social-link {
-  @apply inline-flex text-gray-500 dark:text-gray-400 hover:text-charcoal transition-colors;
+  @apply inline-flex text-muted hover:text-charcoal transition-colors;
 }
 
 .site-footer__social-icon {

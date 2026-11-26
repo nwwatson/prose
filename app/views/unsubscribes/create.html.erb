@@ -1,8 +1,8 @@
 <% content_for(:title, t('unsubscribes.create.title')) %>
 
-<div class="unsubscribe-page">
-  <h1 class="unsubscribe-page__heading"><%= t('unsubscribes.create.title') %></h1>
-  <p class="unsubscribe-page__message">
+<div class="narrow-page narrow-page--centered">
+  <h1 class="narrow-page__heading"><%= t('unsubscribes.create.title') %></h1>
+  <p class="narrow-page__message">
     <%= t('unsubscribes.create.removed_html', email: @subscriber.email) %>
   </p>
   <p class="unsubscribe-page__sub-message"><%= t('unsubscribes.create.no_more_newsletters') %></p>

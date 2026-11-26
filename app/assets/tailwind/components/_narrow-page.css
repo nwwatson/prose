@@ -1,0 +1,28 @@
+/* ==========================================================================
+ * .narrow-page — Narrow single-task page BEM block
+ *
+ * Shell shared by the pages reached from an email link: unsubscribe and email
+ * preferences.
+ *
+ * Usage:
+ *   .narrow-page             Page container
+ *   .narrow-page--centered   Centers everything, not just heading and intro
+ *   .narrow-page__heading    Page heading
+ *   .narrow-page__message    Intro text
+ * ========================================================================== */
+
+.narrow-page {
+  @apply mx-auto max-w-md py-16;
+}
+
+.narrow-page--centered {
+  @apply text-center;
+}
+
+.narrow-page__heading {
+  @apply text-center text-2xl font-bold text-gray-900 dark:text-gray-100;
+}
+
+.narrow-page__message {
+  @apply mt-4 text-center text-muted-strong;
+}

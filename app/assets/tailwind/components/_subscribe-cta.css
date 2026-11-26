@@ -9,7 +9,7 @@
  * ========================================================================== */
 
 .subscribe-cta {
-  @apply mt-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-white/5 p-8 text-center;
+  @apply mt-12 rounded-lg border border-rule bg-white dark:bg-white/5 p-8 text-center;
 }
 
 .subscribe-cta__heading {
@@ -17,7 +17,7 @@
 }
 
 .subscribe-cta__description {
-  @apply mt-2 text-sm text-gray-600 dark:text-gray-400;
+  @apply mt-2 text-sm text-muted-strong;
 }
 
 .subscribe-cta__form-wrapper {

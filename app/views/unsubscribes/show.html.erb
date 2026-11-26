@@ -1,8 +1,8 @@
 <% content_for(:title, t('unsubscribes.show.title')) %>
 
-<div class="unsubscribe-page">
-  <h1 class="unsubscribe-page__heading"><%= t('unsubscribes.show.title') %></h1>
-  <p class="unsubscribe-page__message">
+<div class="narrow-page narrow-page--centered">
+  <h1 class="narrow-page__heading"><%= t('unsubscribes.show.title') %></h1>
+  <p class="narrow-page__message">
     <%= t('unsubscribes.show.confirm_message_html', email: @subscriber.email) %>
   </p>
 
