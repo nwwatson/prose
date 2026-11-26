@@ -4,6 +4,16 @@ import { decodeOptions, serializeCredential } from "admin/lib/webauthn"
 
 export default class extends Controller {
   static targets = ["nameInput", "error"]
+  static values = {
+    authenticationOptionsUrl: String,
+    verifyUrl: String,
+    registrationOptionsUrl: String,
+    createUrl: String,
+    defaultName: String,
+    authenticationFailedMessage: String,
+    registrationFailedMessage: String,
+    alreadyRegisteredMessage: String
+  }
 
   connect() {
     if (!window.PublicKeyCredential) {
@@ -16,10 +26,10 @@ export default class extends Controller {
     this.clearError()
 
     try {
-      const options = await requestJSON("/admin/passkey_authentication/options", { method: "POST" })
+      const options = await requestJSON(this.authenticationOptionsUrlValue, { method: "POST" })
       const credential = await navigator.credentials.get({ publicKey: decodeOptions(options) })
 
-      const verifyResponse = await requestJSON("/admin/passkey_authentication/verify", {
+      const verifyResponse = await requestJSON(this.verifyUrlValue, {
         method: "POST",
         body: { credential: serializeCredential(credential) }
       })
@@ -31,7 +41,7 @@ export default class extends Controller {
       if (error.name === "NotAllowedError") {
         return // User cancelled
       }
-      this.showError(error.message || "Passkey authentication failed.")
+      this.showError(error.message || this.authenticationFailedMessageValue)
     }
   }
 
@@ -40,14 +50,14 @@ export default class extends Controller {
     this.clearError()
 
     try {
-      const options = await requestJSON("/admin/passkeys/registration_options", { method: "POST" })
+      const options = await requestJSON(this.registrationOptionsUrlValue, { method: "POST" })
       const credential = await navigator.credentials.create({ publicKey: decodeOptions(options) })
 
-      const name = this.hasNameInputTarget ? this.nameInputTarget.value : "Passkey"
+      const name = this.hasNameInputTarget ? this.nameInputTarget.value : this.defaultNameValue
 
       const form = document.createElement("form")
       form.method = "POST"
-      form.action = "/admin/passkeys"
+      form.action = this.createUrlValue
       form.style.display = "none"
 
       const csrfInput = document.createElement("input")
@@ -72,10 +82,10 @@ export default class extends Controller {
         return
       }
       if (error.name === "InvalidStateError") {
-        this.showError("This passkey is already registered.")
+        this.showError(this.alreadyRegisteredMessageValue)
         return
       }
-      this.showError(error.message || "Passkey registration failed.")
+      this.showError(error.message || this.registrationFailedMessageValue)
     }
   }
 

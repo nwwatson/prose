@@ -304,6 +304,9 @@ es:
             color:
               hex_color: "debe ser un color hexadecimal válido (p. ej. #6B7280)"
   shared:
+    copy: "Copiar"
+    copied: "¡Copiado!"
+    copy_failed: "Error al copiar"
     pagination: "Paginación"
     previous: "Anterior"
     next: "Siguiente"
@@ -352,6 +355,11 @@ es:
       copyright_html: "&copy; %{year} %{site_name}. Todos los derechos reservados."
       rss_feed: "Canal RSS de %{site_name}"
     editor:
+      autosave:
+        unsaved: "Cambios sin guardar"
+        saving: "Guardando..."
+        saved: "Guardado"
+        error: "Error al guardar"
       keep_editing: "Seguir editando"
       discard: "Descartar"
     admin_editor:
@@ -470,6 +478,7 @@ es:
     via_fediverse: "desde el fediverso"
     delete_confirm: "¿Eliminar este comentario?"
     form:
+      nothing_to_preview: "Nada que previsualizar"
       write: "Escribir"
       preview: "Vista previa"
       placeholder: "Comparte tus pensamientos... (markdown compatible)"
@@ -646,6 +655,11 @@ es:
         table_of_contents: "Tabla de contenidos"
         or: "o"
       editor_panel:
+        quick_prompts:
+          proofread: "Corrige mi publicación"
+          critique: "Haz una crítica de mi publicación"
+          brainstorm: "Ayúdame a generar ideas"
+          social: "Escribe publicaciones para redes sociales sobre mi artículo"
         title: "Panel del editor"
         new_ai_conversation: "Nueva conversación con IA"
         pin_panel: "Fijar panel"
@@ -876,6 +890,11 @@ es:
         canceled_col: "Cancelados"
         net: "Neto"
     passkeys:
+      client:
+        default_name: "Clave de acceso"
+        authentication_failed: "Error al autenticar con la clave de acceso."
+        registration_failed: "Error al registrar la clave de acceso."
+        already_registered: "Esta clave de acceso ya está registrada."
       index:
         title: "Claves de acceso"
         register_new: "Registrar nueva clave de acceso"

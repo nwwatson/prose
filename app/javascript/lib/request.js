@@ -5,7 +5,7 @@ export function csrfToken() {
   return document.querySelector("meta[name='csrf-token']")?.content
 }
 
-export function request(url, { method = "GET", body, headers = {}, accept } = {}) {
+export function request(url, { method = "GET", body, headers = {}, accept, signal } = {}) {
   const finalHeaders = { ...headers, "X-CSRF-Token": csrfToken() }
   if (accept) finalHeaders["Accept"] = accept
 
@@ -16,7 +16,7 @@ export function request(url, { method = "GET", body, headers = {}, accept } = {}
     finalHeaders["Content-Type"] = "application/x-www-form-urlencoded"
   }
 
-  return fetch(url, { method, headers: finalHeaders, body })
+  return fetch(url, { method, headers: finalHeaders, body, signal })
 }
 
 export async function requestJSON(url, options = {}) {

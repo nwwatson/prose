@@ -4,7 +4,8 @@
       <% if defined?(comment) && comment&.errors&.any? %>
         <div class="comment-form__errors"><%= comment.errors.full_messages.to_sentence %></div>
       <% end %>
-      <div data-controller="markdown-preview">
+      <div data-controller="markdown-preview"
+           data-markdown-preview-empty-message-value="<%= t('comments.form.nothing_to_preview') %>">
         <div class="comment-form__tabs">
           <button type="button" data-action="click->markdown-preview#showWrite" data-markdown-preview-target="writeTab"
                   class="comment-form__tab comment-form__tab--active">

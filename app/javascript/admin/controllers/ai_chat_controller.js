@@ -1,19 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 import { request, requestTurboStream } from "lib/request"
 
-const QUICK_ACTION_PROMPTS = {
-  proofread: "Proofread my post",
-  critique: "Critique my post",
-  brainstorm: "Help me brainstorm ideas",
-  social: "Write social media posts for my article"
-}
-
 // AI chat transport for the editor drawer's AI tab. Mounted only where an AI
 // panel is rendered, so the drawer itself stays free of AI targets and values.
 export default class extends Controller {
   static targets = ["messageInput", "messagesContainer"]
 
-  static values = { postSlug: String }
+  // prompts: quick action key → the message sent for it.
+  static values = { messagesUrl: String, conversationUrl: String, prompts: Object }
 
   connect() {
     this.scrollToBottom()
@@ -37,7 +31,7 @@ export default class extends Controller {
 
   quickAction(event) {
     const action = event.currentTarget.dataset.quickAction
-    this.sendMessage(QUICK_ACTION_PROMPTS[action] || action, action)
+    this.sendMessage(this.promptsValue[action] || action, action)
   }
 
   async sendMessage(content, quickAction = null) {
@@ -50,7 +44,7 @@ export default class extends Controller {
     if (title !== undefined) body.set("title", title)
     if (subtitle !== undefined) body.set("subtitle", subtitle)
 
-    await requestTurboStream(`/admin/posts/${this.postSlugValue}/ai/messages`, {
+    await requestTurboStream(this.messagesUrlValue, {
       method: "POST",
       body
     })
@@ -73,7 +67,7 @@ export default class extends Controller {
   }
 
   async clearConversation() {
-    const response = await request(`/admin/posts/${this.postSlugValue}/ai/conversation`, {
+    const response = await request(this.conversationUrlValue, {
       method: "POST",
       accept: "text/vnd.turbo-stream.html, text/html",
       body: new URLSearchParams({ conversation_type: "chat" })

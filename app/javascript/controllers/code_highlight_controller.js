@@ -5,6 +5,8 @@ import { useTimeouts } from "lib/timers"
 const FEEDBACK_DURATION_MS = 2000
 
 export default class extends Controller {
+  static values = { copyLabel: String, copiedLabel: String, failedLabel: String }
+
   async connect() {
     this.timeouts = useTimeouts()
 
@@ -30,7 +32,7 @@ export default class extends Controller {
 
     const button = document.createElement("button")
     button.className = "code-copy-btn"
-    button.textContent = "Copy"
+    button.textContent = this.copyLabelValue
     button.type = "button"
     button.addEventListener("click", () => this.copyCode(pre, button))
 
@@ -44,7 +46,7 @@ export default class extends Controller {
     const copied = await copyText(code.textContent)
     if (!this.element.isConnected) return
 
-    button.textContent = copied ? "Copied!" : "Failed"
-    this.timeouts.set(() => { button.textContent = "Copy" }, FEEDBACK_DURATION_MS)
+    button.textContent = copied ? this.copiedLabelValue : this.failedLabelValue
+    this.timeouts.set(() => { button.textContent = this.copyLabelValue }, FEEDBACK_DURATION_MS)
   }
 }

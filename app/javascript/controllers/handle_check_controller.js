@@ -1,9 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
+import { requestJSON } from "lib/request"
 import { debounce } from "lib/timers"
 
 export default class extends Controller {
   static targets = ["input", "status"]
-  static values = { available: String, taken: String }
+  static values = { url: String, available: String, taken: String }
 
   connect() {
     this.abortController = null
@@ -35,11 +36,8 @@ export default class extends Controller {
     this.abortController = controller
 
     try {
-      const response = await fetch(`/handle_availability?handle=${encodeURIComponent(handle)}`, {
-        headers: { "Accept": "application/json" },
-        signal: controller.signal
-      })
-      const data = await response.json()
+      const url = `${this.urlValue}?${new URLSearchParams({ handle })}`
+      const data = await requestJSON(url, { signal: controller.signal })
 
       // A newer check superseded this one while it was in flight.
       if (this.abortController !== controller) return

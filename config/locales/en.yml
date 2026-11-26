@@ -305,6 +305,9 @@ en:
               hex_color: "must be a valid hex color (e.g. #6B7280)"
   # Shared / common strings
   shared:
+    copy: "Copy"
+    copied: "Copied!"
+    copy_failed: "Failed"
     pagination: "Pagination"
     previous: "Previous"
     next: "Next"
@@ -354,6 +357,11 @@ en:
       copyright_html: "&copy; %{year} %{site_name}. All rights reserved."
       rss_feed: "%{site_name} RSS Feed"
     editor:
+      autosave:
+        unsaved: "Unsaved changes"
+        saving: "Saving..."
+        saved: "Saved"
+        error: "Save failed"
       keep_editing: "Keep editing"
       discard: "Discard"
     admin_editor:
@@ -473,6 +481,7 @@ en:
     via_fediverse: "via the fediverse"
     delete_confirm: "Delete this comment?"
     form:
+      nothing_to_preview: "Nothing to preview"
       write: "Write"
       preview: "Preview"
       placeholder: "Share your thoughts... (markdown supported)"
@@ -650,6 +659,11 @@ en:
         table_of_contents: "Table of Contents"
         or: "or"
       editor_panel:
+        quick_prompts:
+          proofread: "Proofread my post"
+          critique: "Critique my post"
+          brainstorm: "Help me brainstorm ideas"
+          social: "Write social media posts for my article"
         title: "Editor Panel"
         new_ai_conversation: "New AI conversation"
         pin_panel: "Pin panel"
@@ -880,6 +894,11 @@ en:
         canceled_col: "Canceled"
         net: "Net"
     passkeys:
+      client:
+        default_name: "Passkey"
+        authentication_failed: "Passkey authentication failed."
+        registration_failed: "Passkey registration failed."
+        already_registered: "This passkey is already registered."
       index:
         title: "Passkeys"
         register_new: "Register New Passkey"
