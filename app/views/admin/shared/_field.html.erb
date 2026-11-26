@@ -1,0 +1,15 @@
+<%# locals: (form:, attribute:, label: nil, hint: nil, wrapper_class: "mt-2") %>
+<%# The block is the input. `hint` is a string or a list of them; `wrapper_class: nil` skips the wrapper div. %>
+<div>
+  <%= form.label attribute, label, class: admin_label_classes %>
+  <% if wrapper_class %>
+    <div class="<%= wrapper_class %>">
+      <%= yield %>
+    </div>
+  <% else %>
+    <%= yield %>
+  <% end %>
+  <% Array(hint).each do |text| %>
+    <p class="<%= admin_hint_classes %>"><%= text %></p>
+  <% end %>
+</div>

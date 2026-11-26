@@ -1,23 +1,19 @@
 <%# locals: (page:) %>
 <%= fields_for :page, page do |f| %>
   <div class="space-y-6 p-6">
-    <div>
-      <%= f.label :status, class: "block text-sm font-medium text-gray-900" %>
+    <%= render "admin/shared/field", form: f, attribute: :status, wrapper_class: nil do %>
       <%= render "shared/custom_select", form: f, field: :status,
             options: Page.statuses.keys.map { |s| [status_label(page, s), s] },
             form_attr: "page_form" %>
-    </div>
+    <% end %>
 
-    <div>
-      <%= f.label :slug, class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <%= f.text_field :slug,
-              form: "page_form",
-              class: admin_input_classes,
-              placeholder: t("admin.pages.settings_fields.slug_placeholder") %>
-      </div>
-      <p class="mt-1 text-xs text-gray-500"><%= t("admin.pages.settings_fields.slug_help") %></p>
-    </div>
+    <%= render "admin/shared/field", form: f, attribute: :slug,
+          hint: t("admin.pages.settings_fields.slug_help") do %>
+      <%= f.text_field :slug,
+            form: "page_form",
+            class: admin_input_classes,
+            placeholder: t("admin.pages.settings_fields.slug_placeholder") %>
+    <% end %>
 
     <p class="text-xs text-gray-500">
       <%= t("admin.pages.settings_fields.navigation_help") %>
@@ -26,15 +22,12 @@
       <% end %>
     </p>
 
-    <div>
-      <%= f.label :meta_description, t("admin.pages.settings_fields.meta_description"), class: "block text-sm font-medium text-gray-900" %>
-      <div class="mt-2">
-        <%= f.text_area :meta_description, rows: 3, maxlength: 160, form: "page_form",
-              class: admin_input_classes,
-              placeholder: t("admin.pages.settings_fields.meta_description_placeholder") %>
-      </div>
-      <p class="mt-1 text-xs text-gray-500"><%= t("admin.pages.settings_fields.meta_description_help") %></p>
-    </div>
+    <%= render "admin/shared/field", form: f, attribute: :meta_description, label: t("admin.pages.settings_fields.meta_description"),
+          hint: t("admin.pages.settings_fields.meta_description_help") do %>
+      <%= f.text_area :meta_description, rows: 3, maxlength: 160, form: "page_form",
+            class: admin_input_classes,
+            placeholder: t("admin.pages.settings_fields.meta_description_placeholder") %>
+    <% end %>
 
     <% if page.persisted? %>
       <div class="border-t border-gray-200 pt-6">

@@ -25,22 +25,17 @@
     </label>
   <% else %>
     <div class="max-w-lg space-y-6">
-      <div>
-        <%= f.label :label, t("admin.navigation_items.form.label"), class: "block text-sm font-medium text-gray-900" %>
-        <div class="mt-2"><%= f.text_field :label, required: true, maxlength: 50, class: admin_input_classes %></div>
-      </div>
-      <div>
-        <%= f.label :url, t("admin.navigation_items.form.url"), class: "block text-sm font-medium text-gray-900" %>
-        <div class="mt-2"><%= f.text_field :url, required: true, class: admin_input_classes(extra: "font-mono") %></div>
-        <p class="mt-1 text-xs text-gray-500"><%= t("admin.navigation_items.form.url_help") %></p>
-      </div>
-      <div>
-        <%= f.label :location, t("admin.navigation_items.form.location"), class: "block text-sm font-medium text-gray-900" %>
-        <div class="mt-2">
-          <%= f.select :location, NavigationItem.locations.keys.map { |l| [ t("admin.navigation_items.locations.#{l}.title"), l ] },
-                {}, class: admin_input_classes %>
-        </div>
-      </div>
+      <%= render "admin/shared/field", form: f, attribute: :label, label: t("admin.navigation_items.form.label") do %>
+        <%= f.text_field :label, required: true, maxlength: 50, class: admin_input_classes %>
+      <% end %>
+      <%= render "admin/shared/field", form: f, attribute: :url, label: t("admin.navigation_items.form.url"),
+            hint: t("admin.navigation_items.form.url_help") do %>
+        <%= f.text_field :url, required: true, class: admin_input_classes(extra: "font-mono") %>
+      <% end %>
+      <%= render "admin/shared/field", form: f, attribute: :location, label: t("admin.navigation_items.form.location") do %>
+        <%= f.select :location, NavigationItem.locations.keys.map { |l| [ t("admin.navigation_items.locations.#{l}.title"), l ] },
+              {}, class: admin_input_classes %>
+      <% end %>
       <label class="inline-flex items-center text-sm text-gray-900">
         <%= f.check_box :open_in_new_tab, class: "rounded border-gray-300 text-gray-600 focus:ring-gray-600" %>
         <span class="ml-2"><%= t("admin.navigation_items.form.open_in_new_tab") %></span>

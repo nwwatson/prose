@@ -1,21 +1,15 @@
 <% content_for(:title, "#{t('shared.sign_in')} — #{site_name}") %>
 
 <%= form_with url: admin_session_path, class: "space-y-6" do |f| %>
-  <div>
-    <%= f.label :email, class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email",
-            class: admin_input_classes %>
-    </div>
-  </div>
+  <%= render "admin/shared/field", form: f, attribute: :email do %>
+    <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email",
+          class: admin_input_classes %>
+  <% end %>
 
-  <div>
-    <%= f.label :password, class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= f.password_field :password, required: true, autocomplete: "current-password",
-            class: admin_input_classes %>
-    </div>
-  </div>
+  <%= render "admin/shared/field", form: f, attribute: :password do %>
+    <%= f.password_field :password, required: true, autocomplete: "current-password",
+          class: admin_input_classes %>
+  <% end %>
 
   <div>
     <%= f.submit t('shared.sign_in'), class: "flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 cursor-pointer" %>
