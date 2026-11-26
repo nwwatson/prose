@@ -362,6 +362,7 @@ en:
         error: "Save failed"
       keep_editing: "Keep editing"
       discard: "Discard"
+      pin_panel: "Pin panel"
     admin_editor:
       posts: "Posts"
       discard_post: "Discard post?"
@@ -659,7 +660,6 @@ en:
           social: "Write social media posts for my article"
         title: "Editor Panel"
         new_ai_conversation: "New AI conversation"
-        pin_panel: "Pin panel"
         ai_assistant: "AI Assistant"
         settings: "Settings"
         proofread: "Proofread"

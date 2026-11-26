@@ -1,0 +1,9 @@
+<%# locals: (tab:, label:, active: false) %>
+<%# A drawer tab button. editor_drawer_controller swaps the active/inactive classes on connect, so active: only sets the first paint. %>
+<button type="button"
+        data-editor-drawer-target="tabButton"
+        data-tab="<%= tab %>"
+        data-action="click->editor-drawer#switchTab"
+        class="flex-1 border-b-2 px-4 py-2.5 text-center text-sm font-medium <%= active ? "border-blue-500 text-blue-600" : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" %>">
+  <%= label %>
+</button>

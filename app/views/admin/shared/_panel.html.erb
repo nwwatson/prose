@@ -1,0 +1,15 @@
+<%# locals: (title:, action: nil, stack: false, wrapper_class: nil, data: {}) %>
+<%# A white analytics card with an h2 heading; the block is its body. %>
+<%# action: is trailing header content (a link, a range selector); stack: true puts it below the title on narrow screens. %>
+<%= tag.div class: class_names("bg-white shadow rounded-lg p-4 sm:p-6", wrapper_class), data: data do %>
+  <% if action %>
+    <div class="<%= stack ? "flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between" : "flex items-center justify-between mb-4" %>">
+      <h2 class="text-lg font-medium text-gray-900"><%= title %></h2>
+      <%= action %>
+    </div>
+  <% else %>
+    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= title %></h2>
+  <% end %>
+
+  <%= yield %>
+<% end %>

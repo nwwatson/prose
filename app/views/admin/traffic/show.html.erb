@@ -8,166 +8,42 @@
 <%# KPI Cards %>
 <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-5">
   <%= render "admin/shared/stat_card", label: t('admin.traffic.show.total_views'), value: @total_views %>
-
   <%= render "admin/shared/stat_card", label: t('admin.traffic.show.unique_viewers'), value: @unique_viewers %>
-
-  <div class="bg-white overflow-hidden shadow rounded-lg">
-    <div class="p-4 sm:p-5">
-      <div class="text-sm font-medium text-gray-500 truncate"><%= t('admin.traffic.show.top_source') %></div>
-      <div class="mt-1 text-2xl font-semibold text-gray-900 capitalize sm:text-3xl"><%= @top_source %></div>
-    </div>
-  </div>
+  <%= render "admin/shared/stat_card", label: t('admin.traffic.show.top_source'), value: @top_source, value_class: "capitalize" %>
 </div>
 
 <%# Range Selector + Views Chart %>
-<div class="mt-8 bg-white shadow rounded-lg p-4 sm:p-6"
-     data-controller="traffic-chart"
-     data-traffic-chart-data-value="<%= @views_by_day.to_json %>">
-
-  <div class="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">
-    <h2 class="text-lg font-medium text-gray-900"><%= t('admin.traffic.show.views_over_time') %></h2>
-
-    <%= render "admin/shared/range_selector",
-          ranges: Admin::TrafficController::ALLOWED_RANGES,
-          current: @range,
-          path: ->(range) { admin_traffic_path(range: range) } %>
-  </div>
-
+<% range_selector = render("admin/shared/range_selector",
+                           ranges: Admin::TrafficController::ALLOWED_RANGES,
+                           current: @range,
+                           path: ->(range) { admin_traffic_path(range: range) }) %>
+<%= render "admin/shared/panel", title: t('admin.traffic.show.views_over_time'), action: range_selector, stack: true,
+           wrapper_class: "mt-8", data: { controller: "traffic-chart", traffic_chart_data_value: @views_by_day.to_json } do %>
   <div data-traffic-chart-target="canvas" class="w-full min-h-[200px]" style="height: 300px;"></div>
 
   <% if @views_by_day.empty? %>
     <p class="mt-4 text-sm text-gray-500 text-center"><%= t('admin.traffic.show.no_data') %></p>
   <% end %>
-</div>
+<% end %>
 
 <%# Traffic Sources %>
 <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.traffic.show.traffic_sources') %></h2>
-    <% if @traffic_sources.any? %>
-      <div class="space-y-3">
-        <% max_count = @traffic_sources.values.max %>
-        <% @traffic_sources.each do |source, count| %>
-          <div>
-            <div class="flex justify-between text-sm mb-1">
-              <span class="font-medium text-gray-700 capitalize"><%= source %></span>
-              <span class="text-gray-500"><%= count %></span>
-            </div>
-            <div class="w-full bg-gray-100 rounded-full h-2">
-              <div class="bg-blue-600 h-2 rounded-full" style="width: <%= max_count > 0 ? (count.to_f / max_count * 100).round(1) : 0 %>%"></div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <p class="text-sm text-gray-500"><%= t('admin.traffic.show.no_traffic_data') %></p>
-    <% end %>
-  </div>
+  <%= render "admin/shared/panel", title: t('admin.traffic.show.traffic_sources') do %>
+    <%= render "admin/shared/bar_list", counts: @traffic_sources, empty: t('admin.traffic.show.no_traffic_data') %>
+  <% end %>
 
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.traffic.show.top_referrer_domains') %></h2>
-    <% if @top_domains.any? %>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.traffic.show.domain') %></th>
-              <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.traffic.show.views') %></th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <% @top_domains.each do |domain, count| %>
-              <tr>
-                <td class="py-2 text-sm text-gray-900"><%= domain %></td>
-                <td class="py-2 text-sm text-gray-500 text-right"><%= count %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <p class="text-sm text-gray-500"><%= t('admin.traffic.show.no_referrer_data') %></p>
-    <% end %>
-  </div>
+  <%= render "admin/shared/panel", title: t('admin.traffic.show.top_referrer_domains') do %>
+    <%= render "admin/shared/count_table", headers: [ t('admin.traffic.show.domain'), t('admin.traffic.show.views') ],
+               rows: @top_domains, empty: t('admin.traffic.show.no_referrer_data') %>
+  <% end %>
 </div>
 
 <%# UTM Breakdowns %>
 <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.traffic.show.utm_campaigns') %></h2>
-    <% if @utm_campaigns.any? %>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.traffic.show.campaign') %></th>
-              <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.traffic.show.views') %></th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <% @utm_campaigns.each do |campaign, count| %>
-              <tr>
-                <td class="py-2 text-sm text-gray-900"><%= campaign %></td>
-                <td class="py-2 text-sm text-gray-500 text-right"><%= count %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <p class="text-sm text-gray-500"><%= t('admin.traffic.show.no_utm_data') %></p>
+  <% { utm_campaigns: [ @utm_campaigns, :campaign ], utm_sources: [ @utm_sources, :source ], utm_mediums: [ @utm_mediums, :medium ] }.each do |title_key, (counts, column_key)| %>
+    <%= render "admin/shared/panel", title: t("admin.traffic.show.#{title_key}") do %>
+      <%= render "admin/shared/count_table", headers: [ t("admin.traffic.show.#{column_key}"), t('admin.traffic.show.views') ],
+                 rows: counts, empty: t('admin.traffic.show.no_utm_data') %>
     <% end %>
-  </div>
-
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.traffic.show.utm_sources') %></h2>
-    <% if @utm_sources.any? %>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.traffic.show.source') %></th>
-              <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.traffic.show.views') %></th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <% @utm_sources.each do |source, count| %>
-              <tr>
-                <td class="py-2 text-sm text-gray-900"><%= source %></td>
-                <td class="py-2 text-sm text-gray-500 text-right"><%= count %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <p class="text-sm text-gray-500"><%= t('admin.traffic.show.no_utm_data') %></p>
-    <% end %>
-  </div>
-
-  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4"><%= t('admin.traffic.show.utm_mediums') %></h2>
-    <% if @utm_mediums.any? %>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th class="text-left text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.traffic.show.medium') %></th>
-              <th class="text-right text-xs font-medium text-gray-500 uppercase pb-2"><%= t('admin.traffic.show.views') %></th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <% @utm_mediums.each do |medium, count| %>
-              <tr>
-                <td class="py-2 text-sm text-gray-900"><%= medium %></td>
-                <td class="py-2 text-sm text-gray-500 text-right"><%= count %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <p class="text-sm text-gray-500"><%= t('admin.traffic.show.no_utm_data') %></p>
-    <% end %>
-  </div>
+  <% end %>
 </div>
