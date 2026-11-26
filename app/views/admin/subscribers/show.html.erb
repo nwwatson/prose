@@ -38,12 +38,12 @@
 
     <% if @available_labels.any? %>
       <%= form_with url: admin_subscriber_subscriber_labelings_path(@subscriber), class: "flex items-center gap-2" do |f| %>
-        <select name="subscriber_label_id" class="rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600">
+        <select name="subscriber_label_id" class="<%= admin_input_classes(shape: :inline, extra: "text-sm") %>">
           <% @available_labels.each do |label| %>
             <option value="<%= label.id %>"><%= label.name %></option>
           <% end %>
         </select>
-        <%= f.submit t('admin.subscribers.show.add_label'), class: "rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
+        <%= f.submit t('admin.subscribers.show.add_label'), class: admin_button_classes(size: :sm, extra: "cursor-pointer") %>
       <% end %>
     <% end %>
   </div>
@@ -54,12 +54,12 @@
       <h2 class="text-sm font-semibold text-gray-900 mb-4"><%= t('admin.subscribers.show.grant_membership') %></h2>
 
       <%= form_with url: admin_subscriber_comp_membership_path(@subscriber), class: "flex items-center gap-2" do |f| %>
-        <select name="tier_id" class="rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600">
+        <select name="tier_id" class="<%= admin_input_classes(shape: :inline, extra: "text-sm") %>">
           <% @available_membership_tiers.each do |tier| %>
             <option value="<%= tier.id %>"><%= tier.name %> (<%= tier.formatted_price %><%= tier.interval_label %>)</option>
           <% end %>
         </select>
-        <%= f.submit t('admin.subscribers.show.grant_membership_button'), class: "rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 cursor-pointer" %>
+        <%= f.submit t('admin.subscribers.show.grant_membership_button'), class: admin_button_classes(size: :sm, extra: "cursor-pointer") %>
       <% end %>
     </div>
   <% end %>

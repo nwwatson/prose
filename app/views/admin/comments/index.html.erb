@@ -5,9 +5,9 @@
 
   <div class="border-b border-gray-200">
     <nav class="-mb-px flex space-x-4 overflow-x-auto sm:space-x-8">
-      <%= link_to t('shared.all'), admin_comments_path, class: "whitespace-nowrap border-b-2 #{params[:filter].blank? ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
-      <%= link_to t('shared.pending'), admin_comments_path(filter: "pending"), class: "whitespace-nowrap border-b-2 #{params[:filter] == 'pending' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
-      <%= link_to t('admin.comments.index.approved'), admin_comments_path(filter: "approved"), class: "whitespace-nowrap border-b-2 #{params[:filter] == 'approved' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} px-1 pb-4 text-sm font-medium" %>
+      <%= admin_tab_link t('shared.all'), admin_comments_path, active: params[:filter].blank? %>
+      <%= admin_tab_link t('shared.pending'), admin_comments_path(filter: "pending"), active: params[:filter] == 'pending' %>
+      <%= admin_tab_link t('admin.comments.index.approved'), admin_comments_path(filter: "approved"), active: params[:filter] == 'approved' %>
     </nav>
   </div>
 
@@ -16,9 +16,7 @@
       <%= render partial: "comment", collection: @comments, as: :comment %>
     </div>
   <% else %>
-    <div class="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
-      <p class="text-sm text-gray-500"><%= t('admin.comments.index.no_comments') %></p>
-    </div>
+    <%= render "admin/shared/empty_state", description: t('admin.comments.index.no_comments') %>
   <% end %>
 
   <%= render "admin/shared/pagination", page: @page, next_page: @next_page %>

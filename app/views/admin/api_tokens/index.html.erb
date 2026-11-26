@@ -6,15 +6,8 @@
   </div>
 
   <% if flash[:raw_token] %>
-    <div class="mb-6 rounded-lg border border-green-200 bg-green-50 p-4">
-      <p class="text-sm font-medium text-green-800 mb-2"><%= t('admin.api_tokens.index.token_created') %></p>
-      <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <code class="flex-1 rounded bg-white px-3 py-2 font-mono text-sm text-gray-900 border border-green-200 select-all break-all"><%= flash[:raw_token] %></code>
-        <button type="button" onclick="navigator.clipboard.writeText('<%= flash[:raw_token] %>')" class="self-start rounded bg-green-600 px-3 py-2 text-sm font-medium text-white hover:bg-green-700">
-          <%= t('admin.api_tokens.index.copy') %>
-        </button>
-      </div>
-    </div>
+    <%= render "admin/shared/reveal_secret", secret: flash[:raw_token], message: t('admin.api_tokens.index.token_created'),
+          copy_label: t('admin.api_tokens.index.copy'), wrapper_class: "mb-6" %>
   <% end %>
 
   <%# Create form %>

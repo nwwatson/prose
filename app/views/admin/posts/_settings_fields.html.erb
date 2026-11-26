@@ -129,7 +129,7 @@
       <div class="border-t border-gray-200 pt-6">
         <%= button_to t('admin.posts.settings_fields.delete_post'), admin_post_path(post), method: :delete,
               data: { turbo_confirm: t('admin.posts.settings_fields.delete_post_confirm') },
-              class: "w-full rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500" %>
+              class: admin_button_classes(variant: :danger, extra: "w-full") %>
       </div>
     <% end %>
   </div>

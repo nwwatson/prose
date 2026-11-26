@@ -35,6 +35,35 @@ class AdminHelperTest < ActionView::TestCase
     assert_includes classes, "bg-gray-900"
   end
 
+  test "admin_button_classes renders danger variant and sizes" do
+    assert_includes admin_button_classes(variant: :danger), "bg-red-600"
+    assert_includes admin_button_classes, "px-3 py-2"
+    assert_includes admin_button_classes(size: :sm), "px-3 py-1.5"
+    assert_includes admin_button_classes(size: :lg), "px-4 py-2"
+  end
+
+  test "admin_input_classes shapes the layout" do
+    assert_not_includes admin_input_classes(shape: :inline), "w-full"
+    assert_includes admin_input_classes(shape: :suffix), "rounded-none rounded-r-md"
+    assert_not_includes admin_input_classes(shape: :suffix), "shadow-sm"
+  end
+
+  test "page_status_color is green only for published pages" do
+    assert_includes page_status_color("published"), "bg-green-100"
+    assert_includes page_status_color("draft"), "bg-gray-100"
+  end
+
+  test "subscriber_label_pill escapes the name and uses the label colour" do
+    html = subscriber_label_pill(SubscriberLabel.new(name: "<b>VIP</b>", color: "#8B5CF6"))
+    assert_includes html, "background-color: #8B5CF6"
+    assert_includes html, "&lt;b&gt;VIP&lt;/b&gt;"
+  end
+
+  test "admin_tab_link marks only the active tab" do
+    assert_includes admin_tab_link("All", "/admin/posts", active: true), "border-gray-900"
+    assert_includes admin_tab_link("All", "/admin/posts", active: false), "border-transparent"
+  end
+
   test "admin_input_classes includes placeholder styling" do
     classes = admin_input_classes
     assert_includes classes, "placeholder:text-gray-400"

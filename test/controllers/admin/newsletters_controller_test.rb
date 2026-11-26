@@ -21,6 +21,21 @@ class Admin::NewslettersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "a newsletter's status badge has the same colour on the index and show pages" do
+    colors = { "draft" => "bg-gray-100", "scheduled" => "bg-yellow-100", "sending" => "bg-blue-100", "sent" => "bg-green-100" }
+
+    colors.each do |status, color|
+      newsletter = newsletters(:"#{status}_newsletter")
+      label = I18n.t("admin.statuses.newsletter.#{status}")
+
+      get admin_newsletters_path(status: status)
+      assert_select "tbody span.#{color}", text: label
+
+      get admin_newsletter_path(newsletter)
+      assert_select "span.#{color}", text: label
+    end
+  end
+
   test "GET new renders form" do
     get new_admin_newsletter_path
     assert_response :success

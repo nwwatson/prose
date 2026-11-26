@@ -5,15 +5,7 @@
     <div>
       <h1 class="text-2xl font-bold text-gray-900"><%= @newsletter.title %></h1>
       <div class="mt-1 flex items-center gap-3 text-sm text-gray-500">
-        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
-          <%= case @newsletter.status
-              when 'sent' then 'bg-green-100 text-green-800'
-              when 'sending' then 'bg-yellow-100 text-yellow-800'
-              when 'scheduled' then 'bg-blue-100 text-blue-800'
-              else 'bg-gray-100 text-gray-800'
-              end %>">
-          <%= status_label(@newsletter) %>
-        </span>
+        <%= status_badge(status_label(@newsletter), color_class: newsletter_status_color(@newsletter.status)) %>
         <% if @newsletter.sent_at %>
           <span><%= t('admin.newsletters.show.sent_ago', time: time_ago(@newsletter.sent_at)) %></span>
         <% end %>

@@ -22,7 +22,7 @@
       <div>
         <p class="text-sm font-medium text-gray-900 mb-2"><%= t('admin.segments.form.labels') %></p>
         <div class="mb-2">
-          <select name="segment[label_mode]" class="rounded-md bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm"
+          <select name="segment[label_mode]" class="<%= admin_input_classes(shape: :inline) %>"
                   data-action="change->segment-builder#refresh">
             <option value="any_of" <%= "selected" if segment.label_mode == "any_of" %>><%= t('admin.segments.form.any_of') %></option>
             <option value="all_of" <%= "selected" if segment.label_mode == "all_of" %>><%= t('admin.segments.form.all_of') %></option>
